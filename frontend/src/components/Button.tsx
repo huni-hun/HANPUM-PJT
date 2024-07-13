@@ -8,10 +8,15 @@ interface ButtonProps {
   radius: number;
   fontSize: number;
   children: string;
+  onClick: () => {};
 }
 
 function Button({ ...props }: ButtonProps) {
-  return <B.ButtonBox {...props}>{props.children}</B.ButtonBox>;
+  return (
+    <B.ButtonBox {...props} onClick={props.onClick}>
+      {props.children}
+    </B.ButtonBox>
+  );
 }
 
 export default Button;
