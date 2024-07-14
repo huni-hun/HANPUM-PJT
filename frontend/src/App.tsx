@@ -1,5 +1,10 @@
-import styled, {createGlobalStyle} from "styled-components";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import styled, { createGlobalStyle } from "styled-components";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import reset from "styled-reset";
 
 import LoginPage from "./pages/LoginPage";
@@ -8,12 +13,12 @@ import MainPage from "./pages/MainPage";
 function App() {
   return (
     <Container>
-      <GlobalStyle/>
+      <GlobalStyle />
       <Router>
         <Routes>
-          <Route path="/" element={<Navigate to={"/login"} replace={true}/>}/>
-          <Route path="/login" element={<LoginPage/>}/>
-          <Route path="/main" element={<MainPage/>}/>
+          <Route path="/" element={<Navigate to={"/login"} replace={true} />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/main" element={<MainPage />} />
         </Routes>
       </Router>
     </Container>
@@ -33,9 +38,9 @@ const GlobalStyle = createGlobalStyle`
   body{
     display: flex;
   }
-`
+`;
 
 const Container = styled.div`
   width: 100vw;
   height: 100vh;
-`
+`;
