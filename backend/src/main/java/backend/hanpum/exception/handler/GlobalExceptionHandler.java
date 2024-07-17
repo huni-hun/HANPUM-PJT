@@ -1,5 +1,6 @@
 package backend.hanpum.exception.handler;
 
+import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
 import backend.hanpum.exception.exception.test.TestNotFoundException;
 import backend.hanpum.exception.format.code.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(TestNotFoundException.class)
     protected ResponseEntity<?> handle(TestNotFoundException e) {
         log.error("TestNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    /* 일정 */
+    @ExceptionHandler(ScheduleNotFoundException.class)
+    protected ResponseEntity<?> handle(ScheduleNotFoundException e) {
+        log.error("ScheduleNotFoundException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }
