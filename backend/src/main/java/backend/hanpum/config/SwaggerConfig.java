@@ -39,4 +39,12 @@ public class SwaggerConfig {
                 .pathsToMatch("/api/**")
                 .build();
     }
+
+    @Bean
+    public GroupedOpenApi scheduleGroup(){
+        return GroupedOpenApi.builder()
+                .group("일정")
+                .pathsToMatch("/api/schedule/**")
+                .build();
+    }
 }
