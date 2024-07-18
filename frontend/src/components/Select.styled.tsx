@@ -30,12 +30,12 @@ export const SelectList = styled.ul<{
   width: 100%;
   max-height: ${(props) => (props.isOpen ? "none" : "0")};
   overflow: hidden;
-  border: ${(props) => props.border};
+  border: ${(props) => (props.isOpen ? props.border : "")};
   border-radius: ${(props) => props.radius}rem;
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: ${(props) => props.height + 0.1}vh;
+  top: ${(props) => props.height + 1}vh;
   left: 0;
 `;
 

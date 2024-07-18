@@ -30,8 +30,10 @@ function Select(props: SelectProps) {
         test
       </S.SelectLabel>
       <S.SelectList height={props.height} isOpen={props.isOpen} radius={props.radius} border={props.border}>
-        {props.list.map((ele) => (
-          <S.SelectItem onClick={props.onClick}>{ele}</S.SelectItem>
+        {props.list.map((ele, index) => (
+          <S.SelectItem onClick={props.onClick} value={index}>
+            {ele}
+          </S.SelectItem>
         ))}
       </S.SelectList>
     </S.SelectBox>
