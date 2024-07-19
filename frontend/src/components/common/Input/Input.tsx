@@ -1,5 +1,5 @@
 import { CSSProperties, ComponentProps, ReactNode } from "react";
-import * as S from "./Input.styles";
+import * as S from "./Input.styled";
 
 interface InputProps extends Omit<ComponentProps<"input">, "style" | "size"> {
   size?: "md" | "sm";
