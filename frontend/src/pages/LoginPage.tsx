@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 function LoginPage() {
-  return <LoginPageContainer>Login Page</LoginPageContainer>;
+  return <LoginPageContainer>Login MainPage</LoginPageContainer>;
 }
 
 export default LoginPage;
