@@ -1,5 +1,6 @@
 package backend.hanpum.domain.schedule.entity;
 
+import backend.hanpum.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,10 +29,9 @@ public class Schedule {
     @Column(name = "state")
     private boolean state = false;
 
-    // Entity 생성 전까지 주석처리
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id")
-//    private Member member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
   // 경로 하나에 일정이 여러개 있어야 할듯 -> member 컬럼이 있으니
 //    @ManyToOne(fetch = FetchType.LAZY)

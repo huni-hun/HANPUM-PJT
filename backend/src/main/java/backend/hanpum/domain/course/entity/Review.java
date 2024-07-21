@@ -1,5 +1,6 @@
 package backend.hanpum.domain.course.entity;
 
+import backend.hanpum.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,10 +37,9 @@ public class Review {
     @Temporal(TemporalType.DATE)
     private Date writeDate;
 
-    // Entity 생성 전까지 주석처리
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id")
-//    private Member member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)

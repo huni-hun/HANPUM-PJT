@@ -1,5 +1,6 @@
 package backend.hanpum.domain.course.entity;
 
+import backend.hanpum.domain.member.entity.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -42,10 +43,9 @@ public class Course {
     @Temporal(TemporalType.DATE)
     private Date writeDate;
 
-    // 멤버 Entity 생성 전까지 주석처리
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id")
-//    private Member member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @Builder.Default
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
