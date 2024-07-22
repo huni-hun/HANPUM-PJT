@@ -47,4 +47,12 @@ public class SwaggerConfig {
                 .pathsToMatch("/api/schedule/**")
                 .build();
     }
+
+    @Bean
+    public GroupedOpenApi courseGroup(){
+        return GroupedOpenApi.builder()
+                .group("경로")
+                .pathsToMatch("/api/course/**")
+                .build();
+    }
 }
