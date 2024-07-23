@@ -1,4 +1,4 @@
-import styled, { createGlobalStyle } from "styled-components";
+import { GlobalStyle } from "./global/GlobalStyle";
 import Router from "./pages/Router";
 
 function App() {
@@ -11,10 +11,6 @@ function App() {
 }
 
 export default App;
-
-const GlobalStyle = createGlobalStyle`
-  
-`;
 
 const Container = styled.div`
   width: 100vw;
