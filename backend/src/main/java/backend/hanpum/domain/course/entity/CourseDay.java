@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @AllArgsConstructor
@@ -31,4 +34,12 @@ public class CourseDay {
 
     @Column(name = "total_calorie", length = 20)
     private String total_calorie;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "courseDay", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Attraction> attractions = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "courseDay", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Waypoint> waypoints = new ArrayList<>();
 }

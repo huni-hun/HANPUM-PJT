@@ -1,7 +1,6 @@
 package backend.hanpum.domain.course.entity;
 
 import backend.hanpum.domain.member.entity.Member;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,7 +48,6 @@ public class Course {
 
     @Builder.Default
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
     private List<CourseDay> courseDays = new ArrayList<>();
 
     @Builder.Default
