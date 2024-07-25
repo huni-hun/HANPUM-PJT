@@ -55,4 +55,12 @@ public class SwaggerConfig {
                 .pathsToMatch("/api/course/**")
                 .build();
     }
+
+    @Bean
+    public GroupedOpenApi authGroup(){
+        return GroupedOpenApi.builder()
+                .group("인증")
+                .pathsToMatch("/api/auth/**")
+                .build();
+    }
 }
