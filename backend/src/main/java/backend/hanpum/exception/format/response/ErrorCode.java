@@ -20,7 +20,9 @@ public enum ErrorCode {
 
     /* 인증 */
     EMAIL_DUPLICATED(HttpStatus.CONFLICT, "이미 사용 중인 이메일입니다."),
-    AUTHENTICATION_MAIL_SEND_FAILED(HttpStatus.BAD_REQUEST, "인증번호 메일 전송에 실패했습니다.")
+    AUTHENTICATION_MAIL_SEND_FAILED(HttpStatus.BAD_REQUEST, "인증번호 메일 전송에 실패했습니다."),
+    AUTHENTICATION_MAIL_TIMEOUT(HttpStatus.REQUEST_TIMEOUT, "인증번호 입력 시간이 초과했습니다."),
+    AUTHENTICATION_CODE_INVALID(HttpStatus.BAD_REQUEST, "잘못된 인증번호 입니다."),
     ;
 
     private final HttpStatus status;
