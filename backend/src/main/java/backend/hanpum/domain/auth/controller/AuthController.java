@@ -28,7 +28,7 @@ public class AuthController {
         return response.success(ResponseCode.AUTHENTICATION_MAIL_SEND_SUCCESS);
     }
 
-    @Operation(summary = "이메일 인증번호 전송", description = "이메일 인증번호 전송 API")
+    @Operation(summary = "이메일 인증", description = "이메일 인증 API")
     @PostMapping("/email-auth/check")
     public ResponseEntity<?> checkEmailAuthCode(@RequestBody @Valid CheckEmailAuthCodeReqDto checkEmailAuthCodeReqDto) {
         authService.checkEmailAuthCode(checkEmailAuthCodeReqDto);
