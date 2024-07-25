@@ -7,6 +7,7 @@ import backend.hanpum.exception.format.code.ApiResponse;
 import backend.hanpum.exception.format.response.ResponseCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,14 +23,14 @@ public class AuthController {
 
     @Operation(summary = "이메일 인증번호 전송", description = "이메일 인증번호 전송 API")
     @PostMapping("/email-auth")
-    public ResponseEntity<?> sendEmailAuthCode(@RequestBody SendEmailAuthCodeReqDto sendEmailAuthCodeReqDto) {
+    public ResponseEntity<?> sendEmailAuthCode(@RequestBody @Valid SendEmailAuthCodeReqDto sendEmailAuthCodeReqDto) {
         authService.sendEmailAuthCode(sendEmailAuthCodeReqDto);
         return response.success(ResponseCode.AUTHENTICATION_MAIL_SEND_SUCCESS);
     }
 
     @Operation(summary = "이메일 인증번호 전송", description = "이메일 인증번호 전송 API")
     @PostMapping("/email-auth/check")
-    public ResponseEntity<?> checkEmailAuthCode(@RequestBody CheckEmailAuthCodeReqDto checkEmailAuthCodeReqDto) {
+    public ResponseEntity<?> checkEmailAuthCode(@RequestBody @Valid CheckEmailAuthCodeReqDto checkEmailAuthCodeReqDto) {
         authService.checkEmailAuthCode(checkEmailAuthCodeReqDto);
         return response.success(ResponseCode.AUTHENTICATION_SUCCESS);
     }
