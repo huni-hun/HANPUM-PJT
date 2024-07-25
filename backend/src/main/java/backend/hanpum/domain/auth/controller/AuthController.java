@@ -1,5 +1,6 @@
 package backend.hanpum.domain.auth.controller;
 
+import backend.hanpum.domain.auth.dto.CheckEmailAuthCodeReqDto;
 import backend.hanpum.domain.auth.dto.SendEmailAuthCodeReqDto;
 import backend.hanpum.domain.auth.service.AuthService;
 import backend.hanpum.exception.format.code.ApiResponse;
@@ -21,8 +22,15 @@ public class AuthController {
 
     @Operation(summary = "이메일 인증번호 전송", description = "이메일 인증번호 전송 API")
     @PostMapping("/email-auth")
-    public ResponseEntity<?> getCourseDetail(@RequestBody SendEmailAuthCodeReqDto sendEmailAuthCodeReqDto) {
+    public ResponseEntity<?> sendEmailAuthCode(@RequestBody SendEmailAuthCodeReqDto sendEmailAuthCodeReqDto) {
         authService.sendEmailAuthCode(sendEmailAuthCodeReqDto);
         return response.success(ResponseCode.AUTHENTICATION_MAIL_SEND_SUCCESS);
+    }
+
+    @Operation(summary = "이메일 인증번호 전송", description = "이메일 인증번호 전송 API")
+    @PostMapping("/email-auth/check")
+    public ResponseEntity<?> checkEmailAuthCode(@RequestBody CheckEmailAuthCodeReqDto checkEmailAuthCodeReqDto) {
+        authService.checkEmailAuthCode(checkEmailAuthCodeReqDto);
+        return response.success(ResponseCode.AUTHENTICATION_SUCCESS);
     }
 }
