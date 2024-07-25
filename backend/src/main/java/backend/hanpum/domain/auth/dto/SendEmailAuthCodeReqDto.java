@@ -1,5 +1,6 @@
 package backend.hanpum.domain.auth.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,5 +13,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SendEmailAuthCodeReqDto {
     @NotNull
+    @Email
     String email;
 }
