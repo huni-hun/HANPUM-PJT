@@ -1,5 +1,8 @@
 package backend.hanpum.domain.schedule.service;
 
+import backend.hanpum.domain.course.entity.Course;
+import backend.hanpum.domain.course.repository.CourseRepository;
+import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
 import backend.hanpum.domain.schedule.entity.Schedule;
 import backend.hanpum.domain.schedule.repository.ScheduleRepository;
@@ -15,6 +18,24 @@ import java.util.List;
 public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final CourseRepository courseRepository;
+//    private final MemberRepository memberRepository;
+
+    @Override
+    public Long createSchedule(SchedulePostReqDto schedulePostReqDto) {
+
+        Course course = courseRepository.findById(schedulePostReqDto.getCourseId()).orElseThrow(ScheduleNotFoundException::new);
+//        Member member = memberRepository.findById(schedulePostReqDto.getMemberId()).orElseThrow(MemberNotFoundException::new)
+
+        Schedule schedule = Schedule.builder()
+                .type("private")
+                .date(schedulePostReqDto.getStartDate())
+//                .member(member)
+                .build();
+
+        scheduleRepository.save(schedule);
+        return schedule.getId();
+    }
 
     @Override
     public List<ScheduleResDto> getMyScheduleList(Long memberId) {
