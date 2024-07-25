@@ -17,6 +17,9 @@ public class Schedule {
     @Column(name = "schedule_id")
     private Long id;
 
+    @Column
+    private String title;
+
     @Column(name = "type")
     private String type;
 

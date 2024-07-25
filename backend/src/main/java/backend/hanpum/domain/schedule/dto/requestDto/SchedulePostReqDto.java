@@ -12,5 +12,6 @@ import lombok.NoArgsConstructor;
 public class SchedulePostReqDto {
     private Long memberId;
     private Long courseId;
+    private String title;
     private String startDate;
 }

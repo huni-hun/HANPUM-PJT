@@ -29,6 +29,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 //        Member member = memberRepository.findById(schedulePostReqDto.getMemberId()).orElseThrow(MemberNotFoundException::new)
 
         Schedule schedule = Schedule.builder()
+                .title(schedulePostReqDto.getTitle())
                 .type("private")
                 .date(schedulePostReqDto.getStartDate())
 //                .member(member)
