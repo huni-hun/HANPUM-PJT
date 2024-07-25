@@ -1,6 +1,7 @@
 package backend.hanpum.domain.schedule.controller;
 
 import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
+import backend.hanpum.domain.schedule.dto.requestDto.ScheduleRunReqDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
 import backend.hanpum.domain.schedule.service.ScheduleService;
 import backend.hanpum.exception.format.code.ApiResponse;
@@ -32,12 +33,18 @@ public class ScheduleController {
         return response.success(ResponseCode.SCHEDULE_CREATED, scheduleId);
     }
 
-
     @Operation(summary = "멤버별 일정 조회", description = "멤버별 일정 조회")
     @GetMapping
     public ResponseEntity<?> getMySchedule(Long memberId) {
         List<ScheduleResDto> scheduleResDto = scheduleService.getMyScheduleList(memberId);  // 추후 memberId를 직접 받지 않고 토큰 정보로 받게 수정
 
         return response.success(ResponseCode.SCHEDULE_LIST_FETCHED, scheduleResDto);
+    }
+
+    @Operation(summary = "일정 진행, 정지", description = "일정이 진행중이면 정지, 정지중이면 진행")
+    @PostMapping("/run")
+    public ResponseEntity<?> runAndStopSchedule(ScheduleRunReqDto scheduleRunReqDto){
+        Long scheduleId = scheduleService.runAndStopSchedule(scheduleRunReqDto);
+        return response.success(ResponseCode.SCHEDULE_STATE_CHANGED, scheduleId);
     }
 }

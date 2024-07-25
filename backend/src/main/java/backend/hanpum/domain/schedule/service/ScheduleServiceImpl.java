@@ -3,6 +3,7 @@ package backend.hanpum.domain.schedule.service;
 import backend.hanpum.domain.course.entity.Course;
 import backend.hanpum.domain.course.repository.CourseRepository;
 import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
+import backend.hanpum.domain.schedule.dto.requestDto.ScheduleRunReqDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
 import backend.hanpum.domain.schedule.entity.Schedule;
 import backend.hanpum.domain.schedule.repository.ScheduleRepository;
@@ -44,12 +45,19 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public void runAndStopSchedule(Long scheduleId) {
-        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(ScheduleNotFoundException::new);
+    public Long runAndStopSchedule(ScheduleRunReqDto scheduleRunReqDto) {
+        Schedule schedule = scheduleRepository.findById(scheduleRunReqDto.getScheduleId()).orElseThrow(ScheduleNotFoundException::new);
+//        Member member = memberRepository.findById(schedulePostReqDto.getMemberId()).orElseThrow(MemberNotFoundException::new)
+
         if (schedule.isState()) {
             schedule.setState(false);
         } else {
             schedule.setState(true);
         }
+        scheduleRepository.save(schedule);
+
+        return schedule.getId();
     }
+
+
 }
