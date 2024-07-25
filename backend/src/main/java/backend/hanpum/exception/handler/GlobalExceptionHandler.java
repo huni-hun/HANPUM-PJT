@@ -1,5 +1,6 @@
 package backend.hanpum.exception.handler;
 
+import backend.hanpum.exception.exception.auth.AuthenticationMailSendFailedException;
 import backend.hanpum.exception.exception.auth.EmailDuplicatedException;
 import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
 import backend.hanpum.exception.exception.test.TestNotFoundException;
@@ -37,6 +38,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmailDuplicatedException.class)
     protected ResponseEntity<?> handle(EmailDuplicatedException e) {
         log.error("EmailDuplicatedException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(AuthenticationMailSendFailedException.class)
+    protected ResponseEntity<?> handle(AuthenticationMailSendFailedException e) {
+        log.error("AuthenticationMailSendFailedException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }
