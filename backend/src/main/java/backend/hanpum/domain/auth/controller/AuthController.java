@@ -2,6 +2,7 @@ package backend.hanpum.domain.auth.controller;
 
 import backend.hanpum.domain.auth.dto.requestDto.CheckEmailAuthCodeReqDto;
 import backend.hanpum.domain.auth.dto.requestDto.CheckLoginIdDuplicationReqDto;
+import backend.hanpum.domain.auth.dto.requestDto.CheckNicknameDuplicationReqDto;
 import backend.hanpum.domain.auth.dto.requestDto.SendEmailAuthCodeReqDto;
 import backend.hanpum.domain.auth.service.AuthService;
 import backend.hanpum.exception.format.code.ApiResponse;
@@ -43,5 +44,10 @@ public class AuthController {
         return response.success(ResponseCode.LOGIN_ID_CHECK_SUCCESS);
     }
 
-
+    @Operation(summary = "닉네임 중복 검사", description = "닉네임 중복 검사 API")
+    @PostMapping("/nickname/check")
+    public ResponseEntity<?> checkNicknameDuplication(@RequestBody @Valid CheckNicknameDuplicationReqDto checkNicknameDuplicationReqDto) {
+        authService.checkNicknameDuplication(checkNicknameDuplicationReqDto);
+        return response.success(ResponseCode.NICKNAME_CHECK_SUCCESS);
+    }
 }

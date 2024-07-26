@@ -2,6 +2,7 @@ package backend.hanpum.domain.auth.service;
 
 import backend.hanpum.domain.auth.dto.requestDto.CheckEmailAuthCodeReqDto;
 import backend.hanpum.domain.auth.dto.requestDto.CheckLoginIdDuplicationReqDto;
+import backend.hanpum.domain.auth.dto.requestDto.CheckNicknameDuplicationReqDto;
 import backend.hanpum.domain.auth.dto.requestDto.SendEmailAuthCodeReqDto;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.auth.*;
@@ -26,6 +27,7 @@ public class AuthServiceImpl implements AuthService {
 
     private static final String EMAIL_KEY_PREFIX = "email:";
     private static final String LOGIN_ID_KEY_PREFIX = "login_id:";
+    private static final String NICKNAME_KEY_PREFIX = "nickname:";
 
     @Override
     @Transactional(readOnly = true)
@@ -74,6 +76,19 @@ public class AuthServiceImpl implements AuthService {
             throw new LoginIdDuplicatedException();
         }
         stringRedisTemplate.opsForValue().set(LOGIN_ID_KEY_PREFIX + loginId, "Authenticated", 10, TimeUnit.MINUTES);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public void checkNicknameDuplication(CheckNicknameDuplicationReqDto checkNicknameDuplicationReqDto) {
+        String nickname = checkNicknameDuplicationReqDto.getNickname();
+        memberRepository.findMemberByNickname(nickname).ifPresent(member -> {
+            throw new NicknameDuplicatedException();
+        });
+        if (stringRedisTemplate.hasKey(NICKNAME_KEY_PREFIX + nickname)) {
+            throw new NicknameDuplicatedException();
+        }
+        stringRedisTemplate.opsForValue().set(NICKNAME_KEY_PREFIX + nickname, "Authenticated", 10, TimeUnit.MINUTES);
     }
 
     private String generateAuthCode() {
