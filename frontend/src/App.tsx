@@ -1,14 +1,10 @@
 import styled, { createGlobalStyle } from "styled-components";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import reset from "styled-reset";
 
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
+import ScheduleMainPage from "./pages/ScheduleMainPage";
 
 function App() {
   return (
@@ -19,6 +15,7 @@ function App() {
           <Route path="/" element={<Navigate to={"/login"} replace={true} />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/main" element={<MainPage />} />
+          <Route path="/schedule/main" element={<ScheduleMainPage />} />
         </Routes>
       </Router>
     </Container>
