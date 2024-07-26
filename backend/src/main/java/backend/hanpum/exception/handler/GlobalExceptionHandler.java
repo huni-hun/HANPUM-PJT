@@ -1,5 +1,9 @@
 package backend.hanpum.exception.handler;
 
+import backend.hanpum.exception.exception.auth.AuthenticationCodeInvalidException;
+import backend.hanpum.exception.exception.auth.AuthenticationMailSendFailedException;
+import backend.hanpum.exception.exception.auth.AuthenticationMailTimeoutException;
+import backend.hanpum.exception.exception.auth.EmailDuplicatedException;
 import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
 import backend.hanpum.exception.exception.test.TestNotFoundException;
 import backend.hanpum.exception.format.code.ApiResponse;
@@ -28,6 +32,35 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ScheduleNotFoundException.class)
     protected ResponseEntity<?> handle(ScheduleNotFoundException e) {
         log.error("ScheduleNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    /* 인증 */
+    @ExceptionHandler(EmailDuplicatedException.class)
+    protected ResponseEntity<?> handle(EmailDuplicatedException e) {
+        log.error("EmailDuplicatedException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(AuthenticationMailSendFailedException.class)
+    protected ResponseEntity<?> handle(AuthenticationMailSendFailedException e) {
+        log.error("AuthenticationMailSendFailedException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(AuthenticationMailTimeoutException.class)
+    protected ResponseEntity<?> handle(AuthenticationMailTimeoutException e) {
+        log.error("AuthenticationMailTimeoutException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(AuthenticationCodeInvalidException.class)
+    protected ResponseEntity<?> handle(AuthenticationCodeInvalidException e) {
+        log.error("AuthenticationCodeInvalidException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }
