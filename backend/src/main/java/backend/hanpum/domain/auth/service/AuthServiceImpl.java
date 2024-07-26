@@ -1,9 +1,7 @@
 package backend.hanpum.domain.auth.service;
 
-import backend.hanpum.domain.auth.dto.requestDto.CheckEmailAuthCodeReqDto;
-import backend.hanpum.domain.auth.dto.requestDto.CheckLoginIdDuplicationReqDto;
-import backend.hanpum.domain.auth.dto.requestDto.CheckNicknameDuplicationReqDto;
-import backend.hanpum.domain.auth.dto.requestDto.SendEmailAuthCodeReqDto;
+import backend.hanpum.domain.auth.dto.requestDto.*;
+import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.auth.*;
 import lombok.RequiredArgsConstructor;
@@ -89,6 +87,53 @@ public class AuthServiceImpl implements AuthService {
             throw new NicknameDuplicatedException();
         }
         stringRedisTemplate.opsForValue().set(NICKNAME_KEY_PREFIX + nickname, "Authenticated", 10, TimeUnit.MINUTES);
+    }
+
+    @Override
+    @Transactional
+    public void signUp(SignUpReqDto signUpReqDto) {
+        checkLoginIdAuthenticated(signUpReqDto.getLoginId());
+        checkEmailAuthenticated(signUpReqDto.getEmail());
+        checkNicknameAuthenticated(signUpReqDto.getNickname());
+
+        Member member = Member.builder()
+                .loginId(signUpReqDto.getLoginId())
+                .password(signUpReqDto.getPassword())
+                .email(signUpReqDto.getEmail())
+                .profilePicture(signUpReqDto.getProfilePicture())
+                .name(signUpReqDto.getName())
+                .birthDate(signUpReqDto.getBirthDate())
+                .gender(signUpReqDto.getGender())
+                .phoneNumber(signUpReqDto.getPhoneNumber())
+                .nickname(signUpReqDto.getNickname())
+                .memberType(signUpReqDto.getMemberType())
+                .build();
+        memberRepository.save(member);
+
+        stringRedisTemplate.delete(EMAIL_KEY_PREFIX + signUpReqDto.getEmail());
+        stringRedisTemplate.delete(LOGIN_ID_KEY_PREFIX + signUpReqDto.getLoginId());
+        stringRedisTemplate.delete(NICKNAME_KEY_PREFIX + signUpReqDto.getNickname());
+    }
+
+    private void checkLoginIdAuthenticated(String loginId){
+        if (!stringRedisTemplate.hasKey(LOGIN_ID_KEY_PREFIX + loginId)) {
+            throw new LoginIdExpiredException();
+        }
+    }
+
+    private void checkEmailAuthenticated(String email){
+        if (!stringRedisTemplate.hasKey(EMAIL_KEY_PREFIX + email)) {
+            throw new EmailExpiredException();
+        }
+        if (!stringRedisTemplate.opsForValue().get(EMAIL_KEY_PREFIX + email).equals("Authenticated")) {
+            throw new EmailNotAuthenticatedException();
+        }
+    }
+
+    private void checkNicknameAuthenticated(String nickname){
+        if (!stringRedisTemplate.hasKey(NICKNAME_KEY_PREFIX + nickname)) {
+            throw new NicknameExpiredException();
+        }
     }
 
     private String generateAuthCode() {

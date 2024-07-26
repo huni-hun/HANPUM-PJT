@@ -1,9 +1,6 @@
 package backend.hanpum.domain.auth.service;
 
-import backend.hanpum.domain.auth.dto.requestDto.CheckEmailAuthCodeReqDto;
-import backend.hanpum.domain.auth.dto.requestDto.CheckLoginIdDuplicationReqDto;
-import backend.hanpum.domain.auth.dto.requestDto.CheckNicknameDuplicationReqDto;
-import backend.hanpum.domain.auth.dto.requestDto.SendEmailAuthCodeReqDto;
+import backend.hanpum.domain.auth.dto.requestDto.*;
 
 public interface AuthService {
 
@@ -12,4 +9,5 @@ public interface AuthService {
     void checkEmailAuthCode(CheckEmailAuthCodeReqDto checkEmailAuthCodeReqDto);
     void checkLoginIdDuplication(CheckLoginIdDuplicationReqDto checkLoginIdDuplicationReqDto);
     void checkNicknameDuplication(CheckNicknameDuplicationReqDto checkNicknameDuplicationReqDto);
+    void signUp(SignUpReqDto signUpReqDto);
 }
