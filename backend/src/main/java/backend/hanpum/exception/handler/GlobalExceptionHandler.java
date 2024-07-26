@@ -75,4 +75,32 @@ public class GlobalExceptionHandler {
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }
+
+    @ExceptionHandler(LoginIdExpiredException.class)
+    protected ResponseEntity<?> handle(LoginIdExpiredException e) {
+        log.error("LoginIdExpiredException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(EmailExpiredException.class)
+    protected ResponseEntity<?> handle(EmailExpiredException e) {
+        log.error("EmailExpiredException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(NicknameExpiredException.class)
+    protected ResponseEntity<?> handle(NicknameExpiredException e) {
+        log.error("NicknameExpiredException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(EmailNotAuthenticatedException.class)
+    protected ResponseEntity<?> handle(EmailNotAuthenticatedException e) {
+        log.error("EmailNotAuthenticatedException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
 }
