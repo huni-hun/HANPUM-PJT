@@ -1,6 +1,7 @@
 package backend.hanpum.domain.auth.controller;
 
 import backend.hanpum.domain.auth.dto.requestDto.CheckEmailAuthCodeReqDto;
+import backend.hanpum.domain.auth.dto.requestDto.CheckLoginIdDuplicationReqDto;
 import backend.hanpum.domain.auth.dto.requestDto.SendEmailAuthCodeReqDto;
 import backend.hanpum.domain.auth.service.AuthService;
 import backend.hanpum.exception.format.code.ApiResponse;
@@ -34,4 +35,13 @@ public class AuthController {
         authService.checkEmailAuthCode(checkEmailAuthCodeReqDto);
         return response.success(ResponseCode.AUTHENTICATION_SUCCESS);
     }
+
+    @Operation(summary = "로그인 아이디 중복 검사", description = "로그인 아이디 중복 검사 API")
+    @PostMapping("/login-id/check")
+    public ResponseEntity<?> checkLoginIdDuplication(@RequestBody @Valid CheckLoginIdDuplicationReqDto checkLoginIdDuplicationReqDto) {
+        authService.checkLoginIdDuplication(checkLoginIdDuplicationReqDto);
+        return response.success(ResponseCode.LOGIN_ID_CHECK_SUCCESS);
+    }
+
+
 }

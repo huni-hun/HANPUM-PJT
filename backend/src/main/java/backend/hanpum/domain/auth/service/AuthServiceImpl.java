@@ -1,12 +1,10 @@
 package backend.hanpum.domain.auth.service;
 
 import backend.hanpum.domain.auth.dto.requestDto.CheckEmailAuthCodeReqDto;
+import backend.hanpum.domain.auth.dto.requestDto.CheckLoginIdDuplicationReqDto;
 import backend.hanpum.domain.auth.dto.requestDto.SendEmailAuthCodeReqDto;
 import backend.hanpum.domain.member.repository.MemberRepository;
-import backend.hanpum.exception.exception.auth.AuthenticationCodeInvalidException;
-import backend.hanpum.exception.exception.auth.AuthenticationMailSendFailedException;
-import backend.hanpum.exception.exception.auth.AuthenticationMailTimeoutException;
-import backend.hanpum.exception.exception.auth.EmailDuplicatedException;
+import backend.hanpum.exception.exception.auth.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.MailException;
@@ -27,6 +25,7 @@ public class AuthServiceImpl implements AuthService {
     private final JavaMailSender javaMailSender;
 
     private static final String EMAIL_KEY_PREFIX = "email:";
+    private static final String LOGIN_ID_KEY_PREFIX = "login_id:";
 
     @Override
     @Transactional(readOnly = true)
@@ -62,6 +61,19 @@ public class AuthServiceImpl implements AuthService {
             throw new AuthenticationCodeInvalidException();
         }
         stringRedisTemplate.opsForValue().set(EMAIL_KEY_PREFIX + email, "Authenticated", 10, TimeUnit.MINUTES);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public void checkLoginIdDuplication(CheckLoginIdDuplicationReqDto checkLoginIdDuplicationReqDto) {
+        String loginId = checkLoginIdDuplicationReqDto.getLoginId();
+        memberRepository.findMemberByLoginId(loginId).ifPresent(member -> {
+            throw new LoginIdDuplicatedException();
+        });
+        if (stringRedisTemplate.hasKey(LOGIN_ID_KEY_PREFIX + loginId)) {
+            throw new LoginIdDuplicatedException();
+        }
+        stringRedisTemplate.opsForValue().set(LOGIN_ID_KEY_PREFIX + loginId, "Authenticated", 10, TimeUnit.MINUTES);
     }
 
     private String generateAuthCode() {
