@@ -8,7 +8,8 @@ interface ButtonProps {
   radius: number;
   fontSize: number;
   children: string;
-  onClick: () => {};
+  color: string;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 function Button({ ...props }: ButtonProps) {
