@@ -4,11 +4,13 @@ import backend.hanpum.domain.auth.dto.requestDto.*;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.auth.*;
+import ch.qos.logback.core.net.SyslogOutputStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,7 @@ public class AuthServiceImpl implements AuthService {
     private final MemberRepository memberRepository;
     private final StringRedisTemplate stringRedisTemplate;
     private final JavaMailSender javaMailSender;
+    private final PasswordEncoder passwordEncoder;
 
     private static final String EMAIL_KEY_PREFIX = "email:";
     private static final String LOGIN_ID_KEY_PREFIX = "login_id:";
@@ -98,7 +101,7 @@ public class AuthServiceImpl implements AuthService {
 
         Member member = Member.builder()
                 .loginId(signUpReqDto.getLoginId())
-                .password(signUpReqDto.getPassword())
+                .password((passwordEncoder.encode(signUpReqDto.getPassword())))
                 .email(signUpReqDto.getEmail())
                 .profilePicture(signUpReqDto.getProfilePicture())
                 .name(signUpReqDto.getName())
