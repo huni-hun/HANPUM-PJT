@@ -1,7 +1,7 @@
 package backend.hanpum.domain.auth.service;
 
-import backend.hanpum.domain.auth.dto.CheckEmailAuthCodeReqDto;
-import backend.hanpum.domain.auth.dto.SendEmailAuthCodeReqDto;
+import backend.hanpum.domain.auth.dto.requestDto.CheckEmailAuthCodeReqDto;
+import backend.hanpum.domain.auth.dto.requestDto.SendEmailAuthCodeReqDto;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.auth.AuthenticationCodeInvalidException;
 import backend.hanpum.exception.exception.auth.AuthenticationMailSendFailedException;

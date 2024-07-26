@@ -1,7 +1,7 @@
 package backend.hanpum.domain.auth.controller;
 
-import backend.hanpum.domain.auth.dto.CheckEmailAuthCodeReqDto;
-import backend.hanpum.domain.auth.dto.SendEmailAuthCodeReqDto;
+import backend.hanpum.domain.auth.dto.requestDto.CheckEmailAuthCodeReqDto;
+import backend.hanpum.domain.auth.dto.requestDto.SendEmailAuthCodeReqDto;
 import backend.hanpum.domain.auth.service.AuthService;
 import backend.hanpum.exception.format.code.ApiResponse;
 import backend.hanpum.exception.format.response.ResponseCode;
