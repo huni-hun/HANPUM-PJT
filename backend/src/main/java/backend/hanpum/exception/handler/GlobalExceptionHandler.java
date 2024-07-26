@@ -68,4 +68,11 @@ public class GlobalExceptionHandler {
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }
+
+    @ExceptionHandler(NicknameDuplicatedException.class)
+    protected ResponseEntity<?> handle(NicknameDuplicatedException e) {
+        log.error("NicknameDuplicatedException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
 }
