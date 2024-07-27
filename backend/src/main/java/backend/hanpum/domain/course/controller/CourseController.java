@@ -38,4 +38,20 @@ public class CourseController {
 
         return response.success(ResponseCode.COURSE_DAY_FETCHED, getCourseDayResDto);
     }
+
+    @Operation(summary = "관심 경로 등록", description = "관심 경로 등록 API")
+    @GetMapping("{course_id}/like")
+    public ResponseEntity<?> addInterestCourse(@PathVariable("course_id") Long courseId) {
+        /*
+        토큰을 이용해 유저정보 추출하는 부분
+        Member member =
+        Long memberId = member.getMemberId();
+         */
+
+//        courseService.addInterestCourse(courseId, memberId);
+        courseService.addInterestCourse(courseId);
+
+        System.out.println(courseId);
+        return response.success(ResponseCode.ADD_INTEREST_COURSE_SUCCESS);
+    }
 }
