@@ -56,7 +56,7 @@ export const ScheduleType = styled.p<{ isSelected: boolean }>`
 
 export const ScheduleMainContainer = styled.div`
   width: 100vw;
-  height: 84vh;
+  height: 69vh;
   display: flex;
   flex-direction: column;
   align-items: center;
