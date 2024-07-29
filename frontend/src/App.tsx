@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { GlobalStyle } from "./global/GlobalStyle";
 import Router from "./pages/Router";
+import { GlobalStyle } from "./styles/GlobalStyles";
 
 function App() {
   return (
