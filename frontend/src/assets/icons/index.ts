@@ -1,1 +1,14 @@
 export { ReactComponent as IconNext } from "./nextArrow.svg";
+export { ReactComponent as IconHome } from "./HomeGrey.svg";
+export { ReactComponent as IconClass } from "./ClassGrey.svg";
+export { ReactComponent as IconSchedule } from "./ScheduleGrey.svg";
+export { ReactComponent as IconCommunity } from "./CommunityGrey.svg";
+export { ReactComponent as IconHomeSelect } from "./HomeGreen.svg";
+export { ReactComponent as IconClassSelect } from "./ClassGreen.svg";
+export { ReactComponent as IconScheduleSelect } from "./ScheduleGreen.svg";
+export { ReactComponent as IconCommunitySelect } from "./CommunityGreen.svg";
+export { ReactComponent as IconRoute } from "./ClassGrey.svg";
+export { ReactComponent as IconCalendar } from "./ClassGrey.svg";
+export { ReactComponent as IconBookMarkerWhite } from "./ClassGrey.svg";
+export { ReactComponent as IconFlag } from "./ClassGrey.svg";
+export { ReactComponent as IconArrowWhite } from "./ClassGrey.svg";
