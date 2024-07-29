@@ -12,13 +12,7 @@ interface IconProps extends SVGProps<SVGSVGElement> {
 
 const DEFAULT_SIZE = 24;
 
-export default function Icon({
-  name,
-  size = DEFAULT_SIZE,
-  width,
-  height,
-  ...rest
-}: IconProps) {
+export default function Icon({ name, size = DEFAULT_SIZE, width, height, ...rest }: IconProps) {
   const SVGIcon = icon[name];
 
   return (
