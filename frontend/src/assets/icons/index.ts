@@ -1,1 +1,11 @@
 export { ReactComponent as IconNext } from "./nextArrow.svg";
+export { ReactComponent as IconBack } from "./BackArrow.svg";
+export { ReactComponent as IconBookMarker } from "./BookMarker.svg";
+export { ReactComponent as IconBookMarkerWhite } from "./BookMarker2.svg";
+export { ReactComponent as IconNotification } from "./Notification.svg";
+export { ReactComponent as IconMy } from "./My.svg";
+export { ReactComponent as IconArrow } from "./Arrow.svg";
+export { ReactComponent as IconArrowWhite } from "./ArrowWhite.svg";
+export { ReactComponent as IconCalendar } from "./CalendarIcon.svg";
+export { ReactComponent as IconRoute } from "./RouteIcon.svg";
+export { ReactComponent as IconFlag } from "./Flag.svg";
