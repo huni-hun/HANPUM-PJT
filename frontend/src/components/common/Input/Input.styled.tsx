@@ -1,8 +1,8 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 interface InputProps {
   width?: string | number;
-  size?: "md" | "sm";
+  size?: 'md' | 'sm';
 }
 
 export const InputWrapper = styled.div<InputProps>`
@@ -18,7 +18,7 @@ export const InputWrapper = styled.div<InputProps>`
 export const Input = styled.input<InputProps>`
   max-width: ${(props) => `${props.width}px`};
   width: 100%;
-  height: ${(props) => (props.size === "md" ? `50px` : `38px`)};
+  height: ${(props) => (props.size === 'md' ? `50px` : `38px`)};
   box-sizing: border-box;
   outline: none;
   border: none;

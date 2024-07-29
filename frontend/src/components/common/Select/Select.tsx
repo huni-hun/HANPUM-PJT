@@ -1,4 +1,4 @@
-import * as S from "./Select.styled";
+import * as S from './Select.styled';
 
 interface SelectProps {
   list: string[];
@@ -29,7 +29,12 @@ function Select(props: SelectProps) {
       <S.SelectLabel fontSize={props.fontSize} fontColor={props.fontColor}>
         test
       </S.SelectLabel>
-      <S.SelectList height={props.height} isOpen={props.isOpen} radius={props.radius} border={props.border}>
+      <S.SelectList
+        height={props.height}
+        isOpen={props.isOpen}
+        radius={props.radius}
+        border={props.border}
+      >
         {props.list.map((ele, index) => (
           <S.SelectItem onClick={props.onClick} value={index}>
             {ele}

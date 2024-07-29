@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { colors } from "../styles/colorPalette";
+import styled from 'styled-components';
+import { colors } from '../styles/colorPalette';
 
 function LoginPage() {
   return <LoginPageContainer>Login MainPage</LoginPageContainer>;

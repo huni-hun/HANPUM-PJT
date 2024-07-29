@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import Router from "./pages/Router";
+import styled from 'styled-components';
+import Router from '@pages/Router';
 
 function App() {
   return (

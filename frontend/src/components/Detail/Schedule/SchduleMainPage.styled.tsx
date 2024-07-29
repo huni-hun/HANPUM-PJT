@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Container = styled.div`
   width: 100vw;
@@ -50,7 +50,7 @@ export const SchduleTypeBox = styled.div`
 
 export const ScheduleType = styled.p<{ isSelected: boolean }>`
   font-size: 1.5rem;
-  color: ${(props) => (props.isSelected ? "#000000" : "#d9d9d9")};
+  color: ${(props) => (props.isSelected ? '#000000' : '#d9d9d9')};
   font-weight: bold;
 `;
 

@@ -1,8 +1,8 @@
-import { CSSProperties, ComponentProps, ReactNode } from "react";
-import * as S from "./Input.styled";
+import { CSSProperties, ComponentProps, ReactNode } from 'react';
+import * as S from './Input.styled';
 
-interface InputProps extends Omit<ComponentProps<"input">, "style" | "size"> {
-  size?: "md" | "sm";
+interface InputProps extends Omit<ComponentProps<'input'>, 'style' | 'size'> {
+  size?: 'md' | 'sm';
   placeholder?: string;
   rightSlot?: ReactNode; // input 옆에 아이콘 같은 거
   error?: boolean; // 유효성
@@ -14,7 +14,7 @@ interface InputProps extends Omit<ComponentProps<"input">, "style" | "size"> {
 const Input = ({
   placeholder,
   rightSlot,
-  size = "md",
+  size = 'md',
   error,
   errorMessage,
   width,
