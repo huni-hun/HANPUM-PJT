@@ -2,6 +2,8 @@ package backend.hanpum.domain.schedule.service;
 
 import backend.hanpum.domain.course.entity.Course;
 import backend.hanpum.domain.course.repository.CourseRepository;
+import backend.hanpum.domain.member.entity.Member;
+import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.ScheduleRunReqDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
@@ -20,7 +22,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final CourseRepository courseRepository;
-//    private final MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public Long createSchedule(SchedulePostReqDto schedulePostReqDto) {
