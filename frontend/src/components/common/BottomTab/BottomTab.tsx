@@ -1,24 +1,39 @@
 import * as Bt from "./BottomTab.styled";
-import testLogo from "../logo.svg";
+import Icon from "../Icon/Icon";
+import { useState } from "react";
 
 function BottomTab() {
+  const [curTab, setCurTab] = useState<string>("");
+
   return (
     <Bt.BottomTab>
-      <Bt.BottomTabItem onClick={() => {}}>
-        <Bt.BottomTabIcon src={testLogo} />
-        <Bt.BottomTabTitle>메인</Bt.BottomTabTitle>
+      <Bt.BottomTabItem
+        onClick={() => {
+          setCurTab("Home");
+        }}
+      >
+        <Icon name={curTab === "Home" ? "IconHomeSelect" : "IconHome"} size={20} />
       </Bt.BottomTabItem>
-      <Bt.BottomTabItem onClick={() => {}}>
-        <Bt.BottomTabIcon src={testLogo} />
-        <Bt.BottomTabTitle>모임</Bt.BottomTabTitle>
+      <Bt.BottomTabItem
+        onClick={() => {
+          setCurTab("Class");
+        }}
+      >
+        <Icon name={curTab === "Class" ? "IconClassSelect" : "IconClass"} size={20} />
       </Bt.BottomTabItem>
-      <Bt.BottomTabItem onClick={() => {}}>
-        <Bt.BottomTabIcon src={testLogo} />
-        <Bt.BottomTabTitle>커뮤니티</Bt.BottomTabTitle>
+      <Bt.BottomTabItem
+        onClick={() => {
+          setCurTab("Community");
+        }}
+      >
+        <Icon name={curTab === "Community" ? "IconCommunitySelect" : "IconCommunity"} size={20} />
       </Bt.BottomTabItem>
-      <Bt.BottomTabItem onClick={() => {}}>
-        <Bt.BottomTabIcon src={testLogo} />
-        <Bt.BottomTabTitle>내 정보</Bt.BottomTabTitle>
+      <Bt.BottomTabItem
+        onClick={() => {
+          setCurTab("Schedule");
+        }}
+      >
+        <Icon name={curTab === "Schedule" ? "IconScheduleSelect" : "IconSchedule"} size={20} />
       </Bt.BottomTabItem>
     </Bt.BottomTab>
   );

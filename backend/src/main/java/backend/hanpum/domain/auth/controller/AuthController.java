@@ -1,7 +1,6 @@
 package backend.hanpum.domain.auth.controller;
 
-import backend.hanpum.domain.auth.dto.CheckEmailAuthCodeReqDto;
-import backend.hanpum.domain.auth.dto.SendEmailAuthCodeReqDto;
+import backend.hanpum.domain.auth.dto.requestDto.*;
 import backend.hanpum.domain.auth.service.AuthService;
 import backend.hanpum.exception.format.code.ApiResponse;
 import backend.hanpum.exception.format.response.ResponseCode;
@@ -33,5 +32,26 @@ public class AuthController {
     public ResponseEntity<?> checkEmailAuthCode(@RequestBody @Valid CheckEmailAuthCodeReqDto checkEmailAuthCodeReqDto) {
         authService.checkEmailAuthCode(checkEmailAuthCodeReqDto);
         return response.success(ResponseCode.AUTHENTICATION_SUCCESS);
+    }
+
+    @Operation(summary = "로그인 아이디 중복 검사", description = "로그인 아이디 중복 검사 API")
+    @PostMapping("/login-id/check")
+    public ResponseEntity<?> checkLoginIdDuplication(@RequestBody @Valid CheckLoginIdDuplicationReqDto checkLoginIdDuplicationReqDto) {
+        authService.checkLoginIdDuplication(checkLoginIdDuplicationReqDto);
+        return response.success(ResponseCode.LOGIN_ID_CHECK_SUCCESS);
+    }
+
+    @Operation(summary = "닉네임 중복 검사", description = "닉네임 중복 검사 API")
+    @PostMapping("/nickname/check")
+    public ResponseEntity<?> checkNicknameDuplication(@RequestBody @Valid CheckNicknameDuplicationReqDto checkNicknameDuplicationReqDto) {
+        authService.checkNicknameDuplication(checkNicknameDuplicationReqDto);
+        return response.success(ResponseCode.NICKNAME_CHECK_SUCCESS);
+    }
+
+    @Operation(summary = "회원가입", description = "회원가입 API")
+    @PostMapping("/sign-up")
+    public ResponseEntity<?> signUp(@RequestBody @Valid SignUpReqDto signUpReqDto) {
+        authService.signUp(signUpReqDto);
+        return response.success(ResponseCode.SING_UP_SUCCESS);
     }
 }

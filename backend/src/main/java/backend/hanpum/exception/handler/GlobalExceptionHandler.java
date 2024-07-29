@@ -1,9 +1,6 @@
 package backend.hanpum.exception.handler;
 
-import backend.hanpum.exception.exception.auth.AuthenticationCodeInvalidException;
-import backend.hanpum.exception.exception.auth.AuthenticationMailSendFailedException;
-import backend.hanpum.exception.exception.auth.AuthenticationMailTimeoutException;
-import backend.hanpum.exception.exception.auth.EmailDuplicatedException;
+import backend.hanpum.exception.exception.auth.*;
 import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
 import backend.hanpum.exception.exception.test.TestNotFoundException;
 import backend.hanpum.exception.format.code.ApiResponse;
@@ -61,6 +58,48 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AuthenticationCodeInvalidException.class)
     protected ResponseEntity<?> handle(AuthenticationCodeInvalidException e) {
         log.error("AuthenticationCodeInvalidException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(LoginIdDuplicatedException.class)
+    protected ResponseEntity<?> handle(LoginIdDuplicatedException e) {
+        log.error("LoginIdDuplicatedException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(NicknameDuplicatedException.class)
+    protected ResponseEntity<?> handle(NicknameDuplicatedException e) {
+        log.error("NicknameDuplicatedException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(LoginIdExpiredException.class)
+    protected ResponseEntity<?> handle(LoginIdExpiredException e) {
+        log.error("LoginIdExpiredException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(EmailExpiredException.class)
+    protected ResponseEntity<?> handle(EmailExpiredException e) {
+        log.error("EmailExpiredException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(NicknameExpiredException.class)
+    protected ResponseEntity<?> handle(NicknameExpiredException e) {
+        log.error("NicknameExpiredException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(EmailNotAuthenticatedException.class)
+    protected ResponseEntity<?> handle(EmailNotAuthenticatedException e) {
+        log.error("EmailNotAuthenticatedException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }

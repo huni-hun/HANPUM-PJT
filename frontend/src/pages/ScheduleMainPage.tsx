@@ -5,9 +5,7 @@ import Button from "../components/common/Button/Button";
 import PlusIcon from "../assets/PlusIcon.svg";
 
 function ScheduleMainPage() {
-  const BtnClick = () => {
-    
-  };
+  const BtnClick = () => {};
 
   const [isSelected, setIsSelected] = useState<String>("Mine");
 
