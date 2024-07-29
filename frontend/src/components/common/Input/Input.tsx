@@ -1,43 +1,25 @@
-import { CSSProperties, ComponentProps, ReactNode } from 'react';
-import * as S from './Input.styled';
+import styled from 'styled-components';
 
-interface InputProps extends Omit<ComponentProps<'input'>, 'style' | 'size'> {
-  size?: 'md' | 'sm';
-  placeholder?: string;
-  rightSlot?: ReactNode; // input 옆에 아이콘 같은 거
-  error?: boolean; // 유효성
-  errorMessage?: string;
-  width: string | number;
-  style?: CSSProperties;
-}
+import { colors } from '@styles/colorPalette';
 
-const Input = ({
-  placeholder,
-  rightSlot,
-  size = 'md',
-  error,
-  errorMessage,
-  width,
-  style,
-  ...rest
-}: InputProps) => {
-  console.log(size);
-  return (
-    <>
-      <S.InputWrapper className="input-wrapper" style={style}>
-        <S.Input
-          placeholder={placeholder}
-          {...rest}
-          autoComplete="off"
-          width={width}
-          size={size}
-        />
-        {rightSlot}
-      </S.InputWrapper>
+const Input = styled.input`
+  padding: 0 16px;
+  font-size: 15px;
+  height: 48px;
+  font-weight: 500;
+  border: 1px solid ${colors.grey};
+  border-radius: 6px;
+  width: 100%;
+  box-sizing: border-box;
 
-      {error && <span>{errorMessage}</span>}
-    </>
-  );
-};
+  &:focus {
+    outline: none;
+    border-color: ${colors.green};
+  }
+
+  &[aria-invalid='true'] {
+    border-color: ${colors.red};
+  }
+`;
 
 export default Input;

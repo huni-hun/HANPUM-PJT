@@ -19,5 +19,6 @@ export const GlobalStyle = createGlobalStyle`
     --sub_grey: ${colors.sub_grey};
     --green: ${colors.green};
     --grey: ${colors.grey};
+    --red: ${colors.red};
   }
 `;
