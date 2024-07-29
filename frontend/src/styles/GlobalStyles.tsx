@@ -1,5 +1,3 @@
-// c:/Users/user/Desktop/HANPUM-PJT/frontend/src/styles/globalStyles.tsx
-
 import { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
 import { colors } from "./colorPalette";
