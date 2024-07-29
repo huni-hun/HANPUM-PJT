@@ -1,13 +1,15 @@
 import styled from 'styled-components';
-import { colors } from '../styles/colorPalette';
+
+import { colors } from '@styles/colorPalette';
 import Flex from '@components/common/Flex';
+import Text from '@components/common/Text';
 
 function LoginPage() {
   return (
     <LoginPageContainer>
       <Flex direction="column">
-        <span>안녕</span>
-        <span>하세요</span>
+        <Text typography="t3">안녕</Text>
+        <Text color="green">하세요</Text>
       </Flex>
     </LoginPageContainer>
   );
