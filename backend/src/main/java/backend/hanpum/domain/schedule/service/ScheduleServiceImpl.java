@@ -2,21 +2,21 @@ package backend.hanpum.domain.schedule.service;
 
 import backend.hanpum.domain.course.entity.Course;
 import backend.hanpum.domain.course.repository.CourseRepository;
-import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
-import backend.hanpum.domain.schedule.dto.requestDto.ScheduleDayReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.ScheduleRunReqDto;
+import backend.hanpum.domain.schedule.dto.requestDto.ScheduleStartReqDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
 import backend.hanpum.domain.schedule.entity.Schedule;
+import backend.hanpum.domain.schedule.entity.ScheduleDay;
+import backend.hanpum.domain.schedule.repository.ScheduleDayRepository;
 import backend.hanpum.domain.schedule.repository.ScheduleRepository;
 import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
 import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -24,6 +24,7 @@ import java.util.List;
 public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final ScheduleDayRepository scheduleDayRepository;
     private final CourseRepository courseRepository;
     private final MemberRepository memberRepository;
 
@@ -57,7 +58,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public Long startAndStopSchedule(ScheduleRunReqDto scheduleRunReqDto) {
+    public Long startAndStopSchedule(ScheduleStartReqDto scheduleRunReqDto) {
         Schedule schedule = scheduleRepository.findById(scheduleRunReqDto.getScheduleId()).orElseThrow(ScheduleNotFoundException::new);
 //        Member member = memberRepository.findById(schedulePostReqDto.getMemberId()).orElseThrow(MemberNotFoundException::new)
 
@@ -69,6 +70,18 @@ public class ScheduleServiceImpl implements ScheduleService {
         scheduleRepository.save(schedule);
 
         return schedule.getId();
+    }
+
+    @Override
+    public Long runAndStop(ScheduleRunReqDto scheduleRunReqDto) {
+        ScheduleDay scheduleDay = scheduleDayRepository.findById(scheduleRunReqDto.getScheduleDayId()).orElseThrow(ScheduleDayNotFoundException::new);
+        if (scheduleDay.isRunning()) {
+            scheduleDay.setRunning(false);
+        }else{
+            scheduleDay.setRunning(true);
+        }
+        scheduleDayRepository.save(scheduleDay);
+        return scheduleDay.getId();
     }
 
 

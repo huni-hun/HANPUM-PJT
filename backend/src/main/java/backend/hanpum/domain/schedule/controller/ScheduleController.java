@@ -2,6 +2,7 @@ package backend.hanpum.domain.schedule.controller;
 
 import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.ScheduleRunReqDto;
+import backend.hanpum.domain.schedule.dto.requestDto.ScheduleStartReqDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
 import backend.hanpum.domain.schedule.service.ScheduleService;
@@ -49,8 +50,15 @@ public class ScheduleController {
 
     @Operation(summary = "전체 일정 시작, 종료", description = "정해진 날짜가 되면 전체 일정 시작용, 시작상태에서 사용하면 종료")
     @PostMapping("/start")
-    public ResponseEntity<?> startAndStopSchedule(ScheduleRunReqDto scheduleRunReqDto) {
+    public ResponseEntity<?> startAndStopSchedule(ScheduleStartReqDto scheduleRunReqDto) {
         Long scheduleId = scheduleService.startAndStopSchedule(scheduleRunReqDto);
         return response.success(ResponseCode.SCHEDULE_STATE_CHANGED, scheduleId);
+    }
+
+    @Operation(summary = "일차별 일정 상태 전환", description = "쉴때, 걸을때 구분할 수 있는 트리거")
+    @PostMapping("/run")
+    public ResponseEntity<?> runAndStop(@RequestBody ScheduleRunReqDto scheduleRunReqDto){
+        scheduleService.runAndStop(scheduleRunReqDto);
+        return response.success(ResponseCode.SCHEDULE_RUN_STATE_CHANGED);
     }
 }
