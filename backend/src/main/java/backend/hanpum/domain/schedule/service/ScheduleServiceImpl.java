@@ -57,7 +57,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public Long runAndStopSchedule(ScheduleRunReqDto scheduleRunReqDto) {
+    public Long startAndStopSchedule(ScheduleRunReqDto scheduleRunReqDto) {
         Schedule schedule = scheduleRepository.findById(scheduleRunReqDto.getScheduleId()).orElseThrow(ScheduleNotFoundException::new);
 //        Member member = memberRepository.findById(schedulePostReqDto.getMemberId()).orElseThrow(MemberNotFoundException::new)
 

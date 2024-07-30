@@ -1,6 +1,5 @@
 package backend.hanpum.domain.schedule.controller;
 
-import backend.hanpum.domain.schedule.dto.requestDto.ScheduleDayReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.ScheduleRunReqDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
@@ -48,10 +47,10 @@ public class ScheduleController {
         return response.success(ResponseCode.SCHEDULE_DAY_FETCHED, result);
     }
 
-    @Operation(summary = "일정 진행, 정지", description = "일정이 진행중이면 정지, 정지중이면 진행")
-    @PostMapping("/run")
-    public ResponseEntity<?> runAndStopSchedule(ScheduleRunReqDto scheduleRunReqDto) {
-        Long scheduleId = scheduleService.runAndStopSchedule(scheduleRunReqDto);
+    @Operation(summary = "전체 일정 시작, 종료", description = "정해진 날짜가 되면 전체 일정 시작용, 시작상태에서 사용하면 종료")
+    @PostMapping("/start")
+    public ResponseEntity<?> startAndStopSchedule(ScheduleRunReqDto scheduleRunReqDto) {
+        Long scheduleId = scheduleService.startAndStopSchedule(scheduleRunReqDto);
         return response.success(ResponseCode.SCHEDULE_STATE_CHANGED, scheduleId);
     }
 }

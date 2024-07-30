@@ -1,12 +1,8 @@
 package backend.hanpum.domain.schedule.repository.custom;
 
-import backend.hanpum.domain.course.entity.Waypoint;
-import backend.hanpum.domain.schedule.dto.requestDto.ScheduleDayReqDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleWayPointResDto;
-import backend.hanpum.domain.schedule.entity.ScheduleDay;
-import backend.hanpum.domain.schedule.entity.ScheduleWayPoint;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -15,10 +11,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static backend.hanpum.domain.course.entity.QCourseDay.courseDay;
+import static backend.hanpum.domain.course.entity.QWaypoint.waypoint;
 import static backend.hanpum.domain.schedule.entity.QSchedule.schedule;
 import static backend.hanpum.domain.schedule.entity.QScheduleDay.scheduleDay;
 import static backend.hanpum.domain.schedule.entity.QScheduleWayPoint.scheduleWayPoint;
-import static backend.hanpum.domain.course.entity.QWaypoint.waypoint;
 
 @RequiredArgsConstructor
 public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {

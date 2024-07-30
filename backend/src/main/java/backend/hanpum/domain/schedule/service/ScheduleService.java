@@ -26,8 +26,8 @@ public interface ScheduleService {
 
     // 모임 일정 가져오기
 
-    // 전체 일정 진행, 정지
-    Long runAndStopSchedule(ScheduleRunReqDto scheduleRunReqDto);
+    // 전체 일정 시작, 종료
+    Long startAndStopSchedule(ScheduleRunReqDto scheduleRunReqDto);
 
     // 일차별 일정 진행, 정지
 }
