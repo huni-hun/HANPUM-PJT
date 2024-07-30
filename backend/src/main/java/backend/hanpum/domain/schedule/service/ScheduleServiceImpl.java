@@ -14,6 +14,7 @@ import backend.hanpum.domain.schedule.repository.ScheduleDayRepository;
 import backend.hanpum.domain.schedule.repository.ScheduleRepository;
 import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
 import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final CourseRepository courseRepository;
     private final MemberRepository memberRepository;
 
+    @Transactional
     @Override
     public Long createSchedule(SchedulePostReqDto schedulePostReqDto) {
 
@@ -45,18 +47,21 @@ public class ScheduleServiceImpl implements ScheduleService {
         return schedule.getId();
     }
 
+    @Transactional
     @Override
     public List<ScheduleResDto> getMyScheduleList(Long memberId) {
         List<ScheduleResDto> scheduleResDtoList = scheduleRepository.getMyScheduleByMemberId(memberId).orElseThrow(ScheduleNotFoundException::new);
         return scheduleResDtoList;
     }
 
+    @Transactional
     @Override
     public ScheduleDayResDto getMyScheduleDay(Long ScheduleId, int day) {
         ScheduleDayResDto scheduleDayResDto = scheduleRepository.getScheduleDayResDto(ScheduleId, day).orElseThrow(ScheduleDayNotFoundException::new);
         return scheduleDayResDto;
     }
 
+    @Transactional
     @Override
     public Long startAndStopSchedule(ScheduleStartReqDto scheduleRunReqDto) {
         Schedule schedule = scheduleRepository.findById(scheduleRunReqDto.getScheduleId()).orElseThrow(ScheduleNotFoundException::new);
@@ -72,6 +77,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         return schedule.getId();
     }
 
+    @Transactional
     @Override
     public Long runAndStop(ScheduleRunReqDto scheduleRunReqDto) {
         ScheduleDay scheduleDay = scheduleDayRepository.findById(scheduleRunReqDto.getScheduleDayId()).orElseThrow(ScheduleDayNotFoundException::new);
