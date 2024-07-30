@@ -18,7 +18,7 @@ public interface ScheduleService {
     List<ScheduleResDto> getMyScheduleList(Long memberId);
 
     // 일차별 일정 조회
-    ScheduleDayResDto getMyScheduleDay(ScheduleDayReqDto scheduleDayReqDto);
+    ScheduleDayResDto getMyScheduleDay(Long ScheduleId, int day);
 
     // 일정 삭제
 

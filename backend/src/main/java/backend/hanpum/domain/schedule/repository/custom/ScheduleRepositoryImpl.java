@@ -41,7 +41,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     }
 
     @Override
-    public Optional<ScheduleDayResDto> getScheduleDayResDto(ScheduleDayReqDto scheduleDayReqDto) {
+    public Optional<ScheduleDayResDto> getScheduleDayResDto(Long scheduleId, int day) {
         return Optional.ofNullable(query.select(
                         Projections.constructor(ScheduleDayResDto.class,
                                 scheduleDay.id,
@@ -65,7 +65,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .leftJoin(scheduleDay.courseDay, courseDay)
                 .leftJoin(scheduleDay.scheduleWayPointList, scheduleWayPoint)
                 .leftJoin(scheduleWayPoint.waypoint, waypoint)
-                .where(scheduleDay.schedule.id.eq(scheduleDayReqDto.getScheduleId()).and(scheduleDay.courseDay.dayNumber.eq(scheduleDayReqDto.getDay())))
+                .where(scheduleDay.schedule.id.eq(scheduleId).and(scheduleDay.courseDay.dayNumber.eq(day)))
                 .fetchOne());
     }
 }

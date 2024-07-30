@@ -27,7 +27,7 @@ public class ScheduleController {
 
     @Operation(summary = "개인 일정 생성", description = "개인 일정 생성")
     @PostMapping
-    public ResponseEntity<?> createSchedule(SchedulePostReqDto schedulePostReqDto){
+    public ResponseEntity<?> createSchedule(SchedulePostReqDto schedulePostReqDto) {
         Long scheduleId = scheduleService.createSchedule(schedulePostReqDto);
         return response.success(ResponseCode.SCHEDULE_CREATED, scheduleId);
     }
@@ -41,15 +41,16 @@ public class ScheduleController {
     }
 
     @Operation(summary = "일차별 일정 조회", description = "일차별 일정 조회")
-    @GetMapping
-    public ResponseEntity<?> getMyScheduleDay(@RequestParam ScheduleDayReqDto scheduleDayReqDto) {
-        ScheduleDayResDto result = scheduleService.getMyScheduleDay(scheduleDayReqDto);
+    @GetMapping("/day/{dayNumber}")
+    public ResponseEntity<?> getMyScheduleDay(@RequestParam Long scheduleId,
+                                              @PathVariable(name = "dayNumber") int day) {
+        ScheduleDayResDto result = scheduleService.getMyScheduleDay(scheduleId, day);
         return response.success(ResponseCode.SCHEDULE_DAY_FETCHED, result);
     }
 
     @Operation(summary = "일정 진행, 정지", description = "일정이 진행중이면 정지, 정지중이면 진행")
     @PostMapping("/run")
-    public ResponseEntity<?> runAndStopSchedule(ScheduleRunReqDto scheduleRunReqDto){
+    public ResponseEntity<?> runAndStopSchedule(ScheduleRunReqDto scheduleRunReqDto) {
         Long scheduleId = scheduleService.runAndStopSchedule(scheduleRunReqDto);
         return response.success(ResponseCode.SCHEDULE_STATE_CHANGED, scheduleId);
     }

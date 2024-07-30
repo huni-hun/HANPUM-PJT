@@ -51,8 +51,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public ScheduleDayResDto getMyScheduleDay(ScheduleDayReqDto scheduleDayReqDto) {
-        ScheduleDayResDto scheduleDayResDto = scheduleRepository.getScheduleDayResDto(scheduleDayReqDto).orElseThrow(ScheduleDayNotFoundException::new);
+    public ScheduleDayResDto getMyScheduleDay(Long ScheduleId, int day) {
+        ScheduleDayResDto scheduleDayResDto = scheduleRepository.getScheduleDayResDto(ScheduleId, day).orElseThrow(ScheduleDayNotFoundException::new);
         return scheduleDayResDto;
     }
 
