@@ -11,6 +11,7 @@ import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
 import backend.hanpum.domain.schedule.entity.Schedule;
 import backend.hanpum.domain.schedule.repository.ScheduleRepository;
+import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
 import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -50,8 +51,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<ScheduleDayResDto> getMyScheduleDayList(ScheduleDayReqDto scheduleDayReqDto) {
-        return List.of();
+    public ScheduleDayResDto getMyScheduleDay(ScheduleDayReqDto scheduleDayReqDto) {
+        ScheduleDayResDto scheduleDayResDto = scheduleRepository.getScheduleDayResDto(scheduleDayReqDto).orElseThrow(ScheduleDayNotFoundException::new);
+        return scheduleDayResDto;
     }
 
     @Override
