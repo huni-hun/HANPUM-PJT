@@ -1,8 +1,11 @@
 package backend.hanpum.domain.schedule.service;
 
+import backend.hanpum.domain.schedule.dto.requestDto.ScheduleDayReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.ScheduleRunReqDto;
+import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
+import backend.hanpum.domain.schedule.entity.ScheduleDay;
 
 import java.util.List;
 
@@ -15,6 +18,7 @@ public interface ScheduleService {
     List<ScheduleResDto> getMyScheduleList(Long memberId);
 
     // 일차별 일정 조회
+    List<ScheduleDayResDto> getMyScheduleDayList(ScheduleDayReqDto scheduleDayReqDto);
 
     // 일정 삭제
 

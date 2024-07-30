@@ -4,8 +4,10 @@ import backend.hanpum.domain.course.entity.Course;
 import backend.hanpum.domain.course.repository.CourseRepository;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
+import backend.hanpum.domain.schedule.dto.requestDto.ScheduleDayReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.ScheduleRunReqDto;
+import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
 import backend.hanpum.domain.schedule.entity.Schedule;
 import backend.hanpum.domain.schedule.repository.ScheduleRepository;
@@ -45,6 +47,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     public List<ScheduleResDto> getMyScheduleList(Long memberId) {
         List<ScheduleResDto> scheduleResDtoList = scheduleRepository.getMyScheduleByMemberId(memberId).orElseThrow(ScheduleNotFoundException::new);
         return scheduleResDtoList;
+    }
+
+    @Override
+    public List<ScheduleDayResDto> getMyScheduleDayList(ScheduleDayReqDto scheduleDayReqDto) {
+        return List.of();
     }
 
     @Override

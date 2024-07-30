@@ -20,7 +20,7 @@ public class ScheduleWayPoint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "schedule_waypoint_id")
-    private Long scheduleWayPointId;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Waypoint waypoint;
