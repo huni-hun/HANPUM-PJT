@@ -61,4 +61,11 @@ public class ScheduleController {
         scheduleService.runAndStop(scheduleRunReqDto);
         return response.success(ResponseCode.SCHEDULE_RUN_STATE_CHANGED);
     }
+
+    @Operation(summary = "일정 삭제", description = "일정 삭제")
+    @DeleteMapping
+    public ResponseEntity<?> deleteSchedule(Long scheduleId) {
+        scheduleService.deleteSchedule(scheduleId);
+        return response.success(ResponseCode.SCHEDULED_DELETED);
+    }
 }

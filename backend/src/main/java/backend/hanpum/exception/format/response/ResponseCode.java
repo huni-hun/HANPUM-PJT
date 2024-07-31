@@ -17,6 +17,7 @@ public enum ResponseCode {
     SCHEDULE_DAY_FETCHED(HttpStatus.OK, "세부일정이 성공적으로 조회되었습니다."),
     SCHEDULE_STATE_CHANGED(HttpStatus.OK, "진행 상태가 성공적으로 변경되었습니다."),
     SCHEDULE_RUN_STATE_CHANGED(HttpStatus.OK, "진행 상태가 성공적으로 변경되었습니다."),
+    SCHEDULED_DELETED(HttpStatus.OK, "일정이 성공적으로 삭제되었습니다."),
 
     /* 경로 */
     COURSE_DETAIL_FETCHED(HttpStatus.OK, "경로 상세정보가 성공적으로 조회되었습니다."),

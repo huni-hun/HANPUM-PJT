@@ -62,6 +62,11 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleDayResDto;
     }
 
+    @Override
+    public void deleteSchedule(Long ScheduleId) {
+        scheduleRepository.deleteById(ScheduleId);
+    }
+
     @Transactional
     @Override
     public Long startAndStopSchedule(ScheduleStartReqDto scheduleRunReqDto) {

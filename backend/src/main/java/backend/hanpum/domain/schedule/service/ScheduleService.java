@@ -20,6 +20,7 @@ public interface ScheduleService {
     ScheduleDayResDto getMyScheduleDay(Long ScheduleId, int day);
 
     // 일정 삭제
+    void deleteSchedule(Long ScheduleId);
 
     // 모임 일정 생성하기
 
