@@ -1,4 +1,4 @@
-import * as B from "./Button.styled";
+import * as B from './Button.styled';
 
 interface ButtonProps {
   width: number;

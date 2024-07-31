@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const SelectBox = styled.div<{
   width: number;
@@ -13,7 +13,7 @@ export const SelectBox = styled.div<{
   height: ${(props) => props.height}vh;
   border: ${(props) => props.border};
   border-radius: ${(props) => props.radius}rem;
-  color: #${(props) => props.fontColor || "#ffffff"};
+  color: #${(props) => props.fontColor || '#ffffff'};
   font-size: ${(props) => props.fontSize || 1}rem;
   display: flex;
   align-items: center;
@@ -28,9 +28,9 @@ export const SelectList = styled.ul<{
   height: number;
 }>`
   width: 100%;
-  max-height: ${(props) => (props.isOpen ? "none" : "0")};
+  max-height: ${(props) => (props.isOpen ? 'none' : '0')};
   overflow: hidden;
-  border: ${(props) => (props.isOpen ? props.border : "")};
+  border: ${(props) => (props.isOpen ? props.border : '')};
   border-radius: ${(props) => props.radius}rem;
   display: flex;
   flex-direction: column;
@@ -43,7 +43,7 @@ export const SelectLabel = styled.label<{
   fontSize: number;
   fontColor: string;
 }>`
-  color: #${(props) => props.fontColor || "#ffffff"};
+  color: #${(props) => props.fontColor || '#ffffff'};
   font-size: ${(props) => props.fontSize || 1}rem;
 `;
 
