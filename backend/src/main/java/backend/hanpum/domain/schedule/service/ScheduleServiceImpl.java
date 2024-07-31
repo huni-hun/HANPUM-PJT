@@ -10,6 +10,7 @@ import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
 import backend.hanpum.domain.schedule.entity.Schedule;
 import backend.hanpum.domain.schedule.entity.ScheduleDay;
+import backend.hanpum.domain.schedule.entity.ScheduleWayPoint;
 import backend.hanpum.domain.schedule.repository.ScheduleDayRepository;
 import backend.hanpum.domain.schedule.repository.ScheduleRepository;
 import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
@@ -41,9 +42,18 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .type("private")
                 .date(schedulePostReqDto.getStartDate())
 //                .member(member)
+                .course(course)
+                .build();
+        scheduleRepository.save(schedule);
+
+        // ScheduleDay 생성 로직 for문으로 전체 courseDay 조회 후 생성
+        ScheduleDay scheduleDay = ScheduleDay.builder()
                 .build();
 
-        scheduleRepository.save(schedule);
+        // ScheduleWayPoint 생성 로직, for문으로 일차별 일정 내 wayPoint 조회 후 생성
+        ScheduleWayPoint scheduleWayPoint = ScheduleWayPoint.builder()
+                .build();
+
         return schedule.getId();
     }
 
