@@ -14,7 +14,7 @@ import backend.hanpum.domain.schedule.repository.ScheduleDayRepository;
 import backend.hanpum.domain.schedule.repository.ScheduleRepository;
 import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
 import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -47,14 +47,15 @@ public class ScheduleServiceImpl implements ScheduleService {
         return schedule.getId();
     }
 
-    @Transactional
+
+    @Transactional(readOnly = true)
     @Override
     public List<ScheduleResDto> getMyScheduleList(Long memberId) {
         List<ScheduleResDto> scheduleResDtoList = scheduleRepository.getMyScheduleByMemberId(memberId).orElseThrow(ScheduleNotFoundException::new);
         return scheduleResDtoList;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public ScheduleDayResDto getMyScheduleDay(Long ScheduleId, int day) {
         ScheduleDayResDto scheduleDayResDto = scheduleRepository.getScheduleDayResDto(ScheduleId, day).orElseThrow(ScheduleDayNotFoundException::new);
