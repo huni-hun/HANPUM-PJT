@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ScheduleRunReqDto {
-    Long ScheduleDayId;
+public class ScheduleDayReqDto {
+    Long ScheduleId;
+    int day;
 }

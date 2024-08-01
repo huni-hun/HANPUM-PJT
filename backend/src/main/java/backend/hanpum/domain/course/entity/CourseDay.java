@@ -1,5 +1,6 @@
 package backend.hanpum.domain.course.entity;
 
+import backend.hanpum.domain.schedule.entity.ScheduleDay;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,4 +43,7 @@ public class CourseDay {
     @Builder.Default
     @OneToMany(mappedBy = "courseDay", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Waypoint> waypoints = new ArrayList<>();
+
+    @OneToMany(mappedBy = "courseDay", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ScheduleDay> scheduleDayList = new ArrayList<>();
 }

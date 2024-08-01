@@ -1,10 +1,14 @@
 package backend.hanpum.domain.course.entity;
 
+import backend.hanpum.domain.schedule.entity.ScheduleWayPoint;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -51,4 +55,7 @@ public class Waypoint {
 
     @Column(name = "calorie", length = 10)
     private String calorie;
+
+    @OneToMany(mappedBy = "waypoint", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ScheduleWayPoint> scheduleWayPointList = new ArrayList<>();
 }

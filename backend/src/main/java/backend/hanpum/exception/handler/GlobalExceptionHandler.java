@@ -1,6 +1,7 @@
 package backend.hanpum.exception.handler;
 
 import backend.hanpum.exception.exception.auth.*;
+import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
 import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
 import backend.hanpum.exception.exception.test.TestNotFoundException;
 import backend.hanpum.exception.format.code.ApiResponse;
@@ -29,6 +30,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ScheduleNotFoundException.class)
     protected ResponseEntity<?> handle(ScheduleNotFoundException e) {
         log.error("ScheduleNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(ScheduleDayNotFoundException.class)
+    protected ResponseEntity<?> handle(ScheduleDayNotFoundException e) {
+        log.error("ScheduleDayNotFoundException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }
