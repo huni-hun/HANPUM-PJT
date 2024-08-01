@@ -6,6 +6,7 @@ import {
 } from 'react';
 import Input from '@common/Input/Input';
 import Text from '@common/Text';
+import Flex from './Flex';
 
 interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: React.ReactNode;
@@ -34,25 +35,28 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     };
 
     return (
-      <div>
-        {label ? (
-          <Text
-            typography="t7"
-            display="inline-block"
-            style={{ marginBottom: 6 }}
-          >
-            {label}
-          </Text>
-        ) : null}
-        <Input
-          ref={ref}
-          aria-invalid={hasError}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          {...props}
-        />
+      <Flex justify="space-between">
+        <div>
+          {label ? (
+            <Text
+              typography="t7"
+              display="inline-block"
+              style={{ marginBottom: 6 }}
+            >
+              {label}
+            </Text>
+          ) : null}
 
-        {helpMessage && (
+          <Input
+            ref={ref}
+            aria-invalid={hasError}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            {...props}
+          />
+        </div>
+
+        {/* {helpMessage && (
           <Text
             typography="t7"
             color={labelColor}
@@ -61,8 +65,8 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
           >
             {helpMessage}
           </Text>
-        )}
-      </div>
+        )} */}
+      </Flex>
     );
   },
 );

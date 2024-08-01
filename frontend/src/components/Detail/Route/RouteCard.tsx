@@ -1,10 +1,10 @@
-import * as C from "./RouteCard.styled";
+import * as C from './RouteCard.styled';
 
-import Icon from "../../common/Icon/Icon";
+import Icon from '../../common/Icon/Icon';
 
 function RouteCard() {
   return (
-    <C.Card img={""}>
+    <C.Card img={''}>
       <C.TopContent>
         <C.ContentContainer>
           <C.Content>

@@ -5,13 +5,19 @@ interface FlexProps {
   align?: CSSProperties['alignItems'];
   justify?: CSSProperties['justifyContent'];
   direction?: CSSProperties['flexDirection'];
+  gap?: CSSProperties['gap'];
+  wrap?: CSSProperties['flexWrap'];
 }
 
-const Flex = styled.div<FlexProps>(({ align, justify, direction }) => ({
-  display: 'flex',
-  alignItems: align,
-  justifyContent: justify,
-  flexDirection: direction,
-}));
+const Flex = styled.div<FlexProps>(
+  ({ align, justify, direction, gap, wrap }) => ({
+    display: 'flex',
+    alignItems: align,
+    justifyContent: justify,
+    flexDirection: direction,
+    gap: gap,
+    wrap: wrap,
+  }),
+);
 
 export default Flex;
