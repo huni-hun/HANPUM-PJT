@@ -35,28 +35,26 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     };
 
     return (
-      <Flex justify="space-between">
-        <div>
-          {label ? (
-            <Text
-              typography="t7"
-              display="inline-block"
-              style={{ marginBottom: 6 }}
-            >
-              {label}
-            </Text>
-          ) : null}
+      <div>
+        {label ? (
+          <Text
+            typography="t7"
+            display="inline-block"
+            style={{ marginBottom: 6 }}
+          >
+            {label}
+          </Text>
+        ) : null}
 
-          <Input
-            ref={ref}
-            aria-invalid={hasError}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            {...props}
-          />
-        </div>
+        <Input
+          ref={ref}
+          aria-invalid={hasError}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          {...props}
+        />
 
-        {/* {helpMessage && (
+        {helpMessage && (
           <Text
             typography="t7"
             color={labelColor}
@@ -65,8 +63,8 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
           >
             {helpMessage}
           </Text>
-        )} */}
-      </Flex>
+        )}
+      </div>
     );
   },
 );
