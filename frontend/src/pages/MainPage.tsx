@@ -1,7 +1,12 @@
+import { BottomTab } from '@/components/common/BottomTab/BottomTab.styled';
 import styled from 'styled-components';
 
 function MainPage() {
-  return <MainPageContainer>Main Page</MainPageContainer>;
+  return (
+    <MainPageContainer>
+      <BottomTab />
+    </MainPageContainer>
+  );
 }
 
 export default MainPage;

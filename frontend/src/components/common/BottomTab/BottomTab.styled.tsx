@@ -11,6 +11,7 @@ export const BottomTab = styled.div`
 export const BottomTabItem = styled.div`
   width: 25vw;
   height: 6vh;
+  background-color: pink;
   display: flex;
   align-items: center;
   justify-content: center;

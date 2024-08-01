@@ -3,7 +3,7 @@ import Icon from '../Icon/Icon';
 import { useState } from 'react';
 
 function BottomTab() {
-  const [curTab, setCurTab] = useState<string>('');
+  const [curTab, setCurTab] = useState<string>('Home');
 
   return (
     <Bt.BottomTab>
