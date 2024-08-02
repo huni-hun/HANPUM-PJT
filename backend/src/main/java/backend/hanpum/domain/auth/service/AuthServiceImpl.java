@@ -1,7 +1,12 @@
 package backend.hanpum.domain.auth.service;
 
+import backend.hanpum.config.jwt.JwtProvider;
+import backend.hanpum.config.redis.RedisDao;
 import backend.hanpum.domain.auth.dto.requestDto.*;
+import backend.hanpum.domain.auth.dto.responseDto.LoginResDto;
+import backend.hanpum.domain.auth.dto.responseDto.TokenResDto;
 import backend.hanpum.domain.member.entity.Member;
+import backend.hanpum.domain.member.enums.MemberType;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.auth.*;
 import ch.qos.logback.core.net.SyslogOutputStream;
@@ -25,6 +30,8 @@ public class AuthServiceImpl implements AuthService {
     private final StringRedisTemplate stringRedisTemplate;
     private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
+    private final RedisDao redisDao;
 
     private static final String EMAIL_KEY_PREFIX = "email:";
     private static final String LOGIN_ID_KEY_PREFIX = "login_id:";
@@ -116,6 +123,23 @@ public class AuthServiceImpl implements AuthService {
         stringRedisTemplate.delete(EMAIL_KEY_PREFIX + signUpReqDto.getEmail());
         stringRedisTemplate.delete(LOGIN_ID_KEY_PREFIX + signUpReqDto.getLoginId());
         stringRedisTemplate.delete(NICKNAME_KEY_PREFIX + signUpReqDto.getNickname());
+    }
+
+    @Override
+    public LoginResDto login(LoginReqDto loginReqDto) {
+        Member member = memberRepository.findMemberByLoginId(loginReqDto.getLoginId())
+                .orElseThrow(LoginInfoInvalidException::new);
+        if (!passwordEncoder.matches(loginReqDto.getPassword(), member.getPassword())) {
+            throw new LoginInfoInvalidException();
+        }
+        TokenResDto tokenResDto = jwtProvider.createTokenByLogin(member.getEmail(), member.getMemberType());
+        return new LoginResDto(member.getEmail(), tokenResDto);
+    }
+
+    @Override
+    public void logout(String accessToken) {
+        redisDao.deleteRefreshToken(jwtProvider.getEmailFromJwt(accessToken));
+        jwtProvider.addToBlacklist(accessToken);
     }
 
     private void checkLoginIdAuthenticated(String loginId){
