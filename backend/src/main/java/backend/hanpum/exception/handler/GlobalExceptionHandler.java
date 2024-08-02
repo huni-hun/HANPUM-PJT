@@ -111,4 +111,39 @@ public class GlobalExceptionHandler {
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }
+
+    @ExceptionHandler(EmailNotFoundException.class)
+    protected ResponseEntity<?> handle(EmailNotFoundException e) {
+        log.error("EmailNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(LoginInfoInvalidException.class)
+    protected ResponseEntity<?> handle(LoginInfoInvalidException e) {
+        log.error("LoginInfoInvalidException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(TokenInvalidException.class)
+    protected ResponseEntity<?> handle(TokenInvalidException e) {
+        log.error("TokenInvalidException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(TokenBlackListedException.class)
+    protected ResponseEntity<?> handle(TokenBlackListedException e) {
+        log.error("TokenBlackListedException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    protected ResponseEntity<?> handle(TokenExpiredException e) {
+        log.error("TokenExpiredException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
 }
