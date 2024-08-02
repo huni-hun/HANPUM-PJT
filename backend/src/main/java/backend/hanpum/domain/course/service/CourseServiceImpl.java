@@ -51,6 +51,6 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Transactional
     public void deleteInterestCourse(Long courseId, Long memberId) {
-        interestCourseRepository.deleteByMemberIdAndCourseId(courseId, memberId);
+        interestCourseRepository.deleteByMember_MemberIdAndCourse_CourseId(courseId, memberId);
     }
 }
