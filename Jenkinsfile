@@ -35,7 +35,6 @@ pipeline {
                         def commitMessage = sh(script: "git log -1 --pretty=%B", returnStdout: true).trim()
                         if (commitMessage.contains("[BE]")) {
                             sh """
-                                mkdir -p ~/${PROJECT_NAME}/backend/src/main/resources
                                 wget -O ~/${PROJECT_NAME}/backend/src/main/resources/application.yml --header="Authorization: token ${GITHUB_TOKEN}" "https://raw.githubusercontent.com/HANPUM-PJT/config/main/application.yml"
                             """
                         } else if (commitMessage.contains("[FE]")) {
@@ -162,7 +161,7 @@ pipeline {
                     // slackSend(channel: env.SLACK_CHANNEL, message: "Build or deployment failed! Commit by: ${GIT_COMMIT_AUTHOR}", tokenCredentialId: env.SLACK_CREDENTIAL_ID)
                 }
             }
-            deleteDir()
+            // deleteDir()
         }
     }
 }
