@@ -1,6 +1,7 @@
 package backend.hanpum.exception.handler;
 
 import backend.hanpum.exception.exception.auth.*;
+import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
 import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
 import backend.hanpum.exception.exception.test.TestNotFoundException;
 import backend.hanpum.exception.format.code.ApiResponse;
@@ -29,6 +30,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ScheduleNotFoundException.class)
     protected ResponseEntity<?> handle(ScheduleNotFoundException e) {
         log.error("ScheduleNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(ScheduleDayNotFoundException.class)
+    protected ResponseEntity<?> handle(ScheduleDayNotFoundException e) {
+        log.error("ScheduleDayNotFoundException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }
@@ -100,6 +108,41 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmailNotAuthenticatedException.class)
     protected ResponseEntity<?> handle(EmailNotAuthenticatedException e) {
         log.error("EmailNotAuthenticatedException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(EmailNotFoundException.class)
+    protected ResponseEntity<?> handle(EmailNotFoundException e) {
+        log.error("EmailNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(LoginInfoInvalidException.class)
+    protected ResponseEntity<?> handle(LoginInfoInvalidException e) {
+        log.error("LoginInfoInvalidException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(TokenInvalidException.class)
+    protected ResponseEntity<?> handle(TokenInvalidException e) {
+        log.error("TokenInvalidException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(TokenBlackListedException.class)
+    protected ResponseEntity<?> handle(TokenBlackListedException e) {
+        log.error("TokenBlackListedException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    protected ResponseEntity<?> handle(TokenExpiredException e) {
+        log.error("TokenExpiredException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }

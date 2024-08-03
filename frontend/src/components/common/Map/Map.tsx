@@ -1,5 +1,5 @@
-import { styled } from "styled-components";
-import { useEffect } from "react";
+import { styled } from 'styled-components';
+import { useEffect } from 'react';
 
 declare global {
   interface Window {
@@ -14,23 +14,23 @@ interface MapProps {
 
 function Map(props: MapProps) {
   const setMap = () => {
-    const mapScript = document.createElement("script");
+    const mapScript = document.createElement('script');
     mapScript.async = true;
     mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.key}b&autoload=false`;
     document.head.appendChild(mapScript);
 
     const onLoadKakaoMap = () => {
       window.kakao.maps.load(() => {
-        const container = document.getElementById("kakaoMap");
+        const container = document.getElementById('kakaoMap');
         const options = {
           center: new window.kakao.maps.LatLng(props.latitude, props.longitude),
         };
         const map = new window.kakao.maps.Map(container, options);
       });
     };
-    mapScript.addEventListener("load", onLoadKakaoMap);
+    mapScript.addEventListener('load', onLoadKakaoMap);
 
-    return () => mapScript.removeEventListener("load", onLoadKakaoMap);
+    return () => mapScript.removeEventListener('load', onLoadKakaoMap);
   };
 
   useEffect(() => {

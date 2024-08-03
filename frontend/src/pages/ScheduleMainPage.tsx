@@ -1,13 +1,13 @@
-import { useState } from "react";
-import * as S from "../components/Detail/Schedule/SchduleMainPage.styled";
-import Button from "../components/common/Button/Button";
+import { useState } from 'react';
+import * as S from '../components/Detail/Schedule/SchduleMainPage.styled';
+import Button from '../components/common/Button/Button';
 
-import PlusIcon from "../assets/PlusIcon.svg";
+import PlusIcon from '../assets/PlusIcon.svg';
 
 function ScheduleMainPage() {
   const BtnClick = () => {};
 
-  const [isSelected, setIsSelected] = useState<String>("Mine");
+  const [isSelected, setIsSelected] = useState<String>('Mine');
 
   return (
     <S.Container>
@@ -20,25 +20,25 @@ function ScheduleMainPage() {
       <S.SchduleTypeContainer>
         <S.SchduleTypeBox>
           <S.ScheduleType
-            isSelected={isSelected === "Proceeding"}
+            isSelected={isSelected === 'Proceeding'}
             onClick={() => {
-              setIsSelected("Proceeding");
+              setIsSelected('Proceeding');
             }}
           >
             진행중
           </S.ScheduleType>
           <S.ScheduleType
-            isSelected={isSelected === "Mine"}
+            isSelected={isSelected === 'Mine'}
             onClick={() => {
-              setIsSelected("Mine");
+              setIsSelected('Mine');
             }}
           >
             내 일정
           </S.ScheduleType>
           <S.ScheduleType
-            isSelected={isSelected === "class"}
+            isSelected={isSelected === 'class'}
             onClick={() => {
-              setIsSelected("class");
+              setIsSelected('class');
             }}
           >
             모임일정
@@ -49,11 +49,11 @@ function ScheduleMainPage() {
         <Button
           width={80}
           height={9}
-          fontColor={"#000000"}
-          backgroundColor={"#ffffff"}
+          fontColor={'#000000'}
+          backgroundColor={'#ffffff'}
           radius={1}
           fontSize={1.5}
-          children={"개인 일정 추가"}
+          children={'개인 일정 추가'}
           onClick={BtnClick}
           color="#D9D9D9"
         />

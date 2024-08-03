@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@tanstack/react-query": "^5.50.1",
+    "@tanstack/react-query": "^5.51.21",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -12,11 +12,14 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@types/react-router-dom": "^5.3.3",
+    "babel-plugin-styled-components": "^2.1.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-query": "^3.39.3",
     "react-router-dom": "^6.24.1",
     "react-scripts": "5.0.1",
     "recoil": "^0.7.7",
+    "save-dev": "^0.0.1-security",
     "styled-components": "^6.1.11",
     "styled-reset": "^4.5.2",
     "typescript": "^4.9.5",
@@ -35,10 +38,12 @@
     "workbox-streams": "^6.6.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "craco eject",
+    "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
+    "lint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\""
   },
   "eslintConfig": {
     "extends": [
@@ -59,7 +64,17 @@
     ]
   },
   "devDependencies": {
+    "@babel/preset-react": "^7.24.7",
+    "@craco/craco": "^7.1.0",
+    "@testing-library/jest-dom": "^6.4.5",
+    "@types/react-query": "^1.2.8",
     "@types/styled-components": "^5.1.34",
-    "babel-plugin-styled-components": "^2.1.4"
+    "craco-alias": "^3.0.1",
+    "eslint": "^8.47.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react": "^7.33.2",
+    "prettier": "^3.3.3"
   }
 }

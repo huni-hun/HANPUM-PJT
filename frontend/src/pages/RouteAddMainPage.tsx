@@ -1,17 +1,18 @@
-import { useState } from "react";
-import Button from "../components/common/Button/Button";
-import Icon from "../components/common/Icon/Icon";
-import * as R from "../components/Detail/Route/RouteAddMainPage.styled";
-import Input from "../components/common/Input/Input";
+import { useState } from 'react';
+import Button from '../components/common/Button/Button';
+import Icon from '../components/common/Icon/Icon';
+import * as R from '../components/Detail/Route/RouteAddMainPage.styled';
+import Input from '../components/common/Input/Input';
 
 function RouteAddMainPage() {
   const [imgBoxClick, setImgBoxClick] = useState<boolean>(false);
   const [imgReady, setImgReady] = useState<boolean>(false);
-  const [explanationBoxClick, setExplanationBoxClick] = useState<boolean>(false);
+  const [explanationBoxClick, setExplanationBoxClick] =
+    useState<boolean>(false);
   const [explanationReady, setExplanationReady] = useState<boolean>(false);
 
-  const [routeTitle, setRouteTitle] = useState<string>("");
-  const [routeExplane, setRouteExplane] = useState<string>("");
+  const [routeTitle, setRouteTitle] = useState<string>('');
+  const [routeExplane, setRouteExplane] = useState<string>('');
 
   return (
     <R.Container>
@@ -47,7 +48,7 @@ function RouteAddMainPage() {
                   width={25}
                   height={6}
                   fontColor="ffffff"
-                  backgroundColor={imgReady ? "#1A823B" : "#D9D9D9"}
+                  backgroundColor={imgReady ? '#1A823B' : '#D9D9D9'}
                   radius={0.7}
                   fontSize={1.6}
                   children="등록"
@@ -84,22 +85,29 @@ function RouteAddMainPage() {
             </R.CardClosed>
           ) : (
             <R.ExplanationCardOpen>
-              <R.ExplanationCardTitle>경로명을 입력해주세요.</R.ExplanationCardTitle>
+              <R.ExplanationCardTitle>
+                경로명을 입력해주세요.
+              </R.ExplanationCardTitle>
               <Input
                 value={routeTitle}
-                size="sm"
                 width={78}
-                style={{ border: "0.2rem solid #d9d9d9", marginTop: "1rem", marginBottom: "1rem" }}
+                style={{
+                  border: '0.2rem solid #d9d9d9',
+                  marginTop: '1rem',
+                  marginBottom: '1rem',
+                }}
                 onChange={(e) => {
                   setRouteTitle(e.target.value);
                 }}
               />
-              <R.ExplanationCardTitle>경로를 간단하게 설명해주세요.</R.ExplanationCardTitle>
+              <R.ExplanationCardTitle>
+                경로를 간단하게 설명해주세요.
+              </R.ExplanationCardTitle>
               <R.ExplanationRoute
                 value={routeExplane}
                 onChange={(e) => {
                   setRouteExplane(e.target.value);
-                  if (routeTitle != "") {
+                  if (routeTitle != '') {
                     setExplanationReady(true);
                   }
                 }}
@@ -109,7 +117,7 @@ function RouteAddMainPage() {
                   width={25}
                   height={6}
                   fontColor="ffffff"
-                  backgroundColor={explanationReady ? "#1A823B" : "#D9D9D9"}
+                  backgroundColor={explanationReady ? '#1A823B' : '#D9D9D9'}
                   radius={0.7}
                   fontSize={1.6}
                   children="등록"

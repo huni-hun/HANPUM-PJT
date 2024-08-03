@@ -1,9 +1,9 @@
-import Icon from "../components/common/Icon/Icon";
-import * as Ra from "../components/Detail/Route/RouteAddPagePlace.styled";
+import Icon from '../components/common/Icon/Icon';
+import * as Ra from '../components/Detail/Route/RouteAddPagePlace.styled';
 
-import TestImg from "../assets/test.jpg";
-import Button from "../components/common/Button/Button";
-import Map from "../components/common/Map/Map";
+import TestImg from '../assets/test.jpg';
+import Button from '../components/common/Button/Button';
+import Map from '../components/common/Map/Map';
 
 function RouteAddPlacePage() {
   return (
@@ -20,7 +20,7 @@ function RouteAddPlacePage() {
       <Ra.PlaceBottomContainer>
         <Ra.PlaceContainer>
           <Ra.PlaceContent>
-            <Ra.PlaceImg src={TestImg} />
+            <Ra.PlaceImg src="" />
             <Ra.PlaceTextBox>
               <Ra.PlaceNameBox>
                 <Ra.PlaceName>대천 해수욕장</Ra.PlaceName>
