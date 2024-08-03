@@ -15,7 +15,7 @@ export default function Router() {
         <Route path="/main" element={<MainPage />} />
         <Route path="/schedule/main" element={<ScheduleMainPage />} />
         <Route path="/route/list" element={<RouteList />} />
-        <Route path="/route/main" element={<RouteAddMainPage />} />
+        <Route path="/route/addMain" element={<RouteAddMainPage />} />
         <Route path="/route/add" element={<RouteAddPlacePage />} />
       </Routes>
     </BrowserRouter>
