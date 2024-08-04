@@ -78,7 +78,7 @@ public class CourseServiceImpl implements CourseService {
                         .content(review.getContent())
                         .score(review.getScore())
                         .writeDate(review.getWriteDate())
-                        .like(0) // like 필드는 현재 정보가 없으므로 임의로 0 설정
+                        .like(review.getLikeCount())
                         .build();
                 courseReviewResDtoList.add(courseReviewResDto);
             }
