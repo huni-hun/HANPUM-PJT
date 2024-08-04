@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import Button from '../components/common/Button/Button';
-import Icon from '../components/common/Icon/Icon';
-import * as R from '../components/Detail/Route/RouteAddMainPage.styled';
-import Input from '../components/common/Input/Input';
+import Button from '../../components/common/Button/Button';
+import Icon from '../../components/common/Icon/Icon';
+import * as R from '../../components/Style/Route/RouteAddMainPage.styled';
+import Input from '../../components/common/Input/Input';
 
 function RouteAddMainPage() {
   const [imgBoxClick, setImgBoxClick] = useState<boolean>(false);

@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import * as S from '../components/Detail/Schedule/AddSchdulePage.styled';
-import Button from '../components/common/Button/Button';
-import PlusIcon from '../assets/PlusIcon.svg';
-import HeaderPrevIcon from '../assets/icons/headerPrevArrow.png';
-import HambergerIcon from '../assets/icons/hamburgerMenu.png';
-import Select from '../components/common/Select/Select';
+import * as S from '../../components/Style/Schedule/AddSchdulePage.styled';
+import Button from '../../components/common/Button/Button';
+import PlusIcon from '../../assets/PlusIcon.svg';
+import Icon from '../../components/common/Icon/Icon';
+import Select from '../../components/common/Select/Select';
 
 function AddSchedulePage() {
   const BtnClick = () => {
@@ -45,7 +44,7 @@ function AddSchedulePage() {
     <S.Container>
       <S.HeaderContainer>
         <S.HeaderContent>
-          <S.HeaderIcon src={HeaderPrevIcon} />
+          <Icon name="IconBack" size={20} />
           <S.HeaderTitle>일정을 등록해주세요</S.HeaderTitle>
           {/* <S.HeaderIcon src={HambergerIcon} /> */}
         </S.HeaderContent>

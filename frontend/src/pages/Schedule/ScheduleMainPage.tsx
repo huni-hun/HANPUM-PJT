@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import * as S from '../components/Detail/Schedule/SchduleMainPage.styled';
-import Button from '../components/common/Button/Button';
+import * as S from '../../components/Style/Schedule/SchduleMainPage.styled';
+import Button from '../../components/common/Button/Button';
 
-import PlusIcon from '../assets/PlusIcon.svg';
+import PlusIcon from '../../assets/PlusIcon.svg';
 
 function ScheduleMainPage() {
   const BtnClick = () => {};
