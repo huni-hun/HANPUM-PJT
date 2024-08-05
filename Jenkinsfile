@@ -19,9 +19,12 @@ pipeline {
                         currentBuild.result = 'NOT_BUILT'
                         return
                     }
-                }
-                withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
-                    sh "git clone https://oauth2:${GITHUB_TOKEN}@${GIT_URL} ${PROJECT_NAME}"
+                    withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
+                        sh """
+                            if [ -d ${PROJECT_NAME} ]; then rm -rf ${PROJECT_NAME}; fi
+                            git clone https://oauth2:${GITHUB_TOKEN}@${GIT_URL} ${PROJECT_NAME}
+                        """
+                    }
                 }
             }
         }
@@ -30,16 +33,18 @@ pipeline {
             steps {
                 script {
                     env.COMMIT_MESSAGE = sh(script: "cd ${PROJECT_NAME} && git log -1 --pretty=%B", returnStdout: true).trim()
-                    echo "현재 커밋메세지는 " + env.COMMIT_MESSAGE + " 입니다."
+                    env.GIT_COMMIT_AUTHOR = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+                    echo "현재 커밋메세지는 ${env.COMMIT_MESSAGE} 입니다. 작성자: ${env.GIT_COMMIT_AUTHOR}"
                     if (env.COMMIT_MESSAGE.contains('[BE]')) {
-                        echo "Backend build start"
+                        env.BUILD_TARGET = 'BACKEND'
                     } else if (env.COMMIT_MESSAGE.contains('[FE]')) {
-                        echo "Frontend build start"
+                        env.BUILD_TARGET = 'FRONTEND'
                     } else {
                         echo "[BE], [FE] 가 특정되지 않았습니다. 빌드를 종료합니다."
                         currentBuild.result = 'NOT_BUILT'
                         return
                     }
+                    echo "${env.BUILD_TARGET} 빌드를 시작합니다."
                 }
             }
         }
@@ -64,6 +69,20 @@ pipeline {
             }
         }
 
+        // stage('Run Tests') {
+        //     steps {
+        //         script {
+        //             dir("${PROJECT_NAME}/${env.BUILD_TARGET == 'BACKEND' ? BACKEND_DIR : FRONTEND_DIR}") {
+        //                 if (env.BUILD_TARGET == 'BACKEND') {
+        //                     sh "./gradlew test"
+        //                 } else {
+        //                     sh "npm test"
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
         stage('Stop and Remove') {
             steps {
                 script {
@@ -82,7 +101,7 @@ pipeline {
             steps {
                 script {
                     def imageName = ''
-                    if (env.COMMIT_MESSAGE.contains("[BE]")) {
+                    if (env.BUILD_TARGET == 'BACKEND') {
                         dir("${PROJECT_NAME}/${BACKEND_DIR}") {
                             imageName = "${DOCKER_HUB_ID}/${DOCKER_HUB_REPOSITORY}-backend"
                             sh "docker build -t ${imageName}:${env.BUILD_NUMBER} ."
@@ -92,7 +111,7 @@ pipeline {
                                 sh "docker push ${imageName}:latest"
                             }
                         }
-                    } else if (env.COMMIT_MESSAGE.contains("[FE]")) {
+                    } else if (env.BUILD_TARGET == 'FRONTEND') {
                         dir("${PROJECT_NAME}/${FRONTEND_DIR}") {
                             imageName = "${DOCKER_HUB_ID}/${DOCKER_HUB_REPOSITORY}-frontend"
                             sh "docker build -t ${imageName}:${env.BUILD_NUMBER} ."
@@ -111,12 +130,12 @@ pipeline {
             steps {
                 script {
                     def imageName = ''
-                    if (env.COMMIT_MESSAGE.contains("[BE]")) {
+                    if (env.BUILD_TARGET == 'BACKEND') {
                         imageName = "${DOCKER_HUB_ID}/${DOCKER_HUB_REPOSITORY}-backend"
                         sh "docker pull ${imageName}:latest"
                         sh "docker run -d --rm --network hanpum --name hanpum-backend -p 8080:8080 ${imageName}:latest"
                         sh "docker rmi ${imageName}:${env.BUILD_NUMBER}"
-                    } else if (env.COMMIT_MESSAGE.contains("[FE]")) {
+                    } else if (env.BUILD_TARGET == 'FRONTEND') {
                         imageName = "${DOCKER_HUB_ID}/${DOCKER_HUB_REPOSITORY}-frontend"
                         sh "docker pull ${imageName}:latest"
                         sh "docker run -d --rm --network hanpum --name hanpum-frontend -p 3000:3000 ${imageName}:latest"
@@ -144,9 +163,9 @@ pipeline {
             script {
                 dir("${PROJECT_NAME}") {
                     def GIT_COMMIT_AUTHOR = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
-                    if (env.COMMIT_MESSAGE.contains("[BE]")) {
+                    if (env.BUILD_TARGET == 'BACKEND') {
                         echo "BE build and deployment succeeded! Commit by: ${GIT_COMMIT_AUTHOR} Build Number: ${env.BUILD_NUMBER}"
-                    } else if (env.COMMIT_MESSAGE.contains("[FE]")) {
+                    } else if (env.BUILD_TARGET == 'FRONTEND') {
                         echo "FE build and deployment succeeded! Commit by: ${GIT_COMMIT_AUTHOR} Build Number: ${env.BUILD_NUMBER}"
                     }
                     // slackSend(channel: env.SLACK_CHANNEL, message: "Build and deployment succeeded! Commit by: ${GIT_COMMIT_AUTHOR} Build Number: ${env.BUILD_NUMBER}", tokenCredentialId: env.SLACK_CREDENTIAL_ID)
