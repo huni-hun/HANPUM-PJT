@@ -11,11 +11,15 @@ pipeline {
     }
 
     stages {
-        stage('Clone Repository') {
-            when {
-                branch 'develop'
-            }
+        stage('Check Branch and Clone Repository') {
             steps {
+                script {
+                    if (env.BRANCH_NAME != 'develop') {
+                        echo 'develop 브랜치가 아니므로 빌드를 종료합니다.'
+                        currentBuild.result = 'NOT_BUILT'
+                        return
+                    }
+                }
                 withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
                     sh "git clone https://oauth2:${GITHUB_TOKEN}@${GIT_URL} ${PROJECT_NAME}"
                 }
@@ -26,22 +30,31 @@ pipeline {
             steps {
                 script {
                     env.COMMIT_MESSAGE = sh(script: "cd ${PROJECT_NAME} && git log -1 --pretty=%B", returnStdout: true).trim()
+                    echo "현재 커밋메세지는 " + env.COMMIT_MESSAGE + " 입니다."
+                    if (env.COMMIT_MESSAGE.contains('[BE]')) {
+                        echo "Backend build start"
+                    } else if (env.COMMIT_MESSAGE.contains('[FE]')) {
+                        echo "Frontend build start"
+                    } else {
+                        echo "[BE], [FE] 가 특정되지 않았습니다. 빌드를 종료합니다."
+                        currentBuild.result = 'NOT_BUILT'
+                        return
+                    }
                 }
             }
         }
 
         stage('Set Environment Files') {
-            when {
-                branch 'develop'
-            }
             steps {
                 script {
                     withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
                         if (env.COMMIT_MESSAGE.contains("[BE]")) {
+                            echo "application.yml downloading..."
                             sh """
                                 wget -O ${PROJECT_NAME}/${BACKEND_DIR}/src/main/resources/application.yml --header="Authorization: token ${GITHUB_TOKEN}" "https://raw.githubusercontent.com/HANPUM-PJT/config/main/application.yml"
                             """
                         } else if (env.COMMIT_MESSAGE.contains("[FE]")) {
+                            echo ".env downloading..."
                             sh """
                                 wget -O ${PROJECT_NAME}/${FRONTEND_DIR}/.env --header="Authorization: token ${GITHUB_TOKEN}" "https://raw.githubusercontent.com/HANPUM-PJT/config/main/.env"
                             """
@@ -52,9 +65,6 @@ pipeline {
         }
 
         stage('Stop and Remove') {
-            when {
-                branch 'develop'
-            }
             steps {
                 script {
                     if (env.COMMIT_MESSAGE.contains("[BE]")) {
@@ -69,9 +79,6 @@ pipeline {
         }
 
         stage('Build and Push Docker Image') {
-            when {
-                branch 'develop'
-            }
             steps {
                 script {
                     def imageName = ''
@@ -101,9 +108,6 @@ pipeline {
         }
 
         stage('Deploy') {
-            when {
-                branch 'develop'
-            }
             steps {
                 script {
                     def imageName = ''
@@ -126,9 +130,13 @@ pipeline {
     post {
         always {
             script {
-                dir("${PROJECT_NAME}") {
-                    def GIT_COMMIT_AUTHOR = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
-                    echo "Commit by: ${GIT_COMMIT_AUTHOR}"
+                if (currentBuild.result == 'NOT_BUILT') {
+                    echo '빌드를 진행하지 않았습니다.'
+                } else {
+                    dir("${PROJECT_NAME}") {
+                        def GIT_COMMIT_AUTHOR = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+                        echo "Commit by: ${GIT_COMMIT_AUTHOR}"
+                    }
                 }
             }
         }
