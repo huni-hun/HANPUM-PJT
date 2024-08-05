@@ -1,7 +1,7 @@
-import Button from '../components/common/Button/Button';
-import Icon from '../components/common/Icon/Icon';
-import RouteCard from '../components/Detail/Route/RouteCard';
-import * as R from '../components/Detail/Route/RouteList.styled';
+import Button from '../../components/common/Button/Button';
+import Icon from '../../components/common/Icon/Icon';
+import RouteCard from '../../components/Style/Route/RouteCard';
+import * as R from '../../components/Style/Route/RouteList.styled';
 
 function RouteList() {
   return (
