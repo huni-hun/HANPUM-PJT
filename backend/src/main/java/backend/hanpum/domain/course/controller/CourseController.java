@@ -1,6 +1,7 @@
 package backend.hanpum.domain.course.controller;
 
 import backend.hanpum.domain.course.dto.responseDto.CourseDetailResDto;
+import backend.hanpum.domain.course.dto.responseDto.CourseReviewResDto;
 import backend.hanpum.domain.course.dto.responseDto.GetCourseDayResDto;
 import backend.hanpum.domain.course.service.CourseService;
 import backend.hanpum.exception.format.code.ApiResponse;
@@ -10,6 +11,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "Course 컨트롤러", description = "Course Controller API")
 @RestController
@@ -62,5 +65,13 @@ public class CourseController {
 //        courseService.deleteInterestCourse(courseId, memberId);
 
         return response.success(ResponseCode.DELETE_INTEREST_COURSE_SUCCESS);
+    }
+
+    @Operation(summary = "경로 리뷰 조회", description = "경로 리뷰 조회 API")
+    @GetMapping("{course_id}/reviews")
+    public ResponseEntity<?> getCourseReviews(@PathVariable("course_id") Long courseId) {
+        List<CourseReviewResDto> courseReviwes = courseService.getCourseReviews(courseId);
+
+        return response.success(ResponseCode.COURSE_REVIEWS_FETCHED, courseReviwes);
     }
 }
