@@ -153,35 +153,25 @@ pipeline {
                 if (currentBuild.result == 'NOT_BUILT') {
                     echo '빌드를 진행하지 않았습니다.'
                 } else {
-                    dir("${PROJECT_NAME}") {
-                        def GIT_COMMIT_AUTHOR = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
-                        echo "Commit by: ${GIT_COMMIT_AUTHOR}"
-                    }
+                    echo "Commit by: ${env.GIT_COMMIT_AUTHOR}"
                 }
                 deleteDir()
             }
         }
         success {
             script {
-                dir("${PROJECT_NAME}") {
-                    def GIT_COMMIT_AUTHOR = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
-                    if (env.BUILD_TARGET == 'BACKEND') {
-                        echo "BE build and deployment succeeded! Commit by: ${GIT_COMMIT_AUTHOR} Build Number: ${env.BUILD_NUMBER}"
-                    } else if (env.BUILD_TARGET == 'FRONTEND') {
-                        echo "FE build and deployment succeeded! Commit by: ${GIT_COMMIT_AUTHOR} Build Number: ${env.BUILD_NUMBER}"
-                    }
-                    slackSend(channel: env.SLACK_CHANNEL, color: 'good', message: "${env.BUILD_TARGET} 빌드 혹은 배포 성공! \nCommit by: ${GIT_COMMIT_AUTHOR} Build Number: ${env.BUILD_NUMBER}")
+                if (env.BUILD_TARGET == 'BACKEND') {
+                    echo "BE 빌드, 배포 성공"
+                } else if (env.BUILD_TARGET == 'FRONTEND') {
+                    echo "FE 빌드, 배포 성공"
                 }
+                slackSend(channel: env.SLACK_CHANNEL, color: 'good', message: "${env.BUILD_TARGET} 빌드 혹은 배포 성공! \nCommit by: ${env.GIT_COMMIT_AUTHOR} Build Number: ${env.BUILD_NUMBER}")
             }
         }
         failure {
             script {
-                dir("${PROJECT_NAME}") {
-                    def GIT_COMMIT_AUTHOR = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
-                    echo "Build or deployment failed! Commit by: ${GIT_COMMIT_AUTHOR}"
-                    slackSend(channel: env.SLACK_CHANNEL, color: 'danger', message: "${env.BUILD_TARGET} 빌드 혹은 배포 실패. \nCommit by: ${GIT_COMMIT_AUTHOR} Build Number: ${env.BUILD_NUMBER}")
-
-                }
+                echo "Build or deployment failed! Commit by: ${env.GIT_COMMIT_AUTHOR}"
+                slackSend(channel: env.SLACK_CHANNEL, color: 'danger', message: "${env.BUILD_TARGET} 빌드 혹은 배포 실패. \nCommit by: ${env.GIT_COMMIT_AUTHOR} Build Number: ${env.BUILD_NUMBER}")
             }
         }
     }
