@@ -165,13 +165,13 @@ pipeline {
                 } else if (env.BUILD_TARGET == 'FRONTEND') {
                     echo "FE 빌드, 배포 성공"
                 }
-                slackSend(channel: env.SLACK_CHANNEL, color: 'good', message: "${env.BUILD_TARGET} 빌드 혹은 배포 성공! \nCommit by: ${env.GIT_COMMIT_AUTHOR} Build Number: ${env.BUILD_NUMBER}")
+                slackSend(channel: env.SLACK_CHANNEL, color: 'good', message: "${env.COMMIT_MESSAGE} \n${env.BUILD_TARGET} 빌드, 배포 성공! \nCommit by: ${env.GIT_COMMIT_AUTHOR} \nBuild Number: ${env.BUILD_NUMBER}")
             }
         }
         failure {
             script {
                 echo "Build or deployment failed! Commit by: ${env.GIT_COMMIT_AUTHOR}"
-                slackSend(channel: env.SLACK_CHANNEL, color: 'danger', message: "${env.BUILD_TARGET} 빌드 혹은 배포 실패. \nCommit by: ${env.GIT_COMMIT_AUTHOR} Build Number: ${env.BUILD_NUMBER}")
+                slackSend(channel: env.SLACK_CHANNEL, color: 'danger', message: "${env.COMMIT_MESSAGE} \n${env.BUILD_TARGET} 빌드 혹은 배포 실패. \nCommit by: ${env.GIT_COMMIT_AUTHOR} \nBuild Number: ${env.BUILD_NUMBER}")
             }
         }
     }
