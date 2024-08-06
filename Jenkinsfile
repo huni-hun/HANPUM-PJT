@@ -169,7 +169,7 @@ pipeline {
                     } else if (env.BUILD_TARGET == 'FRONTEND') {
                         echo "FE build and deployment succeeded! Commit by: ${GIT_COMMIT_AUTHOR} Build Number: ${env.BUILD_NUMBER}"
                     }
-                    slackSend(channel: env.SLACK_CHANNEL, color: 'good', message: "${env.BUILD_TARGET} build and deployment succeeded! Commit by: ${GIT_COMMIT_AUTHOR} Build Number: ${env.BUILD_NUMBER}")
+                    slackSend(channel: env.SLACK_CHANNEL, color: 'good', message: "${env.BUILD_TARGET} 빌드 혹은 배포 성공! \nCommit by: ${GIT_COMMIT_AUTHOR} Build Number: ${env.BUILD_NUMBER}")
                 }
             }
             deleteDir()
@@ -179,7 +179,7 @@ pipeline {
                 dir("${PROJECT_NAME}") {
                     def GIT_COMMIT_AUTHOR = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
                     echo "Build or deployment failed! Commit by: ${GIT_COMMIT_AUTHOR}"
-                    slackSend(channel: env.SLACK_CHANNEL, color: 'danger', message: "${env.BUILD_TARGET} 빌드 혹은 배포 실패. Commit by: ${GIT_COMMIT_AUTHOR} Build Number: ${env.BUILD_NUMBER}")
+                    slackSend(channel: env.SLACK_CHANNEL, color: 'danger', message: "${env.BUILD_TARGET} 빌드 혹은 배포 실패. \nCommit by: ${GIT_COMMIT_AUTHOR} Build Number: ${env.BUILD_NUMBER}")
 
                 }
             }
