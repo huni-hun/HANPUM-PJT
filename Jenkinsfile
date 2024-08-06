@@ -158,6 +158,7 @@ pipeline {
                         echo "Commit by: ${GIT_COMMIT_AUTHOR}"
                     }
                 }
+                deleteDir()
             }
         }
         success {
@@ -172,7 +173,6 @@ pipeline {
                     slackSend(channel: env.SLACK_CHANNEL, color: 'good', message: "${env.BUILD_TARGET} 빌드 혹은 배포 성공! \nCommit by: ${GIT_COMMIT_AUTHOR} Build Number: ${env.BUILD_NUMBER}")
                 }
             }
-            deleteDir()
         }
         failure {
             script {
@@ -183,7 +183,6 @@ pipeline {
 
                 }
             }
-            deleteDir()
         }
     }
 }
