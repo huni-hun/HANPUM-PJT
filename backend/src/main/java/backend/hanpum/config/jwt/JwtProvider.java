@@ -87,8 +87,8 @@ public class JwtProvider {
     }
 
     public boolean validateToken(String token) {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
+        Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+        return true;
     }
 
     public void addToBlacklist(String token) {
@@ -106,6 +106,6 @@ public class JwtProvider {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        return claims.getExpiration().getTime();
+        return claims.getExpiration().getTime() - System.currentTimeMillis();
     }
 }
