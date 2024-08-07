@@ -1,9 +1,12 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import LoginPage from './LoginPage';
+
 import MainPage from './MainPage';
-import ScheduleMainPage from './ScheduleMainPage';
-import RouteList from './RouteList';
 import Header from '@/components/common/Header/Header';
+import RouteAddMainPage from './Route/RouteAddMainPage';
+import RouteAddPlacePage from './Route/RouteAddPlacePage';
+import LoginPage from './Auth/LoginPage';
+import ScheduleMainPage from './Schedule/ScheduleMainPage';
+import RouteList from './Route/RouteList';
 
 export default function Router() {
   return (
@@ -16,6 +19,9 @@ export default function Router() {
           <Route path="main" element={<MainPage />} />
           <Route path="schedule/main" element={<ScheduleMainPage />} />
           <Route path="route/list" element={<RouteList />} />
+
+          <Route path="route/addMain" element={<RouteAddMainPage />} />
+          <Route path="route/add" element={<RouteAddPlacePage />} />
         </Route>
       </Routes>
     </BrowserRouter>

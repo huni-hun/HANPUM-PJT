@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { colors } from '@styles/colorPalette';
 
 export const HeaderWrapper = styled.div`
   height: 9.8rem;
@@ -8,4 +9,5 @@ export const HeaderWrapper = styled.div`
   justify-content: end;
   gap: 2rem;
   padding: 0 2rem;
+  background-color: ${colors.white};
 `;
