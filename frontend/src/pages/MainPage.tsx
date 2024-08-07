@@ -1,6 +1,6 @@
-import BottomTab from '@/components/common/BottomTab/BottomTab';
 import styled from 'styled-components';
-import Schedule from '../components/Main/Schedule';
+import BottomTab from '@/components/common/BottomTab/BottomTab';
+import Schedule from '@components/Main/Schedule';
 import Text from '@/components/common/Text';
 import Course from '@/components/Main/Course';
 import Meet from '@/components/Main/Meet';
@@ -15,11 +15,6 @@ function MainPage() {
         <Text typography="t20">모임추천</Text>
       </div>
       <Meet />
-
-      {/* <p>동동님을 위한 추천코스</p> */}
-      {/* <div className="course"></div> */}
-      {/* <p>모임추천</p> */}
-      {/* swiper */}
       <BottomTab />
     </MainPageContainer>
   );

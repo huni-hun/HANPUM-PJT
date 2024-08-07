@@ -13,5 +13,6 @@ export default App;
 
 const Container = styled.div`
   width: 100vw;
-  height: 100vh;
+  padding-bottom: 6vh;
+  /* height: 100vh; */
 `;
