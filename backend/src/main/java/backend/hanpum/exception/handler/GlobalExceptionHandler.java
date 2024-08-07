@@ -180,4 +180,11 @@ public class GlobalExceptionHandler {
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }
+
+    @ExceptionHandler(MemberInfoInvalidException.class)
+    protected ResponseEntity<?> handle(MemberInfoInvalidException e) {
+        log.error("MemberInfoInvalidException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
 }

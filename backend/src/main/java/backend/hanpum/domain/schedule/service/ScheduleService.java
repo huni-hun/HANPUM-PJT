@@ -20,15 +20,15 @@ public interface ScheduleService {
     ScheduleDayResDto getMyScheduleDay(Long memberId, Long ScheduleId, int day);
 
     // 일정 삭제
-    void deleteSchedule(Long ScheduleId);
+    void deleteSchedule(Long memberId, Long ScheduleId);
 
     // 모임 일정 생성하기
 
     // 모임 일정 가져오기
 
     // 전체 일정 시작, 종료
-    Long startAndStopSchedule(ScheduleStartReqDto scheduleRunReqDto);
+    Long startAndStopSchedule(Long memberId, ScheduleStartReqDto scheduleRunReqDto);
 
     // 걷기, 정지 상태 전환
-    Long runAndStop(ScheduleRunReqDto scheduleRunReqDto);
+    Long runAndStop(Long memberId, ScheduleRunReqDto scheduleRunReqDto);
 }

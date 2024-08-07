@@ -10,5 +10,4 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ScheduleStartReqDto {
     private Long scheduleId;
-    private Long memberId;
 }

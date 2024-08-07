@@ -57,22 +57,28 @@ public class ScheduleController {
 
     @Operation(summary = "전체 일정 시작, 종료", description = "정해진 날짜가 되면 전체 일정 시작용, 시작상태에서 사용하면 종료")
     @PostMapping("/start")
-    public ResponseEntity<?> startAndStopSchedule(ScheduleStartReqDto scheduleRunReqDto) {
-        Long scheduleId = scheduleService.startAndStopSchedule(scheduleRunReqDto);
+    public ResponseEntity<?> startAndStopSchedule(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                  @RequestBody ScheduleStartReqDto scheduleRunReqDto) {
+        Long memberId = userDetails.getMember().getMemberId();
+        Long scheduleId = scheduleService.startAndStopSchedule(memberId, scheduleRunReqDto);
         return response.success(ResponseCode.SCHEDULE_STATE_CHANGED, scheduleId);
     }
 
     @Operation(summary = "일차별 일정 상태 전환", description = "쉴때, 걸을때 구분할 수 있는 트리거")
     @PostMapping("/run")
-    public ResponseEntity<?> runAndStop(@RequestBody ScheduleRunReqDto scheduleRunReqDto) {
-        scheduleService.runAndStop(scheduleRunReqDto);
+    public ResponseEntity<?> runAndStop(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                        @RequestBody ScheduleRunReqDto scheduleRunReqDto) {
+        Long memberId = userDetails.getMember().getMemberId();
+        scheduleService.runAndStop(memberId, scheduleRunReqDto);
         return response.success(ResponseCode.SCHEDULE_RUN_STATE_CHANGED);
     }
 
     @Operation(summary = "일정 삭제", description = "일정 삭제")
     @DeleteMapping
-    public ResponseEntity<?> deleteSchedule(Long scheduleId) {
-        scheduleService.deleteSchedule(scheduleId);
+    public ResponseEntity<?> deleteSchedule(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                            Long scheduleId) {
+        Long memberId = userDetails.getMember().getMemberId();
+        scheduleService.deleteSchedule(memberId, scheduleId);
         return response.success(ResponseCode.SCHEDULED_DELETED);
     }
 }

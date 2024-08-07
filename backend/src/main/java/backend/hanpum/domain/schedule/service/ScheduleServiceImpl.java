@@ -18,6 +18,7 @@ import backend.hanpum.domain.schedule.repository.ScheduleDayRepository;
 import backend.hanpum.domain.schedule.repository.ScheduleRepository;
 import backend.hanpum.domain.schedule.repository.ScheduleWayPointRepository;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
+import backend.hanpum.exception.exception.auth.MemberInfoInvalidException;
 import backend.hanpum.exception.exception.schedule.InvalidDayFormatException;
 import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
 import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
@@ -117,15 +118,30 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public void deleteSchedule(Long ScheduleId) {
+    public void deleteSchedule(Long memberId, Long ScheduleId) {
+        Schedule schedule = scheduleRepository.findById(ScheduleId).orElseThrow(ScheduleNotFoundException::new);
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+
+        /* 접근 권한 확인용 */
+        if (!schedule.getMember().equals(member)) {
+            throw new MemberInfoInvalidException();
+        }
+        /**/
+
         scheduleRepository.deleteById(ScheduleId);
     }
 
     @Transactional
     @Override
-    public Long startAndStopSchedule(ScheduleStartReqDto scheduleRunReqDto) {
+    public Long startAndStopSchedule(Long memberId, ScheduleStartReqDto scheduleRunReqDto) {
         Schedule schedule = scheduleRepository.findById(scheduleRunReqDto.getScheduleId()).orElseThrow(ScheduleNotFoundException::new);
-//        Member member = memberRepository.findById(schedulePostReqDto.getMemberId()).orElseThrow(MemberNotFoundException::new)
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+
+        /* 접근 권한 확인용 */
+        if (!schedule.getMember().equals(member)) {
+            throw new MemberInfoInvalidException();
+        }
+        /* */
 
         if (schedule.isState()) {
             schedule.setState(false);
@@ -139,8 +155,16 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Transactional
     @Override
-    public Long runAndStop(ScheduleRunReqDto scheduleRunReqDto) {
+    public Long runAndStop(Long memberId, ScheduleRunReqDto scheduleRunReqDto) {
         ScheduleDay scheduleDay = scheduleDayRepository.findById(scheduleRunReqDto.getScheduleDayId()).orElseThrow(ScheduleDayNotFoundException::new);
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+
+        /* 접근 권한 확인용 */
+        if (!scheduleDay.getSchedule().getMember().equals(member)) {
+            throw new MemberInfoInvalidException();
+        }
+        /* */
+
         if (scheduleDay.isRunning()) {
             scheduleDay.setRunning(false);
         } else {
