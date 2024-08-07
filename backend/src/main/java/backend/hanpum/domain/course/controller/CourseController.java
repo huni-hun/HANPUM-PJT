@@ -1,5 +1,6 @@
 package backend.hanpum.domain.course.controller;
 
+import backend.hanpum.domain.course.dto.requestDto.CourseReviewReqDto;
 import backend.hanpum.domain.course.dto.responseDto.CourseDetailResDto;
 import backend.hanpum.domain.course.dto.responseDto.CourseReviewResDto;
 import backend.hanpum.domain.course.dto.responseDto.GetCourseDayResDto;
@@ -73,5 +74,20 @@ public class CourseController {
         List<CourseReviewResDto> courseReviwes = courseService.getCourseReviews(courseId);
 
         return response.success(ResponseCode.COURSE_REVIEWS_FETCHED, courseReviwes);
+    }
+
+    @Operation(summary = "경로 리뷰 등록", description = "경로 리뷰 등록 API")
+    @PostMapping("{course_id}/reviews")
+    public ResponseEntity<?> writeCourseReviews(@PathVariable("course_id") Long courseId, @RequestBody CourseReviewReqDto courseReviewReqDto) {
+        /*
+        토큰을 이용해 유저정보 추출하는 부분
+        Member member =
+        Long memberId = member.getMemberId();
+         */
+        String content = courseReviewReqDto.getContent();
+        Double score = courseReviewReqDto.getScore();
+        courseService.writeCourseReview(courseId, content, score);
+
+        return response.success(ResponseCode.COURSE_REVIEWS_WRITE_SUCCESS);
     }
 }
