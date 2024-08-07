@@ -90,4 +90,20 @@ public class CourseController {
 
         return response.success(ResponseCode.COURSE_REVIEWS_WRITE_SUCCESS);
     }
+
+    @Operation(summary = "경로 리뷰 수정", description = "경로 리뷰 수정 API")
+    @PutMapping("{course_id}/reviews")
+    public ResponseEntity<?> putCourseReviews(@PathVariable("course_id") Long courseId, @RequestBody CourseReviewReqDto courseReviewReqDto) {
+        /*
+        토큰을 이용해 유저정보 추출하는 부분
+        Member member =
+        Long memberId = member.getMemberId();
+         */
+        String content = courseReviewReqDto.getContent();
+        Double score = courseReviewReqDto.getScore();
+        Long reviewId = courseReviewReqDto.getReviewId();
+        courseService.editCourseReview(reviewId, content, score);
+
+        return response.success(ResponseCode.COURSE_REVIEWS_EDIT_SUCCESS);
+    }
 }

@@ -90,7 +90,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void writeCourseReview(Long courseId, String content, Double score) {
-//        Review review = reviewRepository.findByMember_MemberId(memberId);
+//        Review review = reviewRepository.findByCourse_CourseIdAndMember_MemberId(courseId, memberId);
 //        if(review != null) {
 //            // 리뷰 1회 작성 가능?
 //        }
@@ -106,6 +106,24 @@ public class CourseServiceImpl implements CourseService {
                 .likeCount(0)
 //                .member(member)
                 .course(course)
+                .build();
+
+        reviewRepository.save(review);
+    }
+
+    @Override
+    public void editCourseReview(Long reviewId, String content, Double score) {
+        Review review = reviewRepository.findById(reviewId).orElseThrow(CourseReviewsNotFoundException::new);
+
+        Date currentDate = new Date();
+        review = Review.builder()
+                .reviewId(reviewId)
+                .content(content)
+                .score(score)
+                .writeDate(currentDate) // 작성일? 수정일?
+                .likeCount(review.getLikeCount())
+                .member(review.getMember())
+                .course(review.getCourse())
                 .build();
 
         reviewRepository.save(review);
