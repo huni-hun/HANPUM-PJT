@@ -10,6 +10,7 @@ function RouteAddMainPage() {
   const [explanationBoxClick, setExplanationBoxClick] =
     useState<boolean>(false);
   const [explanationReady, setExplanationReady] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const [routeTitle, setRouteTitle] = useState<string>('');
   const [routeExplane, setRouteExplane] = useState<string>('');
@@ -141,6 +142,19 @@ function RouteAddMainPage() {
       </R.MainContainer>
       <R.BottomContainer>
         <R.ButtonBox>
+          <R.SwitchBtnBox>
+            <R.SwitchBtnText>공개 여부</R.SwitchBtnText>
+
+            <R.SwitchLabel isOpen={isOpen}>
+              <R.SwitchInput
+                type="checkbox"
+                onClick={() => {
+                  setIsOpen(!isOpen);
+                }}
+              />
+              <R.SwitchButton isOpen={isOpen} />
+            </R.SwitchLabel>
+          </R.SwitchBtnBox>
           <Button
             width={25}
             height={6}
