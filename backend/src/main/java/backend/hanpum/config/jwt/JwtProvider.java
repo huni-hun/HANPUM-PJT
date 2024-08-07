@@ -3,8 +3,6 @@ package backend.hanpum.config.jwt;
 import backend.hanpum.config.redis.RedisDao;
 import backend.hanpum.domain.auth.dto.responseDto.TokenResDto;
 import backend.hanpum.domain.member.enums.MemberType;
-import backend.hanpum.exception.exception.auth.TokenExpiredException;
-import backend.hanpum.exception.exception.auth.TokenInvalidException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -71,7 +69,7 @@ public class JwtProvider {
 
     public TokenResDto reissueAtk(String email, MemberType role, String reToken) {
         if (!redisDao.getRefreshToken(email).equals(reToken)) {
-            throw new TokenInvalidException();
+            //
         }
         String accessToken = createToken(email, role, ACCESS_TOKEN_TIME);
         String refreshToken = createToken(email, role, REFRESH_TOKEN_TIME);
@@ -89,20 +87,8 @@ public class JwtProvider {
     }
 
     public boolean validateToken(String token) {
-        try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        } catch (ExpiredJwtException e) {
-            log.info("Invalid JWT token, 만료된 jwt 토큰 입니다.");
-            throw new TokenExpiredException();
-        } catch (SecurityException | MalformedJwtException |
-                 UnsupportedJwtException e) {
-            log.info("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
-            throw new TokenExpiredException();
-        } catch (IllegalArgumentException e) {
-            log.info("JWT claims is empty, JWT 클레임이 비어 있습니다.");
-            throw new TokenInvalidException();
-        }
     }
 
     public void addToBlacklist(String token) {
