@@ -65,7 +65,7 @@ public class JwtProvider {
 
     public TokenResDto createTokenByLogin(String email, MemberType role) {
         String accessToken = createToken(email, role, ACCESS_TOKEN_TIME);
-        String refreshToken = createToken(email, role, REFRESH_TOKEN_TIME);
+        String refreshToken = createToken(null, null, REFRESH_TOKEN_TIME);
         redisDao.setRefreshToken(email, refreshToken, REFRESH_TOKEN_TIME);
         return new TokenResDto(accessToken, refreshToken);
     }
