@@ -125,4 +125,18 @@ public class GlobalExceptionHandler {
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }
+
+    @ExceptionHandler(RefreshTokenNotFoundException.class)
+    protected ResponseEntity<?> handle(RefreshTokenNotFoundException e) {
+        log.error("RefreshTokenNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(AccessTokenInvalidException.class)
+    protected ResponseEntity<?> handle(AccessTokenInvalidException e) {
+        log.error("AccessTokenInvalidException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
 }
