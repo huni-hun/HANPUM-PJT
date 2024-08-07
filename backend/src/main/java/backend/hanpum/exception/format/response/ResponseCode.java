@@ -20,6 +20,7 @@ public enum ResponseCode {
     SCHEDULED_DELETED(HttpStatus.OK, "일정이 성공적으로 삭제되었습니다."),
 
     /* 경로 */
+    COURSE_LIST_FETCHED(HttpStatus.OK, "경로 목록이 성공적으로 조회되었습니다."),
     COURSE_DETAIL_FETCHED(HttpStatus.OK, "경로 상세정보가 성공적으로 조회되었습니다."),
     COURSE_DAY_FETCHED(HttpStatus.OK, "경로 일차 정보가 성공적으로 조회되었습니다."),
     ADD_INTEREST_COURSE_SUCCESS(HttpStatus.OK, "관심 경로 추가가 성공적으로 완료되었습니다."),

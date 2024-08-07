@@ -16,6 +16,7 @@ public enum ErrorCode {
     SCHEDULE_DAY_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 세부 일정이 없습니다."),
 
     /* 경로 */
+    COURSE_LIST_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 경로 목록이 없습니다."),
     COURSE_DETAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 경로 상세정보가 없습니다."),
     COURSE_DAY_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 경로 일차정보가 없습니다."),
     COURSE_REVIEWS_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 경로 리뷰가 없습니다."),

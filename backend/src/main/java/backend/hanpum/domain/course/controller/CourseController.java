@@ -1,14 +1,18 @@
 package backend.hanpum.domain.course.controller;
 
 import backend.hanpum.domain.course.dto.responseDto.CourseDetailResDto;
+import backend.hanpum.domain.course.dto.responseDto.CourseListMapResDto;
 import backend.hanpum.domain.course.dto.responseDto.CourseReviewResDto;
 import backend.hanpum.domain.course.dto.responseDto.GetCourseDayResDto;
+import backend.hanpum.domain.course.enums.CourseTypes;
 import backend.hanpum.domain.course.service.CourseService;
 import backend.hanpum.exception.format.code.ApiResponse;
 import backend.hanpum.exception.format.response.ResponseCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +26,16 @@ public class CourseController {
 
     private final ApiResponse response;
     private final CourseService courseService;
+
+    @Operation(summary = "경로 목록 조회", description = "경로 목록 조회 API")
+    @GetMapping()
+    public ResponseEntity<?> getCourseList(@RequestParam CourseTypes targetCourse
+//    , Pageable pageable
+    ) {
+        CourseListMapResDto courseListMapResDto = courseService.getCourseList(targetCourse);
+
+        return response.success(ResponseCode.COURSE_LIST_FETCHED, courseListMapResDto);
+    }
 
     @Operation(summary = "경로 상세 조회", description = "경로 상세 조회 API")
     @GetMapping("/{course_id}")
