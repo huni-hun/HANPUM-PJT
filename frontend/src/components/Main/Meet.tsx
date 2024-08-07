@@ -1,5 +1,6 @@
 import 'swiper/css';
 import { Swiper, SwiperSlide } from 'swiper/react';
+
 import * as S from '../Style/Main/Meet.styled';
 import MeetItem from './MeetItem';
 

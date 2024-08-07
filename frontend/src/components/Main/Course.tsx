@@ -1,6 +1,6 @@
 import * as S from '../Style/Main/Course.styled';
-import img from '../../assets/img/img1.jpg';
-import Icon from '../common/Icon/Icon';
+import img from '@imgs/img1.jpg';
+import Icon from '@common/Icon/Icon';
 
 function Course() {
   return (

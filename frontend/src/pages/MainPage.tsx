@@ -1,9 +1,10 @@
 import styled from 'styled-components';
-import BottomTab from '@/components/common/BottomTab/BottomTab';
+
+import BottomTab from '@components/common/BottomTab/BottomTab';
 import Schedule from '@components/Main/Schedule';
-import Text from '@/components/common/Text';
-import Course from '@/components/Main/Course';
-import Meet from '@/components/Main/Meet';
+import Text from '@components/common/Text';
+import Course from '@components/Main/Course';
+import Meet from '@components/Main/Meet';
 
 function MainPage() {
   return (

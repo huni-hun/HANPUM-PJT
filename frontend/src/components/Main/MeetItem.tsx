@@ -1,4 +1,4 @@
-import Icon from '../common/Icon/Icon';
+import Icon from '@common/Icon/Icon';
 import * as S from '../Style/Main/MeetItem.styled';
 
 function MeetItem() {

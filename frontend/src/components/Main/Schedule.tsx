@@ -1,7 +1,4 @@
-import React from 'react';
-import styled from 'styled-components';
-import Icon from '../common/Icon/Icon';
-import { colors } from '@/styles/colorPalette';
+import Icon from '@common/Icon/Icon';
 import * as S from '../Style/Main/Schedule.styled';
 
 function Schedule() {
