@@ -4,10 +4,10 @@ import backend.hanpum.exception.format.response.ErrorCode;
 import lombok.Getter;
 
 @Getter
-public class CourseNotFoundException extends RuntimeException {
+public class CourseDayNotFoundException extends RuntimeException {
     public final ErrorCode errorCode;
 
-    public CourseNotFoundException(){
-        this.errorCode = ErrorCode.COURSE_DETAIL_NOT_FOUND;
+    public CourseDayNotFoundException(){
+        this.errorCode = ErrorCode.COURSE_DAY_NOT_FOUND;
     }
 }

@@ -14,31 +14,28 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Review {
+public class InterestCourse {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "review_id")
-    private Long reviewId;
+    @Column(name = "interest_course_id")
+    private Long interestCourseId;
 
-    @Column(name = "content", length = 255)
-    private String content;
-
-    @Column(name = "score")
-    private Integer score;
-
-    @Column(name = "write_date")
-    @Temporal(TemporalType.DATE)
-    private Date writeDate;
-
-    @Column(name = "like_count")
-    private Integer likeCount;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id")
+    private Course course;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id")
-    private Course course;
+    @Column(name = "created_date")
+    @Temporal(TemporalType.DATE)
+    private Date createdDate;
+
+    @PrePersist
+    protected void onCreate() {
+        createdDate = new Date();
+    }
+
 }
