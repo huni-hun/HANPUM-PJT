@@ -2,6 +2,7 @@ package backend.hanpum.domain.course.repository.custom;
 
 import backend.hanpum.domain.course.dto.responseDto.*;
 import backend.hanpum.domain.course.entity.*;
+import backend.hanpum.domain.course.enums.CourseTypes;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,13 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
         QCourse qCourse = QCourse.course;
         QCourseDay qCourseDay = QCourseDay.courseDay;
         QAttraction qAttraction = QAttraction.attraction;
+        QCourseType qCourseType = QCourseType.courseType;
+
+        List<CourseTypes> courseTypes = query
+                .select(qCourseType.typeName)
+                .from(qCourseType)
+                .where(qCourseType.course.courseId.eq(courseId))
+                .fetch();
 
         CourseResDto courseResDto = query
                 .select(Projections.constructor(CourseResDto.class,
@@ -37,6 +45,7 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
         if (courseResDto == null) {
             return Optional.empty();
         }
+        courseResDto.setCourseTypes(courseTypes);
 
         List<CourseDayResDto> courseDays = query
                 .select(Projections.constructor(CourseDayResDto.class,
@@ -83,7 +92,8 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
                         qCourseDay.total_duration,
                         qCourseDay.total_calorie))
                 .from(qCourseDay)
-                .where(qCourseDay.course.courseId.eq(courseId))
+                .where(qCourseDay.course.courseId.eq(courseId)
+                .and(qCourseDay.dayNumber.eq(day)))
                 .fetchOne();
 
         List<WayPointResDto> wayPoints = query
