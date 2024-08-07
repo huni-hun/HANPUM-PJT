@@ -47,9 +47,11 @@ public class ScheduleController {
 
     @Operation(summary = "일차별 일정 조회", description = "일차별 일정 조회")
     @GetMapping("/day/{dayNumber}")
-    public ResponseEntity<?> getMyScheduleDay(@RequestParam Long scheduleId,
+    public ResponseEntity<?> getMyScheduleDay(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                              @RequestParam Long scheduleId,
                                               @PathVariable(name = "dayNumber") int day) {
-        ScheduleDayResDto result = scheduleService.getMyScheduleDay(scheduleId, day);
+        Long memberId = userDetails.getMember().getMemberId();
+        ScheduleDayResDto result = scheduleService.getMyScheduleDay(memberId, scheduleId, day);
         return response.success(ResponseCode.SCHEDULE_DAY_FETCHED, result);
     }
 

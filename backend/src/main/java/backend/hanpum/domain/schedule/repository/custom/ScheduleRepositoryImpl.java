@@ -10,8 +10,10 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.Optional;
 
+import static backend.hanpum.domain.course.entity.QCourse.course;
 import static backend.hanpum.domain.course.entity.QCourseDay.courseDay;
 import static backend.hanpum.domain.course.entity.QWaypoint.waypoint;
+import static backend.hanpum.domain.member.entity.QMember.member;
 import static backend.hanpum.domain.schedule.entity.QSchedule.schedule;
 import static backend.hanpum.domain.schedule.entity.QScheduleDay.scheduleDay;
 import static backend.hanpum.domain.schedule.entity.QScheduleWayPoint.scheduleWayPoint;
@@ -28,16 +30,16 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                                 schedule.id,
                                 schedule.type,
                                 schedule.date,
-                                schedule.state
-//                                member.id,
-//                                course.id,
+                                schedule.state,
+                                member.memberId,
+                                course.courseId
                         )).from(schedule)
-//                .where(schedule.member.id.eq(memberId))
+                .where(schedule.member.memberId.eq(memberId))
                 .fetch());
     }
 
     @Override
-    public Optional<ScheduleDayResDto> getScheduleDayResDto(Long scheduleId, int day) {
+    public Optional<ScheduleDayResDto> getScheduleDayResDto(Long memberId, Long scheduleId, int day) {
         return Optional.ofNullable(query.select(
                         Projections.constructor(ScheduleDayResDto.class,
                                 scheduleDay.id,
@@ -61,7 +63,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .leftJoin(scheduleDay.courseDay, courseDay)
                 .leftJoin(scheduleDay.scheduleWayPointList, scheduleWayPoint)
                 .leftJoin(scheduleWayPoint.waypoint, waypoint)
-                .where(scheduleDay.schedule.id.eq(scheduleId).and(scheduleDay.courseDay.dayNumber.eq(day)))
+                .where(scheduleDay.schedule.id.eq(scheduleId).and(scheduleDay.courseDay.dayNumber.eq(day)).and(scheduleDay.schedule.member.memberId.eq(memberId)))
                 .fetchOne());
     }
 }

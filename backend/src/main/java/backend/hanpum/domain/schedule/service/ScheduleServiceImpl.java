@@ -21,13 +21,12 @@ import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.schedule.InvalidDayFormatException;
 import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
 import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
-import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -67,8 +66,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         courseDays.sort(Comparator.comparingInt(CourseDay::getDayNumber));
         for (int i = 0; i < courseDays.size(); i++) {
             CourseDay courseDay = courseDays.get(i);
-            int dayNumber = courseDay.getDayNumber();
-            String date = calculateDate(startDate, dayNumber - 1);
+            String date = calculateDate(startDate, i);
             ScheduleDay scheduleDay = ScheduleDay.builder()
                     .date(date)
                     .courseDay(courseDay)
@@ -113,8 +111,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Transactional(readOnly = true)
     @Override
-    public ScheduleDayResDto getMyScheduleDay(Long ScheduleId, int day) {
-        ScheduleDayResDto scheduleDayResDto = scheduleRepository.getScheduleDayResDto(ScheduleId, day).orElseThrow(ScheduleDayNotFoundException::new);
+    public ScheduleDayResDto getMyScheduleDay(Long memberId, Long ScheduleId, int day) {
+        ScheduleDayResDto scheduleDayResDto = scheduleRepository.getScheduleDayResDto(memberId, ScheduleId, day).orElseThrow(ScheduleDayNotFoundException::new);
         return scheduleDayResDto;
     }
 
@@ -151,6 +149,4 @@ public class ScheduleServiceImpl implements ScheduleService {
         scheduleDayRepository.save(scheduleDay);
         return scheduleDay.getId();
     }
-
-
 }
