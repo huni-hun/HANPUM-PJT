@@ -1,16 +1,19 @@
 package backend.hanpum.domain.course.service;
 
 import backend.hanpum.domain.course.dto.responseDto.CourseDetailResDto;
+import backend.hanpum.domain.course.dto.responseDto.CourseListMapResDto;
 import backend.hanpum.domain.course.dto.responseDto.CourseReviewResDto;
 import backend.hanpum.domain.course.dto.responseDto.GetCourseDayResDto;
 import backend.hanpum.domain.course.entity.Course;
 import backend.hanpum.domain.course.entity.InterestCourse;
 import backend.hanpum.domain.course.entity.Review;
+import backend.hanpum.domain.course.enums.CourseTypes;
 import backend.hanpum.domain.course.repository.CourseRepository;
 import backend.hanpum.domain.course.repository.InterestCourseRepository;
 import backend.hanpum.domain.course.repository.ReviewRepository;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.course.CourseDayNotFoundException;
+import backend.hanpum.exception.exception.course.CourseListNotFoundException;
 import backend.hanpum.exception.exception.course.CourseNotFoundException;
 import backend.hanpum.exception.exception.course.CourseReviewsNotFoundException;
 import backend.hanpum.exception.format.response.ErrorCode;
@@ -29,6 +32,14 @@ public class CourseServiceImpl implements CourseService {
     private final InterestCourseRepository interestCourseRepository;
     private final MemberRepository memberRepository;
     private final ReviewRepository reviewRepository;
+
+    @Override
+    @Transactional(readOnly = true)
+    public CourseListMapResDto getCourseList(CourseTypes targetCourse) {
+        CourseListMapResDto courseListMapResDto = courseRepository.getCourseList(targetCourse).orElseThrow(CourseListNotFoundException::new);
+
+        return courseListMapResDto;
+    }
 
     @Override
     @Transactional(readOnly = true)
