@@ -20,7 +20,7 @@ function MainPage() {
       {/* <div className="course"></div> */}
       {/* <p>모임추천</p> */}
       {/* swiper */}
-      {/* <BottomTab /> */}
+      <BottomTab />
     </MainPageContainer>
   );
 }

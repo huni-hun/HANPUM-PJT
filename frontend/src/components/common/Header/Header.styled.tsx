@@ -10,4 +10,7 @@ export const HeaderWrapper = styled.div`
   gap: 2rem;
   padding: 0 2rem;
   background-color: ${colors.white};
+  position: sticky;
+  top: 0;
+  z-index: 10;
 `;
