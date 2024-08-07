@@ -11,7 +11,7 @@ import java.util.List;
 public interface ScheduleService {
 
     // 개인 일정 생성하기
-    Long createSchedule(SchedulePostReqDto schedulePostReqDto);
+    Long createSchedule(Long memberId, SchedulePostReqDto schedulePostReqDto);
 
     // 개인 일정 가져오기
     List<ScheduleResDto> getMyScheduleList(Long memberId);

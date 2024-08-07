@@ -4,6 +4,7 @@ import backend.hanpum.exception.exception.auth.*;
 import backend.hanpum.exception.exception.course.CourseDayNotFoundException;
 import backend.hanpum.exception.exception.course.CourseNotFoundException;
 import backend.hanpum.exception.exception.course.CourseReviewsNotFoundException;
+import backend.hanpum.exception.exception.schedule.InvalidDayFormatException;
 import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
 import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
 import backend.hanpum.exception.exception.test.TestNotFoundException;
@@ -64,6 +65,14 @@ public class GlobalExceptionHandler {
         log.error("ScheduleDayNotFoundException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(InvalidDayFormatException.class)
+    protected ResponseEntity<?> handle(InvalidDayFormatException e) {
+        log.error("InvalidDayFormatException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+
     }
 
     /* 인증 */

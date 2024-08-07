@@ -1,5 +1,7 @@
 package backend.hanpum.domain.schedule.controller;
 
+import backend.hanpum.config.jwt.UserDetailsImpl;
+import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.ScheduleRunReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.ScheduleStartReqDto;
@@ -12,6 +14,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,16 +30,18 @@ public class ScheduleController {
 
     @Operation(summary = "개인 일정 생성", description = "개인 일정 생성")
     @PostMapping
-    public ResponseEntity<?> createSchedule(SchedulePostReqDto schedulePostReqDto) {
-        Long scheduleId = scheduleService.createSchedule(schedulePostReqDto);
+    public ResponseEntity<?> createSchedule(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                            SchedulePostReqDto schedulePostReqDto) {
+        Long memberId = userDetails.getMember().getMemberId();
+        Long scheduleId = scheduleService.createSchedule(memberId, schedulePostReqDto);
         return response.success(ResponseCode.SCHEDULE_CREATED, scheduleId);
     }
 
     @Operation(summary = "멤버별 일정 조회", description = "멤버별 일정 조회")
     @GetMapping
-    public ResponseEntity<?> getMySchedule(Long memberId) {
-        List<ScheduleResDto> scheduleResDto = scheduleService.getMyScheduleList(memberId);  // 추후 memberId를 직접 받지 않고 토큰 정보로 받게 수정
-
+    public ResponseEntity<?> getMySchedule(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Long memberId = userDetails.getMember().getMemberId();
+        List<ScheduleResDto> scheduleResDto = scheduleService.getMyScheduleList(memberId);
         return response.success(ResponseCode.SCHEDULE_LIST_FETCHED, scheduleResDto);
     }
 
@@ -57,7 +62,7 @@ public class ScheduleController {
 
     @Operation(summary = "일차별 일정 상태 전환", description = "쉴때, 걸을때 구분할 수 있는 트리거")
     @PostMapping("/run")
-    public ResponseEntity<?> runAndStop(@RequestBody ScheduleRunReqDto scheduleRunReqDto){
+    public ResponseEntity<?> runAndStop(@RequestBody ScheduleRunReqDto scheduleRunReqDto) {
         scheduleService.runAndStop(scheduleRunReqDto);
         return response.success(ResponseCode.SCHEDULE_RUN_STATE_CHANGED);
     }
