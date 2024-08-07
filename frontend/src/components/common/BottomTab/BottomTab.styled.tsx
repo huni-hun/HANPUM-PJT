@@ -12,6 +12,7 @@ export const BottomTab = styled.div`
   right: 0px;
   bottom: 0px;
   z-index: 11;
+  box-shadow: 0px 4px 4px 0 rgba(0, 0, 0, 0.25);
 `;
 
 export const BottomTabItem = styled.div`
