@@ -89,6 +89,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional
     public void writeCourseReview(Long courseId, String content, Double score) {
 //        Review review = reviewRepository.findByCourse_CourseIdAndMember_MemberId(courseId, memberId);
 //        if(review != null) {
@@ -112,6 +113,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional
     public void editCourseReview(Long reviewId, String content, Double score) {
         Review review = reviewRepository.findById(reviewId).orElseThrow(CourseReviewsNotFoundException::new);
 
@@ -127,6 +129,12 @@ public class CourseServiceImpl implements CourseService {
                 .build();
 
         reviewRepository.save(review);
+    }
+
+    @Override
+    @Transactional
+    public void deleteCourseReview(Long courseId) {
+//        reviewRepository.deleteByCourse_CourseIdAndMember_MemberId(courseId, memberId);
     }
 
 }

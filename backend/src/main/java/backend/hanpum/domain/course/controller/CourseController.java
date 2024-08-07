@@ -94,16 +94,24 @@ public class CourseController {
     @Operation(summary = "경로 리뷰 수정", description = "경로 리뷰 수정 API")
     @PutMapping("{course_id}/reviews")
     public ResponseEntity<?> putCourseReviews(@PathVariable("course_id") Long courseId, @RequestBody CourseReviewReqDto courseReviewReqDto) {
-        /*
-        토큰을 이용해 유저정보 추출하는 부분
-        Member member =
-        Long memberId = member.getMemberId();
-         */
         String content = courseReviewReqDto.getContent();
         Double score = courseReviewReqDto.getScore();
         Long reviewId = courseReviewReqDto.getReviewId();
         courseService.editCourseReview(reviewId, content, score);
 
         return response.success(ResponseCode.COURSE_REVIEWS_EDIT_SUCCESS);
+    }
+
+    @Operation(summary = "경로 리뷰 삭제", description = "경로 리뷰 삭제 API")
+    @DeleteMapping("{course_id}/reviews")
+    public ResponseEntity<?> deleteCourseReviews(@PathVariable("course_id") Long courseId) {
+        /*
+        토큰을 이용해 유저정보 추출하는 부분
+        Member member =
+        Long memberId = member.getMemberId();
+         */
+        courseService.deleteCourseReview(courseId);
+
+        return response.success(ResponseCode.COURSE_REVIEWS_DELETE_SUCCESS);
     }
 }

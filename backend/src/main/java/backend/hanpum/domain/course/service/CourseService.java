@@ -14,4 +14,5 @@ public interface CourseService {
     List<CourseReviewResDto> getCourseReviews(Long courseId);
     void writeCourseReview(Long courseId, String content, Double score);
     void editCourseReview(Long reviewId, String content, Double score);
+    void deleteCourseReview(Long courseId);
 }
