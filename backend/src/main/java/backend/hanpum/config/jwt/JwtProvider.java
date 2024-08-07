@@ -1,8 +1,11 @@
 package backend.hanpum.config.jwt;
 
 import backend.hanpum.config.redis.RedisDao;
+import backend.hanpum.domain.auth.dto.responseDto.ReissueAccessTokenResDto;
 import backend.hanpum.domain.auth.dto.responseDto.TokenResDto;
 import backend.hanpum.domain.member.enums.MemberType;
+import backend.hanpum.exception.exception.auth.AccessTokenInvalidException;
+import backend.hanpum.exception.exception.auth.RefreshTokenNotFoundException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -67,14 +70,12 @@ public class JwtProvider {
         return new TokenResDto(accessToken, refreshToken);
     }
 
-    public TokenResDto reissueAtk(String email, MemberType role, String reToken) {
+    public ReissueAccessTokenResDto reissueAccessToken(String email, MemberType role, String reToken) {
         if (!redisDao.getRefreshToken(email).equals(reToken)) {
-            //
+            throw new RefreshTokenNotFoundException();
         }
         String accessToken = createToken(email, role, ACCESS_TOKEN_TIME);
-        String refreshToken = createToken(email, role, REFRESH_TOKEN_TIME);
-        redisDao.setRefreshToken(email, refreshToken, REFRESH_TOKEN_TIME);
-        return new TokenResDto(accessToken, refreshToken);
+        return new ReissueAccessTokenResDto(accessToken);
     }
 
     public String getEmailFromJwt(String token) {
@@ -84,6 +85,21 @@ public class JwtProvider {
                 .parseClaimsJws(token)
                 .getBody();
         return claims.getSubject();
+    }
+
+    public String getEmailFromExpiredToken(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            return claims.getSubject();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims().getSubject();
+        } catch (JwtException e){
+            throw new AccessTokenInvalidException();
+        }
     }
 
     public boolean validateToken(String token) {
