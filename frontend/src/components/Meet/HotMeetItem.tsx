@@ -1,10 +1,13 @@
 import Icon from '@/components/common/Icon/Icon';
-import * as S from '../../Style/Meet/HotMeetItem.styled';
-import img from '../../../assets/imgs/mountain.jpg';
+import * as S from '../Style/Meet/HotMeetItem.styled';
+import img from '../../assets/img/mountain.jpg';
+import { useNavigate } from 'react-router-dom';
 
 function HotMeetItem() {
+  const id = 1;
+  const navigate = useNavigate();
   return (
-    <S.ItemContainer>
+    <S.ItemContainer onClick={() => navigate(`/meet/${id}`)}>
       <div className="meet-img">
         <img src={img} alt="" />
       </div>

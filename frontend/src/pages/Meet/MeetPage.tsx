@@ -1,6 +1,6 @@
 import Text from '@/components/common/Text';
 import styled from 'styled-components';
-import HotMeet from '../../components/Style/Meet/HotMeet';
+import HotMeet from '../../components/Meet/HotMeet';
 
 function MeetPage() {
   return (

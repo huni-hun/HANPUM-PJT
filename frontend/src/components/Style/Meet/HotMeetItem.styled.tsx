@@ -7,6 +7,7 @@ export const ItemContainer = styled.div`
   border-radius: 12px;
   background-color: ${colors.white};
   width: 16rem;
+  cursor: pointer;
   .meet-img {
     width: 100%;
     height: 16rem;

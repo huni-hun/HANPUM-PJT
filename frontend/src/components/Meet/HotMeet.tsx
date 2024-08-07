@@ -1,4 +1,4 @@
-import * as S from '../../Style/Meet/HotMeet.styled';
+import * as S from '../Style/Meet/HotMeet.styled';
 import HotMeetItem from './HotMeetItem';
 
 function HotMeet() {
