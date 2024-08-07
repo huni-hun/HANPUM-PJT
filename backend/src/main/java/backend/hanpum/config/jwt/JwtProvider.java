@@ -1,10 +1,11 @@
 package backend.hanpum.config.jwt;
 
 import backend.hanpum.config.redis.RedisDao;
+import backend.hanpum.domain.auth.dto.responseDto.ReissueAccessTokenResDto;
 import backend.hanpum.domain.auth.dto.responseDto.TokenResDto;
 import backend.hanpum.domain.member.enums.MemberType;
-import backend.hanpum.exception.exception.auth.TokenExpiredException;
-import backend.hanpum.exception.exception.auth.TokenInvalidException;
+import backend.hanpum.exception.exception.auth.AccessTokenInvalidException;
+import backend.hanpum.exception.exception.auth.RefreshTokenNotFoundException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -64,19 +65,17 @@ public class JwtProvider {
 
     public TokenResDto createTokenByLogin(String email, MemberType role) {
         String accessToken = createToken(email, role, ACCESS_TOKEN_TIME);
-        String refreshToken = createToken(email, role, REFRESH_TOKEN_TIME);
+        String refreshToken = createToken(null, null, REFRESH_TOKEN_TIME);
         redisDao.setRefreshToken(email, refreshToken, REFRESH_TOKEN_TIME);
         return new TokenResDto(accessToken, refreshToken);
     }
 
-    public TokenResDto reissueAtk(String email, MemberType role, String reToken) {
+    public ReissueAccessTokenResDto reissueAccessToken(String email, MemberType role, String reToken) {
         if (!redisDao.getRefreshToken(email).equals(reToken)) {
-            throw new TokenInvalidException();
+            throw new RefreshTokenNotFoundException();
         }
         String accessToken = createToken(email, role, ACCESS_TOKEN_TIME);
-        String refreshToken = createToken(email, role, REFRESH_TOKEN_TIME);
-        redisDao.setRefreshToken(email, refreshToken, REFRESH_TOKEN_TIME);
-        return new TokenResDto(accessToken, refreshToken);
+        return new ReissueAccessTokenResDto(accessToken);
     }
 
     public String getEmailFromJwt(String token) {
@@ -88,21 +87,24 @@ public class JwtProvider {
         return claims.getSubject();
     }
 
-    public boolean validateToken(String token) {
+    public String getEmailFromExpiredToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            return claims.getSubject();
         } catch (ExpiredJwtException e) {
-            log.info("Invalid JWT token, 만료된 jwt 토큰 입니다.");
-            throw new TokenExpiredException();
-        } catch (SecurityException | MalformedJwtException |
-                 UnsupportedJwtException e) {
-            log.info("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
-            throw new TokenExpiredException();
-        } catch (IllegalArgumentException e) {
-            log.info("JWT claims is empty, JWT 클레임이 비어 있습니다.");
-            throw new TokenInvalidException();
+            return e.getClaims().getSubject();
+        } catch (JwtException e){
+            throw new AccessTokenInvalidException();
         }
+    }
+
+    public boolean validateToken(String token) {
+        Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+        return true;
     }
 
     public void addToBlacklist(String token) {
@@ -120,6 +122,6 @@ public class JwtProvider {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        return claims.getExpiration().getTime();
+        return claims.getExpiration().getTime() - System.currentTimeMillis();
     }
 }
