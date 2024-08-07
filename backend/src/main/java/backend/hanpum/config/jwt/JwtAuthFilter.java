@@ -1,7 +1,8 @@
 package backend.hanpum.config.jwt;
 
-import backend.hanpum.exception.exception.auth.TokenBlackListedException;
-import backend.hanpum.exception.exception.auth.TokenExpiredException;
+import backend.hanpum.exception.format.response.ErrorCode;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +22,7 @@ import java.io.IOException;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
+    private static final String EXCEPTION_ATTRIBUTE = "exception";
     private final JwtProvider jwtProvider;
     private final UserDetailsService userDetailsService;
 
@@ -29,23 +31,38 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String jwt = jwtProvider.getJwtFromRequest(request);
-
-        if(jwt != null ){
-            if(jwtProvider.isTokenInBlacklist(jwt)){
-                throw new TokenBlackListedException();
-            }
-            if (!jwtProvider.validateToken(jwt)) {
-                throw new TokenExpiredException();
-            }
-            String username = jwtProvider.getEmailFromJwt(jwt);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            if (userDetails != null) {
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+        if (jwt != null) {
+            handleToken(request, jwt);
+        } else {
+            request.setAttribute(EXCEPTION_ATTRIBUTE, ErrorCode.TOKEN_NOT_FOUND);
         }
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
+    }
+
+    private void handleToken(HttpServletRequest request, String jwt) {
+        if (jwtProvider.isTokenInBlacklist(jwt)) {
+            request.setAttribute(EXCEPTION_ATTRIBUTE, ErrorCode.TOKEN_BLACKLISTED);
+            return;
+        }
+        try {
+            if (jwtProvider.validateToken(jwt)) {
+                setAuthentication(request, jwt);
+            }
+        } catch (ExpiredJwtException e) {
+            request.setAttribute(EXCEPTION_ATTRIBUTE, ErrorCode.ACCESS_TOKEN_EXPIRED);
+        } catch (JwtException e) {
+            request.setAttribute(EXCEPTION_ATTRIBUTE, ErrorCode.TOKEN_INVALID);
+        }
+    }
+
+    private void setAuthentication(HttpServletRequest request, String jwt) {
+        String username = jwtProvider.getEmailFromJwt(jwt);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        if (userDetails != null) {
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities());
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
     }
 }
