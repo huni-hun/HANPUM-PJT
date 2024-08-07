@@ -151,23 +151,16 @@ public class GlobalExceptionHandler {
         return response.error(e.getErrorCode());
     }
 
-    @ExceptionHandler(TokenInvalidException.class)
-    protected ResponseEntity<?> handle(TokenInvalidException e) {
-        log.error("TokenInvalidException = {}", e.getErrorCode().getMessage());
+    @ExceptionHandler(RefreshTokenNotFoundException.class)
+    protected ResponseEntity<?> handle(RefreshTokenNotFoundException e) {
+        log.error("RefreshTokenNotFoundException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }
 
-    @ExceptionHandler(TokenBlackListedException.class)
-    protected ResponseEntity<?> handle(TokenBlackListedException e) {
-        log.error("TokenBlackListedException = {}", e.getErrorCode().getMessage());
-        log.error("Error Message = {}", e.getMessage());
-        return response.error(e.getErrorCode());
-    }
-
-    @ExceptionHandler(TokenExpiredException.class)
-    protected ResponseEntity<?> handle(TokenExpiredException e) {
-        log.error("TokenExpiredException = {}", e.getErrorCode().getMessage());
+    @ExceptionHandler(AccessTokenInvalidException.class)
+    protected ResponseEntity<?> handle(AccessTokenInvalidException e) {
+        log.error("AccessTokenInvalidException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }
