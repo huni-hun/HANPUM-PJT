@@ -13,6 +13,7 @@ import backend.hanpum.domain.course.repository.InterestCourseRepository;
 import backend.hanpum.domain.course.repository.ReviewRepository;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.course.CourseDayNotFoundException;
+import backend.hanpum.exception.exception.course.CourseListNotFoundException;
 import backend.hanpum.exception.exception.course.CourseNotFoundException;
 import backend.hanpum.exception.exception.course.CourseReviewsNotFoundException;
 import backend.hanpum.exception.format.response.ErrorCode;
@@ -35,7 +36,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Transactional(readOnly = true)
     public CourseListMapResDto getCourseList(CourseTypes targetCourse) {
-        CourseListMapResDto courseListMapResDto = courseRepository.getCourseList(targetCourse).orElseThrow();
+        CourseListMapResDto courseListMapResDto = courseRepository.getCourseList(targetCourse).orElseThrow(CourseListNotFoundException::new);
 
         return courseListMapResDto;
     }
