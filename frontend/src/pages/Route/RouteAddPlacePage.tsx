@@ -1,7 +1,6 @@
 import Icon from '../../components/common/Icon/Icon';
 import * as Ra from '../../components/Style/Route/RouteAddPagePlace.styled';
 
-import TestImg from '../../assets/test.jpg';
 import Button from '../../components/common/Button/Button';
 import Map from '../../components/common/Map/Map';
 

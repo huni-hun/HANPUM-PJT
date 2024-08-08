@@ -29,7 +29,6 @@ public class Schedule {
     @Column(name = "date")
     private String date;
 
-    @Setter
     @Builder.Default
     @Column(name = "state")
     private boolean state = false;
@@ -45,4 +44,8 @@ public class Schedule {
 
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ScheduleDay> scheduleDayList = new ArrayList<>();
+
+    public void startAndStop(){
+        this.state = !this.state;
+    }
 }

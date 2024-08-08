@@ -5,17 +5,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CourseReviewResDto {
-    Long memberId;
-    Long courseId;
-    String content;
-    Double score;
-    Date writeDate;
-    Integer like;
+public class CourseListMapResDto {
+
+
+    Map<String, List<CourseResDto>> CourseListMap;
 }
