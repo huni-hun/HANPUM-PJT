@@ -27,6 +27,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
@@ -92,12 +94,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     private String calculateDate(String date, int day) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         try {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(simpleDateFormat.parse(date));
-            calendar.add(Calendar.DATE, day);
-            return simpleDateFormat.format(calendar.getTime());
+            LocalDate localDate = LocalDate.parse(date, dateTimeFormatter);
+            localDate = localDate.plusDays(day);
+            return localDate.format(dateTimeFormatter);
         } catch (Exception e) {
             throw new InvalidDayFormatException(e.getMessage());
         }
