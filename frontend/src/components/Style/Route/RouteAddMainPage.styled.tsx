@@ -181,10 +181,54 @@ export const BottomContainer = styled.div`
   align-items:center;
 `;
 
+export const SwitchBtnBox = styled.div`
+  width: 40%;
+  height: 100%;
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  padding: 1.5rem 0 0 0;
+`;
+
+export const SwitchBtnText = styled.p`
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-top: 0.4rem;
+`;
+
+export const SwitchInput = styled.input`
+  height: 0;
+  width: 0;
+  visibility: hidden;
+`;
+
+export const SwitchLabel = styled.label<{ isOpen: boolean }>`
+  display: flex;
+  position: relative;
+  width: 5.6rem;
+  height: 3.1rem;
+  border-radius: 10rem 10rem 10rem 10rem;
+  background-color: ${({ isOpen }) => (isOpen ? '#1A823B' : '#d9d9d9')};
+  align-items: center;
+  transition: background-color 0.5s;
+`;
+
+export const SwitchButton = styled.span<{ isOpen: boolean }>`
+  width: 2.7rem;
+  height: 2.7rem;
+  background-color: #ffffff;
+  position: absolute;
+  border-radius: 50%;
+  left: 0.2rem;
+  transition: all 0.5s ease-in-out;
+  ${({ isOpen }) =>
+    isOpen ? 'transform: translateX(2.4rem)' : 'transform: translateX(0.2rem)'}
+`;
+
 export const ButtonBox = styled.div`
   width: 85%;
   height: 70%;
   display: flex;
   align-items: start;
-  justify-content: end;
+  justify-content: space-between;
 `;
