@@ -4,7 +4,7 @@ import styled from 'styled-components';
 export const MeetInfoContainer = styled.div`
   background-color: ${colors.white};
   .section {
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid ${colors.grey4};
     &_user {
       display: flex;
       align-items: center;
@@ -13,7 +13,7 @@ export const MeetInfoContainer = styled.div`
       &-userImg {
         width: 5rem;
         height: 5rem;
-        background-color: #d9d9d9;
+        background-color: ${colors.grey1};
         border-radius: 50%;
         img {
           width: 100%;
@@ -77,7 +77,7 @@ export const MeetInfoContainer = styled.div`
           display: flex;
           flex-direction: column;
           gap: 5px;
-          color: #a0a0a0;
+          color: ${colors.grey2};
           &-label {
             font-weight: bold;
             font-size: 1.2rem;

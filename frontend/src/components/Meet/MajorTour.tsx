@@ -21,7 +21,7 @@ function MajorTour() {
             <img src={img} alt="" />
             <div className="place">제주도</div>
             <div className="place_detail">
-              <Icon name="IconFlag" size={15} />
+              <Icon name="IconFlagBold" size={15} />
               <span>모슬포항</span>
             </div>
           </div>
@@ -32,7 +32,7 @@ function MajorTour() {
             <img src={img} alt="" />
             <div className="place">제주도</div>
             <div className="place_detail">
-              <Icon name="IconFlag" size={15} />
+              <Icon name="IconFlagBold" size={15} />
               <span>모슬포항</span>
             </div>
           </div>
@@ -43,7 +43,7 @@ function MajorTour() {
             <img src={img} alt="" />
             <div className="place">제주도</div>
             <div className="place_detail">
-              <Icon name="IconFlag" size={15} />
+              <Icon name="IconFlagBold" size={15} />
               <span>모슬포항</span>
             </div>
           </div>
@@ -54,7 +54,7 @@ function MajorTour() {
             <img src={img} alt="" />
             <div className="place">제주도</div>
             <div className="place_detail">
-              <Icon name="IconFlag" size={15} />
+              <Icon name="IconFlagBold" size={15} />
               <span>모슬포항</span>
             </div>
           </div>

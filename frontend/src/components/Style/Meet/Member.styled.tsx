@@ -19,7 +19,7 @@ export const MemberContainer = styled.div`
     span {
       font-size: 1.4rem;
       font-weight: bold;
-      color: #a0a0a0;
+      color: ${colors.grey2};
     }
   }
 
@@ -36,7 +36,7 @@ export const MemberContainer = styled.div`
         width: 6rem;
         height: 6rem;
         border-radius: 50%;
-        background-color: #d9d9d9;
+        background-color: ${colors.grey1};
         overflow: hidden;
         img {
           width: 100%;

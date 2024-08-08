@@ -15,13 +15,13 @@ function HotMeetItem() {
       <div className="meet-date">5박 6일</div>
 
       <div className="meet-heart">
-        <Icon name="IconMy" size={20} />
+        <Icon name="IconHeartInGrey" size={20} />
       </div>
 
       <div className="meet_info">
         <div className="meet_info-root">
           <span>인천</span>
-          <Icon name="IconArrow" size={6} />
+          <Icon name="IconGreyLeftArrow" size={6} />
           <span>당진</span>
         </div>
 
@@ -34,12 +34,12 @@ function HotMeetItem() {
 
         <div className="meet_info_items">
           <div className="meet_info_items-item">
-            <Icon name="IconMy" size={8} />
+            <Icon name="IconMemberGrey" size={8} />
             <span>6/8</span>
           </div>
 
           <div className="meet_info_items-item">
-            <Icon name="IconMy" size={8} />
+            <Icon name="IconHeartGrey" size={8} />
             <span>25</span>
           </div>
         </div>

@@ -1,3 +1,4 @@
+import { colors } from '@/styles/colorPalette';
 import styled from 'styled-components';
 
 export const MeetScheduleNav = styled.div`
@@ -13,18 +14,18 @@ export const MeetScheduleNav = styled.div`
     width: 7.4rem;
     height: 3.3rem;
     border-radius: 100px;
-    border: 2px solid #a0a0a0;
+    border: 2px solid ${colors.grey2};
     box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 1.6rem;
-    color: #a0a0a0;
+    color: ${colors.grey2};
   }
 
   .active {
-    border: 2px solid #1a823b;
-    color: #1a823b;
+    border: 2px solid ${colors.green};
+    color: ${colors.green};
   }
 
   .swiper-slide {

@@ -4,6 +4,7 @@ import MeetInfo from '@/components/Meet/MeetInfo';
 import MeetSchedule from '@/components/Meet/MeetSchedule';
 import MajorTour from '@/components/Meet/MajorTour';
 import Member from '@/components/Meet/Member';
+import { colors } from '@/styles/colorPalette';
 
 function MeetDetailPage() {
   return (
@@ -32,6 +33,6 @@ const MeetDetailPageContainer = styled.div`
   .grayBox {
     width: 100%;
     height: 35.8rem;
-    background-color: #d9d9d9;
+    background-color: ${colors.grey1};
   }
 `;

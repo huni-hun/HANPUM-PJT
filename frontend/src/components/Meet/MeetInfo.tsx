@@ -83,12 +83,12 @@ function MeetInfo() {
 
           <div className="section_meetInfo_items">
             <div className="section_meetInfo_items-item">
-              <Icon name="IconMy" size={20} />
+              <Icon name="IconSquareGreyFill" size={20} />
               <span>6/8</span>
             </div>
 
             <div className="section_meetInfo_items-item">
-              <Icon name="IconMy" size={20} />
+              <Icon name="IconHeartGreyFill" size={20} />
               <span>25</span>
             </div>
           </div>

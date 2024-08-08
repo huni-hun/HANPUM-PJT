@@ -31,3 +31,14 @@ export { ReactComponent as IconLeftWhiteArrow } from './leftWhiteArrow.svg';
 // 모임 추천
 export { ReactComponent as IconMember } from './member.svg';
 export { ReactComponent as IconHeart } from './heart.svg';
+
+// 모임 리스트
+export { ReactComponent as IconHeartInGrey } from './heart_in_grey.svg';
+export { ReactComponent as IconGreyLeftArrow } from './grey_left_arrow.svg';
+export { ReactComponent as IconMemberGrey } from './member_grey.svg';
+export { ReactComponent as IconHeartGrey } from './heart_grey.svg';
+
+// 모임 디테일
+export { ReactComponent as IconHeartGreyFill } from './heart_grey_fill.svg';
+export { ReactComponent as IconSquareGreyFill } from './square_grey_fill.svg';
+export { ReactComponent as IconFlagBold } from './icon_flag_bold.svg';

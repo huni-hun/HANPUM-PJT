@@ -6,7 +6,6 @@ import MeetScheduleItem from './MeetScheduleItem';
 function MeetSchedule() {
   return (
     <S.MeetScheduleContainer>
-      {/* <div className="dateNav"></div> */}
       <MeetScheduleNav />
       <div className="list">
         <MeetScheduleItem />

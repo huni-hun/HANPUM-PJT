@@ -50,7 +50,7 @@ export const ItemContainer = styled.div`
       display: flex;
       align-items: center;
       gap: 3px;
-      color: #a0a0a0;
+      color: ${colors.grey2};
       font-size: 1rem;
     }
 
@@ -64,7 +64,7 @@ export const ItemContainer = styled.div`
       display: flex;
       gap: 2px;
       font-size: 1rem;
-      color: #a0a0a0;
+      color: ${colors.grey2};
       margin-bottom: 16px;
       span {
       }
@@ -73,7 +73,7 @@ export const ItemContainer = styled.div`
     &_items {
       display: flex;
       gap: 8px;
-      color: #a0a0a0;
+      color: ${colors.grey2};
       font-size: 0.8rem;
       &-item {
         display: flex;

@@ -17,6 +17,6 @@ export const Container = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #a0a0a0;
+    background-color: ${colors.grey2};
   }
 `;

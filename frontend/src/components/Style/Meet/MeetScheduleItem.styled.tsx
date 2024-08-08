@@ -2,7 +2,7 @@ import { colors } from '@/styles/colorPalette';
 import styled from 'styled-components';
 
 export const MeetScheduleItemContainer = styled.div`
-  border-bottom: 1px solid #e1e1e1;
+  border-bottom: 1px solid ${colors.grey3};
   display: flex;
   padding: 12px 16px;
 
@@ -34,7 +34,7 @@ export const MeetScheduleItemContainer = styled.div`
         }
         &-category {
           font-size: 1.2rem;
-          color: #a0a0a0;
+          color: ${colors.grey2};
           font-weight: bold;
         }
       }

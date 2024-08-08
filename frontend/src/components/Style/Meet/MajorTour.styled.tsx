@@ -22,7 +22,6 @@ export const MajorTourContainer = styled.div`
     width: 10rem;
     height: 10rem;
     border-radius: 12px;
-    background-color: pink;
     position: relative;
     overflow: hidden;
     img {
