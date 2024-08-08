@@ -143,11 +143,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
         /* */
 
-        if (schedule.isState()) {
-            schedule.setState(false);
-        } else {
-            schedule.setState(true);
-        }
+        schedule.startAndStop();
+
         scheduleRepository.save(schedule);
 
         return schedule.getId();
@@ -165,11 +162,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
         /* */
 
-        if (scheduleDay.isRunning()) {
-            scheduleDay.setRunning(false);
-        } else {
-            scheduleDay.setRunning(true);
-        }
+        scheduleDay.runAndStop();
+
         scheduleDayRepository.save(scheduleDay);
         return scheduleDay.getId();
     }
