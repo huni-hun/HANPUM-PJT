@@ -1,14 +1,21 @@
 package backend.hanpum.domain.auth.controller;
 
+import backend.hanpum.config.jwt.JwtProvider;
+import backend.hanpum.config.jwt.UserDetailsImpl;
 import backend.hanpum.domain.auth.dto.requestDto.*;
+import backend.hanpum.domain.auth.dto.responseDto.LoginResDto;
 import backend.hanpum.domain.auth.service.AuthService;
+import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.exception.format.code.ApiResponse;
 import backend.hanpum.exception.format.response.ResponseCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Auth 컨트롤러", description = "Auth Controller API")
@@ -19,6 +26,7 @@ public class AuthController {
 
     private final ApiResponse response;
     private final AuthService authService;
+    private final JwtProvider jwtProvider;
 
     @Operation(summary = "이메일 인증번호 전송", description = "이메일 인증번호 전송 API")
     @PostMapping("/email-auth")
@@ -53,5 +61,25 @@ public class AuthController {
     public ResponseEntity<?> signUp(@RequestBody @Valid SignUpReqDto signUpReqDto) {
         authService.signUp(signUpReqDto);
         return response.success(ResponseCode.SING_UP_SUCCESS);
+    }
+
+    @Operation(summary = "로그인", description = "로그인 API")
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody @Valid LoginReqDto loginReqDto) {
+        LoginResDto loginResDto = authService.login(loginReqDto);
+        return response.success(ResponseCode.LOGIN_SUCCESS, loginResDto);
+    }
+
+    @Operation(summary = "로그아웃", description = "로그아웃 API")
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletRequest request) {
+        authService.logout(jwtProvider.getJwtFromRequest(request));
+        return response.success(ResponseCode.LOGOUT_SUCCESS);
+    }
+
+    @Operation(summary = "토큰 재발급", description = "토큰 재발급 API")
+    @PostMapping("/reissue-token")
+    public ResponseEntity<?> reissueToken(@RequestBody TokenReissueReqDto tokenReissueReqDto, HttpServletRequest request) {
+        return response.success(ResponseCode.TOKEN_REISSUE_SUCCESS, authService.reissueToken(jwtProvider.getJwtFromRequest(request), tokenReissueReqDto));
     }
 }

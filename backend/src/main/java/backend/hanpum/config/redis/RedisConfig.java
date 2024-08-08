@@ -1,4 +1,4 @@
-package backend.hanpum.config;
+package backend.hanpum.config.redis;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

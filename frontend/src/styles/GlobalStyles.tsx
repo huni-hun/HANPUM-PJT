@@ -11,6 +11,7 @@ export const GlobalStyle = createGlobalStyle`
 
   body {
     height: 100vh;
+    background-color: #F5F5F5;
   }
 
   :root {
@@ -18,7 +19,11 @@ export const GlobalStyle = createGlobalStyle`
     --black: ${colors.black};
     --sub_grey: ${colors.sub_grey};
     --green: ${colors.green};
-    --grey: ${colors.grey};
+    --line: ${colors.line};
     --red: ${colors.red};
+    --grey1 : ${colors.grey1};
+    --grey2 : ${colors.grey2};
+    --grey3 : ${colors.grey3};
+    --grey4 : ${colors.grey4};
   }
 `;
