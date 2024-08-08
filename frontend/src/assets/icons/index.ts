@@ -12,8 +12,22 @@ export { ReactComponent as IconCalendar } from './CalendarIcon.svg';
 export { ReactComponent as IconBookMarkerWhite } from './BookMarker2.svg';
 export { ReactComponent as IconFlag } from './Flag.svg';
 export { ReactComponent as IconArrowWhite } from './ArrowWhite.svg';
-export { ReactComponent as IconBack } from './BackArrow.svg';
-export { ReactComponent as IconArrow } from './Arrow.svg';
-export { ReactComponent as IconNotification } from './Notification.svg';
-export { ReactComponent as IconMy } from './My.svg';
 export { ReactComponent as IconBookMarker } from './BookMarker.svg';
+export { ReactComponent as IconBack } from './BackArrow.svg';
+export { ReactComponent as IconMy } from './My.svg';
+export { ReactComponent as IconLeftBlackArrow } from './Arrow.svg';
+
+// header
+export { ReactComponent as IconUser } from './user.svg';
+export { ReactComponent as IconNotification } from './Notification.svg';
+
+// 진행중인 일정
+export { ReactComponent as IconSun } from './sun.svg';
+export { ReactComponent as IconInprogress } from './inprogress.svg';
+
+// 추천 코스
+export { ReactComponent as IconLeftWhiteArrow } from './leftWhiteArrow.svg';
+
+// 모임 추천
+export { ReactComponent as IconMember } from './member.svg';
+export { ReactComponent as IconHeart } from './heart.svg';

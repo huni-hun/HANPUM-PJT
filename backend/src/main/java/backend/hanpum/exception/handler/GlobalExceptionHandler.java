@@ -2,8 +2,10 @@ package backend.hanpum.exception.handler;
 
 import backend.hanpum.exception.exception.auth.*;
 import backend.hanpum.exception.exception.course.CourseDayNotFoundException;
+import backend.hanpum.exception.exception.course.CourseListNotFoundException;
 import backend.hanpum.exception.exception.course.CourseNotFoundException;
 import backend.hanpum.exception.exception.course.CourseReviewsNotFoundException;
+import backend.hanpum.exception.exception.schedule.InvalidDayFormatException;
 import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
 import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
 import backend.hanpum.exception.exception.test.TestNotFoundException;
@@ -30,6 +32,13 @@ public class GlobalExceptionHandler {
     }
 
     /* 경로 */
+    @ExceptionHandler(CourseListNotFoundException.class)
+    protected ResponseEntity<?> handle(CourseListNotFoundException e) {
+        log.error("CourseListNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
     @ExceptionHandler(CourseNotFoundException.class)
     protected ResponseEntity<?> handle(CourseNotFoundException e) {
         log.error("CourseNotFoundException = {}", e.getErrorCode().getMessage());
@@ -64,6 +73,14 @@ public class GlobalExceptionHandler {
         log.error("ScheduleDayNotFoundException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(InvalidDayFormatException.class)
+    protected ResponseEntity<?> handle(InvalidDayFormatException e) {
+        log.error("InvalidDayFormatException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+
     }
 
     /* 인증 */
@@ -161,6 +178,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessTokenInvalidException.class)
     protected ResponseEntity<?> handle(AccessTokenInvalidException e) {
         log.error("AccessTokenInvalidException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(MemberInfoInvalidException.class)
+    protected ResponseEntity<?> handle(MemberInfoInvalidException e) {
+        log.error("MemberInfoInvalidException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }

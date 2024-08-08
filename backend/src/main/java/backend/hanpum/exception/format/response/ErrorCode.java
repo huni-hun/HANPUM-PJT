@@ -14,8 +14,10 @@ public enum ErrorCode {
     /* 일정 */
     SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 일정이 없습니다."),
     SCHEDULE_DAY_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 세부 일정이 없습니다."),
+    INVALID_DATE_FORMAT(HttpStatus.BAD_REQUEST, "유효하지 않은 날짜 형식입니다."),
 
     /* 경로 */
+    COURSE_LIST_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 경로 목록이 없습니다."),
     COURSE_DETAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 경로 상세정보가 없습니다."),
     COURSE_DAY_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 경로 일차정보가 없습니다."),
     COURSE_REVIEWS_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 경로 리뷰가 없습니다."),
@@ -35,6 +37,7 @@ public enum ErrorCode {
     LOGIN_INFO_INVALID(HttpStatus.BAD_REQUEST, "로그인 정보가 잘못되었습니다."),
     TOKEN_INVALID(HttpStatus.BAD_REQUEST, "잘못된 토큰 입니다."),
     TOKEN_BLACKLISTED(HttpStatus.BAD_REQUEST, "다시 로그인해주세요."),
+    MEMBER_INFO_INVALID(HttpStatus.BAD_REQUEST, "접근 권한이 없습니다."),
     ACCESS_TOKEN_EXPIRED(HttpStatus.REQUEST_TIMEOUT, "엑세스 토큰이 만료되었습니다."),
     TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "토큰이 존재하지 않습니다."),
     REFRESH_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "리프레쉬 토큰이 존재하지 않습니다. 다시 로그인해 주세요."),

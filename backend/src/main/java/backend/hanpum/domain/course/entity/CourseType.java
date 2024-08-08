@@ -1,5 +1,6 @@
 package backend.hanpum.domain.course.entity;
 
+import backend.hanpum.domain.course.enums.CourseTypes;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,13 +19,10 @@ public class CourseType {
     @Column(name = "course_type_id")
     private Long courseTypeId;
 
-    @Column(name = "course_id", nullable = false)
-    private Long courseId;
+    @Column(name = "type_name", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private CourseTypes typeName;
 
-    @Column(name = "type_name", length = 20)
-    private String typeName;
-
-    @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;

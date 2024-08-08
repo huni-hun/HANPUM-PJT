@@ -15,7 +15,7 @@ public class CourseReviewResDto {
     Long memberId;
     Long courseId;
     String content;
-    Integer score;
+    Double score;
     Date writeDate;
     Integer like;
 }
