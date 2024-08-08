@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findByCourse_CourseId(Long courseId);
+//    Review findByCourse_CourseIdAndMember_MemberId(Long courseId, Long memberId);
+//    Review deleteByCourse_CourseIdAndMember_MemberId(Long courseId, Long memberId);
 }
