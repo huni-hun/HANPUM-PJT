@@ -37,7 +37,7 @@ public enum ErrorCode {
     LOGIN_INFO_INVALID(HttpStatus.BAD_REQUEST, "로그인 정보가 잘못되었습니다."),
     TOKEN_INVALID(HttpStatus.BAD_REQUEST, "잘못된 토큰 입니다."),
     TOKEN_BLACKLISTED(HttpStatus.BAD_REQUEST, "다시 로그인해주세요."),
-    MEMBER_INFO_INVALID(HttpStatus.BAD_REQUEST, "접근 권한이 없습니다.")
+    MEMBER_INFO_INVALID(HttpStatus.BAD_REQUEST, "접근 권한이 없습니다."),
     ACCESS_TOKEN_EXPIRED(HttpStatus.REQUEST_TIMEOUT, "엑세스 토큰이 만료되었습니다."),
     TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "토큰이 존재하지 않습니다."),
     REFRESH_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "리프레쉬 토큰이 존재하지 않습니다. 다시 로그인해 주세요."),
