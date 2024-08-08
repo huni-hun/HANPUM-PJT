@@ -25,7 +25,7 @@ public class Review {
     private String content;
 
     @Column(name = "score")
-    private Integer score;
+    private Double score;
 
     @Column(name = "write_date")
     @Temporal(TemporalType.DATE)

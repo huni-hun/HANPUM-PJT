@@ -4,12 +4,11 @@ import backend.hanpum.config.jwt.JwtProvider;
 import backend.hanpum.config.redis.RedisDao;
 import backend.hanpum.domain.auth.dto.requestDto.*;
 import backend.hanpum.domain.auth.dto.responseDto.LoginResDto;
+import backend.hanpum.domain.auth.dto.responseDto.ReissueAccessTokenResDto;
 import backend.hanpum.domain.auth.dto.responseDto.TokenResDto;
 import backend.hanpum.domain.member.entity.Member;
-import backend.hanpum.domain.member.enums.MemberType;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.auth.*;
-import ch.qos.logback.core.net.SyslogOutputStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.MailException;
@@ -142,6 +141,13 @@ public class AuthServiceImpl implements AuthService {
         jwtProvider.addToBlacklist(accessToken);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public ReissueAccessTokenResDto reissueToken(String accessToken, TokenReissueReqDto tokenReissueReqDto) {
+        Member member = memberRepository.findMemberByEmail(jwtProvider.getEmailFromExpiredToken(accessToken)).orElseThrow(EmailNotFoundException::new);
+        return jwtProvider.reissueAccessToken(member.getEmail(), member.getMemberType(), tokenReissueReqDto.getRefreshToken());
+    }
+
     private void checkLoginIdAuthenticated(String loginId){
         if (!stringRedisTemplate.hasKey(LOGIN_ID_KEY_PREFIX + loginId)) {
             throw new LoginIdExpiredException();
@@ -159,7 +165,7 @@ public class AuthServiceImpl implements AuthService {
 
     private void checkNicknameAuthenticated(String nickname){
         if (!stringRedisTemplate.hasKey(NICKNAME_KEY_PREFIX + nickname)) {
-            throw new NicknameExpiredException();
+            throw new RefreshTokenNotFoundException();
         }
     }
 
