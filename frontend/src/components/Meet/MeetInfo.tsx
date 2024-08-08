@@ -73,9 +73,11 @@ function MeetInfo() {
 
             <div className="section_meetInfo-detail-total">
               <div className="section_meetInfo-detail-total-label">
-                총 이동거리
+                총 일정기간
               </div>
-              <div className="section_meetInfo-detail-total-value">52.8KM</div>
+              <div className="section_meetInfo-detail-total-value">
+                15박 16일
+              </div>
             </div>
           </div>
 

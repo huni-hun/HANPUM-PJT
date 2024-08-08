@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 import img from '../../assets/img/mountain.jpg';
 import MeetInfo from '@/components/Meet/MeetInfo';
+import MeetSchedule from '@/components/Meet/MeetSchedule';
+import MajorTour from '@/components/Meet/MajorTour';
+import Member from '@/components/Meet/Member';
 
 function MeetDetailPage() {
   return (
@@ -8,6 +11,9 @@ function MeetDetailPage() {
       <img src={img} alt="" />
       <MeetInfo />
       <div className="grayBox" />
+      <MeetSchedule />
+      <MajorTour />
+      <Member />
     </MeetDetailPageContainer>
   );
 }
