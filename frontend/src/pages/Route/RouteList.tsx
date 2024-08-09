@@ -31,7 +31,7 @@ function RouteList() {
             <R.TypeTitle>지금 가장 인기 있는 코스</R.TypeTitle>
             <R.MoreButton>
               <R.MoreText>더보기</R.MoreText>
-              <Icon name="IconArrow" size={10} />
+              <Icon name="IconLeftBlackArrow" size={10} />
             </R.MoreButton>
           </R.RouteTypeHeader>
           <R.CardContainer>
@@ -55,7 +55,7 @@ function RouteList() {
             <R.TypeTitle>지금 가장 인기 있는 코스</R.TypeTitle>
             <R.MoreButton>
               <R.MoreText>더보기</R.MoreText>
-              <Icon name="IconArrow" size={10} />
+              <Icon name="IconLeftBlackArrow" size={10} />
             </R.MoreButton>
           </R.RouteTypeHeader>
           <R.CardContainer>
@@ -79,7 +79,7 @@ function RouteList() {
             <R.TypeTitle>지금 가장 인기 있는 코스</R.TypeTitle>
             <R.MoreButton>
               <R.MoreText>더보기</R.MoreText>
-              <Icon name="IconArrow" size={10} />
+              <Icon name="IconLeftBlackArrow" size={10} />
             </R.MoreButton>
           </R.RouteTypeHeader>
           <R.CardContainer>
