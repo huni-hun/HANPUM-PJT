@@ -22,7 +22,6 @@ public class ScheduleDay {
     @Column(name = "date")
     private String date;
 
-    @Setter
     @Builder.Default
     @Column(name = "running")
     private boolean running = false;
@@ -35,4 +34,8 @@ public class ScheduleDay {
 
     @OneToMany(mappedBy = "scheduleDay", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ScheduleWayPoint> scheduleWayPointList = new ArrayList<>();
+
+    public void runAndStop(){
+        this.running = !this.running;
+    }
 }
