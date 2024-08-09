@@ -30,6 +30,9 @@ public enum ResponseCode {
     COURSE_REVIEWS_EDIT_SUCCESS(HttpStatus.OK, "경로 리뷰 수정이 성공적으로 완료되었습니다."),
     COURSE_REVIEWS_DELETE_SUCCESS(HttpStatus.OK, "경로 리뷰 삭제가 성공적으로 완료되었습니다."),
 
+    /* 모임 */
+    GROUP_CREATED_SUCCESS(HttpStatus.OK, "모임이 성공적으로 생성되었습니다."),
+
     /* 인증 */
     AUTHENTICATION_MAIL_SEND_SUCCESS(HttpStatus.OK, "인증 메일이 성공적으로 전송되었습니다."),
     AUTHENTICATION_SUCCESS(HttpStatus.OK, "인증이 성공적으로 완료되었습니다."),

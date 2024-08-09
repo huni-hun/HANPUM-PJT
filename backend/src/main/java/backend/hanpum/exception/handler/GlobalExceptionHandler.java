@@ -5,6 +5,7 @@ import backend.hanpum.exception.exception.course.CourseDayNotFoundException;
 import backend.hanpum.exception.exception.course.CourseListNotFoundException;
 import backend.hanpum.exception.exception.course.CourseNotFoundException;
 import backend.hanpum.exception.exception.course.CourseReviewsNotFoundException;
+import backend.hanpum.exception.exception.group.GroupAlreadyJoinedException;
 import backend.hanpum.exception.exception.schedule.InvalidDayFormatException;
 import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
 import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
@@ -81,6 +82,14 @@ public class GlobalExceptionHandler {
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
 
+    }
+
+    /* 모임 */
+    @ExceptionHandler(GroupAlreadyJoinedException.class)
+    protected ResponseEntity<?> handle(GroupAlreadyJoinedException e) {
+        log.error("GroupAlreadyJoinedException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
     }
 
     /* 인증 */
