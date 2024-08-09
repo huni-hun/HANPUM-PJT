@@ -7,6 +7,8 @@ import RouteAddPlacePage from './Route/RouteAddPlacePage';
 import LoginPage from './Auth/LoginPage';
 import ScheduleMainPage from './Schedule/ScheduleMainPage';
 import RouteList from './Route/RouteList';
+import MeetPage from './Meet/MeetPage';
+import MeetDetailPage from './Meet/MeetDetailPage';
 
 export default function Router() {
   return (
@@ -22,6 +24,9 @@ export default function Router() {
 
           <Route path="route/addMain" element={<RouteAddMainPage />} />
           <Route path="route/add" element={<RouteAddPlacePage />} />
+
+          <Route path="meet" element={<MeetPage />} />
+          <Route path="meet/:id" element={<MeetDetailPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -21,8 +21,9 @@ export const GlobalStyle = createGlobalStyle`
     --green: ${colors.green};
     --line: ${colors.line};
     --red: ${colors.red};
-    --grey3 : ${colors.grey3};
+    --grey1 : ${colors.grey1};
     --grey2 : ${colors.grey2};
+    --grey3 : ${colors.grey3};
     --grey4 : ${colors.grey4};
   }
 `;
