@@ -2,6 +2,7 @@ import { SignupInfo } from '@/models/signup';
 import * as S from '../Style/Signup/UserInfo.styled';
 import { useState } from 'react';
 import TextField from '../common/TextField';
+import BaseButton from '../common/BaseButton';
 
 function UserInfo({
   signupValue,
@@ -36,6 +37,31 @@ function UserInfo({
           // onBlur={handleBlur}
         />
       </div>
+
+      <BaseButton>버튼1</BaseButton>
+      <BaseButton weak={true}>버튼2</BaseButton>
+      <BaseButton size="radius">버튼2</BaseButton>
+      <BaseButton size="radius" weak={true}>
+        버튼2
+      </BaseButton>
+
+      <BaseButton size="medium" fontSize={1}>
+        버튼2
+      </BaseButton>
+      <BaseButton size="medium" fontSize={1} disabled={true}>
+        버튼2
+      </BaseButton>
+
+      <BaseButton size="medium" fontSize={1}>
+        버튼2
+      </BaseButton>
+
+      <BaseButton size="medium" fontSize={1} full={true}>
+        버튼2
+      </BaseButton>
+      <BaseButton size="medium" full={true} disabled={true}>
+        버튼2
+      </BaseButton>
     </S.UserInfoContainer>
   );
 }

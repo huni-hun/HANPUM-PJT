@@ -14,6 +14,18 @@ export const GlobalStyle = createGlobalStyle`
     background-color: #F5F5F5;
   }
 
+  button {
+    border: none;
+    margin: 0;
+    padding: 0;
+    width: auto;
+    overflow: visible;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    line-height: normal;
+  }
+
   :root {
     --white: ${colors.white};
     --black: ${colors.black};

@@ -7,14 +7,29 @@ export const buttonColorMap = {
   `,
 };
 
+export const buttonWeakMap = {
+  primary: css`
+    background-color: ${colors.white};
+    color: ${colors.main};
+    border: 1px solid ${colors.main};
+  `,
+};
+
 export const buttonSizeMap = {
-  small: css`
+  radius: css`
     width: 7.4rem;
     height: 3.3rem;
+    border-radius: 100px;
+  `,
+  small: css`
+    width: 9.7rem;
+    height: 4.8rem;
+    border-radius: 7px;
   `,
   medium: css`
-    width: 14.4rem;
+    width: 12.7rem;
     height: 4.8rem;
+    border-radius: 7px;
   `,
 };
 
