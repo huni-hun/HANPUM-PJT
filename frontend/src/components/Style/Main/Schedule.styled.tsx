@@ -51,7 +51,7 @@ export const MainScheduleTop = styled.div`
       justify-content: space-between;
     }
     &_color {
-      color: ${colors.green};
+      color: ${colors.main};
     }
   }
 
@@ -96,7 +96,7 @@ export const MainScheduleRoute = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: ${colors.green};
+    color: ${colors.main};
     &-percent {
       font-weight: bold;
       font-size: 1.5rem;
@@ -122,7 +122,7 @@ export const ProgressBar = styled.div<ProgressProps>`
   .progress {
     height: 8px;
     border-radius: 10px;
-    background-color: ${colors.green};
+    background-color: ${colors.main};
     transition: width 0.2s ease-in-out;
     width: ${(props) => `${props.percentage}%`};
     box-shadow: inset 0px 4px 3px 0px rgba(255, 255, 255, 0.29);

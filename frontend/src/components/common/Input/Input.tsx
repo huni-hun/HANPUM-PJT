@@ -18,7 +18,7 @@ const Input = styled.input`
 
   &:focus {
     outline: none;
-    border-color: ${colors.green};
+    border-color: ${colors.main};
   }
 
   &[aria-invalid='true'] {

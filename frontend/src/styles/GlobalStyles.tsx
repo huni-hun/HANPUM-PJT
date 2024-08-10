@@ -17,8 +17,8 @@ export const GlobalStyle = createGlobalStyle`
   :root {
     --white: ${colors.white};
     --black: ${colors.black};
-    --sub_grey: ${colors.sub_grey};
-    --green: ${colors.green};
+    --sub: ${colors.sub};
+    --main: ${colors.main};
     --line: ${colors.line};
     --red: ${colors.red};
     --grey1 : ${colors.grey1};

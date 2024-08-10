@@ -15,9 +15,9 @@ interface TextProps {
 
 const Text = styled.span<TextProps>(
   ({ color = 'black', display, textAlign, fontWeight, bold }) => ({
-    color: colors[color], // var(--red)
+    color: colors[color],
     textAlign,
-    fontWeight: bold ? 'bold' : fontWeight, // 우선순위 지정
+    fontWeight: bold ? 'bold' : fontWeight,
     display,
   }),
   ({ typography = 't5' }) => typographyMap[typography],

@@ -44,7 +44,7 @@ export const TermsContainer = styled.div`
   .title {
     font-size: 2rem;
     font-weight: bold;
-    color: ${colors.green};
+    color: ${colors.main};
     padding-left: 24px;
     margin: 16px 0;
   }
@@ -92,7 +92,7 @@ export const TermsContainer = styled.div`
         width: 2rem;
         height: 2rem;
         border-radius: 50%;
-        background-color: ${colors.green};
+        background-color: ${colors.main};
         margin-right: 16px;
         border: none;
       }
@@ -138,7 +138,7 @@ export const TermsContainer = styled.div`
         width: 2rem;
         height: 2rem;
         border-radius: 50%;
-        background-color: ${colors.green};
+        background-color: ${colors.main};
         margin-right: 16px;
         border: none;
       }

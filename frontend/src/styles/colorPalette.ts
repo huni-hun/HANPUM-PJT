@@ -1,8 +1,9 @@
 export const colors = {
   white: '#ffffff',
   black: '#000000',
-  sub_grey: '#B9B9B9',
-  green: '#1A823B',
+  black2: '#252525',
+  main: '#1A823B',
+  sub: '#B9B9B9',
   line: '#66666E',
   red: '#FF0000',
   grey1: '#D9D9D9',

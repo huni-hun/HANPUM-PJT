@@ -108,7 +108,7 @@ function Terms({
       <div
         className="btn"
         style={{
-          backgroundColor: isEssentialCheck ? colors.green : undefined,
+          backgroundColor: isEssentialCheck ? colors.main : undefined,
         }}
         onClick={() => (isEssentialCheck ? clickNext() : '')}
       >

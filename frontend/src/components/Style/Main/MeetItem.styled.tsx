@@ -48,7 +48,7 @@ export const Container = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: ${colors.green};
+        background-color: ${colors.main};
         font-size: 0.6rem;
       }
     }
