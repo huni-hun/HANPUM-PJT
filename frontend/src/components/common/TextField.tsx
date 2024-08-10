@@ -15,6 +15,13 @@ interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   rightElement?: React.ReactNode;
 }
 
+/**
+ * @param {React.ReactNode} [label] label 값
+ * @param {boolean} [hasError] error가 있는지 여부
+ * @param {React.ReactNode} [helpMessage] input 하단에 글자
+ * @param {React.ReactNode} [rightElement] 우측의 요소
+ */
+
 const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
   function TextField(
     { label, hasError, rightElement, helpMessage, onFocus, onBlur, ...props },
@@ -23,7 +30,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     const [focused, setFocused] = useState(false);
 
     // 우선 순위 : 에러 > focus > 기본
-    const labelColor = hasError ? 'red' : focused ? 'main' : 'line';
+    const labelColor = hasError ? 'red' : focused ? 'main' : 'grey2';
 
     const handleFocus: FocusEventHandler<HTMLInputElement> = (event) => {
       setFocused(true);
