@@ -1,11 +1,18 @@
 import Form from '@/components/signup/Form';
-import React from 'react';
+import Terms from '@/components/signup/Terms';
+import { signupInfo } from '@/models/signup';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const SignupPage = () => {
+  const [signupValue, setSignupValue] = useState<signupInfo>({
+    currStep: 0,
+    totalStep: 2,
+  });
+
   return (
     <SignUpPageContainer>
-      <Form />
+      {signupValue.currStep === 0 && <Terms signupValue={signupValue} />}
     </SignUpPageContainer>
   );
 };
