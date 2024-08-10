@@ -21,6 +21,11 @@ export const buttonSizeMap = {
     height: 3.3rem;
     border-radius: 100px;
   `,
+  longRadius: css`
+    width: 10.1rem;
+    height: 3.3rem;
+    border-radius: 100px;
+  `,
   small: css`
     width: 9.7rem;
     height: 4.8rem;

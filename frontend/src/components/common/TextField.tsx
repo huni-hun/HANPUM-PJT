@@ -7,6 +7,7 @@ import {
 import Input from '@common/Input/Input';
 import Text from '@common/Text';
 import Flex from './Flex';
+import Spacing from './Spacing';
 
 interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: React.ReactNode;
@@ -55,7 +56,12 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     return (
       <div>
         {label ? (
-          <Text typography="t12" display="block" style={{ marginBottom: 12 }}>
+          <Text
+            typography="t12"
+            display="block"
+            bold={true}
+            style={{ marginBottom: 12 }}
+          >
             {label}
           </Text>
         ) : null}
@@ -80,7 +86,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
             typography="t10"
             color={labelColor}
             display="inline-block"
-            style={{ marginBottom: 6, fontSize: 12 }}
+            style={{ marginBottom: 24, marginTop: 4 }}
           >
             {helpMessage}
           </Text>

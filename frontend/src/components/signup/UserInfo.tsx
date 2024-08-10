@@ -1,114 +1,85 @@
-import { SignupInfo } from '@/models/signup';
 import * as S from '../Style/Signup/UserInfo.styled';
-import { useState } from 'react';
 import TextField from '../common/TextField';
 import BaseButton from '../common/BaseButton';
-import Icon from '../common/Icon/Icon';
 import Flex from '../common/Flex';
+import Icon from '../common/Icon/Icon';
+import Spacing from '../common/Spacing';
 import FixedBottomButton from '../common/FixedBottomButton';
 
-function UserInfo({
-  signupValue,
-  clickNext,
-}: {
-  signupValue: SignupInfo;
-  clickNext: () => void;
-}) {
-  const [formValues, setFormValues] = useState({});
-
-  const activeClass = (step: number) => {
-    return step === signupValue.currStep ? '-active' : '';
-  };
-
+function UserInfo({ clickNext }: { clickNext: () => void }) {
   return (
     <S.UserInfoContainer>
-      <div className="pagenation">
-        {Array.from({ length: signupValue.totalStep }, (_, index) => (
-          <div key={index} className={`page${activeClass(index)}`} />
-        ))}
-      </div>
+      <TextField
+        label="아이디"
+        name="id"
+        placeholder="김동산"
+        helpMessage="※영문, 숫자를 조합해서 입력해주세요.(6~13자)"
+        rightElement={
+          <BaseButton
+            size="radius"
+            fontSize={1.2}
+            weak={true}
+            style={{
+              marginLeft: '8px',
+            }}
+          >
+            중복확인
+          </BaseButton>
+        }
+      />
 
-      <div className="form">
-        <TextField
-          label="아이디"
-          name="email"
-          placeholder="김동산"
-          // value={formValues.email}
-          // onChange={handleFormValues}
-          // hasError={Boolean(dirty.email) && Boolean(errors.email)}
-          // helpMessage={Boolean(dirty.email) ? errors.email : ''}
-          // onBlur={handleBlur}
-        />
+      <TextField
+        label="비밀번호"
+        type="password"
+        name="password"
+        helpMessage="※영문 대/소문자, 숫자, 특수문자를 조합해서 입력해 주세요.(8~16자)"
+      />
 
-        <TextField
-          label="아이디"
-          name="email"
-          placeholder="김동산"
-          rightElement={
-            <BaseButton
-              size="radius"
-              fontSize={1.2}
-              weak={true}
-              style={{
-                marginLeft: '8px',
-              }}
-            >
-              중복확인
-            </BaseButton>
-          }
-        />
+      <TextField label="비밀번호 확인" type="password" name="rePassword" />
 
-        <TextField
-          label="아이디"
-          name="email"
-          placeholder="김동산"
-          bottomElement={
-            <BaseButton
-              size="radius"
-              fontSize={1.2}
-              weak={true}
-              style={{
-                marginLeft: '8px',
-              }}
-            >
-              중복확인
-            </BaseButton>
-          }
-        />
-      </div>
+      <Spacing size={42} />
 
-      <BaseButton>버튼1</BaseButton>
-      <BaseButton weak={true}>버튼2</BaseButton>
-      <BaseButton size="radius">버튼2</BaseButton>
-      <BaseButton size="radius" weak={true}>
-        버튼2
-      </BaseButton>
+      <TextField
+        label="이메일"
+        name="email"
+        bottomElement={
+          <BaseButton
+            fontSize={1.2}
+            size="longRadius"
+            weak={true}
+            style={{ marginTop: 8 }}
+          >
+            인증번호 재발송
+          </BaseButton>
+        }
+      />
 
-      <BaseButton size="medium" fontSize={1}>
-        버튼2
-      </BaseButton>
-      <BaseButton size="medium" fontSize={1} disabled={true}>
-        버튼2
-      </BaseButton>
+      <TextField
+        label="인증번호"
+        name="id"
+        rightElement={
+          <BaseButton
+            size="radius"
+            fontSize={1.2}
+            weak={false}
+            style={{
+              marginLeft: '8px',
+            }}
+          >
+            <Flex align="center" justify="center" gap={4}>
+              <Icon name="IconHeart" size={9} />
+              <span>인증</span>
+            </Flex>
+          </BaseButton>
+        }
+      />
 
-      <BaseButton size="medium" fontSize={1}>
-        버튼2
-      </BaseButton>
-
-      <BaseButton size="medium" fontSize={1} full={true}>
-        버튼2
-      </BaseButton>
-      <BaseButton size="medium" full={true} disabled={true}>
-        버튼2
-      </BaseButton>
-      <BaseButton size="medium" full={true} disabled={true}>
-        <Flex align="center" justify="center" as="span">
-          <Icon name="IconSun" />
-          <span>ㅎㅇㅇ</span>
-        </Flex>
-      </BaseButton>
-
-      <FixedBottomButton label="보내기" onClick={() => {}} />
+      <FixedBottomButton
+        label="다음"
+        onClick={() => {}}
+        disabled={true}
+        bottom="5"
+      />
     </S.UserInfoContainer>
   );
 }

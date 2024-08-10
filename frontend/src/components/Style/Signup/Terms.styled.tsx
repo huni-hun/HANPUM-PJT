@@ -4,42 +4,6 @@ import styled from 'styled-components';
 export const TermsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
-
-  /* TODO FIxedButton 컴포넌트로 빼기 */
-  .btn {
-    width: 34.3rem;
-    height: 4.8rem;
-    /* margin: 50px auto; */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 50px auto;
-    background-color: ${colors.grey2};
-    color: ${colors.white};
-    font-weight: bold;
-    border-radius: 7px;
-    font-size: 1.6rem;
-  }
-
-  .pagenation {
-    display: flex;
-    gap: 3px;
-    padding-left: 24px;
-
-    .page {
-      width: 0.5rem;
-      height: 0.5rem;
-      border-radius: 50%;
-      background-color: ${colors.grey2};
-    }
-    .page-active {
-      width: 1.3rem;
-      height: 0.5rem;
-      border-radius: 100px;
-      background-color: ${colors.red};
-    }
-  }
 
   .title {
     font-size: 2rem;

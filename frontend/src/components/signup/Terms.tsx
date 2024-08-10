@@ -1,18 +1,10 @@
-import { SignupInfo } from '@/models/signup';
 import * as S from '../Style/Signup/Terms.styled';
-import Flex from '../common/Flex';
-import Text from '../common/Text';
 import { APPLY } from '@/constants';
 import { MouseEvent, useState } from 'react';
 import { colors } from '@/styles/colorPalette';
+import FixedBottomButton from '../common/FixedBottomButton';
 
-function Terms({
-  signupValue,
-  clickNext,
-}: {
-  signupValue: SignupInfo;
-  clickNext: () => void;
-}) {
+function Terms({ clickNext }: { clickNext: () => void }) {
   // 약관 동의 체크를 위한 객체
   // {01: false, 02: false, 03: true}
   const [termsAgreements, setTermsAgreements] = useState(() => {
@@ -24,10 +16,6 @@ function Terms({
       {},
     );
   });
-
-  const activeClass = (step: number) => {
-    return step === signupValue.currStep ? '-active' : '';
-  };
 
   // 모두 체크되었는지 확인하고 true, false로 반환
   const isAllCheck = Object.values(termsAgreements).every((allTrue) => allTrue);
@@ -65,12 +53,6 @@ function Terms({
 
   return (
     <S.TermsContainer>
-      <div className="pagenation">
-        {Array.from({ length: signupValue.totalStep }, (_, index) => (
-          <div key={index} className={`page${activeClass(index)}`} />
-        ))}
-      </div>
-
       <div className="title">한품 시작하기</div>
 
       <div className="desc">
@@ -105,17 +87,19 @@ function Terms({
       </div>
 
       {/* TODO FixedBottom 생성 후 disable props 추가 */}
-      <div
-        className="btn"
-        style={{
-          backgroundColor: isEssentialCheck ? colors.main : undefined,
-        }}
+      <FixedBottomButton
+        label="동의하고 시작하기"
+        disabled={!isEssentialCheck}
+        bottom="5"
         onClick={() => (isEssentialCheck ? clickNext() : '')}
-      >
-        동의하고 시작하기
-      </div>
+      />
     </S.TermsContainer>
   );
 }
 
 export default Terms;
+
+//  style={{
+//           backgroundColor: isEssentialCheck ? colors.main : undefined,
+//         }}
+//
