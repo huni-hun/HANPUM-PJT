@@ -80,4 +80,8 @@ public class Member {
     public void JoinGroupMember(GroupMember groupMember) {
         this.groupMember = groupMember;
     }
+
+    public void updateNickname(String nickname){
+        this.nickname = nickname;
+    }
 }
