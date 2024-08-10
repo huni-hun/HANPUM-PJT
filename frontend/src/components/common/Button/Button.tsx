@@ -3,12 +3,12 @@ import * as B from './Button.styled';
 interface ButtonProps {
   width: number;
   height: number;
-  fontColor: string;
-  backgroundColor: string;
-  radius: number;
-  fontSize: number;
+  fontColor?: string;
+  backgroundColor?: string;
+  radius?: number;
+  fontSize?: number;
   children: string;
-  color: string;
+  color?: string;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
 }
 

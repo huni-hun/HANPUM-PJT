@@ -3,11 +3,11 @@ import styled from 'styled-components';
 export const ButtonBox = styled.button<{
   width: number;
   height: number;
-  backgroundColor: string;
-  fontColor: string;
-  fontSize: number;
-  radius: number;
-  color: string;
+  backgroundColor?: string;
+  fontColor?: string;
+  fontSize?: number;
+  radius?: number;
+  color?: string;
 }>`
   width: ${(props) => props.width || 12}vw;
   height: ${(props) => props.height || 4}vh;
