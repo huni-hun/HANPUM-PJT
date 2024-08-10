@@ -71,7 +71,6 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
           />
 
           {rightElement}
-          {/* button 넣기 */}
         </Flex>
 
         {bottomElement && <Flex justify="end">{bottomElement}</Flex>}

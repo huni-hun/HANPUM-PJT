@@ -5,6 +5,7 @@ import TextField from '../common/TextField';
 import BaseButton from '../common/BaseButton';
 import Icon from '../common/Icon/Icon';
 import Flex from '../common/Flex';
+import FixedBottomButton from '../common/FixedBottomButton';
 
 function UserInfo({
   signupValue,
@@ -106,6 +107,8 @@ function UserInfo({
           <span>ㅎㅇㅇ</span>
         </Flex>
       </BaseButton>
+
+      <FixedBottomButton label="보내기" onClick={() => {}} />
     </S.UserInfoContainer>
   );
 }
