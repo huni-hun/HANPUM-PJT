@@ -9,6 +9,7 @@ import ScheduleMainPage from './Schedule/ScheduleMainPage';
 import RouteList from './Route/RouteList';
 import MeetPage from './Meet/MeetPage';
 import MeetDetailPage from './Meet/MeetDetailPage';
+import SignupPage from './Auth/SignupPage';
 
 export default function Router() {
   return (
@@ -16,6 +17,7 @@ export default function Router() {
       <Routes>
         <Route path="/" element={<Navigate to={'/login'} replace={true} />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
 
         <Route path="/" element={<Header />}>
           <Route path="main" element={<MainPage />} />
