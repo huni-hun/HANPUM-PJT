@@ -45,6 +45,7 @@ public enum ResponseCode {
 
     /* 멤버 */
     NICKNAME_UPDATE_SUCCESS(HttpStatus.OK, "닉네임이 성공적으로 변경되었습니다."),
+    MEMBER_INFO_UPDATE_SUCCESS(HttpStatus.OK, "회원정보가 성공적으로 변경되었습니다."),
     ;
 
     private final HttpStatus status;

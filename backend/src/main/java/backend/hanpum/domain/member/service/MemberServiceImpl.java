@@ -1,6 +1,7 @@
 package backend.hanpum.domain.member.service;
 
 import backend.hanpum.config.redis.RedisDao;
+import backend.hanpum.domain.member.dto.requestDto.UpdateMemberInfoReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdateNicknameReqDto;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
@@ -26,5 +27,16 @@ public class MemberServiceImpl implements MemberService{
         }
         member.updateNickname(updateNicknameReqDto.getNickname());
         redisDao.deleteNickname(updateNicknameReqDto.getNickname());
+    }
+
+    @Override
+    @Transactional
+    public void updateMemberInfo(Long memberId, UpdateMemberInfoReqDto updateMemberInfoReqDto) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        member.updateMemberInfo(
+                updateMemberInfoReqDto.getName(),
+                updateMemberInfoReqDto.getBirthDate(),
+                updateMemberInfoReqDto.getGender(),
+                updateMemberInfoReqDto.getPhoneNumber());
     }
 }

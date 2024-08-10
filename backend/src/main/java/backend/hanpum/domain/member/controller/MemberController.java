@@ -1,6 +1,7 @@
 package backend.hanpum.domain.member.controller;
 
 import backend.hanpum.config.jwt.UserDetailsImpl;
+import backend.hanpum.domain.member.dto.requestDto.UpdateMemberInfoReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdateNicknameReqDto;
 import backend.hanpum.domain.member.service.MemberService;
 import backend.hanpum.exception.format.code.ApiResponse;
@@ -28,5 +29,13 @@ public class MemberController {
                                             @RequestBody @Valid UpdateNicknameReqDto updateNicknameReqDto) {
         memberService.updateNickname(userDetails.getMember().getMemberId(), updateNicknameReqDto);
         return response.success(ResponseCode.NICKNAME_UPDATE_SUCCESS);
+    }
+
+    @Operation(summary = "회원정보 변경", description = "회원정보 변경 API")
+    @PutMapping("/info-update")
+    public ResponseEntity<?> updateMemberInfo(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                            @RequestBody @Valid UpdateMemberInfoReqDto updateMemberInfoReqDto) {
+        memberService.updateMemberInfo(userDetails.getMember().getMemberId(), updateMemberInfoReqDto);
+        return response.success(ResponseCode.MEMBER_INFO_UPDATE_SUCCESS);
     }
 }
