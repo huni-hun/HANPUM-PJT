@@ -10,7 +10,6 @@ import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.auth.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,22 +18,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     private final MemberRepository memberRepository;
-    private final StringRedisTemplate stringRedisTemplate;
     private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final RedisDao redisDao;
-
-    private static final String EMAIL_KEY_PREFIX = "email:";
-    private static final String LOGIN_ID_KEY_PREFIX = "login_id:";
-    private static final String NICKNAME_KEY_PREFIX = "nickname:";
 
     @Override
     @Transactional(readOnly = true)
@@ -43,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
             throw new EmailDuplicatedException();
         });
 
-        if (stringRedisTemplate.hasKey(EMAIL_KEY_PREFIX + email)) {
+        if (redisDao.hasEmail(email)) {
             throw new EmailDuplicatedException();
         }
     }
@@ -54,22 +47,22 @@ public class AuthServiceImpl implements AuthService {
         checkEmailDuplication(email);
         String authCode = generateAuthCode();
         createAuthMail(email, authCode);
-        stringRedisTemplate.opsForValue().set(EMAIL_KEY_PREFIX + email, authCode, 5, TimeUnit.MINUTES);
+        redisDao.setEmailAuthCode(email, authCode);
     }
 
     @Override
     public void checkEmailAuthCode(CheckEmailAuthCodeReqDto checkEmailAuthCodeReqDto) {
         String email = checkEmailAuthCodeReqDto.getEmail();
         String inputAuthCode = checkEmailAuthCodeReqDto.getInputAuthCode();
-        String storedAuthCode = stringRedisTemplate.opsForValue().get(EMAIL_KEY_PREFIX + email);
+        String storedAuthCode = redisDao.getEmailAuthCode(email);
 
-        if(storedAuthCode == null){
+        if (storedAuthCode == null) {
             throw new AuthenticationMailTimeoutException();
         }
-        if(!storedAuthCode.equals(inputAuthCode)){
+        if (!storedAuthCode.equals(inputAuthCode)) {
             throw new AuthenticationCodeInvalidException();
         }
-        stringRedisTemplate.opsForValue().set(EMAIL_KEY_PREFIX + email, "Authenticated", 10, TimeUnit.MINUTES);
+        redisDao.setAuthenticatedEmail(email);
     }
 
     @Override
@@ -79,10 +72,10 @@ public class AuthServiceImpl implements AuthService {
         memberRepository.findMemberByLoginId(loginId).ifPresent(member -> {
             throw new LoginIdDuplicatedException();
         });
-        if (stringRedisTemplate.hasKey(LOGIN_ID_KEY_PREFIX + loginId)) {
+        if (redisDao.hasLoginId(loginId)) {
             throw new LoginIdDuplicatedException();
         }
-        stringRedisTemplate.opsForValue().set(LOGIN_ID_KEY_PREFIX + loginId, "Authenticated", 10, TimeUnit.MINUTES);
+        redisDao.setLoginId(loginId);
     }
 
     @Override
@@ -92,10 +85,10 @@ public class AuthServiceImpl implements AuthService {
         memberRepository.findMemberByNickname(nickname).ifPresent(member -> {
             throw new NicknameDuplicatedException();
         });
-        if (stringRedisTemplate.hasKey(NICKNAME_KEY_PREFIX + nickname)) {
+        if (redisDao.hasNickname(nickname)) {
             throw new NicknameDuplicatedException();
         }
-        stringRedisTemplate.opsForValue().set(NICKNAME_KEY_PREFIX + nickname, "Authenticated", 10, TimeUnit.MINUTES);
+        redisDao.setNickName(nickname);
     }
 
     @Override
@@ -119,9 +112,9 @@ public class AuthServiceImpl implements AuthService {
                 .build();
         memberRepository.save(member);
 
-        stringRedisTemplate.delete(EMAIL_KEY_PREFIX + signUpReqDto.getEmail());
-        stringRedisTemplate.delete(LOGIN_ID_KEY_PREFIX + signUpReqDto.getLoginId());
-        stringRedisTemplate.delete(NICKNAME_KEY_PREFIX + signUpReqDto.getNickname());
+        redisDao.deleteEmail(signUpReqDto.getEmail());
+        redisDao.deleteLoginId(signUpReqDto.getLoginId());
+        redisDao.deleteNickname(signUpReqDto.getNickname());
     }
 
     @Override
@@ -148,23 +141,23 @@ public class AuthServiceImpl implements AuthService {
         return jwtProvider.reissueAccessToken(member.getEmail(), member.getMemberType(), tokenReissueReqDto.getRefreshToken());
     }
 
-    private void checkLoginIdAuthenticated(String loginId){
-        if (!stringRedisTemplate.hasKey(LOGIN_ID_KEY_PREFIX + loginId)) {
+    private void checkLoginIdAuthenticated(String loginId) {
+        if (!redisDao.hasLoginId(loginId)) {
             throw new LoginIdExpiredException();
         }
     }
 
-    private void checkEmailAuthenticated(String email){
-        if (!stringRedisTemplate.hasKey(EMAIL_KEY_PREFIX + email)) {
+    private void checkEmailAuthenticated(String email) {
+        if (!redisDao.hasEmail(email)) {
             throw new EmailExpiredException();
         }
-        if (!stringRedisTemplate.opsForValue().get(EMAIL_KEY_PREFIX + email).equals("Authenticated")) {
+        if (!redisDao.checkAuthenticatedEmail(email).equals("Authenticated")) {
             throw new EmailNotAuthenticatedException();
         }
     }
 
-    private void checkNicknameAuthenticated(String nickname){
-        if (!stringRedisTemplate.hasKey(NICKNAME_KEY_PREFIX + nickname)) {
+    private void checkNicknameAuthenticated(String nickname) {
+        if (!redisDao.hasNickname(nickname)) {
             throw new RefreshTokenNotFoundException();
         }
     }

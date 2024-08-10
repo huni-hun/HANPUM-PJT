@@ -2,6 +2,7 @@ package backend.hanpum.domain.member.entity;
 
 import backend.hanpum.domain.course.entity.Course;
 import backend.hanpum.domain.course.entity.Review;
+import backend.hanpum.domain.group.entity.GroupMember;
 import backend.hanpum.domain.member.enums.Gender;
 import backend.hanpum.domain.member.enums.MemberType;
 import backend.hanpum.domain.schedule.entity.Schedule;
@@ -71,4 +72,12 @@ public class Member {
     @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Review> reviews = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_member_id", unique = true)
+    private GroupMember groupMember;
+
+    public void JoinGroupMember(GroupMember groupMember) {
+        this.groupMember = groupMember;
+    }
 }
