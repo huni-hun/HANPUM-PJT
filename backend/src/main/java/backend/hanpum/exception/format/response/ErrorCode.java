@@ -35,7 +35,7 @@ public enum ErrorCode {
     LOGIN_ID_EXPIRED(HttpStatus.REQUEST_TIMEOUT, "아이디 검증 시간이 만료되었습니다. 회원가입을 다시 시도해 주세요."),
     EMAIL_EXPIRED(HttpStatus.REQUEST_TIMEOUT, "이메일 검증 시간이 만료되었습니다. 회원가입을 다시 시도해 주세요."),
     EMAIL_NOT_AUTHENTICATED(HttpStatus.BAD_REQUEST, "이메일 인증이 완료되지 않았습니다. 인증을 완료한 후 다시 시도해 주세요."),
-    NICKNAME_EXPIRED(HttpStatus.REQUEST_TIMEOUT, "닉네임 검증 시간이 만료되었습니다. 회원가입을 다시 시도해 주세요."),
+    NICKNAME_EXPIRED(HttpStatus.REQUEST_TIMEOUT, "닉네임 검증 시간이 만료되었습니다."),
     EMAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 이메일을 가진 회원을 찾을 수 없습니다."),
     LOGIN_INFO_INVALID(HttpStatus.BAD_REQUEST, "로그인 정보가 잘못되었습니다."),
     TOKEN_INVALID(HttpStatus.BAD_REQUEST, "잘못된 토큰 입니다."),
