@@ -11,6 +11,7 @@ const Input = styled.input`
   border-radius: 7px;
   width: 100%;
   box-sizing: border-box;
+  flex: 1;
 
   ::placeholder {
     color: ${colors.grey2};

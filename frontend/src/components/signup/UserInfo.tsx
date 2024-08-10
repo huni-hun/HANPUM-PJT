@@ -3,6 +3,8 @@ import * as S from '../Style/Signup/UserInfo.styled';
 import { useState } from 'react';
 import TextField from '../common/TextField';
 import BaseButton from '../common/BaseButton';
+import Icon from '../common/Icon/Icon';
+import Flex from '../common/Flex';
 
 function UserInfo({
   signupValue,
@@ -36,6 +38,42 @@ function UserInfo({
           // helpMessage={Boolean(dirty.email) ? errors.email : ''}
           // onBlur={handleBlur}
         />
+
+        <TextField
+          label="아이디"
+          name="email"
+          placeholder="김동산"
+          rightElement={
+            <BaseButton
+              size="radius"
+              fontSize={1.2}
+              weak={true}
+              style={{
+                marginLeft: '8px',
+              }}
+            >
+              중복확인
+            </BaseButton>
+          }
+        />
+
+        <TextField
+          label="아이디"
+          name="email"
+          placeholder="김동산"
+          bottomElement={
+            <BaseButton
+              size="radius"
+              fontSize={1.2}
+              weak={true}
+              style={{
+                marginLeft: '8px',
+              }}
+            >
+              중복확인
+            </BaseButton>
+          }
+        />
       </div>
 
       <BaseButton>버튼1</BaseButton>
@@ -61,6 +99,12 @@ function UserInfo({
       </BaseButton>
       <BaseButton size="medium" full={true} disabled={true}>
         버튼2
+      </BaseButton>
+      <BaseButton size="medium" full={true} disabled={true}>
+        <Flex align="center" justify="center" as="span">
+          <Icon name="IconSun" />
+          <span>ㅎㅇㅇ</span>
+        </Flex>
       </BaseButton>
     </S.UserInfoContainer>
   );

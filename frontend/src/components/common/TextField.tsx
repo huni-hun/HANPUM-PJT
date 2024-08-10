@@ -13,6 +13,7 @@ interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   hasError?: boolean;
   helpMessage?: React.ReactNode;
   rightElement?: React.ReactNode;
+  bottomElement?: React.ReactNode;
 }
 
 /**
@@ -20,11 +21,21 @@ interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
  * @param {boolean} [hasError] error가 있는지 여부
  * @param {React.ReactNode} [helpMessage] input 하단에 글자
  * @param {React.ReactNode} [rightElement] 우측의 요소
+ * @param {React.ReactNode} [rightElement] 하단의 요소
  */
 
 const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
   function TextField(
-    { label, hasError, rightElement, helpMessage, onFocus, onBlur, ...props },
+    {
+      label,
+      hasError,
+      rightElement,
+      bottomElement,
+      helpMessage,
+      onFocus,
+      onBlur,
+      ...props
+    },
     ref,
   ) {
     const [focused, setFocused] = useState(false);
@@ -49,7 +60,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
           </Text>
         ) : null}
 
-        <Flex>
+        <Flex align="center">
           <Input
             autoComplete="off"
             ref={ref}
@@ -59,8 +70,11 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
             {...props}
           />
 
+          {rightElement}
           {/* button 넣기 */}
         </Flex>
+
+        {bottomElement && <Flex justify="end">{bottomElement}</Flex>}
 
         {helpMessage && (
           <Text

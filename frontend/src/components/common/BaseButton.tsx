@@ -6,7 +6,9 @@ import {
   buttonWeakMap,
 } from '@/styles/buttons';
 import { colors } from '@/styles/colorPalette';
+import React from 'react';
 import styled, { css } from 'styled-components';
+import Flex from './Flex';
 
 interface ButtonProps {
   color?: ButtonColor;
