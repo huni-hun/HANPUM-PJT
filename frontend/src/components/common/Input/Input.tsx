@@ -3,14 +3,18 @@ import styled from 'styled-components';
 import { colors } from '@styles/colorPalette';
 
 const Input = styled.input`
-  padding: 0 16px;
-  font-size: 15px;
-  height: 48px;
+  padding: 14px 12px;
+  font-size: 1.4rem;
+  height: 4.8rem;
   font-weight: 500;
   border: 1px solid ${colors.line};
-  border-radius: 6px;
+  border-radius: 7px;
   width: 100%;
   box-sizing: border-box;
+
+  ::placeholder {
+    color: ${colors.grey2};
+  }
 
   &:focus {
     outline: none;

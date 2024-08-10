@@ -1,4 +1,4 @@
-import { signupInfo } from '@/models/signup';
+import { SignupInfo } from '@/models/signup';
 import * as S from '../Style/Signup/Terms.styled';
 import Flex from '../common/Flex';
 import Text from '../common/Text';
@@ -10,7 +10,7 @@ function Terms({
   signupValue,
   clickNext,
 }: {
-  signupValue: signupInfo;
+  signupValue: SignupInfo;
   clickNext: () => void;
 }) {
   // 약관 동의 체크를 위한 객체
@@ -32,7 +32,14 @@ function Terms({
   // 모두 체크되었는지 확인하고 true, false로 반환
   const isAllCheck = Object.values(termsAgreements).every((allTrue) => allTrue);
 
-  // 전체동의 누르는 함수
+  // 필수약관 모두 체크되었는지
+  const isEssentialCheck = Object.entries(termsAgreements)
+    .filter(([key]) => key !== '03')
+    .every(([, value]) => value);
+
+  console.log('isAllCheck ::', isAllCheck);
+
+  // 전체 동의 누르는 함수
   const handleAllAgree = (
     _: MouseEvent<HTMLElement>,
     checked: boolean,
@@ -101,9 +108,9 @@ function Terms({
       <div
         className="btn"
         style={{
-          backgroundColor: isAllCheck ? colors.green : undefined,
+          backgroundColor: isEssentialCheck ? colors.green : undefined,
         }}
-        onClick={() => (isAllCheck ? clickNext() : '')}
+        onClick={() => (isEssentialCheck ? clickNext() : '')}
       >
         동의하고 시작하기
       </div>

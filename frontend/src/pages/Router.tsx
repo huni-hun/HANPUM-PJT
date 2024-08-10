@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
-import MainPage from './MainPage';
+import MainPage from './Main/MainPage';
 import Header from '@/components/common/Header/Header';
 import RouteAddMainPage from './Route/RouteAddMainPage';
 import RouteAddPlacePage from './Route/RouteAddPlacePage';

@@ -1,17 +1,15 @@
-import Form from '@/components/signup/Form';
 import Terms from '@/components/signup/Terms';
-import { signupInfo } from '@/models/signup';
+import UserInfo from '@/components/signup/UserInfo';
+import { SignupInfo } from '@/models/signup';
 import { colors } from '@/styles/colorPalette';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const SignupPage = () => {
-  const [signupValue, setSignupValue] = useState<signupInfo>({
-    currStep: 0,
+  const [signupValue, setSignupValue] = useState<SignupInfo>({
+    currStep: 1,
     totalStep: 2,
   });
-
-  console.log(signupValue);
 
   const handleNextPage = () => {
     setSignupValue((prevValues) => ({
@@ -24,6 +22,9 @@ const SignupPage = () => {
     <SignUpPageContainer>
       {signupValue.currStep === 0 && (
         <Terms signupValue={signupValue} clickNext={handleNextPage} />
+      )}
+      {signupValue.currStep === 1 && (
+        <UserInfo signupValue={signupValue} clickNext={handleNextPage} />
       )}
     </SignUpPageContainer>
   );

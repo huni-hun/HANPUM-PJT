@@ -5,8 +5,9 @@ export const typographyMap = {
     font-size: 2rem;
     font-weight: bold;
   `,
-  t2: css`
-    font-size: 26px;
+  tlabel: css`
+    font-size: 1.2rem;
+    font-weight: bold;
   `,
   t3: css`
     font-size: 22px;
