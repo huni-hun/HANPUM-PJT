@@ -3,26 +3,30 @@ import { css } from 'styled-components';
 export const typographyMap = {
   t20: css`
     font-size: 2rem;
-    font-weight: bold;
   `,
-  tlabel: css`
+  t16: css`
+    font-size: 1.6rem;
+  `,
+  t15: css`
+    font-size: 1.5rem;
+  `,
+  t14: css`
+    font-size: 1.4rem;
+  `,
+  t13: css`
+    font-size: 1.3rem;
+  `,
+  t12: css`
     font-size: 1.2rem;
-    font-weight: bold;
   `,
-  t3: css`
-    font-size: 22px;
+  t10: css`
+    font-size: 1rem;
   `,
-  t4: css`
-    font-size: 20px;
-  `,
-  t5: css`
-    font-size: 17px;
+  t8: css`
+    font-size: 0.8rem;
   `,
   t6: css`
-    font-size: 15px;
-  `,
-  t7: css`
-    font-size: 13px;
+    font-size: 0.6rem;
   `,
 };
 
