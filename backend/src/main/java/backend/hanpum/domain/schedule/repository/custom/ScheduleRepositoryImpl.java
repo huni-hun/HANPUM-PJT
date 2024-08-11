@@ -45,9 +45,9 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                                 scheduleDay.id,
                                 scheduleDay.date,
                                 scheduleDay.running,
-                                courseDay.total_distance,
-                                courseDay.total_duration,
-                                courseDay.total_calorie,
+                                courseDay.totalDistance,
+                                courseDay.totalDuration,
+                                courseDay.totalCalorie,
                                 Projections.list(
                                         Projections.constructor(ScheduleWayPointResDto.class,
                                                 scheduleWayPoint.id,

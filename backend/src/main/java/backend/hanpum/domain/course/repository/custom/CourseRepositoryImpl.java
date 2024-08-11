@@ -93,9 +93,9 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
         List<CourseDayResDto> courseDays = query
                 .select(Projections.constructor(CourseDayResDto.class,
                         qCourseDay.dayNumber,
-                        qCourseDay.total_distance,
-                        qCourseDay.total_duration,
-                        qCourseDay.total_calorie))
+                        qCourseDay.totalDistance,
+                        qCourseDay.totalDuration,
+                        qCourseDay.totalCalorie))
                 .from(qCourseDay)
                 .where(qCourseDay.course.courseId.eq(courseId))
                 .fetch();
@@ -131,9 +131,9 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
         CourseDayResDto courseDay = query
                 .select(Projections.constructor(CourseDayResDto.class,
                         qCourseDay.dayNumber,
-                        qCourseDay.total_distance,
-                        qCourseDay.total_duration,
-                        qCourseDay.total_calorie))
+                        qCourseDay.totalDistance,
+                        qCourseDay.totalDuration,
+                        qCourseDay.totalCalorie))
                 .from(qCourseDay)
                 .where(qCourseDay.course.courseId.eq(courseId)
                 .and(qCourseDay.dayNumber.eq(day)))
