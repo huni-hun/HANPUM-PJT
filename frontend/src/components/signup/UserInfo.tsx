@@ -18,7 +18,7 @@ function UserInfo({ clickNext }: { clickNext: () => void }) {
           <BaseButton
             size="radius"
             fontSize={1.2}
-            weak={true}
+            $weak={true}
             style={{
               marginLeft: '8px',
             }}
@@ -46,7 +46,7 @@ function UserInfo({ clickNext }: { clickNext: () => void }) {
           <BaseButton
             fontSize={1.2}
             size="longRadius"
-            weak={true}
+            $weak={true}
             style={{ marginTop: 8 }}
           >
             인증번호 재발송
@@ -61,7 +61,7 @@ function UserInfo({ clickNext }: { clickNext: () => void }) {
           <BaseButton
             size="radius"
             fontSize={1.2}
-            weak={false}
+            $weak={false}
             style={{
               marginLeft: '8px',
             }}

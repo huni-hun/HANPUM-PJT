@@ -10,7 +10,7 @@ interface TextProps {
   display?: CSSProperties['display'];
   textAlign?: CSSProperties['textAlign'];
   fontWeight?: CSSProperties['fontWeight'];
-  bold?: boolean;
+  $bold?: boolean;
 }
 
 /**
@@ -19,15 +19,13 @@ interface TextProps {
  * @param {CSSProperties['display']} [display]  display 속성
  * @param {CSSProperties['textAlign']} [textAlign] 텍스트의 정렬
  * @param {CSSProperties['fontWeight']} [fontWeight] 텍스트의 굵기
- * @param {boolean} [bold] 텍스트를 굵게 표시할지 `fontWeight`보다 우선 적용됩니다.
+ * @param {boolean} [bold] 텍스트를 굵게 표시할지 `fontWeight`보다 우선 적용
  */
-const Text = styled.span.attrs<TextProps>(() => ({
-  bold: undefined,
-}))(
-  ({ color = 'black', display, textAlign, fontWeight, bold }) => ({
+const Text = styled.span<TextProps>(
+  ({ color = 'black', display, textAlign, fontWeight, $bold }) => ({
     color: colors[color],
     textAlign,
-    fontWeight: bold ? 'bold' : fontWeight,
+    fontWeight: $bold ? 'bold' : fontWeight,
     display,
   }),
   ({ typography = 't10' }) => typographyMap[typography],

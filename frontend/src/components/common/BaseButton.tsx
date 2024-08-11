@@ -11,8 +11,8 @@ import styled, { css } from 'styled-components';
 interface ButtonProps {
   color?: ButtonColor;
   size?: ButtonSize;
-  weak?: boolean;
-  full?: boolean;
+  $weak?: boolean;
+  $full?: boolean;
   disabled?: boolean;
   fontSize?: number;
   fontWeight?: string;
@@ -29,11 +29,7 @@ interface ButtonProps {
  * @param {string} [fontWeight=bold] - 폰트 굵기
  */
 
-const BaseButton = styled.button.attrs<ButtonProps>(() => ({
-  // 속성을 DOM에 전달하지 않도록 설정
-  full: undefined,
-  weak: undefined,
-}))(
+const BaseButton = styled.button<ButtonProps>(
   {
     cursor: 'pointer',
     color: 'white',
@@ -45,23 +41,23 @@ const BaseButton = styled.button.attrs<ButtonProps>(() => ({
   ({ fontWeight = 'bold' }) => css`
     font-weight: ${fontWeight};
   `,
-  ({ color = 'primary', weak }) =>
-    weak ? buttonWeakMap[color] : buttonColorMap[color],
+  ({ color = 'primary', $weak }) =>
+    $weak ? buttonWeakMap[color] : buttonColorMap[color],
   ({ size = 'small' }) => buttonSizeMap[size],
-  ({ full }) =>
-    full
+  ({ $full }) =>
+    $full
       ? css`
           display: block;
           width: 100%;
         `
-      : undefined,
+      : '',
   ({ disabled }) =>
     disabled
       ? css`
           background-color: ${colors.grey1};
           cursor: default;
         `
-      : undefined,
+      : '',
 );
 
 export default BaseButton;

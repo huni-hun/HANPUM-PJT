@@ -7,7 +7,7 @@ import styled from 'styled-components';
 
 const SignupPage = () => {
   const [signupValue, setSignupValue] = useState<SignupInfo>({
-    currStep: 1,
+    currStep: 0,
     totalStep: 3,
   });
 

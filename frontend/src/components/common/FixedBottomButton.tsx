@@ -14,7 +14,7 @@ interface FixedBottomButtonProps {
  * @param {string} [label] - 버튼에 표시될 글자
  * @param {() => void} [onClick] - 버튼 클릭 시 실행될 함수
  * @param {boolean} [disabled] - 비활성화 여부
- * * @param {string} [bottom] - bottom에서 얼만큼 떨어지는지
+ * @param {string} [bottom] - bottom에서 얼만큼 떨어지는지
  */
 function FixedBottomButton({
   label,
@@ -26,7 +26,7 @@ function FixedBottomButton({
     <Container bottom={bottom}>
       <BaseButton
         size="medium"
-        full={true}
+        $full={true}
         onClick={onClick}
         disabled={disabled}
       >

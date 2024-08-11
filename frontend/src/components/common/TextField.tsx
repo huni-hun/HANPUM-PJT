@@ -59,7 +59,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
           <Text
             typography="t12"
             display="block"
-            bold={true}
+            $bold={true}
             style={{ marginBottom: 12 }}
           >
             {label}
