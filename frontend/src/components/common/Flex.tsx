@@ -24,6 +24,7 @@ const Flex = styled.div<FlexProps>(
     flexDirection: direction,
     gap: gap,
     wrap: wrap,
+    width: '100%',
   }),
 );
 

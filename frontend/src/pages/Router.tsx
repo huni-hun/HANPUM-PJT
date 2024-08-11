@@ -18,7 +18,7 @@ export default function Router() {
         <Route path="/" element={<Navigate to={'/login'} replace={true} />} />
         <Route path="/login" element={<LoginPage />} />
 
-        {/* <Route path="/" element={<Header />}> */}
+        {/* <Route path="/" element={<Header purpose={purpose} />}> */}
         <Route path="signup" element={<SignupPage />} />
         <Route path="main" element={<MainPage />} />
         <Route path="schedule/main" element={<ScheduleMainPage />} />

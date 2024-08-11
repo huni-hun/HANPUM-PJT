@@ -1,3 +1,4 @@
+import Header from '../common/Header/Header';
 import Text from '../common/Text';
 import * as S from '../Style/Meet/HotMeet.styled';
 import HotMeetItem from './HotMeetItem';
