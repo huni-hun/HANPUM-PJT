@@ -158,7 +158,7 @@ public class AuthServiceImpl implements AuthService {
 
     private void checkNicknameAuthenticated(String nickname) {
         if (!redisDao.hasNickname(nickname)) {
-            throw new RefreshTokenNotFoundException();
+            throw new NicknameExpiredException();
         }
     }
 

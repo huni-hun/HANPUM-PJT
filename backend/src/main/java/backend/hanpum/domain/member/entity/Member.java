@@ -80,4 +80,15 @@ public class Member {
     public void JoinGroupMember(GroupMember groupMember) {
         this.groupMember = groupMember;
     }
+
+    public void updateNickname(String nickname){
+        this.nickname = nickname;
+    }
+
+    public void updateMemberInfo(String name, Date birthDate, Gender gender, String phoneNumber){
+        this.name = name;
+        this.birthDate = birthDate;
+        this.gender = gender;
+        this.phoneNumber = phoneNumber;
+    }
 }
