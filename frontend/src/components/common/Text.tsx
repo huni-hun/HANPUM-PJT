@@ -21,7 +21,9 @@ interface TextProps {
  * @param {CSSProperties['fontWeight']} [fontWeight] 텍스트의 굵기
  * @param {boolean} [bold] 텍스트를 굵게 표시할지 `fontWeight`보다 우선 적용됩니다.
  */
-const Text = styled.span<TextProps>(
+const Text = styled.span.attrs<TextProps>(() => ({
+  bold: undefined,
+}))(
   ({ color = 'black', display, textAlign, fontWeight, bold }) => ({
     color: colors[color],
     textAlign,

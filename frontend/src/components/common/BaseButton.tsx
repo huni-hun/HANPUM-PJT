@@ -26,11 +26,14 @@ interface ButtonProps {
  * @param {boolean} [full=false] - full크기 여부
  * @param {boolean} [disabled=false] - 활성화 여부
  * @param {number} [fontSize=1.6] - 폰트 크기
- * * @param {string} [fontWeight=bold] - 폰트 굵기
+ * @param {string} [fontWeight=bold] - 폰트 굵기
  */
 
-const BaseButton = styled.button<ButtonProps>(
-  // 기본 스타일
+const BaseButton = styled.button.attrs<ButtonProps>(() => ({
+  // 속성을 DOM에 전달하지 않도록 설정
+  full: undefined,
+  weak: undefined,
+}))(
   {
     cursor: 'pointer',
     color: 'white',
@@ -40,7 +43,7 @@ const BaseButton = styled.button<ButtonProps>(
     font-size: ${fontSize}rem;
   `,
   ({ fontWeight = 'bold' }) => css`
-    font-size: ${fontWeight};
+    font-weight: ${fontWeight};
   `,
   ({ color = 'primary', weak }) =>
     weak ? buttonWeakMap[color] : buttonColorMap[color],
