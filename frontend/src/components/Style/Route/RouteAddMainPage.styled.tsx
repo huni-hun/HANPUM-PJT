@@ -137,6 +137,94 @@ export const CardTitle = styled.p`
   font-weight: bold;
 `;
 
+export const TypeCardOpen = styled.div<{ isChecked: boolean }>`
+  width: 80vw;
+  height: ${(props) => (props.isChecked ? '50vh' : '40vh')};
+  border-radius: 1.2rem;
+  background-color: #ffffff;
+  box-shadow: -0.2rem 0.3rem 0.1rem #d9d9d9;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2.4rem 2.4rem 2.4rem 2.4rem;
+  margin-top: 2.4rem;
+`;
+
+export const CheckedTypeContainer = styled.div`
+  width: 80vw;
+  height: 7vh;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  overflow-x: auto;
+  margin-top: 1rem;
+`;
+
+export const CheckedTypeCard = styled.div<{ isLong: boolean }>`
+  height: 4.3rem;
+  width: ${(props) => (props.isLong ? '9.7rem' : '8.3rem')};
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  margin-right: 0.7rem;
+  border: 0.1rem solid #1a823b;
+  border-radius: 1rem;
+  flex-shrink: 0;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+export const TypeText = styled.p`
+  font-size: 1.4rem;
+  color: #1a823b;
+`;
+
+export const TypeContainer = styled.div`
+  width: 76vw;
+  height: 27vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  margin-top: 1rem;
+  border-radius: 1rem;
+  background-color: #e9f3ec;
+  padding: 1rem 1rem 1rem 1rem;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+export const CheckBoxContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 1.7rem;
+`;
+
+export const TypeCheckBox = styled.input`
+  width: 1.8rem;
+  height: 1.8rem;
+  margin-right: 0.2rem;
+`;
+
+export const TypeLabel = styled.label`
+  font-size: 1.4rem;
+  margin-left: 0.2rem;
+`;
+
+export const TypeBtnBox = styled.div`
+  width: 80vw;
+  height: 6vh;
+  display: flex;
+  align-items: end;
+  justify-content: end;
+  margin-top: 1rem;
+`;
+
 export const RouteCardHeader = styled.div`
   width: 78vw;
   height: 3vh;

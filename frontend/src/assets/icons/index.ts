@@ -16,6 +16,7 @@ export { ReactComponent as IconBookMarker } from './BookMarker.svg';
 export { ReactComponent as IconBack } from './BackArrow.svg';
 export { ReactComponent as IconMy } from './My.svg';
 export { ReactComponent as IconLeftBlackArrow } from './Arrow.svg';
+export { ReactComponent as IconSearch } from './SearchIcon.svg';
 
 // header
 export { ReactComponent as IconUser } from './user.svg';

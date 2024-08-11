@@ -22,7 +22,7 @@
     "save-dev": "^0.0.1-security",
     "styled-components": "^6.1.11",
     "styled-reset": "^4.5.2",
-    "swiper": "9",
+    "swiper": "^9.4.1",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4",
     "workbox-background-sync": "^6.6.0",
