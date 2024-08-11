@@ -10,17 +10,25 @@ interface TextProps {
   display?: CSSProperties['display'];
   textAlign?: CSSProperties['textAlign'];
   fontWeight?: CSSProperties['fontWeight'];
-  bold?: boolean;
+  $bold?: boolean;
 }
 
+/**
+ * @param {Typography} [typography='t10'] 텍스트의 타이포그래피 스타일
+ * @param {Colors} [color='black'] 텍스트의 색상
+ * @param {CSSProperties['display']} [display]  display 속성
+ * @param {CSSProperties['textAlign']} [textAlign] 텍스트의 정렬
+ * @param {CSSProperties['fontWeight']} [fontWeight] 텍스트의 굵기
+ * @param {boolean} [bold] 텍스트를 굵게 표시할지 `fontWeight`보다 우선 적용
+ */
 const Text = styled.span<TextProps>(
-  ({ color = 'black', display, textAlign, fontWeight, bold }) => ({
-    color: colors[color], // var(--red)
+  ({ color = 'black', display, textAlign, fontWeight, $bold }) => ({
+    color: colors[color],
     textAlign,
-    fontWeight: bold ? 'bold' : fontWeight, // 우선순위 지정
+    fontWeight: $bold ? 'bold' : fontWeight,
     display,
   }),
-  ({ typography = 't5' }) => typographyMap[typography],
+  ({ typography = 't10' }) => typographyMap[typography],
 );
 
 export default Text;

@@ -8,7 +8,7 @@ function RouteList() {
     <R.RouteListContainer>
       <R.RouteListHeader>
         <R.BackBtnBox>
-          <Icon name="IconBack" size={20} />
+          <Icon name="IconBackArrow" size={20} />
         </R.BackBtnBox>
         <R.SearchContainer>
           <R.SearchBox />

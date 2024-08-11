@@ -1,6 +1,6 @@
 // index.js
 import LoginPage from '../pages/Auth/LoginPage';
-import MainPage from './MainPage';
+import MainPage from './Main/MainPage';
 
 /** 일정 */
 import ScheduleMainPage from '../pages/Schedule/ScheduleMainPage';

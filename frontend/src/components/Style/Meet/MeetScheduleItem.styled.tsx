@@ -12,7 +12,7 @@ export const MeetScheduleItemContainer = styled.div`
       width: 1rem;
       height: 1rem;
       border-radius: 50%;
-      background-color: ${colors.green};
+      background-color: ${colors.main};
       margin-right: 14px;
     }
   }

@@ -44,7 +44,7 @@ function AddSchedulePage() {
     <S.Container>
       <S.HeaderContainer>
         <S.HeaderContent>
-          <Icon name="IconBack" size={20} />
+          <Icon name="IconBackArrow" size={20} />
           <S.HeaderTitle>일정을 등록해주세요</S.HeaderTitle>
           {/* <S.HeaderIcon src={HambergerIcon} /> */}
         </S.HeaderContent>

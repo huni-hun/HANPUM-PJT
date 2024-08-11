@@ -14,11 +14,23 @@ export const GlobalStyle = createGlobalStyle`
     background-color: #F5F5F5;
   }
 
+  button {
+    border: none;
+    margin: 0;
+    padding: 0;
+    width: auto;
+    overflow: visible;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    line-height: normal;
+  }
+
   :root {
     --white: ${colors.white};
     --black: ${colors.black};
-    --sub_grey: ${colors.sub_grey};
-    --green: ${colors.green};
+    --sub: ${colors.sub};
+    --main: ${colors.main};
     --line: ${colors.line};
     --red: ${colors.red};
     --grey1 : ${colors.grey1};
