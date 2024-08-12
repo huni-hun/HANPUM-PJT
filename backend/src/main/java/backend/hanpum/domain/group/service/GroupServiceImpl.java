@@ -77,7 +77,7 @@ public class GroupServiceImpl implements GroupService {
                 .description(group.getDescription())
                 .recruitmentCount(group.getRecruitmentCount())
                 .recruitmentPeriod(group.getRecruitmentPeriod())
-                .recruitmentCount(group.getGroupMemberList().size())
+                .recruitedCount(group.getGroupMemberList().size())
                 .groupJoinStatus(groupJoinStatus)
                 .build();
     }

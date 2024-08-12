@@ -16,7 +16,7 @@ public class GroupDetailGetResDto {
     private String title;
     private String groupImg;
     private String description;
-    private String recruitedCount;
+    private int recruitedCount;
     private int recruitmentCount;
     private Date recruitmentPeriod;
     private GroupJoinStatus groupJoinStatus;
