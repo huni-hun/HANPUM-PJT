@@ -12,6 +12,7 @@ export interface Term {
 export interface SignupValues {
   loginId: string;
   password: string;
+  checkPassword: string;
   email: string;
   profilePicture: string;
   name: string;
@@ -20,14 +21,18 @@ export interface SignupValues {
   phoneNumber: string;
   nickname: string;
   memberType: 'ADMIN' | 'COMMON';
+  inputAuthCode: string;
+}
 
+export interface IncludeStepSignupValues extends SignupStep {
   step: SignupStep;
-  // profile :
-  // type : ,
 }
 
-export interface certificationValidate {
-  id: boolean;
-  email: boolean;
-  nickname: boolean;
+export interface CertificationValidate {
+  checkId: string | boolean;
+  checkEmail: string | boolean;
+  checkNickname: string | boolean;
+  checkComplete: string | boolean;
 }
+
+// export interface

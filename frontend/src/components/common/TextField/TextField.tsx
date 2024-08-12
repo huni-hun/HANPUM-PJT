@@ -2,12 +2,14 @@ import {
   FocusEventHandler,
   forwardRef,
   InputHTMLAttributes,
+  useEffect,
   useState,
 } from 'react';
+import * as S from './TextField.styled';
 import Input from '@common/Input/Input';
 import Text from '@common/Text';
-import Flex from './Flex';
-import Spacing from './Spacing';
+import Flex from '../Flex';
+import Spacing from '../Spacing';
 
 interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: React.ReactNode;
@@ -15,6 +17,7 @@ interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   helpMessage?: React.ReactNode;
   rightElement?: React.ReactNode;
   bottomElement?: React.ReactNode;
+  hasTimer?: string;
 }
 
 /**
@@ -35,6 +38,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       helpMessage,
       onFocus,
       onBlur,
+      hasTimer,
       ...props
     },
     ref,
@@ -54,7 +58,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     };
 
     return (
-      <div>
+      <S.TextFieldContainer>
         {label ? (
           <Text
             $typography="t12"
@@ -67,6 +71,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         ) : null}
 
         <Flex align="center">
+          {hasTimer && <span className="timer">{hasTimer}</span>}
           <Input
             autoComplete="off"
             ref={ref}
@@ -79,8 +84,6 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
           {rightElement}
         </Flex>
 
-        {bottomElement && <Flex justify="end">{bottomElement}</Flex>}
-
         {helpMessage && (
           <Text
             $typography="t10"
@@ -91,7 +94,9 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
             {helpMessage}
           </Text>
         )}
-      </div>
+
+        {bottomElement && <Flex justify="end">{bottomElement}</Flex>}
+      </S.TextFieldContainer>
     );
   },
 );

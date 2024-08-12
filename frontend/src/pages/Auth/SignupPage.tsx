@@ -1,17 +1,21 @@
 import Terms from '@/components/signup/Terms';
 import UserInfo from '@/components/signup/UserInfo';
-import { SignupValues } from '@/models/signup';
+import { IncludeStepSignupValues, SignupValues } from '@/models/signup';
 import { colors } from '@/styles/colorPalette';
 import { useState } from 'react';
 import styled from 'styled-components';
 
 const SignupPage = () => {
-  const [formValues, setFormValues] = useState<Partial<SignupValues>>({
+  const [formValues, setFormValues] = useState<
+    Partial<IncludeStepSignupValues>
+  >({
     step: {
       currStep: 1,
       totalStep: 3,
     },
   });
+
+  console.log(formValues);
 
   const activeClass = (step: number) => {
     if (formValues.step) {
@@ -25,16 +29,16 @@ const SignupPage = () => {
     }
   };
 
-  const handleInfoChange = (
-    infoValue: Pick<SignupValues, 'loginId' | 'password' | 'email'>,
-  ) => {
+  const handleInfoChange = (infoValue: Partial<SignupValues>) => {
     console.log('infoValue ::', infoValue);
-    // console.log('terms ::', terms);
-    // setFormValues((prevValues) => ({
-    //   ...prevValues,
-    //   // [name]: value
-    //   step: (prevValues.step as number) + 1,
-    // }));
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      ...infoValue,
+      step: {
+        currStep: (prevValues.step?.currStep || 0) + 1,
+        totalStep: prevValues.step?.totalStep || 3,
+      },
+    }));
   };
 
   return (
@@ -45,7 +49,6 @@ const SignupPage = () => {
             <div key={index} className={`page${activeClass(index)}`} />
           ))}
       </div>
-      {/* {formValues.step?.currStep === 0 && <Terms clickNext={handleNextPage} />} */}
       {formValues.step?.currStep === 0 && (
         <Terms
           clickNext={() => {
@@ -62,6 +65,7 @@ const SignupPage = () => {
       {formValues.step?.currStep === 1 && (
         <UserInfo clickNext={handleInfoChange} />
       )}
+      {formValues.step?.currStep === 2 && <div>3번째</div>}
     </SignUpPageContainer>
   );
 };
