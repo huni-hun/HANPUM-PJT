@@ -1,4 +1,4 @@
-export interface SignupInfo {
+export interface SignupStep {
   currStep: number;
   totalStep: number;
 }
@@ -9,17 +9,19 @@ export interface Term {
   id: string;
 }
 
-export interface SignFormValues {
-  id: String;
-  password: String;
-  name: String;
-  gender: String;
-  birth: String;
-  email: String;
-  address: String;
-  tel: String;
-  agreement: true;
-  nickname: String;
+export interface SignupValues {
+  loginId: string;
+  password: string;
+  email: string;
+  profilePicture: string;
+  name: string;
+  birthDate: Date;
+  gender: 'MAN' | 'WOMAN' | 'OTHER';
+  phoneNumber: string;
+  nickname: string;
+  memberType: 'ADMIN' | 'COMMON';
+
+  step: SignupStep;
   // profile :
   // type : ,
 }

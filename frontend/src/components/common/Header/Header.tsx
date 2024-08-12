@@ -3,6 +3,7 @@ import * as S from './Header.styled';
 import Icon from '../Icon/Icon';
 import Flex from '../Flex';
 import Text from '../Text';
+import api from '@/api';
 
 interface HeaderProps {
   purpose: string;
@@ -34,7 +35,7 @@ const Header = ({ purpose, title, arrive, depart }: HeaderProps) => {
         return (
           <Flex align="center" justify="center">
             <Icon name="IconBackArrow" className="back-arrow" size={15} />
-            <Text as="div" $bold={true} typography="t20">
+            <Text as="div" $bold={true} $typography="t20">
               {title}
             </Text>
           </Flex>
@@ -44,7 +45,7 @@ const Header = ({ purpose, title, arrive, depart }: HeaderProps) => {
         return (
           <Flex align="center" style={{ paddingLeft: '4.7rem' }}>
             <Icon name="IconBackArrow" className="back-arrow" size={15} />
-            <Text as="div" $bold={true} typography="t20">
+            <Text as="div" $bold={true} $typography="t20">
               {title}
             </Text>
           </Flex>
@@ -53,19 +54,19 @@ const Header = ({ purpose, title, arrive, depart }: HeaderProps) => {
         return (
           <Flex align="center" justify="center">
             <Flex direction="column" gap={4}>
-              <Text as="div" $bold={true} typography="t10" color="grey2">
+              <Text as="div" $bold={true} $typography="t10" color="grey2">
                 출발지
               </Text>
-              <Text as="div" $bold={true} typography="t12">
+              <Text as="div" $bold={true} $typography="t12">
                 {depart}
               </Text>
             </Flex>
 
             <Flex direction="column" gap={4}>
-              <Text as="div" $bold={true} typography="t10" color="grey2">
+              <Text as="div" $bold={true} $typography="t10" color="grey2">
                 도착지
               </Text>
-              <Text as="div" $bold={true} typography="t12">
+              <Text as="div" $bold={true} $typography="t12">
                 {arrive}
               </Text>
             </Flex>

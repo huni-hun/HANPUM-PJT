@@ -1,56 +1,67 @@
 import Terms from '@/components/signup/Terms';
 import UserInfo from '@/components/signup/UserInfo';
-import { SignFormValues, SignupInfo } from '@/models/signup';
+import { SignupValues } from '@/models/signup';
 import { colors } from '@/styles/colorPalette';
 import { useState } from 'react';
 import styled from 'styled-components';
 
 const SignupPage = () => {
-  const [signupValue, setSignupValue] = useState<SignupInfo>({
-    currStep: 0,
-    totalStep: 3,
+  const [formValues, setFormValues] = useState<Partial<SignupValues>>({
+    step: {
+      currStep: 1,
+      totalStep: 3,
+    },
   });
-
-  const [formValues, setFormValues] = useState<SignFormValues>({
-    id: '',
-    password: '',
-    name: '',
-    gender: '',
-    birth: '',
-    email: '',
-    address: '',
-    tel: '',
-    agreement: true,
-    nickname: '',
-  });
-
-  const handleNextPage = () => {
-    setSignupValue((prevValues) => ({
-      ...prevValues,
-      currStep: (prevValues.currStep as number) + 1,
-    }));
-  };
 
   const activeClass = (step: number) => {
-    if (step < signupValue.currStep) {
-      return '-prev';
-    } else if (step === signupValue.currStep) {
-      return '-active';
-    } else {
-      return '';
+    if (formValues.step) {
+      if (step < formValues.step.currStep) {
+        return '-prev';
+      } else if (step === formValues.step.currStep) {
+        return '-active';
+      } else {
+        return '';
+      }
     }
-    // return step === signupValue.currStep ? '-active' : '';
+  };
+
+  const handleInfoChange = (
+    infoValue: Pick<SignupValues, 'loginId' | 'password' | 'email'>,
+  ) => {
+    console.log('infoValue ::', infoValue);
+    // console.log('terms ::', terms);
+    // setFormValues((prevValues) => ({
+    //   ...prevValues,
+    //   // [name]: value
+    //   step: (prevValues.step as number) + 1,
+    // }));
   };
 
   return (
     <SignUpPageContainer>
       <div className="pagenation">
-        {Array.from({ length: signupValue.totalStep }, (_, index) => (
-          <div key={index} className={`page${activeClass(index)}`} />
-        ))}
+        {formValues.step &&
+          Array.from({ length: formValues.step.totalStep }, (_, index) => (
+            <div key={index} className={`page${activeClass(index)}`} />
+          ))}
       </div>
-      {signupValue.currStep === 0 && <Terms clickNext={handleNextPage} />}
-      {signupValue.currStep === 1 && <UserInfo clickNext={handleNextPage} />}
+      {/* {formValues.step?.currStep === 0 && <Terms clickNext={handleNextPage} />} */}
+      {formValues.step?.currStep === 0 && (
+        <Terms
+          clickNext={() => {
+            setFormValues((prevValues) => ({
+              ...prevValues,
+              step: {
+                currStep: (prevValues.step?.currStep || 0) + 1,
+                totalStep: prevValues.step?.totalStep || 3,
+              },
+            }));
+          }}
+        />
+      )}
+      {formValues.step?.currStep === 1 && (
+        <UserInfo clickNext={handleInfoChange} />
+      )}
     </SignUpPageContainer>
   );
 };

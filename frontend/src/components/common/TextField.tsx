@@ -57,7 +57,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       <div>
         {label ? (
           <Text
-            typography="t12"
+            $typography="t12"
             display="block"
             $bold={true}
             style={{ marginBottom: 12 }}
@@ -83,7 +83,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
 
         {helpMessage && (
           <Text
-            typography="t10"
+            $typography="t10"
             color={labelColor}
             display="inline-block"
             style={{ marginBottom: 24, marginTop: 4 }}

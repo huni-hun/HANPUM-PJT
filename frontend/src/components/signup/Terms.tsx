@@ -25,8 +25,6 @@ function Terms({ clickNext }: { clickNext: () => void }) {
     .filter(([key]) => key !== '03')
     .every(([, value]) => value);
 
-  console.log('isAllCheck ::', isAllCheck);
-
   // 전체 동의 누르는 함수
   const handleAllAgree = (
     _: MouseEvent<HTMLElement>,
@@ -90,7 +88,7 @@ function Terms({ clickNext }: { clickNext: () => void }) {
       <FixedBottomButton
         label="동의하고 시작하기"
         disabled={!isEssentialCheck}
-        bottom="5"
+        $bottom="5"
         onClick={() => (isEssentialCheck ? clickNext() : '')}
       />
     </S.TermsContainer>

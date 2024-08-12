@@ -13,9 +13,9 @@ function MainPage() {
       <Header purpose="search" />
       <div className="padding-box">
         <Schedule />
-        <Text typography="t20">동동님을 위한 추천코스</Text>
+        <Text $typography="t20">동동님을 위한 추천코스</Text>
         <Course />
-        <Text typography="t20">모임추천</Text>
+        <Text $typography="t20">모임추천</Text>
       </div>
       <Meet />
       <BottomTab />

@@ -8,7 +8,7 @@ function MeetPage() {
     <MeetPageContainer>
       <Header purpose="title" title="임시방편이요" />
       <div className="layout">
-        <Text typography="t20">지금 가장 인기 있는 모임</Text>
+        <Text $typography="t20">지금 가장 인기 있는 모임</Text>
         <HotMeet />
       </div>
     </MeetPageContainer>
