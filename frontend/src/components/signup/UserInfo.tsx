@@ -8,6 +8,7 @@ import FixedBottomButton from '../common/FixedBottomButton';
 import { CheckId } from '@/api/signup/POST';
 import { SignupValues } from '@/models/signup';
 import { ChangeEvent, useState } from 'react';
+import { useMutation } from 'react-query';
 
 type InfoValues = Pick<SignupValues, 'loginId' | 'password' | 'email'>;
 
@@ -25,14 +26,24 @@ function UserInfo({
 
   const handleInfoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    console.log('이름은 ::', name, '값은 ::', value);
+
+    setInfoValue((prevValue) => ({
+      ...prevValue,
+      [name]: value,
+    }));
   };
-  // const { mutate } = CheckId({
-  //   onSuccess: (res) => {
-  //     console.log(res);
-  //   },
-  //   // onError: () => {},
-  // });
+
+  // console.log(infoValue);
+  const { mutate } = useMutation(CheckId, {
+    onSuccess: (res) => {
+      console.log(res);
+      // 성공 시 처리 로직 추가
+    },
+    onError: (error) => {
+      console.error(error);
+      // 에러 처리 로직 추가
+    },
+  });
 
   const clickCheckId = (id: string) => {
     CheckId(id);
@@ -42,7 +53,7 @@ function UserInfo({
     <S.UserInfoContainer>
       <TextField
         label="아이디"
-        name="id"
+        name="loginId"
         placeholder="김동산"
         onChange={handleInfoChange}
         value={infoValue.loginId}
@@ -55,6 +66,7 @@ function UserInfo({
             style={{
               marginLeft: '8px',
             }}
+            onClick={() => mutate(infoValue.loginId)}
           >
             중복확인
           </BaseButton>
