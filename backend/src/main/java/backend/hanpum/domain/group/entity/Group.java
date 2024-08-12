@@ -40,7 +40,7 @@ public class Group {
     private Date recruitmentPeriod;
 
     @Builder.Default
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<GroupMember> groupMemberList = new ArrayList<>();
 
     // 일정 추가
