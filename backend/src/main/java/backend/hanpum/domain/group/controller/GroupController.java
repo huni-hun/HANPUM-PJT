@@ -3,6 +3,7 @@ package backend.hanpum.domain.group.controller;
 import backend.hanpum.config.jwt.UserDetailsImpl;
 import backend.hanpum.domain.group.dto.requestDto.GroupPostReqDto;
 import backend.hanpum.domain.group.dto.responseDto.GroupDetailGetResDto;
+import backend.hanpum.domain.group.dto.responseDto.GroupListGetResDto;
 import backend.hanpum.domain.group.dto.responseDto.GroupPostResDto;
 import backend.hanpum.domain.group.service.GroupService;
 import backend.hanpum.exception.format.code.ApiResponse;
@@ -30,6 +31,13 @@ public class GroupController {
                                        @RequestBody @Valid GroupPostReqDto groupPostReqDto) {
         GroupPostResDto groupPostResDto = groupService.createGroup(userDetails.getMember().getMemberId(), groupPostReqDto);
         return response.success(ResponseCode.GROUP_CREATED_SUCCESS, groupPostResDto);
+    }
+
+    @Operation(summary = "모임 리스트 조회", description = "모임 리스트 조회 API")
+    @GetMapping
+    public ResponseEntity<?> getGroupList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        GroupListGetResDto groupListGetResDto = groupService.getGroupList(userDetails.getMember().getMemberId());
+        return response.success(ResponseCode.GROUP_LIST_FETCHED, groupListGetResDto);
     }
 
     @Operation(summary = "모임 상세 조회", description = "모임 상세 조회 API")
