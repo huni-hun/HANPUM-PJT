@@ -9,6 +9,8 @@ import { CheckId } from '@/api/signup/POST';
 import { SignupValues } from '@/models/signup';
 import { ChangeEvent, useState } from 'react';
 import { useMutation } from 'react-query';
+import { toast } from 'react-toastify';
+import { STATUS } from '@/constants';
 
 type InfoValues = Pick<SignupValues, 'loginId' | 'password' | 'email'>;
 
@@ -37,10 +39,19 @@ function UserInfo({
   const { mutate } = useMutation(CheckId, {
     onSuccess: (res) => {
       console.log(res);
+      if (res.status === STATUS.success) {
+        console.log('성공');
+        toast.success(res.message);
+      }
+      if (res.status === STATUS.error) {
+        console.log('실패');
+        toast.error(res.message);
+      }
       // 성공 시 처리 로직 추가
     },
     onError: (error) => {
       console.error(error);
+      toast.error('네트워크 오류');
       // 에러 처리 로직 추가
     },
   });

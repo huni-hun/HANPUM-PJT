@@ -26,3 +26,8 @@ export const APPLY = [
     link: 'www.google.com',
   },
 ] as Term[];
+
+export const STATUS = {
+  success: 'SUCCESS',
+  error: 'ERROR',
+};

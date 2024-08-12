@@ -25,3 +25,9 @@ export interface SignupValues {
   // profile :
   // type : ,
 }
+
+export interface certificationValidate {
+  id: boolean;
+  email: boolean;
+  nickname: boolean;
+}
