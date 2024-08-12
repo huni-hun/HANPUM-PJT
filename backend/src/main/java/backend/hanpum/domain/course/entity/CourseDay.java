@@ -28,13 +28,13 @@ public class CourseDay {
     private Course course;
 
     @Column(name = "total_distance", length = 10)
-    private String total_distance;
+    private String totalDistance;
 
     @Column(name = "total_duration", length = 10)
-    private String total_duration;
+    private String totalDuration;
 
     @Column(name = "total_calorie", length = 20)
-    private String total_calorie;
+    private String totalCalorie;
 
     @Builder.Default
     @OneToMany(mappedBy = "courseDay", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
