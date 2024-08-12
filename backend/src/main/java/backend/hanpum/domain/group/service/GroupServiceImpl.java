@@ -69,11 +69,21 @@ public class GroupServiceImpl implements GroupService {
     @Transactional(readOnly = true)
     public GroupDetailGetResDto getGroupDetail(Long memberId, Long groupId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
-        Group group = groupRepository.findById(groupId).orElseThrow(GroupDetailNotFoundException::new);
+        GroupDetailGetResDto groupDetailGetResDto = groupRepositoryCustom.findGroupById(groupId).orElseThrow(GroupDetailNotFoundException::new);
 
-        GroupMember groupMember = member.getGroupMember();
+        return GroupDetailGetResDto.builder()
+                .title(groupDetailGetResDto.getTitle())
+                .groupImg(groupDetailGetResDto.getGroupImg())
+                .description(groupDetailGetResDto.getDescription())
+                .recruitmentCount(groupDetailGetResDto.getRecruitmentCount())
+                .recruitmentPeriod(groupDetailGetResDto.getRecruitmentPeriod())
+                .recruitedCount(groupDetailGetResDto.getRecruitedCount())
+                .groupJoinStatus(getGroupJoinStatus(member.getGroupMember(), groupId))
+                .build();
+    }
+
+    private GroupJoinStatus getGroupJoinStatus(GroupMember groupMember, Long groupId) {
         GroupJoinStatus groupJoinStatus = GroupJoinStatus.NOT_JOINED_GROUP;
-
         if (groupMember != null) {
             if (!groupMember.getGroup().getGroupId().equals(groupId)) {
                 groupJoinStatus = GroupJoinStatus.ANOTHER_GROUP;
@@ -85,15 +95,6 @@ public class GroupServiceImpl implements GroupService {
                 }
             }
         }
-
-        return GroupDetailGetResDto.builder()
-                .title(group.getTitle())
-                .groupImg(group.getGroupImg())
-                .description(group.getDescription())
-                .recruitmentCount(group.getRecruitmentCount())
-                .recruitmentPeriod(group.getRecruitmentPeriod())
-                .recruitedCount(group.getGroupMemberList().size())
-                .groupJoinStatus(groupJoinStatus)
-                .build();
+        return groupJoinStatus;
     }
 }

@@ -16,8 +16,19 @@ public class GroupDetailGetResDto {
     private String title;
     private String groupImg;
     private String description;
-    private int recruitedCount;
+    private Long recruitedCount;
     private int recruitmentCount;
     private Date recruitmentPeriod;
     private GroupJoinStatus groupJoinStatus;
+
+    @Builder
+    public GroupDetailGetResDto(String title, String groupImg, String description,
+                                Long recruitedCount, int recruitmentCount, Date recruitmentPeriod) {
+        this.title = title;
+        this.groupImg = groupImg;
+        this.description = description;
+        this.recruitedCount = recruitedCount;
+        this.recruitmentCount = recruitmentCount;
+        this.recruitmentPeriod = recruitmentPeriod;
+    }
 }
