@@ -3,6 +3,7 @@ package backend.hanpum.domain.auth.service;
 import backend.hanpum.config.jwt.JwtProvider;
 import backend.hanpum.config.redis.RedisDao;
 import backend.hanpum.domain.auth.dto.requestDto.*;
+import backend.hanpum.domain.auth.dto.responseDto.FindMemberLoginIdResDto;
 import backend.hanpum.domain.auth.dto.responseDto.LoginResDto;
 import backend.hanpum.domain.auth.dto.responseDto.ReissueAccessTokenResDto;
 import backend.hanpum.domain.auth.dto.responseDto.TokenResDto;
@@ -139,6 +140,15 @@ public class AuthServiceImpl implements AuthService {
     public ReissueAccessTokenResDto reissueToken(String accessToken, TokenReissueReqDto tokenReissueReqDto) {
         Member member = memberRepository.findMemberByEmail(jwtProvider.getEmailFromExpiredToken(accessToken)).orElseThrow(EmailNotFoundException::new);
         return jwtProvider.reissueAccessToken(member.getEmail(), member.getMemberType(), tokenReissueReqDto.getRefreshToken());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public FindMemberLoginIdResDto findMemberLoginId(FindMemberLoginIdReqDto findMemberLoginIdReqDto) {
+        Member member =
+                memberRepository.findByEmailAndName(findMemberLoginIdReqDto.getEmail(), findMemberLoginIdReqDto.getName())
+                        .orElseThrow(MemberNotFoundException::new);
+        return FindMemberLoginIdResDto.builder().loginId(member.getLoginId()).build();
     }
 
     private void checkLoginIdAuthenticated(String loginId) {
