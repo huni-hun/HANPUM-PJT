@@ -1,4 +1,5 @@
 import Header from '@/components/common/Header/Header';
+import ProfileConfig from '@/components/signup/ProfileConfig';
 import Terms from '@/components/signup/Terms';
 import UserInfo from '@/components/signup/UserInfo';
 import { IncludeStepSignupValues, SignupValues } from '@/models/signup';
@@ -64,7 +65,7 @@ const SignupPage = () => {
             ? '약관 동의'
             : formValues.step?.currStep === 1
               ? '기본정보'
-              : '회원정보'
+              : '프로필 설정'
         }
         clickBack={() => {
           if ((formValues.step?.currStep as number) > 0) {
@@ -97,7 +98,9 @@ const SignupPage = () => {
       {formValues.step?.currStep === 1 && (
         <UserInfo clickNext={handleInfoChange} pagenation={renderPagenation} />
       )}
-      {formValues.step?.currStep === 2 && <div>3번째</div>}
+      {formValues.step?.currStep === 2 && (
+        <ProfileConfig pagenation={renderPagenation} />
+      )}
     </SignUpPageContainer>
   );
 };

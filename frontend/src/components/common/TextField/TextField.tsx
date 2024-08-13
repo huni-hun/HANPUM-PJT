@@ -17,7 +17,7 @@ interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   helpMessage?: React.ReactNode;
   rightElement?: React.ReactNode;
   bottomElement?: React.ReactNode;
-  hasTimer?: string;
+  hasFloat?: string | React.ReactNode;
 }
 
 /**
@@ -38,7 +38,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       helpMessage,
       onFocus,
       onBlur,
-      hasTimer,
+      hasFloat,
       ...props
     },
     ref,
@@ -71,7 +71,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         ) : null}
 
         <Flex $align="center">
-          {hasTimer && <span className="timer">{hasTimer}</span>}
+          {hasFloat && <span className="timer">{hasFloat}</span>}
           <Input
             autoComplete="off"
             ref={ref}

@@ -345,7 +345,7 @@ function UserInfo({
             ? validate.inputAuthCode
             : ''
         }
-        hasTimer={isSend.checkEmail ? formatTime(time) : ''}
+        hasFloat={isSend.checkEmail ? formatTime(time) : ''}
         rightElement={
           <BaseButton
             size="radius"
