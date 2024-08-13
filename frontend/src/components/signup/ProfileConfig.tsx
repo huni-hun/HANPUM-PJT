@@ -4,8 +4,23 @@ import * as S from '../Style/Signup/ProfileConfig.styled';
 import img from '../../assets/img/img1.jpg';
 import TextField from '../common/TextField/TextField';
 import BaseButton from '../common/BaseButton';
+import { useAlert } from '@/hooks/global/useAlert';
+import CalenderAlert from '../common/Modal/CalenderAlert';
+import Calender from './Calender';
 
 function ProfileConfig({ pagenation }: { pagenation: () => React.ReactNode }) {
+  const { open } = useAlert();
+
+  const handleClick = () => {
+    console.log('눌림');
+    open({
+      purpose: 'calender',
+      onButtonClick: () => {
+        // console.log('버튼이 클릭되었습니다.');
+      },
+      element: <Calender />,
+    });
+  };
   return (
     <S.ProfileConfigContainer>
       {pagenation()}
@@ -16,7 +31,7 @@ function ProfileConfig({ pagenation }: { pagenation: () => React.ReactNode }) {
         <div className="profile-prev_img">{/* <img src={img} alt="" /> */}</div>
 
         <div className="profile-icon_box">
-          <input type="file" accept="*" />
+          <input type="file" accept="image/*" />
           <Icon name="IconCamera" size={19} />
         </div>
       </div>
@@ -70,7 +85,7 @@ function ProfileConfig({ pagenation }: { pagenation: () => React.ReactNode }) {
         </Text>
         <div className="gender_list">
           <div className="gender_list-item">남성</div>
-          <div className="gender_list-item">여성</div>
+          <div className="gender_list-item active">여성</div>
           <div className="gender_list-item">기타</div>
         </div>
       </div>
@@ -78,9 +93,13 @@ function ProfileConfig({ pagenation }: { pagenation: () => React.ReactNode }) {
       <TextField
         label="생년월일"
         name="birthDay"
+        readOnly={true}
         placeholder="1999-01-21"
         helpMessage="생년월일을 선택해주세요."
-        hasFloat={<Icon name="IconSignupCalender" size={21} />}
+        onClick={handleClick}
+        hasFloat={
+          <Icon name="IconSignupCalender" size={21} onClick={handleClick} />
+        }
       />
 
       <TextField

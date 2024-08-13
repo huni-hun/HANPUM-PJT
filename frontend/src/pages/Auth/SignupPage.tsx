@@ -19,8 +19,6 @@ const SignupPage = () => {
     },
   });
 
-  console.log(formValues);
-
   const handleInfoChange = (infoValue: Partial<SignupValues>) => {
     console.log('infoValue ::', infoValue);
     setFormValues((prevValues) => ({

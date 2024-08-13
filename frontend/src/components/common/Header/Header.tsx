@@ -19,9 +19,6 @@ const Header = ({ purpose, title, arrive, depart, clickBack }: HeaderProps) => {
     navigate(`/${to}`);
   };
 
-  const path = useLocation().pathname.substring(1);
-  console.log(path);
-
   //  default(알림, user만 있는)
   // title(약관동의, 회원정보 등)
   // result(글씨가 왼쪽에 붙어있는)

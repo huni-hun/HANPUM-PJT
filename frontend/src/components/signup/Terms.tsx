@@ -1,7 +1,6 @@
 import * as S from '../Style/Signup/Terms.styled';
 import { APPLY } from '@/constants';
 import { MouseEvent, useState } from 'react';
-import { colors } from '@/styles/colorPalette';
 import FixedBottomButton from '../common/FixedBottomButton';
 
 function Terms({
