@@ -28,8 +28,6 @@ function CalenderAlert({
     return null;
   }
 
-  console.log(element);
-
   return (
     <Dimmed>
       <AlertContainer>
@@ -45,14 +43,23 @@ function CalenderAlert({
         )}
         {description && <Text $typography="t10">{description}</Text>}
         {element}
-        <Flex $justify="flex-end">
+        <Flex>
           {buttonCancel && (
-            <BaseButton color="cancel" onClick={onButtonClick}>
+            <BaseButton
+              color="cancel"
+              onClick={onButtonClick}
+              style={{ flex: 1, borderRadius: '0' }}
+            >
               {buttonCancel}
             </BaseButton>
           )}
           {buttonConfirm && (
-            <BaseButton onClick={onButtonClick}>{buttonConfirm}</BaseButton>
+            <BaseButton
+              onClick={onButtonClick}
+              style={{ flex: 1, borderRadius: '0' }}
+            >
+              {buttonConfirm}
+            </BaseButton>
           )}
         </Flex>
       </AlertContainer>
@@ -71,6 +78,10 @@ const AlertContainer = styled.div`
   z-index: var(--alert-zindex);
   width: 32.7rem;
   box-sizing: border-box;
+  /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
+  box-shadow:
+    rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
 `;
 
 export default CalenderAlert;

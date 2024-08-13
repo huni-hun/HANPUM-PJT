@@ -12,7 +12,6 @@ function ProfileConfig({ pagenation }: { pagenation: () => React.ReactNode }) {
   const { open } = useAlert();
 
   const handleClick = () => {
-    console.log('눌림');
     open({
       purpose: 'calender',
       onButtonClick: () => {

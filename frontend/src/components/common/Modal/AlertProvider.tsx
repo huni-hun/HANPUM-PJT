@@ -7,7 +7,6 @@ import CalenderAlert from './CalenderAlert';
 
 export function AlertProvider({ children }: { children: React.ReactNode }) {
   const alertState = useRecoilValue(alertStateAtom);
-  console.log(alertState);
 
   const $portal_root = document.getElementById('root-portal');
 
