@@ -91,4 +91,8 @@ public class Member {
         this.gender = gender;
         this.phoneNumber = phoneNumber;
     }
+
+    public void updateMemberPassword(String password){
+        this.password = password;
+    }
 }
