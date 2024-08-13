@@ -197,4 +197,11 @@ public class GlobalExceptionHandler {
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }
+
+    @ExceptionHandler(MemberNotFoundException.class)
+    protected ResponseEntity<?> handle(MemberNotFoundException e) {
+        log.error("MemberNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
 }
