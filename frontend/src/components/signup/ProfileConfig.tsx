@@ -80,7 +80,7 @@ function ProfileConfig({ pagenation }: { pagenation: () => React.ReactNode }) {
         name="birthDay"
         placeholder="1999-01-21"
         helpMessage="생년월일을 선택해주세요."
-        hasFloat="달력"
+        hasFloat={<Icon name="IconSignupCalender" size={21} />}
       />
 
       <TextField

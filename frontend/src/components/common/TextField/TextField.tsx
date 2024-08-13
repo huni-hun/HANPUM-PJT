@@ -71,7 +71,17 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         ) : null}
 
         <Flex $align="center">
-          {hasFloat && <span className="timer">{hasFloat}</span>}
+          {hasFloat && (
+            <span
+              className="float"
+              style={{
+                left: rightElement ? '200px' : '',
+                right: rightElement ? '' : '15px',
+              }}
+            >
+              {hasFloat}
+            </span>
+          )}
           <Input
             autoComplete="off"
             ref={ref}

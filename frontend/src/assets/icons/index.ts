@@ -48,3 +48,4 @@ export { ReactComponent as IconFlagBold } from './icon_flag_bold.svg';
 // 회원 가입 페이지
 export { ReactComponent as IconCheck } from './check.svg';
 export { ReactComponent as IconCamera } from './camera.svg';
+export { ReactComponent as IconSignupCalender } from './signupCalender.svg';

@@ -53,7 +53,21 @@ export const ProfileConfigContainer = styled.div`
   }
 
   .gender {
-    width: 100%;
-    display: flex;
+    /* width: 100%; */
+    &_list {
+      margin-top: 17px;
+      display: flex;
+      background-color: ${colors.grey5};
+      height: 4.8rem;
+      border-radius: 7px;
+      align-items: center;
+      &-item {
+        flex: 1;
+        text-align: center;
+        color: ${colors.grey2};
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+    }
   }
 `;
