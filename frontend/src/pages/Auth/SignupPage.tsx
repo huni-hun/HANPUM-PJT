@@ -1,33 +1,24 @@
+import Header from '@/components/common/Header/Header';
 import Terms from '@/components/signup/Terms';
 import UserInfo from '@/components/signup/UserInfo';
 import { IncludeStepSignupValues, SignupValues } from '@/models/signup';
 import { colors } from '@/styles/colorPalette';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const SignupPage = () => {
+  const navigate = useNavigate();
   const [formValues, setFormValues] = useState<
     Partial<IncludeStepSignupValues>
   >({
     step: {
-      currStep: 1,
+      currStep: 2,
       totalStep: 3,
     },
   });
 
   console.log(formValues);
-
-  const activeClass = (step: number) => {
-    if (formValues.step) {
-      if (step < formValues.step.currStep) {
-        return '-prev';
-      } else if (step === formValues.step.currStep) {
-        return '-active';
-      } else {
-        return '';
-      }
-    }
-  };
 
   const handleInfoChange = (infoValue: Partial<SignupValues>) => {
     console.log('infoValue ::', infoValue);
@@ -41,16 +32,57 @@ const SignupPage = () => {
     }));
   };
 
-  return (
-    <SignUpPageContainer>
+  const activeClass = (step: number) => {
+    if (formValues.step) {
+      if (step < formValues.step.currStep) {
+        return '-prev';
+      } else if (step === formValues.step.currStep) {
+        return '-active';
+      } else {
+        return '';
+      }
+    }
+  };
+
+  const renderPagenation = (): React.ReactNode => {
+    return (
       <div className="pagenation">
         {formValues.step &&
           Array.from({ length: formValues.step.totalStep }, (_, index) => (
             <div key={index} className={`page${activeClass(index)}`} />
           ))}
       </div>
+    );
+  };
+
+  return (
+    <SignUpPageContainer>
+      <Header
+        purpose="title"
+        title={
+          formValues.step?.currStep === 0
+            ? '약관 동의'
+            : formValues.step?.currStep === 1
+              ? '기본정보'
+              : '회원정보'
+        }
+        clickBack={() => {
+          if ((formValues.step?.currStep as number) > 0) {
+            setFormValues((prevValues) => ({
+              ...prevValues,
+              step: {
+                currStep: (prevValues.step?.currStep || 0) - 1,
+                totalStep: prevValues.step?.totalStep || 3,
+              },
+            }));
+          } else {
+            navigate(-1);
+          }
+        }}
+      />
       {formValues.step?.currStep === 0 && (
         <Terms
+          pagenation={renderPagenation}
           clickNext={() => {
             setFormValues((prevValues) => ({
               ...prevValues,
@@ -63,7 +95,7 @@ const SignupPage = () => {
         />
       )}
       {formValues.step?.currStep === 1 && (
-        <UserInfo clickNext={handleInfoChange} />
+        <UserInfo clickNext={handleInfoChange} pagenation={renderPagenation} />
       )}
       {formValues.step?.currStep === 2 && <div>3번째</div>}
     </SignUpPageContainer>
@@ -80,8 +112,8 @@ const SignUpPageContainer = styled.div`
   .pagenation {
     display: flex;
     gap: 3px;
-    padding-left: 24px;
     margin-bottom: 22px;
+    margin-top: 2px;
 
     .page {
       width: 0.5rem;

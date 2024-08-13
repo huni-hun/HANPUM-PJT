@@ -10,9 +10,10 @@ interface HeaderProps {
   title?: string;
   arrive?: string;
   depart?: string;
+  clickBack: () => void;
 }
 
-const Header = ({ purpose, title, arrive, depart }: HeaderProps) => {
+const Header = ({ purpose, title, arrive, depart, clickBack }: HeaderProps) => {
   const navigate = useNavigate();
   const onClickHandler = (to: string) => {
     navigate(`/${to}`);
@@ -33,8 +34,15 @@ const Header = ({ purpose, title, arrive, depart }: HeaderProps) => {
     switch (purpose) {
       case 'title':
         return (
-          <Flex align="center" justify="center">
-            <Icon name="IconBackArrow" className="back-arrow" size={15} />
+          <Flex $align="center" $justify="center">
+            <Icon
+              name="IconBackArrow"
+              className="back-arrow"
+              size={15}
+              onClick={() => {
+                clickBack();
+              }}
+            />
             <Text as="div" $bold={true} $typography="t20">
               {title}
             </Text>
@@ -43,8 +51,15 @@ const Header = ({ purpose, title, arrive, depart }: HeaderProps) => {
 
       case 'result':
         return (
-          <Flex align="center" style={{ paddingLeft: '4.7rem' }}>
-            <Icon name="IconBackArrow" className="back-arrow" size={15} />
+          <Flex $align="center" style={{ paddingLeft: '4.7rem' }}>
+            <Icon
+              name="IconBackArrow"
+              className="back-arrow"
+              size={15}
+              onClick={() => {
+                clickBack();
+              }}
+            />
             <Text as="div" $bold={true} $typography="t20">
               {title}
             </Text>
@@ -52,8 +67,8 @@ const Header = ({ purpose, title, arrive, depart }: HeaderProps) => {
         );
       case 'root':
         return (
-          <Flex align="center" justify="center">
-            <Flex direction="column" gap={4}>
+          <Flex $align="center" $justify="center">
+            <Flex direction="column" $gap={4}>
               <Text as="div" $bold={true} $typography="t10" color="grey2">
                 출발지
               </Text>
@@ -62,7 +77,7 @@ const Header = ({ purpose, title, arrive, depart }: HeaderProps) => {
               </Text>
             </Flex>
 
-            <Flex direction="column" gap={4}>
+            <Flex direction="column" $gap={4}>
               <Text as="div" $bold={true} $typography="t10" color="grey2">
                 도착지
               </Text>
@@ -74,9 +89,9 @@ const Header = ({ purpose, title, arrive, depart }: HeaderProps) => {
         );
       case 'merge':
         return (
-          <Flex style={{ marginLeft: '4.4rem' }} align="center">
+          <Flex style={{ marginLeft: '4.4rem' }} $align="center">
             <input type="text" />
-            <Flex gap={20} style={{ width: 'auto', marginLeft: '9px' }}>
+            <Flex $gap={20} style={{ width: 'auto', marginLeft: '9px' }}>
               <Icon
                 name="IconBookMarkInHeader"
                 size={14}
@@ -97,7 +112,7 @@ const Header = ({ purpose, title, arrive, depart }: HeaderProps) => {
         );
       case 'search-place':
         return (
-          <Flex style={{ marginLeft: '2rem' }} align="start">
+          <Flex style={{ marginLeft: '2rem' }} $align="start">
             <input
               className="place-input"
               style={{ height: '4.8rem' }}
@@ -109,7 +124,7 @@ const Header = ({ purpose, title, arrive, depart }: HeaderProps) => {
 
       case 'search':
         return (
-          <Flex style={{ marginLeft: '2rem' }} align="start">
+          <Flex style={{ marginLeft: '2rem' }} $align="start">
             <div className="search-bar">
               <Icon name="IconSearch" size={14} />
               <input type="text" />
@@ -119,7 +134,7 @@ const Header = ({ purpose, title, arrive, depart }: HeaderProps) => {
       default:
         return (
           <S.HeaderWrapper>
-            <Flex justify="end">
+            <Flex $justify="end">
               <Icon
                 name="IconNotification"
                 onClick={() => onClickHandler('noti')}
@@ -139,7 +154,14 @@ const Header = ({ purpose, title, arrive, depart }: HeaderProps) => {
   return (
     <>
       <S.HeaderWrapper>
-        <Icon name="IconBackArrow" className="back-arrow" size={15} />
+        <Icon
+          name="IconBackArrow"
+          className="back-arrow"
+          size={15}
+          onClick={() => {
+            clickBack();
+          }}
+        />
         {renderHeader()}
       </S.HeaderWrapper>
       {/* <Outlet /> */}

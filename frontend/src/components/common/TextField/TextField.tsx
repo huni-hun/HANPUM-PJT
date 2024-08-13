@@ -70,7 +70,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
           </Text>
         ) : null}
 
-        <Flex align="center">
+        <Flex $align="center">
           {hasTimer && <span className="timer">{hasTimer}</span>}
           <Input
             autoComplete="off"
@@ -95,7 +95,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
           </Text>
         )}
 
-        {bottomElement && <Flex justify="end">{bottomElement}</Flex>}
+        {bottomElement && <Flex $justify="end">{bottomElement}</Flex>}
       </S.TextFieldContainer>
     );
   },

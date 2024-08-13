@@ -4,7 +4,13 @@ import { MouseEvent, useState } from 'react';
 import { colors } from '@/styles/colorPalette';
 import FixedBottomButton from '../common/FixedBottomButton';
 
-function Terms({ clickNext }: { clickNext: () => void }) {
+function Terms({
+  clickNext,
+  pagenation,
+}: {
+  clickNext: () => void;
+  pagenation: () => React.ReactNode;
+}) {
   // 약관 동의 체크를 위한 객체
   // {01: false, 02: false, 03: true}
   const [termsAgreements, setTermsAgreements] = useState(() => {
@@ -51,6 +57,7 @@ function Terms({ clickNext }: { clickNext: () => void }) {
 
   return (
     <S.TermsContainer>
+      {pagenation()}
       <div className="title">한품 시작하기</div>
 
       <div className="desc">

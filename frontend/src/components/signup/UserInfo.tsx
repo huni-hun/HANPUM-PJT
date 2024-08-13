@@ -20,8 +20,10 @@ type InfoValues = Pick<
 
 function UserInfo({
   clickNext,
+  pagenation,
 }: {
   clickNext: (signupForms: Partial<SignupValues>) => void;
+  pagenation: () => React.ReactNode;
 }) {
   // 회원 정보에만 있는 state
   const [infoValue, setInfoValue] = useState<InfoValues>({
@@ -52,9 +54,6 @@ function UserInfo({
   });
 
   const [time, setTime] = useState(300);
-
-  console.log(time);
-  console.log(isSend);
 
   const [isComplete, setIsComplete] = useState(false);
 
@@ -229,6 +228,7 @@ function UserInfo({
   }
   return (
     <S.UserInfoContainer>
+      {pagenation()}
       <TextField
         label="아이디"
         name="loginId"
@@ -260,7 +260,7 @@ function UserInfo({
             }}
           >
             {isSend.checkId ? (
-              <Flex align="center" gap={4} justify="center">
+              <Flex $align="center" $gap={4} $justify="center">
                 중복확인
                 <Icon name="IconCheck" size={9} />
               </Flex>
@@ -303,7 +303,7 @@ function UserInfo({
         onBlur={handleBlur}
       />
 
-      <Spacing size={42} />
+      <Spacing size={4.2} />
 
       <TextField
         label="이메일"
@@ -361,7 +361,7 @@ function UserInfo({
               })
             }
           >
-            <Flex align="center" justify="center" gap={4}>
+            <Flex $align="center" $justify="center" $gap={4}>
               {isComplete && time !== 0 && <Icon name="IconCheck" size={9} />}
               <span>인증</span>
             </Flex>
@@ -369,13 +369,15 @@ function UserInfo({
         }
       />
 
+      <Spacing size={10} />
+
       <FixedBottomButton
         label="다음"
         onClick={() => {
           clickNext(infoValue);
         }}
         disabled={!(isComplete && noError)}
-        $bottom="5"
+        // $bottom="5"
       />
     </S.UserInfoContainer>
   );

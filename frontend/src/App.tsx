@@ -15,7 +15,8 @@ function App() {
 export default App;
 
 const Container = styled.div`
-  padding-bottom: 6vh;
+  /* padding-bottom: 6vh; */
+  background-color: #f5f5f5;
   /* width: 100vw; */
   /* height: 100vh; */
 `;
