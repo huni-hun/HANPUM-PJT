@@ -12,7 +12,6 @@ import backend.hanpum.domain.course.entity.*;
 import backend.hanpum.domain.course.enums.CourseTypes;
 import backend.hanpum.domain.course.repository.*;
 import backend.hanpum.domain.member.repository.MemberRepository;
-import backend.hanpum.exception.exception.auth.MemberInfoInvalidException;
 import backend.hanpum.exception.exception.course.CourseDayNotFoundException;
 import backend.hanpum.exception.exception.course.CourseListNotFoundException;
 import backend.hanpum.exception.exception.course.CourseNotFoundException;
@@ -119,6 +118,16 @@ public class CourseServiceImpl implements CourseService {
                 waypointRepository.save(waypoint);
             }
         }
+    }
+
+    @Override
+    public void deleteCourse(Long memberId, Long courseId) {
+        Course course;
+        course = courseRepository.findByMember_MemberIdAndCourseId(memberId, courseId).orElseThrow(CourseNotFoundException::new);
+        if (course.getBackgroundImg() != null) {
+            // S3 이미지 삭제 로직
+        }
+        courseRepository.delete(course);
     }
 
     @Override

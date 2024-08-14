@@ -12,6 +12,7 @@ import java.util.List;
 public interface CourseService {
     CourseListMapResDto getCourseList(CourseTypes targetCourse);
     void makeCourse(MakeCourseReqDto makeCourseReqDto);
+    void deleteCourse(Long memberId, Long courseId);
     CourseDetailResDto getCourseDetail(Long courseId);
     GetCourseDayResDto getCourseDay(Long courseId, Integer day);
     void addInterestCourse(Long courseId, Long memberId);
