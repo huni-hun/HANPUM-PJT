@@ -10,6 +10,7 @@ import backend.hanpum.exception.exception.group.GroupDetailNotFoundException;
 import backend.hanpum.exception.exception.schedule.InvalidDayFormatException;
 import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
 import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
+import backend.hanpum.exception.exception.schedule.ScheduleWayPointNotFoundException;
 import backend.hanpum.exception.exception.test.TestNotFoundException;
 import backend.hanpum.exception.format.code.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -83,6 +84,13 @@ public class GlobalExceptionHandler {
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
 
+    }
+
+    @ExceptionHandler(ScheduleWayPointNotFoundException.class)
+    protected ResponseEntity<?> handle(ScheduleWayPointNotFoundException e){
+        log.error("ScheduleWayPointNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
     }
 
     /* 모임 */

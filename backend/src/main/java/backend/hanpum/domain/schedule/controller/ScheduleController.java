@@ -1,6 +1,7 @@
 package backend.hanpum.domain.schedule.controller;
 
 import backend.hanpum.config.jwt.UserDetailsImpl;
+import backend.hanpum.domain.schedule.dto.requestDto.MemoPostReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.ScheduleRunReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.ScheduleStartReqDto;
@@ -79,5 +80,14 @@ public class ScheduleController {
         Long memberId = userDetails.getMember().getMemberId();
         scheduleService.deleteSchedule(memberId, scheduleId);
         return response.success(ResponseCode.SCHEDULED_DELETED);
+    }
+
+    @Operation(summary = "메모 작성", description = "경유지 메모작성")
+    @PostMapping("/memo")
+    public ResponseEntity<?> createMemo(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                        MemoPostReqDto memoPostReqDto){
+        Long memberId = userDetails.getMember().getMemberId();
+        scheduleService.createMemo(memberId, memoPostReqDto);
+        return response.success(ResponseCode.MEMO_CREATED);
     }
 }

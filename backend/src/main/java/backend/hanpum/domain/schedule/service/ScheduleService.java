@@ -1,5 +1,6 @@
 package backend.hanpum.domain.schedule.service;
 
+import backend.hanpum.domain.schedule.dto.requestDto.MemoPostReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.ScheduleRunReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.ScheduleStartReqDto;
@@ -31,4 +32,7 @@ public interface ScheduleService {
 
     // 걷기, 정지 상태 전환
     Long runAndStop(Long memberId, ScheduleRunReqDto scheduleRunReqDto);
+
+    // WayPoint 메모 작성
+    void createMemo(Long memberId, MemoPostReqDto memoPostReqDto);
 }
