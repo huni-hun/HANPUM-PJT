@@ -82,4 +82,17 @@ public class AuthController {
     public ResponseEntity<?> reissueToken(@RequestBody TokenReissueReqDto tokenReissueReqDto, HttpServletRequest request) {
         return response.success(ResponseCode.TOKEN_REISSUE_SUCCESS, authService.reissueToken(jwtProvider.getJwtFromRequest(request), tokenReissueReqDto));
     }
+
+    @Operation(summary = "로그인 아이디 찾기", description = "로그인 아이디 찾기 API")
+    @GetMapping("/find-id")
+    public ResponseEntity<?> findLoginId(@RequestBody @Valid FindMemberLoginIdReqDto findMemberLoginIdReqDto) {
+        return response.success(ResponseCode.MEMBER_FETCH_SUCCESS, authService.findMemberLoginId(findMemberLoginIdReqDto));
+    }
+
+    @Operation(summary = "비밀번호 찾기", description = "비밀번호 찾기 API")
+    @PutMapping("/find-password")
+    public ResponseEntity<?> findPassword(@RequestBody @Valid FindMemberPasswordReqDto findMemberPasswordReqDto) {
+        authService.findMemberPassword(findMemberPasswordReqDto);
+        return response.success(ResponseCode.TEMPORARY_PASSWORD_MAIL_SEND_SUCCESS);
+    }
 }
