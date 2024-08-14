@@ -1,7 +1,6 @@
 package backend.hanpum.domain.schedule.controller;
 
 import backend.hanpum.config.jwt.UserDetailsImpl;
-import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.ScheduleRunReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.ScheduleStartReqDto;
@@ -56,7 +55,7 @@ public class ScheduleController {
     }
 
     @Operation(summary = "전체 일정 시작, 종료", description = "정해진 날짜가 되면 전체 일정 시작용, 시작상태에서 사용하면 종료")
-    @PostMapping("/start")
+    @PutMapping("/start")
     public ResponseEntity<?> startAndStopSchedule(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                   @RequestBody ScheduleStartReqDto scheduleRunReqDto) {
         Long memberId = userDetails.getMember().getMemberId();
@@ -65,7 +64,7 @@ public class ScheduleController {
     }
 
     @Operation(summary = "일차별 일정 상태 전환", description = "쉴때, 걸을때 구분할 수 있는 트리거")
-    @PostMapping("/run")
+    @PutMapping("/run")
     public ResponseEntity<?> runAndStop(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                         @RequestBody ScheduleRunReqDto scheduleRunReqDto) {
         Long memberId = userDetails.getMember().getMemberId();
