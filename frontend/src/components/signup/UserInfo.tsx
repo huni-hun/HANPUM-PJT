@@ -47,6 +47,7 @@ function UserInfo({
     checkEmail: '',
   });
 
+  // TODO checked랑 message로 타입 수정 terms 처럼
   const [isSend, setIsSend] = useState<Partial<CertificationValidate>>({
     checkId: false,
     checkEmail: false,
@@ -81,6 +82,7 @@ function UserInfo({
     }));
   };
 
+  // TODO ValidateMessage로 타입 수정
   // 인증 및 필드 유효성 검사
   const validate = useMemo(() => {
     let errors: Partial<InfoValues & CertificationValidate> = {};

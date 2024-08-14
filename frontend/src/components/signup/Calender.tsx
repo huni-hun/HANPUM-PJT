@@ -1,78 +1,74 @@
-import { useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import Flex from '../common/Flex';
 import Text from '../common/Text';
 import * as S from '../Style/Signup/Calender.styled';
 
-function Calender() {
-  const [selectedYear, setSelectedYear] = useState(2024);
-  const [selectedMonth, setSelectedMonth] = useState(8);
-  const [selectedDay, setSelectedDay] = useState(2);
+import { Datepicker, localeKo } from '@mobiscroll/react';
+import '@mobiscroll/react/dist/css/mobiscroll.min.css';
 
-  const years = Array.from({ length: 2024 - 1970 + 1 }, (_, i) => 1970 + i);
-  const months = Array.from({ length: 12 }, (_, i) => i + 1);
-  const days = Array.from({ length: 31 }, (_, i) => i + 1);
+function Calender({ onChange }: { onChange: (date: string) => void }) {
+  const today = new Date();
 
-  const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedYear(parseInt(e.target.value, 10));
-  };
+  // 현재 달력 렌더링이 늦음
+  const [isLoading, setIsLoading] = useState(true); // 스켈레톤 UI
 
-  const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedMonth(parseInt(e.target.value, 10));
-  };
+  const handleDateChange = (event: any) => {
+    const { value } = event;
+    const date = new Date(value);
 
-  const handleDayChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedDay(parseInt(e.target.value, 10));
+    // 31을 택했을 때 30일로 되는 이슈(타임존)
+    const localDate = new Date(
+      date.getTime() - date.getTimezoneOffset() * 60000,
+    );
+    // onChange(date); // 선택된 날짜를 부모 컴포넌트로 전달
+    // ISO 8601로 변환 현재 2024-08-31T00:00:00.000Z
+    const isoString = localDate.toISOString();
+    onChange(isoString);
   };
 
   return (
     <S.CalenderContainer>
       <div className="calender">
         <div className="calender-header">
-          <Text $typography="t12" color="main">
+          <Text color="main" $typography="t10">
             년
           </Text>
-          <Text $typography="t12" color="main">
+          <Text color="main" $typography="t10">
             월
           </Text>
-          <Text $typography="t12" color="main">
+          <Text color="main" $typography="t10">
             일
           </Text>
         </div>
-
         <div className="calender-body">
-          <div className="calender-body-year calender-body-list">
-            {years.map((year, index) => (
-              <S.ScrollItem
-                className="calender-body-item"
-                key={index}
-                // selected={year === currentYear}
-              >
-                {year}
-              </S.ScrollItem>
-            ))}
-          </div>
-          <div className="calender-body-month calender-body-list">
-            {months.map((month, index) => (
-              <S.ScrollItem
-                className="calender-body-item"
-                key={index}
-                // selected={month === currentMonth}
-              >
-                {month.toString().padStart(2, '0')}
-              </S.ScrollItem>
-            ))}
-          </div>
-          <div className="calender-body-date calender-body-list">
-            {days.map((day, index) => (
-              <S.ScrollItem
-                className="calender-body-item"
-                key={index}
-                // selected={day === currentDay}
-              >
-                {day.toString().padStart(2, '0')}
-              </S.ScrollItem>
-            ))}
-          </div>
+          {/* {isLoading ? (
+            <S.SkeletonContainer>
+              <div className="skeleton-body"></div>
+            </S.SkeletonContainer>
+          ) : (
+            <Suspense fallback={<div>Loading...</div>}>
+              <Datepicker
+                theme="ios"
+                min="1970-01-01"
+                max={`${today.getFullYear()}-12-31`}
+                controls={['date']}
+                display="inline"
+                touchUi={true}
+                locale={localeKo}
+                onChange={handleDateChange}
+              />
+            </Suspense>
+          )} */}
+          <Datepicker
+            theme="ios"
+            min="1970-01-01"
+            max={`${today.getFullYear()}-12-31`}
+            controls={['date']}
+            display="inline"
+            touchUi={true}
+            locale={localeKo}
+            onChange={handleDateChange}
+          />
         </div>
       </div>
     </S.CalenderContainer>

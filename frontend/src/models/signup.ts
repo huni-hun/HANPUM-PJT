@@ -16,8 +16,8 @@ export interface SignupValues {
   email: string;
   profilePicture: string;
   name: string;
-  birthDate: Date;
-  gender: 'MAN' | 'WOMAN' | 'OTHER';
+  birthDate: string;
+  gender: string | null;
   phoneNumber: string;
   nickname: string;
   memberType: 'ADMIN' | 'COMMON';
@@ -35,4 +35,9 @@ export interface CertificationValidate {
   checkComplete: string | boolean;
 }
 
-// export interface
+export interface Gender {
+  label: string;
+  value: string;
+}
+
+export interface ValidateMessgae {}

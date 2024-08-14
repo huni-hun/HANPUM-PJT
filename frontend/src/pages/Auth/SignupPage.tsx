@@ -4,7 +4,7 @@ import Terms from '@/components/signup/Terms';
 import UserInfo from '@/components/signup/UserInfo';
 import { IncludeStepSignupValues, SignupValues } from '@/models/signup';
 import { colors } from '@/styles/colorPalette';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -24,6 +24,18 @@ const SignupPage = () => {
     setFormValues((prevValues) => ({
       ...prevValues,
       ...infoValue,
+      step: {
+        currStep: (prevValues.step?.currStep || 0) + 1,
+        totalStep: prevValues.step?.totalStep || 3,
+      },
+    }));
+  };
+
+  const handleProfileConfigChange = (profileInfo: Partial<SignupValues>) => {
+    console.log('infoValue ::', profileInfo);
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      ...profileInfo,
       step: {
         currStep: (prevValues.step?.currStep || 0) + 1,
         totalStep: prevValues.step?.totalStep || 3,
@@ -53,6 +65,11 @@ const SignupPage = () => {
       </div>
     );
   };
+
+  // 스크롤 최상단으로 보내기
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [formValues.step?.currStep]);
 
   return (
     <SignUpPageContainer>
@@ -97,7 +114,10 @@ const SignupPage = () => {
         <UserInfo clickNext={handleInfoChange} pagenation={renderPagenation} />
       )}
       {formValues.step?.currStep === 2 && (
-        <ProfileConfig pagenation={renderPagenation} />
+        <ProfileConfig
+          pagenation={renderPagenation}
+          clickNext={handleProfileConfigChange}
+        />
       )}
     </SignUpPageContainer>
   );

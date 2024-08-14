@@ -28,7 +28,7 @@ export async function CertificationEmail(email: string, inputAuthCode: string) {
 
 // 닉네임 중복 확인 TODO
 export async function CheckNickname(nickname: string) {
-  const { data } = await api.post('/api/auth/nickname-duplicate', {
+  const { data } = await api.post('/api/auth/nickname/check', {
     nickname,
   });
   return data;

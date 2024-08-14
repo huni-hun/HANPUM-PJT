@@ -5,6 +5,7 @@ export const ProfileConfigContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 24px;
+  padding-bottom: 10vh;
 
   .profile {
     display: flex;
@@ -78,6 +79,7 @@ export const ProfileConfigContainer = styled.div`
         border: 1px solid ${colors.main};
         box-sizing: border-box;
         color: ${colors.main};
+        background-color: ${colors.white};
       }
     }
   }
