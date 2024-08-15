@@ -7,24 +7,41 @@ import BaseButton from '../common/BaseButton';
 import { useAlert } from '@/hooks/global/useAlert';
 import CalenderAlert from '../common/Modal/CalenderAlert';
 import Calender from './Calender';
-import { CertificationValidate, Gender, SignupValues } from '@/models/signup';
-import { ChangeEvent, MouseEvent, useMemo, useState } from 'react';
+import {
+  Gender,
+  SignupRequestValues,
+  UserSignupFormValues,
+} from '@/models/signup';
+import {
+  ChangeEvent,
+  Dispatch,
+  MouseEvent,
+  SetStateAction,
+  useMemo,
+  useState,
+} from 'react';
 import { dateFormat, telnumberFormat } from '@/ustils/util';
 import { useMutation } from 'react-query';
-import { CheckNickname } from '@/api/signup/POST';
+import { CheckNickname, SignUp } from '@/api/signup/POST';
 import { toast } from 'react-toastify';
 import { STATUS } from '@/constants';
 import { AxiosError } from 'axios';
 import FixedBottomButton from '../common/FixedBottomButton';
 import Flex from '../common/Flex';
+import { signupStepAtom } from '@/atoms/signupStepAtom';
+import { useSetRecoilState } from 'recoil';
+import { profile } from 'console';
 
 function ProfileConfig({
   pagenation,
-  clickNext,
+  setFormValues,
+  formValues,
 }: {
   pagenation: () => React.ReactNode;
-  clickNext: (profileInfo: Partial<SignupValues>) => void;
+  setFormValues: Dispatch<SetStateAction<Partial<SignupRequestValues>>>;
+  formValues: Partial<UserSignupFormValues>;
 }) {
+  // const setStep = useSetRecoilState(signupStepAtom);
   const genderList: Gender[] = [
     {
       label: '남성',
@@ -42,75 +59,60 @@ function ProfileConfig({
   const { open } = useAlert();
 
   // 프로필 기본 정보
-  const [profileInfo, setProfileInfo] = useState<Partial<SignupValues>>({
-    gender: null,
-    nickname: '',
-    birthDate: '',
-    profilePicture: '',
-  });
+  // const [formValues, setformValues] = useState<Partial<UserSignupFormValues>>(
+  //   {
+  //     gender: null,
+  //     profilePicture: '',
+  //     birthDate: '',
+  //     phoneNumber: '',
+  //   },
+  // );
 
-  // 중복 했을 때 메세지 담을 state
-  const [infoValidate, setInfoValidate] = useState<
-    Partial<CertificationValidate>
-  >({
-    checkNickname: '',
-  });
+  const [chcekNicknameMessage, setCheckNicknameMessage] = useState<
+    string | null
+  >(null);
 
-  // 중복확인 결과
-  const [isSend, setIsSend] = useState<Partial<CertificationValidate>>({
-    checkNickname: false,
-  });
-
-  const [dirty, setDirty] = useState<
-    Partial<Record<keyof SignupValues, boolean>>
-  >({});
+  // console.log(formValues);
 
   const handleInfoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
 
-    setProfileInfo((prevValue) => ({
+    setFormValues((prevValue) => ({
       ...prevValue,
       [name]: value,
     }));
   };
 
-  // console.log('profileInfo ::', profileInfo);
+  // console.log('formValues :::', formValues);
 
+  // gender
   const handleClickGender = (value: string) => {
-    setProfileInfo((prevValue) => ({
+    // setformValues((prevValue) => ({
+    //   ...prevValue,
+    //   gender: value,
+    // }));
+
+    setFormValues((prevValue) => ({
       ...prevValue,
       gender: value,
     }));
-
-    if (!dirty.gender) {
-      setDirty((prev) => ({
-        ...prev,
-        gender: true,
-      }));
-    }
   };
 
+  // 달력
   const handleDate = (birthDate: string) => {
-    setProfileInfo((prevValue) => ({
+    setFormValues((prevValue) => ({
       ...prevValue,
-      birthDate,
-    }));
-
-    if (!dirty.birthDate) {
-      setDirty((prev) => ({
-        ...prev,
-        birthDate: true,
-      }));
-    }
-  };
-
-  const handleBlur = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name } = e.target;
-    setDirty((prev) => ({
-      ...prev,
-      [name]: 'true',
+      birthDate: birthDate,
     }));
   };
+
+  // const handleBlur = (e: ChangeEvent<HTMLInputElement>) => {
+  //   const { name } = e.target;
+  //   setDirty((prev) => ({
+  //     ...prev,
+  //     [name]: 'true',
+  //   }));
+  // };
 
   const handleClickAlert = () => {
     open({
@@ -124,21 +126,23 @@ function ProfileConfig({
 
   const { mutate: checkNickname } = useMutation(CheckNickname, {
     onSuccess: (res) => {
-      console.log(res);
+      // console.log(res);
       if (res.status === STATUS.success) {
         // console.log('성공');
         toast.success(res.message);
-        setIsSend((prev) => ({
+        setCheckNicknameMessage(null);
+        setFormValues((prev) => ({
           ...prev,
-          checkNickname: true,
+          sendNickname: true,
         }));
       }
       if (res.status === STATUS.error) {
         // console.log('실패');
         toast.error(res.message);
-        setInfoValidate((prev) => ({
+        setCheckNicknameMessage(res.message);
+        setFormValues((prev) => ({
           ...prev,
-          checkNickname: res.message,
+          sendNickname: false,
         }));
       }
     },
@@ -148,36 +152,72 @@ function ProfileConfig({
   });
 
   const validate = useMemo(() => {
-    let errors: Partial<SignupValues & CertificationValidate> = {};
+    let errors: Partial<UserSignupFormValues> = {};
 
-    const nickNamePattern = /^[a-zA-Z0-9]{3,8}$/;
-
-    if (nickNamePattern.test(profileInfo.nickname as string)) {
+    const nickNamePattern = /^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]{3,8}$/;
+    if (!nickNamePattern.test(formValues.nickname || '')) {
       errors.nickname = '※특수 문자는 제외해 주세요.(3~8자)';
     }
 
-    if (profileInfo.gender == null) {
+    if (chcekNicknameMessage) {
+      errors.checkNickname = chcekNicknameMessage;
+    }
+
+    if (formValues.gender == null) {
       errors.gender = '성별을 선택해주세요.';
     }
 
-    if (profileInfo.birthDate?.length === 0) {
-      errors.gender = '생년월일을 선택해주세요.';
+    if (formValues.birthDate?.length === 0) {
+      errors.birthDate = '생년월일을 선택해주세요.';
     }
 
-    if (!profileInfo.phoneNumber?.length) {
+    if (formValues.phoneNumber?.length === 0) {
       errors.phoneNumber = '휴대폰번호를 입력해주세요.';
-    } else if (profileInfo.phoneNumber.length > 11) {
-      errors.gender = '휴대폰번호는 11자리 입니다.';
+    } else if (formValues.phoneNumber?.length !== 13) {
+      errors.phoneNumber = '유효한 휴대폰번호 형식을 입력해 주세요.';
     }
 
     console.log(errors);
 
     return errors;
-  }, []);
+  }, [formValues, chcekNicknameMessage]);
 
   const noError = Object.keys(validate).length === 0;
 
-  console.log(isSend);
+  const { mutate } = useMutation(SignUp, {
+    onSuccess: (res) => {
+      console.log(res);
+      if (res.status === STATUS.success) {
+        toast.success(res.message);
+      }
+      if (res.status === STATUS.error) {
+        toast.error(res.message);
+      }
+    },
+    onError: (error: AxiosError) => {
+      toast.error(error.message);
+    },
+  });
+
+  const submitTemp = () => {
+    // console.log(formValues);
+    // console.log('회원가입에 필요한 데이터는', formValues);
+
+    const signupReq: SignupRequestValues = {
+      loginId: formValues.loginId || '',
+      password: formValues.password || '',
+      email: formValues.email || '',
+      profilePicture: formValues.profilePicture || '',
+      name: '심채운',
+      birthDate: formValues.birthDate || '',
+      gender: formValues.gender || '',
+      phoneNumber: formValues.phoneNumber || '',
+      nickname: formValues.nickname || '',
+      memberType: 'COMMON',
+    };
+
+    mutate({ ...signupReq });
+  };
 
   return (
     <S.ProfileConfigContainer>
@@ -197,30 +237,28 @@ function ProfileConfig({
       <TextField
         label="닉네임"
         name="nickname"
-        value={profileInfo.nickname}
-        hasError={Boolean(
-          dirty.nickname && (validate.nickname || infoValidate.checkNickname),
-        )}
-        onBlur={handleBlur}
+        value={formValues.nickname}
+        // onBlur={handleBlur}
         onChange={handleInfoChange}
+        hasError={Boolean(validate.nickname || validate.checkNickname)}
         helpMessage={
-          dirty.nickname
-            ? validate.nickname || infoValidate.checkNickname
-            : '※특수 문자는 제외해 주세요.(3~8자)'
+          validate.nickname ||
+          validate.checkNickname ||
+          '※특수 문자는 제외해 주세요.(3~8자)'
         }
         rightElement={
           <BaseButton
             size="radius"
             fontSize={1.2}
-            $weak={!isSend.checkNickname}
+            $weak={!formValues.sendNickname}
             style={{ marginLeft: '8px' }}
             onClick={() => {
-              if (profileInfo.nickname?.length !== 0) {
-                checkNickname(profileInfo.nickname as string);
+              if (formValues.nickname?.length !== 0) {
+                checkNickname(formValues.nickname as string);
               }
             }}
           >
-            {isSend.checkNickname ? (
+            {formValues.sendNickname ? (
               <Flex $align="center" $gap={4} $justify="center">
                 중복확인
                 <Icon name="IconCheck" size={9} />
@@ -239,7 +277,7 @@ function ProfileConfig({
         <div className="gender_list">
           {genderList.map((gender) => (
             <div
-              className={`gender_list-item ${profileInfo.gender === gender.value ? 'active' : ''}`}
+              className={`gender_list-item ${formValues.gender === gender.value ? 'active' : ''}`}
               key={gender.value}
               onClick={() => handleClickGender(gender.value)}
             >
@@ -252,10 +290,9 @@ function ProfileConfig({
       <TextField
         label="생년월일"
         name="birthDate"
-        value={dateFormat(profileInfo.birthDate) || ''}
+        value={dateFormat(formValues.birthDate) || ''}
         readOnly
         placeholder="1999-01-21"
-        helpMessage="생년월일을 선택해주세요."
         onClick={handleClickAlert}
         hasFloat={
           <Icon
@@ -264,27 +301,39 @@ function ProfileConfig({
             onClick={handleClickAlert}
           />
         }
+        hasError={Boolean(validate.birthDate)}
+        helpMessage={validate.birthDate}
       />
 
       <TextField
         label="전화번호"
         name="phoneNumber"
         placeholder="010-0000-0000"
-        helpMessage="전화번호를 입력해주세요."
         onChange={handleInfoChange}
-        onBlur={handleBlur}
-        value={telnumberFormat(profileInfo.phoneNumber)}
-        hasError={Boolean(dirty.phoneNumber && validate.phoneNumber)}
+        value={telnumberFormat(formValues.phoneNumber)}
+        hasError={Boolean(validate.phoneNumber)}
+        helpMessage={validate.phoneNumber}
+        // onBlur={handleBlur}
       />
 
       <FixedBottomButton
-        label="확인"
+        label="회원가입"
         onClick={() => {
-          if (noError) {
-            clickNext(profileInfo);
-          }
+          submitTemp();
+          // console.log(formValues);
+          // const { birthDate, gender, nickname, phoneNumber, profilePicture } =
+          //   formValues;
+
+          // const filteredValues: Partial<SignupRequestValues> = {
+          //   birthDate,
+          //   gender,
+          //   nickname,
+          //   phoneNumber: phoneNumber?.slice(0, 13),
+          //   profilePicture,
+          // };
+          // clickNext(filteredValues);
         }}
-        disabled={!noError}
+        disabled={!(formValues.sendNickname && noError)}
       />
     </S.ProfileConfigContainer>
   );

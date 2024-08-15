@@ -48,6 +48,22 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     // 우선 순위 : 에러 > focus > 기본
     const labelColor = hasError ? 'red' : focused ? 'main' : 'grey2';
 
+    // const checkLabel = () => {
+    //   if (hasError) {
+    //     return 'red';
+    //   } else if (hasError === false) {
+    //     return 'main';
+    //   }
+
+    //   if (focused) {
+    //     return 'main';
+    //   }
+
+    //   return 'grey2';
+    // };
+
+    // const labelColor = checkLabel();
+
     const handleFocus: FocusEventHandler<HTMLInputElement> = (event) => {
       setFocused(true);
       onFocus?.(event);

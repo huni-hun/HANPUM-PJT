@@ -10,7 +10,7 @@ function Terms({
   clickNext: () => void;
   pagenation: () => React.ReactNode;
 }) {
-  // 약관 동의 체크를 위한 객체
+  // 약관 동의 체크를 위한 객체 생성
   // {01: false, 02: false, 03: true}
   const [termsAgreements, setTermsAgreements] = useState(() => {
     return APPLY.reduce<Record<string, boolean>>(

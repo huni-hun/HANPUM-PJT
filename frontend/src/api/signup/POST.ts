@@ -1,3 +1,4 @@
+import { SignupRequestValues } from '@/models/signup';
 import api from '../index';
 
 // 아이디 중복확인
@@ -26,7 +27,7 @@ export async function CertificationEmail(email: string, inputAuthCode: string) {
   return data;
 }
 
-// 닉네임 중복 확인 TODO
+// 닉네임 중복 확인
 export async function CheckNickname(nickname: string) {
   const { data } = await api.post('/api/auth/nickname/check', {
     nickname,
@@ -34,10 +35,11 @@ export async function CheckNickname(nickname: string) {
   return data;
 }
 
-// 회원가입TODO
-export async function SignUp(signUpReq: any) {
+// 회원가입
+export async function SignUp(signupReq: SignupRequestValues) {
+  console.log(signupReq);
   const { data } = await api.post('/api/auth/sign-up', {
-    signUpReq,
+    ...signupReq,
   });
   return data;
 }

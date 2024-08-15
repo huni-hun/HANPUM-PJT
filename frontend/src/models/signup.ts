@@ -3,16 +3,17 @@ export interface SignupStep {
   totalStep: number;
 }
 
+// 약관 동의
 export interface Term {
   title: string;
   link: string;
   id: string;
 }
 
-export interface SignupValues {
+// 회원가입에 필요한 request
+export interface SignupRequestValues {
   loginId: string;
   password: string;
-  checkPassword: string;
   email: string;
   profilePicture: string;
   name: string;
@@ -21,19 +22,27 @@ export interface SignupValues {
   phoneNumber: string;
   nickname: string;
   memberType: 'ADMIN' | 'COMMON';
-  inputAuthCode: string;
 }
 
-export interface IncludeStepSignupValues extends SignupStep {
-  step: SignupStep;
+export interface UserSignupFormValues extends SignupRequestValues {
+  checkPassword: string;
+  sendAuthCode: boolean; // 메일 인증
+  checkAuthCode: string; // 메일 인증 에러
+  inputAuthCode: string; // 인증코드
+  sendLoginId: boolean; // id 중복확인
+  checkLoginId: string; // id 중복확인 에러
+  sendEmail: boolean; // 메일 인증코드
+  checkEmail: string; // 메일 인증코드 에러
+  sendNickname: boolean; // 닉네임 인증
+  checkNickname: string; // 닉네임 인증코드 에러
 }
 
-export interface CertificationValidate {
-  checkId: string | boolean;
-  checkEmail: string | boolean;
-  checkNickname: string | boolean;
-  checkComplete: string | boolean;
-}
+// export interface CertificationValidate {
+//   checkId: string | boolean;
+//   checkEmail: string | boolean;
+//   checkNickname: string | boolean;
+//   checkComplete: string | boolean;
+// }
 
 export interface Gender {
   label: string;

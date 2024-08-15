@@ -1,122 +1,138 @@
+import { signupStepAtom } from '@/atoms/signupStepAtom';
 import Header from '@/components/common/Header/Header';
 import ProfileConfig from '@/components/signup/ProfileConfig';
+// import ProfileConfig from '@/components/signup/ProfileConfig';
 import Terms from '@/components/signup/Terms';
 import UserInfo from '@/components/signup/UserInfo';
-import { IncludeStepSignupValues, SignupValues } from '@/models/signup';
+import {
+  SignupRequestValues,
+  SignupStep,
+  UserSignupFormValues,
+} from '@/models/signup';
+// import { IncludeStepSignupValues, SignupRequestValues, SignupStep } from '@/models/signup';
 import { colors } from '@/styles/colorPalette';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
 const SignupPage = () => {
+  // atom으로 관리 ->채운
+  const [step, setStep] = useRecoilState(signupStepAtom);
+
   const navigate = useNavigate();
-  const [formValues, setFormValues] = useState<
-    Partial<IncludeStepSignupValues>
-  >({
-    step: {
-      currStep: 2,
-      totalStep: 3,
-    },
+
+  // 최상단에서 data관리
+  const [formValues, setFormValues] = useState<Partial<UserSignupFormValues>>({
+    gender: null,
+    profilePicture: '',
+    birthDate: '',
+    // phoneNumber: '',
   });
 
-  const handleInfoChange = (infoValue: Partial<SignupValues>) => {
-    console.log('infoValue ::', infoValue);
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      ...infoValue,
-      step: {
-        currStep: (prevValues.step?.currStep || 0) + 1,
-        totalStep: prevValues.step?.totalStep || 3,
-      },
-    }));
-  };
+  // console.log('step ::', step);
+  // console.log('formValue ::', formValues);
 
-  const handleProfileConfigChange = (profileInfo: Partial<SignupValues>) => {
-    console.log('infoValue ::', profileInfo);
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      ...profileInfo,
-      step: {
-        currStep: (prevValues.step?.currStep || 0) + 1,
-        totalStep: prevValues.step?.totalStep || 3,
-      },
-    }));
-  };
+  // 기본정보에서 formValues 수정하는 handler 함수 -> 채운
+  // const handleInfoChange = (infoValue: Partial<SignupRequestValues>) => {
+  //   console.log('infoValue ::', infoValue);
+  //   setFormValues((prevValues) => ({
+  //     ...prevValues,
+  //     ...infoValue,
+  //   }));
+  // };
 
-  const activeClass = (step: number) => {
-    if (formValues.step) {
-      if (step < formValues.step.currStep) {
-        return '-prev';
-      } else if (step === formValues.step.currStep) {
-        return '-active';
-      } else {
-        return '';
-      }
+  // // 프로필 정보
+  // const handleProfileConfigChange = (
+  //   profileInfo: Partial<SignupRequestValues>,
+  // ) => {
+  //   // console.log('infoValue ::', profileInfo);
+  //   setFormValues((prevValues) => ({
+  //     ...prevValues,
+  //     ...profileInfo,
+  //   }));
+  // };
+
+  // pagenation 현재, 이전, 다음 style 분기 함수
+  const activeClass = (paramStep: number) => {
+    if (paramStep < step.currStep) {
+      return '-prev';
+    } else if (paramStep === step.currStep) {
+      return '-active';
+    } else {
+      return '';
     }
   };
+
+  const clickNext = () => {
+    setStep((prevStep) => ({
+      ...prevStep,
+      currStep: prevStep.currStep + 1,
+    }));
+  };
+
+  // console.log(formValues);
 
   const renderPagenation = (): React.ReactNode => {
     return (
       <div className="pagenation">
-        {formValues.step &&
-          Array.from({ length: formValues.step.totalStep }, (_, index) => (
-            <div key={index} className={`page${activeClass(index)}`} />
-          ))}
+        {Array.from({ length: step.totalStep }, (_, index) => (
+          <div key={index} className={`page${activeClass(index)}`} />
+        ))}
       </div>
     );
   };
 
-  // 스크롤 최상단으로 보내기
+  // const handleSubmit = () => {
+  //   // 회원가입 제출 로직
+  //   console.log('회원가입 데이터를 제출합니다:', formValues);
+  //   // 회원가입 API 호출 등을 여기에 추가
+  // };
+
+  // // 스크롤 최상단으로 보내기
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [formValues.step?.currStep]);
+  }, [step.currStep]);
 
   return (
     <SignUpPageContainer>
       <Header
         purpose="title"
         title={
-          formValues.step?.currStep === 0
+          step.currStep === 0
             ? '약관 동의'
-            : formValues.step?.currStep === 1
+            : step.currStep === 1
               ? '기본정보'
               : '프로필 설정'
         }
         clickBack={() => {
-          if ((formValues.step?.currStep as number) > 0) {
-            setFormValues((prevValues) => ({
-              ...prevValues,
-              step: {
-                currStep: (prevValues.step?.currStep || 0) - 1,
-                totalStep: prevValues.step?.totalStep || 3,
-              },
+          if (step.currStep > 0) {
+            setStep((prevStep) => ({
+              ...prevStep,
+              currStep: prevStep.currStep - 1,
             }));
           } else {
             navigate(-1);
           }
         }}
       />
-      {formValues.step?.currStep === 0 && (
-        <Terms
+      {step.currStep === 0 && (
+        <Terms pagenation={renderPagenation} clickNext={clickNext} />
+      )}
+      {step.currStep === 1 && (
+        <UserInfo
+          clickNext={clickNext}
           pagenation={renderPagenation}
-          clickNext={() => {
-            setFormValues((prevValues) => ({
-              ...prevValues,
-              step: {
-                currStep: (prevValues.step?.currStep || 0) + 1,
-                totalStep: prevValues.step?.totalStep || 3,
-              },
-            }));
-          }}
+          setFormValues={setFormValues}
+          formValues={formValues}
         />
       )}
-      {formValues.step?.currStep === 1 && (
-        <UserInfo clickNext={handleInfoChange} pagenation={renderPagenation} />
-      )}
-      {formValues.step?.currStep === 2 && (
+      {step.currStep === 2 && (
         <ProfileConfig
+          setFormValues={setFormValues}
+          formValues={formValues}
           pagenation={renderPagenation}
-          clickNext={handleProfileConfigChange}
+          // clickNext={clickNext}
         />
       )}
     </SignUpPageContainer>
