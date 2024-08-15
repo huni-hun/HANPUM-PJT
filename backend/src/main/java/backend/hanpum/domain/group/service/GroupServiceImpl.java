@@ -16,6 +16,7 @@ import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.group.GroupAlreadyJoinedException;
 import backend.hanpum.exception.exception.group.GroupDetailNotFoundException;
+import backend.hanpum.exception.exception.group.GroupNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,6 +81,23 @@ public class GroupServiceImpl implements GroupService {
                 .recruitedCount(groupDetailGetResDto.getRecruitedCount())
                 .groupJoinStatus(getGroupJoinStatus(member.getGroupMember(), groupId))
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public void applyGroup(Long memberId, Long groupId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
+        if (member.getGroupMember() != null) throw new GroupAlreadyJoinedException();
+
+        GroupMember groupMember = GroupMember.builder()
+                .joinType(JoinType.APPLY)
+                .group(group)
+                .member(member)
+                .build();
+        group.getGroupMemberList().add(groupMember);
+        member.JoinGroupMember(groupMember);
+        groupRepository.save(group);
     }
 
     private GroupJoinStatus getGroupJoinStatus(GroupMember groupMember, Long groupId) {

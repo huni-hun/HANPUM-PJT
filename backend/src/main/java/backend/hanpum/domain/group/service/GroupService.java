@@ -10,4 +10,5 @@ public interface GroupService {
     GroupPostResDto createGroup(Long memberId, GroupPostReqDto groupPostReqDto);
     GroupListGetResDto getGroupList(Long memberId);
     GroupDetailGetResDto getGroupDetail(Long memberId, Long groupId);
+    void applyGroup(Long memberId, Long groupId);
 }
