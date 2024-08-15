@@ -46,4 +46,10 @@ public class CourseDay {
 
     @OneToMany(mappedBy = "courseDay", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ScheduleDay> scheduleDayList = new ArrayList<>();
+
+    public void updateCourseDayTotal(String totalCalorie, String totalDuration, String totalDistance) {
+        this.totalCalorie = totalCalorie;
+        this.totalDistance = totalDistance;
+        this.totalDuration = totalDuration;
+    }
 }
