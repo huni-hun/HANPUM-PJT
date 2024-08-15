@@ -12,7 +12,6 @@ function App() {
 export default App;
 
 const Container = styled.div`
-  padding-bottom: 6vh;
-  /* width: 100vw; */
-  /* height: 100vh; */
+  width: 100vw;
+  height: 100vh;
 `;

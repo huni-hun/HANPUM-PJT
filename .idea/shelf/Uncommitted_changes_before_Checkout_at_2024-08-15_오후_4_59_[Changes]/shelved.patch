@@ -1,0 +1,173 @@
+Index: frontend/src/react-app-env.d.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>/// <reference types=\"react-scripts\" />\r\n\r\ndeclare namespace NodeJS {\r\n    export interface ProcessEnv {\r\n        REACT_APP_MAP_KEY: string;\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/react-app-env.d.ts b/frontend/src/react-app-env.d.ts
+--- a/frontend/src/react-app-env.d.ts	(revision fb669ccc61a805dcfb51eeb482b31b01196dad1f)
++++ b/frontend/src/react-app-env.d.ts	(date 1723705617511)
+@@ -1,7 +1,7 @@
+ /// <reference types="react-scripts" />
+ 
+ declare namespace NodeJS {
+-    export interface ProcessEnv {
+-        REACT_APP_MAP_KEY: string;
+-    }
+-}
+\ No newline at end of file
++  export interface ProcessEnv {
++    REACT_APP_MAP_KEY: string;
++  }
++}
+Index: frontend/src/App.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import styled from 'styled-components';\r\nimport Router from '@pages/Router';\r\n\r\nfunction App() {\r\n  return (\r\n    <Container>\r\n      <Router />\r\n    </Container>\r\n  );\r\n}\r\n\r\nexport default App;\r\n\r\nconst Container = styled.div`\r\n  padding-bottom: 6vh;\r\n  /* width: 100vw; */\r\n  /* height: 100vh; */\r\n`;\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/App.tsx b/frontend/src/App.tsx
+--- a/frontend/src/App.tsx	(revision fb669ccc61a805dcfb51eeb482b31b01196dad1f)
++++ b/frontend/src/App.tsx	(date 1723705253599)
+@@ -12,7 +12,6 @@
+ export default App;
+ 
+ const Container = styled.div`
+-  padding-bottom: 6vh;
+-  /* width: 100vw; */
+-  /* height: 100vh; */
++  width: 100vw;
++  height: 100vh;
+ `;
+Index: frontend/src/pages/Route/RouteList.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import Button from '../../components/common/Button/Button';\r\nimport Icon from '../../components/common/Icon/Icon';\r\nimport RouteCard from '../../components/Style/Route/RouteCard';\r\nimport * as R from '../../components/Style/Route/RouteList.styled';\r\n\r\nfunction RouteList() {\r\n  return (\r\n    <R.RouteListContainer>\r\n      <R.RouteListHeader>\r\n        <R.BackBtnBox>\r\n          <Icon name=\"IconBackArrow\" size={20} />\r\n        </R.BackBtnBox>\r\n        <R.SearchContainer>\r\n          <R.SearchBox />\r\n        </R.SearchContainer>\r\n        <R.IconContainer>\r\n          <R.IconBox>\r\n            <Icon name=\"IconBookMarker\" size={20} />\r\n          </R.IconBox>\r\n          <R.IconBox>\r\n            <Icon name=\"IconNotification\" size={20} />\r\n          </R.IconBox>\r\n          <R.IconBox>\r\n            <Icon name=\"IconMy\" size={20} />\r\n          </R.IconBox>\r\n        </R.IconContainer>\r\n      </R.RouteListHeader>\r\n      <R.MainContainer>\r\n        <R.RouteCardContainer>\r\n          <R.RouteTypeHeader>\r\n            <R.TypeTitle>지금 가장 인기 있는 코스</R.TypeTitle>\r\n            <R.MoreButton>\r\n              <R.MoreText>더보기</R.MoreText>\r\n              <Icon name=\"IconLeftBlackArrow\" size={10} />\r\n            </R.MoreButton>\r\n          </R.RouteTypeHeader>\r\n          <R.CardContainer>\r\n            <R.BlankBox />\r\n            <R.OverFlow>\r\n              <RouteCard />\r\n              <RouteCard />\r\n              <RouteCard />\r\n              <RouteCard />\r\n              <RouteCard />\r\n              <RouteCard />\r\n              <RouteCard />\r\n              <RouteCard />\r\n              <RouteCard />\r\n              <RouteCard />\r\n            </R.OverFlow>\r\n          </R.CardContainer>\r\n        </R.RouteCardContainer>\r\n        <R.RouteCardContainer>\r\n          <R.RouteTypeHeader>\r\n            <R.TypeTitle>지금 가장 인기 있는 코스</R.TypeTitle>\r\n            <R.MoreButton>\r\n              <R.MoreText>더보기</R.MoreText>\r\n              <Icon name=\"IconLeftBlackArrow\" size={10} />\r\n            </R.MoreButton>\r\n          </R.RouteTypeHeader>\r\n          <R.CardContainer>\r\n            <R.BlankBox />\r\n            <R.OverFlow>\r\n              <RouteCard />\r\n              <RouteCard />\r\n              <RouteCard />\r\n              <RouteCard />\r\n              <RouteCard />\r\n              <RouteCard />\r\n              <RouteCard />\r\n              <RouteCard />\r\n              <RouteCard />\r\n              <RouteCard />\r\n            </R.OverFlow>\r\n          </R.CardContainer>\r\n        </R.RouteCardContainer>\r\n        <R.RouteCardContainer>\r\n          <R.RouteTypeHeader>\r\n            <R.TypeTitle>지금 가장 인기 있는 코스</R.TypeTitle>\r\n            <R.MoreButton>\r\n              <R.MoreText>더보기</R.MoreText>\r\n              <Icon name=\"IconLeftBlackArrow\" size={10} />\r\n            </R.MoreButton>\r\n          </R.RouteTypeHeader>\r\n          <R.CardContainer>\r\n            <R.BlankBox />\r\n            <R.OverFlow>\r\n              <RouteCard />\r\n              <RouteCard />\r\n              <RouteCard />\r\n              <RouteCard />\r\n              <RouteCard />\r\n              <RouteCard />\r\n              <RouteCard />\r\n              <RouteCard />\r\n              <RouteCard />\r\n              <RouteCard />\r\n            </R.OverFlow>\r\n          </R.CardContainer>\r\n        </R.RouteCardContainer>\r\n      </R.MainContainer>\r\n      <R.ButtonContainer>\r\n        <Button\r\n          width={90}\r\n          height={7}\r\n          fontColor=\"ffffff\"\r\n          backgroundColor=\"#A0A0A0\"\r\n          radius={0.7}\r\n          fontSize={1.6}\r\n          children=\"나의 경로 만들기\"\r\n          color=\"\"\r\n          onClick={() => {}}\r\n        />\r\n      </R.ButtonContainer>\r\n    </R.RouteListContainer>\r\n  );\r\n}\r\n\r\nexport default RouteList;\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/pages/Route/RouteList.tsx b/frontend/src/pages/Route/RouteList.tsx
+--- a/frontend/src/pages/Route/RouteList.tsx	(revision fb669ccc61a805dcfb51eeb482b31b01196dad1f)
++++ b/frontend/src/pages/Route/RouteList.tsx	(date 1723705667860)
+@@ -1,30 +1,14 @@
++import Header from '@/components/common/Header/Header';
+ import Button from '../../components/common/Button/Button';
+ import Icon from '../../components/common/Icon/Icon';
+ import RouteCard from '../../components/Style/Route/RouteCard';
+ import * as R from '../../components/Style/Route/RouteList.styled';
++import BottomTab from '@/components/common/BottomTab/BottomTab';
+ 
+ function RouteList() {
+   return (
+     <R.RouteListContainer>
+-      <R.RouteListHeader>
+-        <R.BackBtnBox>
+-          <Icon name="IconBackArrow" size={20} />
+-        </R.BackBtnBox>
+-        <R.SearchContainer>
+-          <R.SearchBox />
+-        </R.SearchContainer>
+-        <R.IconContainer>
+-          <R.IconBox>
+-            <Icon name="IconBookMarker" size={20} />
+-          </R.IconBox>
+-          <R.IconBox>
+-            <Icon name="IconNotification" size={20} />
+-          </R.IconBox>
+-          <R.IconBox>
+-            <Icon name="IconMy" size={20} />
+-          </R.IconBox>
+-        </R.IconContainer>
+-      </R.RouteListHeader>
++      <Header purpose="merge" />
+       <R.MainContainer>
+         <R.RouteCardContainer>
+           <R.RouteTypeHeader>
+@@ -102,7 +86,7 @@
+       <R.ButtonContainer>
+         <Button
+           width={90}
+-          height={7}
++          height={6}
+           fontColor="ffffff"
+           backgroundColor="#A0A0A0"
+           radius={0.7}
+@@ -112,6 +96,7 @@
+           onClick={() => {}}
+         />
+       </R.ButtonContainer>
++      <BottomTab />
+     </R.RouteListContainer>
+   );
+ }
+Index: frontend/src/components/Style/Route/RouteList.styled.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import styled from 'styled-components';\r\n\r\nexport const RouteListContainer = styled.div`\r\n  width: 100vw;\r\n  height: 100vh;\r\n`;\r\n\r\nexport const RouteListHeader = styled.div`\r\n  width: 100vw;\r\n  height: 6vh;\r\n  display: flex;\r\n  flex-direction: row;\r\n  align-items: center;\r\n`;\r\n\r\nexport const BackBtnBox = styled.div`\r\n  width: 10vw;\r\n  height: 100%;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n`;\r\n\r\nexport const SearchContainer = styled.div`\r\n  width: 60vw;\r\n  height: 100%;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n`;\r\n\r\nexport const SearchBox = styled.input`\r\n  type: text;\r\n  width: 90%;\r\n  height: 50%;\r\n  border-radius: 10rem;\r\n  padding: 0 0 0 1.6rem;\r\n  border: 0.2rem solid #e9e9e9;\r\n`;\r\n\r\nexport const IconContainer = styled.div`\r\n  width: 30vw;\r\n  height: 100%;\r\n  display: flex;\r\n  aling-items: center;\r\n`;\r\n\r\nexport const IconBox = styled.div`\r\n  width: 30%;\r\n  height: 100%;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n`;\r\n\r\nexport const MainContainer = styled.div`\r\n  width: 100vw;\r\n  height: 83vh;\r\n  display: flex;\r\n  flex-direction: column;\r\n  overflow-x: auto;\r\n`;\r\n\r\nexport const ButtonContainer = styled.div`\r\n  width: 100vw;\r\n  height: 11vh;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n`;\r\n\r\nexport const RouteCardContainer = styled.div`\r\n  width: 100vw;\r\n  height: 25vh;\r\n  display: flex;\r\n  flex-direction: column;\r\n  overflow-x: auto;\r\n`;\r\n\r\nexport const RouteTypeHeader = styled.div`\r\n  width: 100vw;\r\n  height: 5vh;\r\n  display: flex;\r\n  flex-direction: row;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n`;\r\n\r\nexport const TypeTitle = styled.p`\r\n  font-size: 2rem;\r\n  font-weight: bold;\r\n  padding-left: 2rem;\r\n`;\r\n\r\nexport const MoreButton = styled.div`\r\n  width: 10vw;\r\n  height: 6vh;\r\n  display: flex;\r\n  flex-direction: row;\r\n  align-items: center;\r\n  justify-content: center;\r\n  padding-right: 3rem;\r\n`;\r\n\r\nexport const MoreText = styled.p`\r\n  font-size: 1rem;\r\n`;\r\n\r\nexport const CardContainer = styled.div`\r\n  width: 100vw;\r\n  height: 19vh;\r\n  display: flex;\r\n  flex-direction: row;\r\n`;\r\n\r\nexport const OverFlow = styled.div`\r\n  display: flex;\r\n  flex-direction: row;\r\n  align-items: center;\r\n  height: 19vh;\r\n  width: 96vw;\r\n  overflow-x: auto;\r\n  &::-webkit-scrollbar {\r\n    display: none;\r\n  }\r\n`;\r\n\r\nexport const BlankBox = styled.div`\r\n  width: 2rem;\r\n  height: 100%;\r\n  display: block;\r\n`;\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/components/Style/Route/RouteList.styled.tsx b/frontend/src/components/Style/Route/RouteList.styled.tsx
+--- a/frontend/src/components/Style/Route/RouteList.styled.tsx	(revision fb669ccc61a805dcfb51eeb482b31b01196dad1f)
++++ b/frontend/src/components/Style/Route/RouteList.styled.tsx	(date 1723708638998)
+@@ -1,8 +1,10 @@
++import { colors } from '@/styles/colorPalette';
+ import styled from 'styled-components';
+ 
+ export const RouteListContainer = styled.div`
+   width: 100vw;
+   height: 100vh;
++  background-color: ${colors.white};
+ `;
+ 
+ export const RouteListHeader = styled.div`
+@@ -55,7 +57,7 @@
+ 
+ export const MainContainer = styled.div`
+   width: 100vw;
+-  height: 83vh;
++  height: auto;
+   display: flex;
+   flex-direction: column;
+   overflow-x: auto;
+@@ -71,7 +73,7 @@
+ 
+ export const RouteCardContainer = styled.div`
+   width: 100vw;
+-  height: 25vh;
++  height: 23.5rem;
+   display: flex;
+   flex-direction: column;
+   overflow-x: auto;
+@@ -117,7 +119,7 @@
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+-  height: 19vh;
++  height: 18.5rem;
+   width: 96vw;
+   overflow-x: auto;
+   &::-webkit-scrollbar {
+Index: frontend/src/components/Style/Route/RouteCard.styled.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import styled from 'styled-components';\r\n\r\nexport const Card = styled.div<{ img: string }>`\r\n  min-width: 15rem;\r\n  height: 15rem;\r\n  border: 1px solid;\r\n  border-radius: 1.2rem;\r\n  display: flex;\r\n  margin-right: 0.8rem;\r\n  padding: 1rem 1rem 1rem 1rem;\r\n  background-image: url(${(props) => props.img});\r\n  background-size: cover;\r\n  background-repeat: no-repeat;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n`;\r\n\r\nexport const TopContent = styled.div`\r\n  width: 14rem;\r\n  height: 5rem;\r\n  display: flex;\r\n  flex-direction: row;\r\n  justify-content: space-between;\r\n`;\r\n\r\nexport const ContentContainer = styled.div`\r\n  width: 65%;\r\n  height: 100%;\r\n  display: flex;\r\n  flex-direction: row;\r\n  justify-content: space-between;\r\n`;\r\n\r\nexport const Content = styled.div`\r\n  width: 4.3rem;\r\n  height: 4.3rem;\r\n  display: flex;\r\n  flex-direction: column;\r\n  justify-content: center;\r\n  align-items: center;\r\n  background: #000000;\r\n  border-radius: 0.8rem;\r\n`;\r\n\r\nexport const ContentText = styled.p`\r\n  font-size: 1rem;\r\n  color: #ffffff;\r\n`;\r\n\r\nexport const BottomContent = styled.div`\r\n  width: 15rem;\r\n  height: 4rem;\r\n  display: flex;\r\n  flex-direction: row;\r\n  align-items: center;\r\n`;\r\n\r\nexport const RouteNTitleBox = styled.div`\r\n  width: 60%;\r\n  height: 100%;\r\n  display: flex;\r\n  flex-direction: column;\r\n`;\r\n\r\nexport const RouteBox = styled.div`\r\n  width: 70%;\r\n  height: 40%;\r\n  display: flex;\r\n  flex-direction: row;\r\n  align-items: end;\r\n  justify-content: space-between;\r\n`;\r\n\r\nexport const RouteText = styled.div`\r\n  font-size: 1rem;\r\n  color: #ffffff;\r\n`;\r\n\r\nexport const TitleBox = styled.div`\r\n  width: 100%;\r\n  height: 60%;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: start;\r\n  font-size: 1.4rem;\r\n  font-weight: 800;\r\n  color: #ffffff;\r\n`;\r\n\r\nexport const Datecontainer = styled.div`\r\n  width: 33%;\r\n  height: 100%;\r\n  display: flex;\r\n  align-items: end;\r\n  justify-content: center;\r\n`;\r\n\r\nexport const DateBox = styled.div`\r\n  width: 100%;\r\n  height: 50%;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  background-color: #1a823b;\r\n  border-radius: 10rem;\r\n  border: 0.1rem solid #ffffff;\r\n  color: #ffffff;\r\n`;\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/components/Style/Route/RouteCard.styled.tsx b/frontend/src/components/Style/Route/RouteCard.styled.tsx
+--- a/frontend/src/components/Style/Route/RouteCard.styled.tsx	(revision fb669ccc61a805dcfb51eeb482b31b01196dad1f)
++++ b/frontend/src/components/Style/Route/RouteCard.styled.tsx	(date 1723706225079)
+@@ -1,8 +1,8 @@
+ import styled from 'styled-components';
+ 
+ export const Card = styled.div<{ img: string }>`
+-  min-width: 15rem;
+-  height: 15rem;
++  min-width: 14.6rem;
++  height: 14.6rem;
+   border: 1px solid;
+   border-radius: 1.2rem;
+   display: flex;

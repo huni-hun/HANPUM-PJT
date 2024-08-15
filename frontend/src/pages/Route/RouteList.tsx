@@ -1,30 +1,42 @@
+import Header from '@/components/common/Header/Header';
 import Button from '../../components/common/Button/Button';
 import Icon from '../../components/common/Icon/Icon';
 import RouteCard from '../../components/Style/Route/RouteCard';
 import * as R from '../../components/Style/Route/RouteList.styled';
+import BottomTab from '@/components/common/BottomTab/BottomTab';
+import { useEffect, useState } from 'react';
+import { getRouteList } from '@/api/route/GET';
+import { RouteListProps } from '@/models/route';
 
 function RouteList() {
+  const [arr, setArr] = useState<RouteListProps[]>([]);
+  useEffect(() => {
+    const data: RouteListProps[] = [];
+    getRouteList('초보자').then((result) => {
+      if (result.status === 200) {
+        let response: RouteListProps = {
+          routeName: result.data.data.courseListMap.초보자[0].courseName,
+          routeContent: result.data.data.courseListMap.초보자[0].content,
+          routeScore: result.data.data.courseListMap.초보자[0].scoreAvg,
+          routeComment: result.data.data.courseListMap.초보자[0].commentCnt,
+          routeId: result.data.data.courseListMap.초보자[0].courseId,
+          img: result.data.data.courseListMap.초보자[0].backgroundImg,
+          writeState: result.data.data.courseListMap.초보자[0].writeState,
+          openState: result.data.data.courseListMap.초보자[0].openState,
+          memberId: result.data.data.courseListMap.초보자[0].memberId,
+          writeDate: result.data.data.courseListMap.초보자[0].writeDate,
+        };
+        for (let i = 0; i < 5; i++) {
+          data.push(response);
+        }
+
+        setArr(data);
+      }
+    });
+  }, []);
   return (
     <R.RouteListContainer>
-      <R.RouteListHeader>
-        <R.BackBtnBox>
-          <Icon name="IconBackArrow" size={20} />
-        </R.BackBtnBox>
-        <R.SearchContainer>
-          <R.SearchBox />
-        </R.SearchContainer>
-        <R.IconContainer>
-          <R.IconBox>
-            <Icon name="IconBookMarker" size={20} />
-          </R.IconBox>
-          <R.IconBox>
-            <Icon name="IconNotification" size={20} />
-          </R.IconBox>
-          <R.IconBox>
-            <Icon name="IconMy" size={20} />
-          </R.IconBox>
-        </R.IconContainer>
-      </R.RouteListHeader>
+      <Header purpose="merge" />
       <R.MainContainer>
         <R.RouteCardContainer>
           <R.RouteTypeHeader>
@@ -37,16 +49,9 @@ function RouteList() {
           <R.CardContainer>
             <R.BlankBox />
             <R.OverFlow>
-              <RouteCard />
-              <RouteCard />
-              <RouteCard />
-              <RouteCard />
-              <RouteCard />
-              <RouteCard />
-              <RouteCard />
-              <RouteCard />
-              <RouteCard />
-              <RouteCard />
+              {arr.map((ele) => (
+                <RouteCard {...ele} />
+              ))}
             </R.OverFlow>
           </R.CardContainer>
         </R.RouteCardContainer>
@@ -61,16 +66,9 @@ function RouteList() {
           <R.CardContainer>
             <R.BlankBox />
             <R.OverFlow>
-              <RouteCard />
-              <RouteCard />
-              <RouteCard />
-              <RouteCard />
-              <RouteCard />
-              <RouteCard />
-              <RouteCard />
-              <RouteCard />
-              <RouteCard />
-              <RouteCard />
+              {arr.map((ele) => (
+                <RouteCard {...ele} />
+              ))}
             </R.OverFlow>
           </R.CardContainer>
         </R.RouteCardContainer>
@@ -85,33 +83,28 @@ function RouteList() {
           <R.CardContainer>
             <R.BlankBox />
             <R.OverFlow>
-              <RouteCard />
-              <RouteCard />
-              <RouteCard />
-              <RouteCard />
-              <RouteCard />
-              <RouteCard />
-              <RouteCard />
-              <RouteCard />
-              <RouteCard />
-              <RouteCard />
+              {arr.map((ele) => (
+                <RouteCard {...ele} />
+              ))}
             </R.OverFlow>
           </R.CardContainer>
         </R.RouteCardContainer>
+        <R.MentContainer>🤔찾으시는 코스가 없으신가요?</R.MentContainer>
+        <R.ButtonContainer>
+          <Button
+            width={90}
+            height={7}
+            fontColor="ffffff"
+            backgroundColor="#A0A0A0"
+            radius={0.7}
+            fontSize={1.6}
+            children="나의 경로 만들기"
+            color=""
+            onClick={() => {}}
+          />
+        </R.ButtonContainer>
       </R.MainContainer>
-      <R.ButtonContainer>
-        <Button
-          width={90}
-          height={7}
-          fontColor="ffffff"
-          backgroundColor="#A0A0A0"
-          radius={0.7}
-          fontSize={1.6}
-          children="나의 경로 만들기"
-          color=""
-          onClick={() => {}}
-        />
-      </R.ButtonContainer>
+      <BottomTab />
     </R.RouteListContainer>
   );
 }
