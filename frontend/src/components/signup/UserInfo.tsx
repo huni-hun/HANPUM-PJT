@@ -407,14 +407,14 @@ function UserInfo({
           clickNext();
           setTime(0);
         }}
-        // disabled={
-        //   !(
-        //     formValues.sendAuthCode &&
-        //     formValues.sendEmail &&
-        //     formValues.sendLoginId &&
-        //     noError
-        //   )
-        // }
+        disabled={
+          !(
+            formValues.sendAuthCode &&
+            formValues.sendEmail &&
+            formValues.sendLoginId &&
+            noError
+          )
+        }
         // $bottom="5"
       />
     </S.UserInfoContainer>

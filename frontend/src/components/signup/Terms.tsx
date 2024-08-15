@@ -22,14 +22,16 @@ function Terms({
     );
   });
 
+  console.log(termsAgreements);
   // 모두 체크되었는지 확인하고 true, false로 반환
   const isAllCheck = Object.values(termsAgreements).every((allTrue) => allTrue);
+  console.log(isAllCheck);
 
   // 필수약관 모두 체크되었는지
   const isEssentialCheck = Object.entries(termsAgreements)
-    .filter(([key]) => key !== '03')
+    .filter(([key]) => key !== '04')
     .every(([, value]) => value);
-
+  console.log('필수 ::', isEssentialCheck);
   // 전체 동의 누르는 함수
   const handleAllAgree = (
     _: MouseEvent<HTMLElement>,

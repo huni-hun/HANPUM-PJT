@@ -10,7 +10,7 @@ export const PATH = {
 } as const;
 
 export const APPLY = [
-  { id: '01', title: '만 14세 이상입니다 (필수)', link: 'www.google.com' },
+  { id: '01', title: '만 14세 (필수)', link: 'www.google.com' },
   {
     id: '02',
     title: '서비스 이용약관 동의 (필수)',
