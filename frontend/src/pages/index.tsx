@@ -1,6 +1,6 @@
-// index.js
+// index.tsx
 import LoginPage from '../pages/Auth/LoginPage';
-import MainPage from './Main/MainPage';
+import MainPage from '../pages/Main/MainPage';
 
 /** 일정 */
 import ScheduleMainPage from '../pages/Schedule/ScheduleMainPage';
@@ -12,6 +12,8 @@ import RouteAddPlacePage from '../pages/Route/RouteAddPlacePage';
 import RouteAddMainPage from '../pages/Route/RouteAddMainPage';
 
 /** 모임 */
+import MeetPage from '../pages/Meet/MeetPage';
+import MeetDetailPage from '../pages/Meet/MeetDetailPage';
 
 /** 커뮤니티 */
 
@@ -25,4 +27,6 @@ export {
   RouteList,
   RouteAddPlacePage,
   RouteAddMainPage,
+  MeetPage,
+  MeetDetailPage,
 };
