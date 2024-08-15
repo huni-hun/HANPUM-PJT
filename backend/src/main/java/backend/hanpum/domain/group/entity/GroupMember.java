@@ -28,7 +28,7 @@ public class GroupMember {
     @JoinColumn(name = "group_id")
     private Group group;
 
-    @OneToOne(mappedBy = "groupMember", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "groupMember", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private Member member;
 
 }
