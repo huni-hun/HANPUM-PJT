@@ -54,7 +54,7 @@ public class GroupServiceImpl implements GroupService {
                 .build();
 
         group.getGroupMemberList().add(groupMember);
-        member.JoinGroupMember(groupMember);
+        member.updateGroupMember(groupMember);
         groupRepository.save(group);
 
         return GroupPostResDto.builder().groupId(group.getGroupId()).build();
@@ -98,7 +98,7 @@ public class GroupServiceImpl implements GroupService {
                 .build();
         group.getGroupMemberList().add(groupMember);
         groupMemberRepository.save(groupMember);
-        member.JoinGroupMember(groupMember);
+        member.updateGroupMember(groupMember);
         groupRepository.save(group);
     }
 
@@ -110,7 +110,7 @@ public class GroupServiceImpl implements GroupService {
         if (member.getGroupMember() == null) throw new GroupMemberNotFoundException();
         GroupMember groupMember =
                 groupMemberRepository.findByGroupAndMember(group, member).orElseThrow(GroupMemberNotFoundException::new);
-        member.JoinGroupMember(null);
+        member.updateGroupMember(null);
         group.getGroupMemberList().remove(groupMember);
         groupMemberRepository.delete(groupMember);
     }
