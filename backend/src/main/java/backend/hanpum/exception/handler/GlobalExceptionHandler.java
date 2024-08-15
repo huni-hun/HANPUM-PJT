@@ -6,7 +6,6 @@ import backend.hanpum.exception.exception.course.CourseListNotFoundException;
 import backend.hanpum.exception.exception.course.CourseNotFoundException;
 import backend.hanpum.exception.exception.course.CourseReviewsNotFoundException;
 import backend.hanpum.exception.exception.group.GroupAlreadyJoinedException;
-import backend.hanpum.exception.exception.group.GroupDetailNotFoundException;
 import backend.hanpum.exception.exception.group.GroupNotFoundException;
 import backend.hanpum.exception.exception.schedule.InvalidDayFormatException;
 import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
@@ -94,12 +93,6 @@ public class GlobalExceptionHandler {
         return response.error(e.getErrorCode());
     }
 
-    @ExceptionHandler(GroupDetailNotFoundException.class)
-    protected ResponseEntity<?> handle(GroupDetailNotFoundException e) {
-        log.error("GroupDetailNotFoundException = {}", e.getErrorCode().getMessage());
-        log.error("Error Message = {}", e.getMessage());
-        return response.error(e.getErrorCode());
-    }
     @ExceptionHandler(GroupNotFoundException.class)
     protected ResponseEntity<?> handle(GroupNotFoundException e) {
         log.error("GroupNotFoundException = {}", e.getErrorCode().getMessage());

@@ -15,14 +15,12 @@ import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.group.GroupAlreadyJoinedException;
-import backend.hanpum.exception.exception.group.GroupDetailNotFoundException;
 import backend.hanpum.exception.exception.group.GroupNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -70,7 +68,7 @@ public class GroupServiceImpl implements GroupService {
     @Transactional(readOnly = true)
     public GroupDetailGetResDto getGroupDetail(Long memberId, Long groupId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
-        GroupDetailGetResDto groupDetailGetResDto = groupRepositoryCustom.findGroupById(groupId).orElseThrow(GroupDetailNotFoundException::new);
+        GroupDetailGetResDto groupDetailGetResDto = groupRepositoryCustom.findGroupById(groupId).orElseThrow(GroupNotFoundException::new);
 
         return GroupDetailGetResDto.builder()
                 .title(groupDetailGetResDto.getTitle())
