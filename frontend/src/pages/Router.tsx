@@ -12,6 +12,8 @@ import {
   MeetDetailPage,
   RouteAddPlacePage,
   RouteAddMainPage,
+  RouteDetailPage,
+  RouteAddDetailPage,
 } from './index'; // index.tsx에서 컴포넌트를 가져옵니다.
 
 export default function Router() {
@@ -26,8 +28,9 @@ export default function Router() {
         <Route path="schedule/addSchedule" element={<AddSchedulePage />} />
 
         <Route path="route/list" element={<RouteList />} />
-
+        <Route path="route/detail" element={<RouteDetailPage />} />
         <Route path="route/addMain" element={<RouteAddMainPage />} />
+        <Route path="route/addDetail" element={<RouteAddDetailPage />} />
         <Route path="route/add" element={<RouteAddPlacePage />} />
 
         <Route path="meet" element={<MeetPage />} />

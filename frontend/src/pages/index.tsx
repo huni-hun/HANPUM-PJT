@@ -10,6 +10,8 @@ import AddSchedulePage from '../pages/Schedule/AddSchedulePage';
 import RouteList from '../pages/Route/RouteList';
 import RouteAddPlacePage from '../pages/Route/RouteAddPlacePage';
 import RouteAddMainPage from '../pages/Route/RouteAddMainPage';
+import RouteAddDetailPage from './Route/RouteAddDetailPage';
+import RouteDetailPage from './Route/RouteDetailPage';
 
 /** 모임 */
 import MeetPage from '../pages/Meet/MeetPage';
@@ -19,6 +21,8 @@ import MeetDetailPage from '../pages/Meet/MeetDetailPage';
 
 /** 마이페이지 */
 
+/** 커뮤니티 */
+/** 마이페이지 */
 export {
   LoginPage,
   MainPage,
@@ -29,4 +33,6 @@ export {
   RouteAddMainPage,
   MeetPage,
   MeetDetailPage,
+  RouteDetailPage,
+  RouteAddDetailPage,
 };
