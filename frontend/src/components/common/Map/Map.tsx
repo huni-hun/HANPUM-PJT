@@ -17,8 +17,6 @@ function Map(props: MapProps) {
     const mapScript = document.createElement('script');
     mapScript.async = true;
     mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_MAP_KEY}&autoload=false`;
-    console.log(process.env.REACT_APP_MAP_KEY);
-    // mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=f7d4ebdd98b5b81712647b8f4f71e07b&autoload=false`;
     document.head.appendChild(mapScript);
     const onLoadKakaoMap = () => {
       window.kakao.maps.load(() => {

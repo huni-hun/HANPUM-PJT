@@ -11,6 +11,7 @@ import MeetPage from './Meet/MeetPage';
 import MeetDetailPage from './Meet/MeetDetailPage';
 import RouteAddDetailPage from './Route/RouteAddDetailPage';
 import SearchPlacePage from './Route/SearchPlacePage';
+import RouteDetailPage from './Route/RouteDetailPage';
 
 export default function Router() {
   return (
@@ -28,6 +29,7 @@ export default function Router() {
         <Route path="route/add" element={<RouteAddPlacePage />} />
         <Route path="route/addDetail" element={<RouteAddDetailPage />} />
         <Route path="route/search" element={<SearchPlacePage />} />
+        <Route path="route/detail" element={<RouteDetailPage />} />
 
         <Route path="meet" element={<MeetPage />} />
         <Route path="meet/:id" element={<MeetDetailPage />} />
