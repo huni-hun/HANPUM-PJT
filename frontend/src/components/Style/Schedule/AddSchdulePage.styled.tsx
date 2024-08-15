@@ -1,55 +1,28 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  width: 100vw;
-  height: 100vh;
-`;
-
-export const HeaderContainer = styled.div`
-  width: 100vw;
-  height: 10vh;
-  display: flex;
-  align-items: center;
-  align-content: space-between;
-`;
-
-export const HeaderContent = styled.div`
-  width: 100vw;
-  height: 2vh;
-  padding: 2rem;
-`;
-
-export const HeaderTitle = styled.p`
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin: auto;
-  text-align: center;
-`;
-
-export const HeaderIcon = styled.img<{ src: string }>`
-  src: ${(props) => props.src};
-  float: left;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
 `;
 
 export const SchduleContainer = styled.div`
-  width: 85vw;
-  height: 30vh;
-  margin: 2rem;
-  box-sizing: border-box;
+  width: 100%;
 `;
 export const DateWrap = styled.div<{ isExpanded: boolean }>`
-  height: ${({ isExpanded }) => (isExpanded ? '80vh' : '8vh')};
-  width: 100vw;
+  height: ${({ isExpanded }) => (isExpanded ? '75vh' : '11vh')};
+  width: 90vw;
   background-color: #fff;
   border-radius: 2rem;
   display: ${({ isExpanded }) => (isExpanded ? 'normal' : 'flex')};
-  padding: ${({ isExpanded }) => (isExpanded ? '4rem 3rem' : '2rem 3rem')};
   align-items: ${({ isExpanded }) => (isExpanded ? 'normal' : 'center')};
   justify-content: space-between;
   padding: ${({ isExpanded }) => (isExpanded ? '4rem 3rem' : '2rem 3rem')};
   box-shadow: 0rem 1rem 1rem #e1e1e1;
-  margin-bottom: 3rem;
+  margin: 10rem 0 3rem 0;
   transition: height 0.5s ease;
+  box-sizing: border-box;
 `;
 
 export const H3 = styled.p`
@@ -69,20 +42,21 @@ export const DatePicker = styled.div`
 `;
 
 export const RouteWrap = styled.div<{ isExpanded: boolean }>`
-  height: ${({ isExpanded }) => (isExpanded ? '8vh' : '80vh')};
-  width: 100vw;
+  height: ${({ isExpanded }) => (isExpanded ? '11vh' : '75vh')};
+  width: 90vw;
   background-color: #fff;
   border-radius: 2rem;
-  padding: 2rem 3rem;
+  padding: 1.2rem 2.4rem;
   box-shadow: 0rem 1rem 1rem #e1e1e1;
   transition: height 0.5s ease;
+  box-sizing: border-box;
 `;
 
 export const RouteTop = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-
+  align-items: center;
   /* padding: 1.2rem; */
 `;
 
@@ -94,6 +68,7 @@ export const RoutePointWrap = styled.div`
   justify-content: space-between;
   position: relative;
   margin-bottom: 1rem;
+  box-sizing: border-box;
   :nth-child(1) ::after {
     content: '';
     border-left: 1px solid #ccc;
@@ -131,7 +106,7 @@ export const RouteMapWrap = styled.div`
 
 export const RouteMapContent = styled.div`
   background-color: #ccc;
-  height: 68vh;
+  height: 60vh;
   border-radius: 1.5rem;
   text-align: center;
   font-size: 4rem;
