@@ -55,4 +55,12 @@ public class GroupController {
         groupService.applyGroup(userDetails.getMember().getMemberId(), groupId);
         return response.success(ResponseCode.GROUP_APPLY_SUCCESS);
     }
+
+    @Operation(summary = "모임 신청 취소", description = "모임 신청 취소 API")
+    @DeleteMapping("/{groupId}/apply")
+    public ResponseEntity<?> removeApplyGroup(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                        @PathVariable Long groupId) {
+        groupService.removeApplyGroup(userDetails.getMember().getMemberId(), groupId);
+        return response.success(ResponseCode.GROUP_APPLY_REMOVE_SUCCESS);
+    }
 }

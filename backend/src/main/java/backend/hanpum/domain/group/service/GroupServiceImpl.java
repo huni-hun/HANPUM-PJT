@@ -9,12 +9,14 @@ import backend.hanpum.domain.group.entity.Group;
 import backend.hanpum.domain.group.entity.GroupMember;
 import backend.hanpum.domain.group.enums.GroupJoinStatus;
 import backend.hanpum.domain.group.enums.JoinType;
+import backend.hanpum.domain.group.repository.GroupMemberRepository;
 import backend.hanpum.domain.group.repository.GroupRepository;
 import backend.hanpum.domain.group.repository.custom.GroupRepositoryCustom;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.group.GroupAlreadyJoinedException;
+import backend.hanpum.exception.exception.group.GroupMemberNotFoundException;
 import backend.hanpum.exception.exception.group.GroupNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,7 @@ public class GroupServiceImpl implements GroupService {
     private final MemberRepository memberRepository;
     private final GroupRepository groupRepository;
     private final GroupRepositoryCustom groupRepositoryCustom;
+    private final GroupMemberRepository groupMemberRepository;
 
     @Override
     @Transactional
@@ -94,8 +97,22 @@ public class GroupServiceImpl implements GroupService {
                 .member(member)
                 .build();
         group.getGroupMemberList().add(groupMember);
+        groupMemberRepository.save(groupMember);
         member.JoinGroupMember(groupMember);
         groupRepository.save(group);
+    }
+
+    @Override
+    @Transactional
+    public void removeApplyGroup(Long memberId, Long groupId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
+        if (member.getGroupMember() == null) throw new GroupMemberNotFoundException();
+        GroupMember groupMember =
+                groupMemberRepository.findByGroupAndMember(group, member).orElseThrow(GroupMemberNotFoundException::new);
+        member.JoinGroupMember(null);
+        group.getGroupMemberList().remove(groupMember);
+        groupMemberRepository.delete(groupMember);
     }
 
     private GroupJoinStatus getGroupJoinStatus(GroupMember groupMember, Long groupId) {
