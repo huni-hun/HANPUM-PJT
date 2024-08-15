@@ -1,9 +1,9 @@
 import { signupStepAtom } from '@/atoms/signupStepAtom';
 import Header from '@/components/common/Header/Header';
-import ProfileConfig from '@/components/signup/ProfileConfig';
+import ProfileConfig from '@/components/Signup/ProfileConfig';
 // import ProfileConfig from '@/components/signup/ProfileConfig';
-import Terms from '@/components/signup/Terms';
-import UserInfo from '@/components/signup/UserInfo';
+import Terms from '@/components/Signup/Terms';
+import UserInfo from '@/components/Signup/UserInfo';
 import {
   SignupRequestValues,
   SignupStep,
