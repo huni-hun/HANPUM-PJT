@@ -1,6 +1,7 @@
 package backend.hanpum.domain.course.controller;
 
 import backend.hanpum.domain.course.dto.requestDto.CourseReviewReqDto;
+import backend.hanpum.domain.course.dto.requestDto.MakeCourseReqDto;
 import backend.hanpum.domain.course.dto.responseDto.CourseDetailResDto;
 import backend.hanpum.domain.course.dto.responseDto.CourseListMapResDto;
 import backend.hanpum.domain.course.dto.responseDto.CourseReviewResDto;
@@ -36,6 +37,28 @@ public class CourseController {
         CourseListMapResDto courseListMapResDto = courseService.getCourseList(targetCourse);
 
         return response.success(ResponseCode.COURSE_LIST_FETCHED, courseListMapResDto);
+    }
+
+    @Operation(summary = "경로 생성", description = "경로 생성 API")
+    @PostMapping()
+    public ResponseEntity<?> makeCourse(@ModelAttribute MakeCourseReqDto makeCourseReqDto) {
+        courseService.makeCourse(makeCourseReqDto);
+
+        return response.success(ResponseCode.COURSE_MAKE_SUCCESS);
+    }
+
+    @Operation(summary = "경로 삭제", description = "경로 삭제 API")
+    @DeleteMapping("/{course_id}")
+    public ResponseEntity<?> deleteCourse(@PathVariable("course_id") Long courseId) {
+         /*
+        토큰을 이용해 유저정보 추출하는 부분
+        Member member =
+        Long memberId = member.getMemberId();
+         */
+
+//        courseService.deleteCourse(memberId, courseId);
+
+        return response.success(ResponseCode.COURSE_DELETE_SUCCESS);
     }
 
     @Operation(summary = "경로 상세 조회", description = "경로 상세 조회 API")

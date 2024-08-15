@@ -6,6 +6,7 @@ import backend.hanpum.exception.exception.course.CourseListNotFoundException;
 import backend.hanpum.exception.exception.course.CourseNotFoundException;
 import backend.hanpum.exception.exception.course.CourseReviewsNotFoundException;
 import backend.hanpum.exception.exception.group.GroupAlreadyJoinedException;
+import backend.hanpum.exception.exception.group.GroupDetailNotFoundException;
 import backend.hanpum.exception.exception.schedule.InvalidDayFormatException;
 import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
 import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
@@ -88,6 +89,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(GroupAlreadyJoinedException.class)
     protected ResponseEntity<?> handle(GroupAlreadyJoinedException e) {
         log.error("GroupAlreadyJoinedException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(GroupDetailNotFoundException.class)
+    protected ResponseEntity<?> handle(GroupDetailNotFoundException e) {
+        log.error("GroupDetailNotFoundException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }
@@ -194,6 +202,20 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MemberInfoInvalidException.class)
     protected ResponseEntity<?> handle(MemberInfoInvalidException e) {
         log.error("MemberInfoInvalidException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(MemberNotFoundException.class)
+    protected ResponseEntity<?> handle(MemberNotFoundException e) {
+        log.error("MemberNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(TemporaryPasswordMailSendFailedException.class)
+    protected ResponseEntity<?> handle(TemporaryPasswordMailSendFailedException e) {
+        log.error("TemporaryPasswordMailSendFailedException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }

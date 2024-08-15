@@ -24,7 +24,7 @@ export const ItemContainer = styled.div`
     height: 1.5rem;
     border: 1px solid ${colors.white};
     box-sizing: border-box;
-    background-color: ${colors.green};
+    background-color: ${colors.main};
     color: ${colors.white};
     font-size: 1rem;
     position: absolute;

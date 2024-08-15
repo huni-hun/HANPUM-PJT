@@ -64,11 +64,11 @@ export const DayCard = styled.div<{ isSelected: boolean }>`
   margin-right: 0.8rem;
   align-items: center;
   border: 0.15rem solid
-    ${(prop) => (prop.isSelected ? colors.green : colors.grey2)};
+    ${(prop) => (prop.isSelected ? colors.main : colors.grey2)};
   border-radius: 10rem;
   font-size: 1.6rem;
   font-weight: bold;
-  color: ${(prop) => (prop.isSelected ? colors.green : colors.grey2)};
+  color: ${(prop) => (prop.isSelected ? colors.main : colors.grey2)};
   flex-shrink: 0;
 `;
 

@@ -9,7 +9,7 @@ function RouteAddPlacePage() {
     <Ra.Container>
       <Ra.Header>
         <Ra.HeaderButton>
-          <Icon name="IconBack" size={20} />
+          <Icon name="IconBackArrow" size={20} />
         </Ra.HeaderButton>
         <Ra.HeaderTitle>대천 해수욕장</Ra.HeaderTitle>
       </Ra.Header>

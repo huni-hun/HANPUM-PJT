@@ -9,7 +9,7 @@ function SearchPlacePage() {
     <R.Container>
       <R.Header>
         <R.HeaderButton>
-          <Icon name="IconBack" size={20} />
+          <Icon name="IconBackArrow" size={20} />
         </R.HeaderButton>
         <R.InputContainer>
           <R.Input

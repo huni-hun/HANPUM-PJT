@@ -24,8 +24,8 @@ export const MeetScheduleNav = styled.div`
   }
 
   .active {
-    border: 2px solid ${colors.green};
-    color: ${colors.green};
+    border: 2px solid ${colors.main};
+    color: ${colors.main};
   }
 
   .swiper-slide {

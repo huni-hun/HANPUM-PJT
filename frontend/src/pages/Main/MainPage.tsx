@@ -5,10 +5,12 @@ import Schedule from '@components/Main/Schedule';
 import Text from '@components/common/Text';
 import Course from '@components/Main/Course';
 import Meet from '@components/Main/Meet';
+import Header from '@/components/common/Header/Header';
 
 function MainPage() {
   return (
     <MainPageContainer>
+      <Header purpose="search" />
       <div className="padding-box">
         <Schedule />
         <Text typography="t20">동동님을 위한 추천코스</Text>
