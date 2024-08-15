@@ -2,7 +2,7 @@ import { useState } from 'react';
 import * as S from '../../components/Style/Schedule/SchduleMainPage.styled';
 import Button from '../../components/common/Button/Button';
 
-import PlusIcon from '../../assets/PlusIcon.svg';
+// import PlusIcon from '../../PlusIcon.svg';
 
 function ScheduleMainPage() {
   const BtnClick = () => {};
@@ -14,7 +14,7 @@ function ScheduleMainPage() {
       <S.HeaderContainer>
         <S.HeaderContent>
           <S.HeaderTitle>일정</S.HeaderTitle>
-          <S.HeaderIcon src={PlusIcon} />
+          {/* <S.HeaderIcon src={PlusIcon} /> */}
         </S.HeaderContent>
       </S.HeaderContainer>
       <S.SchduleTypeContainer>
