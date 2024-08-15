@@ -1,5 +1,6 @@
 package backend.hanpum.domain.course.service;
 
+import backend.hanpum.domain.course.dto.requestDto.EditCourseReqDto;
 import backend.hanpum.domain.course.dto.requestDto.MakeCourseReqDto;
 import backend.hanpum.domain.course.dto.responseDto.CourseDetailResDto;
 import backend.hanpum.domain.course.dto.responseDto.CourseListMapResDto;
@@ -12,6 +13,7 @@ import java.util.List;
 public interface CourseService {
     CourseListMapResDto getCourseList(CourseTypes targetCourse);
     void makeCourse(MakeCourseReqDto makeCourseReqDto);
+    void editCourse(EditCourseReqDto editCourseReqDto);
     void deleteCourse(Long memberId, Long courseId);
     CourseDetailResDto getCourseDetail(Long courseId);
     GetCourseDayResDto getCourseDay(Long courseId, Integer day);

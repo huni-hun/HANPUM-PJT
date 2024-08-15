@@ -1,9 +1,6 @@
 package backend.hanpum.domain.course.service;
 
-import backend.hanpum.domain.course.dto.requestDto.AttractionReqDto;
-import backend.hanpum.domain.course.dto.requestDto.CourseDayReqDto;
-import backend.hanpum.domain.course.dto.requestDto.MakeCourseReqDto;
-import backend.hanpum.domain.course.dto.requestDto.WayPointReqDto;
+import backend.hanpum.domain.course.dto.requestDto.*;
 import backend.hanpum.domain.course.dto.responseDto.CourseDetailResDto;
 import backend.hanpum.domain.course.dto.responseDto.CourseListMapResDto;
 import backend.hanpum.domain.course.dto.responseDto.CourseReviewResDto;
@@ -23,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -118,6 +117,181 @@ public class CourseServiceImpl implements CourseService {
                 waypointRepository.save(waypoint);
             }
         }
+    }
+
+    @Override
+    @Transactional
+    public void editCourse(EditCourseReqDto editCourseReqDto) {
+        Course course = courseRepository.findById(editCourseReqDto.getCourseId()).orElseThrow(CourseNotFoundException::new);
+
+        course.updateCourse(
+                editCourseReqDto.getCourseName(),
+                editCourseReqDto.getContent(),
+                editCourseReqDto.isOpenState(),
+                editCourseReqDto.isWriteState()
+        );
+
+        if(editCourseReqDto.getBgImage() != null) {
+            // S3 image update 로직
+        }
+
+        List<CourseType> courseTypeList = courseTypeRepository.findByCourse_courseId(editCourseReqDto.getCourseId());
+        List<String> existCourseTypeNameList = courseTypeList.stream()
+                .map(courseType -> courseType.getTypeName().name())
+                .collect(Collectors.toList());
+        List<String> newCourseTypeNameList = editCourseReqDto.getCourseTypeList();
+        for (int i = 0; i < existCourseTypeNameList.size(); i++) {
+            if(!newCourseTypeNameList.contains(existCourseTypeNameList.get(i))) {
+                courseTypeRepository.delete(courseTypeList.get(i));
+            }
+        }
+
+        for (int i = 0; i < newCourseTypeNameList.size(); i++) {
+            if(!existCourseTypeNameList.contains(newCourseTypeNameList.get(i))) {
+                CourseType courseType = CourseType.builder()
+                        .course(course)
+                        .typeName(CourseTypes.valueOf(newCourseTypeNameList.get(i)))
+                        .build();
+
+                courseTypeRepository.save(courseType);
+            }
+        }
+
+        // CourseDay 업데이트
+        Set<Integer> existDayNumbers = course.getCourseDays().stream()
+                .map(CourseDay::getDayNumber)
+                .collect(Collectors.toSet());
+
+        for (CourseDayReqDto newCourseDay : editCourseReqDto.getCourseDayReqDtoList()) {
+            Double totalCalorie = 0.0;
+            Double totalDuration = 0.0;
+            Double totalDistance = 0.0;
+            for (WayPointReqDto waypointReqDto : newCourseDay.getWayPointReqDtoList()) {
+                totalCalorie += Double.parseDouble(waypointReqDto.getCalorie());
+                totalDuration += Double.parseDouble(waypointReqDto.getDuration());
+                totalDistance += Double.parseDouble(waypointReqDto.getDistance());
+            }
+
+            if (existDayNumbers.contains(newCourseDay.getDayNumber())) {
+                CourseDay existDay = course.getCourseDays().stream()
+                        .filter(exDay -> exDay.getDayNumber().equals(newCourseDay.getDayNumber()))
+                        .findFirst().orElseThrow();
+                updateCourseDay(existDay, newCourseDay, totalCalorie, totalDuration, totalDistance);
+            } else {
+                CourseDay newDay = CourseDay.builder()
+                        .dayNumber(newCourseDay.getDayNumber())
+                        .course(course)
+                        .totalDistance(String.format("%.1f", totalDistance))
+                        .totalDuration(String.format("%.1f", totalDuration))
+                        .totalCalorie(String.format("%.1f", totalCalorie))
+                        .build();
+                course.getCourseDays().add(newDay);
+            }
+            existDayNumbers.remove(newCourseDay.getDayNumber());
+        }
+
+        for (CourseDay courseDay : course.getCourseDays()) {
+            if(existDayNumbers.contains(courseDay.getDayNumber())) {
+                courseDayRepository.delete(courseDay);
+            }
+        }
+        course.getCourseDays().removeIf(day -> existDayNumbers.contains(day.getDayNumber()));
+        courseRepository.save(course);
+    }
+
+    private void updateCourseDay(CourseDay existDay, CourseDayReqDto newDay, Double totalCalorie, Double totalDuration, Double totalDistance) {
+        // CourseDay 정보 업데이트
+        existDay.updateCourseDayTotal(String.format("%.1f", totalCalorie), String.format("%.1f", totalDuration), String.format("%.1f", totalDistance));
+
+        // Attraction 업데이트
+        Set<String> existAttractionName = existDay.getAttractions().stream()
+                .map(Attraction::getName)
+                .collect(Collectors.toSet());
+
+        for (AttractionReqDto newAttraction : newDay.getAttractionReqDtoList()) {
+            if (existAttractionName.contains(newAttraction.getName())) {
+                Attraction existAttraction = existDay.getAttractions().stream()
+                        .filter(attraction -> attraction.getName().equals(newAttraction.getName()))
+                        .findFirst().orElseThrow();
+
+                existAttraction.updateAttraction(newAttraction.getName(),
+                        newAttraction.getType(),
+                        newAttraction.getAddress(),
+                        newAttraction.getLat(),
+                        newAttraction.getLon());
+
+                if(newAttraction.getImage() != null) {
+                    // S3 image update 로직
+                }
+            } else {
+                Attraction attraction = Attraction.builder()
+                        .courseDay(existDay)
+                        .name(newAttraction.getName())
+                        .type(newAttraction.getType())
+                        .address(newAttraction.getAddress())
+                        .lat(newAttraction.getLat())
+                        .lon(newAttraction.getLon())
+                        .img("TEMP") // S3 미생성. 이미지 업로드 미구현. 추후 변경
+                        .build();
+
+                existDay.getAttractions().add(attraction);
+            }
+            existAttractionName.remove(newAttraction.getName());
+        }
+
+        for (Attraction attraction : existDay.getAttractions()) {
+            if(existAttractionName.contains(attraction.getName())) {
+                attractionRepository.delete(attraction);
+            }
+        }
+        existDay.getAttractions().removeIf(attraction -> existAttractionName.contains(attraction.getName()));
+
+        // Waypoint 업데이트
+        Set<String> existPointNumber = existDay.getWaypoints().stream()
+                .map(Waypoint::getPointNumber)
+                .collect(Collectors.toSet());
+
+        for (WayPointReqDto newWaypoint : newDay.getWayPointReqDtoList()) {
+            if (existPointNumber.contains(newWaypoint.getPointNumber())) {
+                Waypoint existWaypoint = existDay.getWaypoints().stream()
+                        .filter(waypoint -> waypoint.getPointNumber().equals(newWaypoint.getPointNumber()))
+                        .findFirst().orElseThrow();
+
+                existWaypoint.updateWayPoint(newWaypoint.getType(),
+                        newWaypoint.getName(),
+                        newWaypoint.getAddress(),
+                        newWaypoint.getLat(),
+                        newWaypoint.getLon(),
+                        newWaypoint.getPointNumber(),
+                        newWaypoint.getDistance(),
+                        newWaypoint.getDuration(),
+                        newWaypoint.getCalorie());
+            } else {
+                Waypoint waypoint = Waypoint.builder()
+                        .courseDay(existDay)
+                        .type(newWaypoint.getType())
+                        .name(newWaypoint.getName())
+                        .address(newWaypoint.getAddress())
+                        .lat(newWaypoint.getLat())
+                        .lon(newWaypoint.getLon())
+                        .pointNumber(newWaypoint.getPointNumber())
+                        .distance(newWaypoint.getDistance())
+                        .duration(newWaypoint.getDuration())
+                        .calorie(newWaypoint.getCalorie())
+                        .build();
+
+                existDay.getWaypoints().add(waypoint);
+            }
+
+            existPointNumber.remove(newWaypoint.getPointNumber());
+        }
+
+        for (Waypoint waypoint : existDay.getWaypoints()) {
+            if(existPointNumber.contains(waypoint.getPointNumber())) {
+                waypointRepository.delete(waypoint);
+            }
+        }
+        existDay.getWaypoints().removeIf(waypoint -> existPointNumber.contains(waypoint.getPointNumber()));
     }
 
     @Override

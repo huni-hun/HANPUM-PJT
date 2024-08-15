@@ -1,6 +1,7 @@
 package backend.hanpum.domain.course.controller;
 
 import backend.hanpum.domain.course.dto.requestDto.CourseReviewReqDto;
+import backend.hanpum.domain.course.dto.requestDto.EditCourseReqDto;
 import backend.hanpum.domain.course.dto.requestDto.MakeCourseReqDto;
 import backend.hanpum.domain.course.dto.responseDto.CourseDetailResDto;
 import backend.hanpum.domain.course.dto.responseDto.CourseListMapResDto;
@@ -45,6 +46,14 @@ public class CourseController {
         courseService.makeCourse(makeCourseReqDto);
 
         return response.success(ResponseCode.COURSE_MAKE_SUCCESS);
+    }
+
+    @Operation(summary = "경로 수정", description = "경로 수정 API")
+    @PutMapping()
+    public ResponseEntity<?> editCourse(@ModelAttribute EditCourseReqDto editCourseReqDto) {
+        courseService.editCourse(editCourseReqDto);
+
+        return response.success(ResponseCode.COURSE_EDIT_SUCCESS);
     }
 
     @Operation(summary = "경로 삭제", description = "경로 삭제 API")
