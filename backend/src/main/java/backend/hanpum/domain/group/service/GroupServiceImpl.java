@@ -125,19 +125,14 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional
     public void acceptGroupApply(Long memberId, Long groupMemberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
-        if(member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
-        GroupMember groupMember = groupMemberRepository.findById(groupMemberId).orElseThrow(GroupMemberNotFoundException::new);
+        GroupMember groupMember = validGroupApply(memberId, groupMemberId);
         groupMember.updateJoinType(JoinType.GROUP_MEMBER);
     }
 
     @Override
     @Transactional
     public void declineGroupApply(Long memberId, Long groupMemberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
-        if(member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
-        GroupMember groupMember = groupMemberRepository.findById(groupMemberId).orElseThrow(GroupMemberNotFoundException::new);
-        if(groupMember.getJoinType() != JoinType.APPLY) throw new GroupAlreadyJoinedException();
+        GroupMember groupMember = validGroupApply(memberId, groupMemberId);
         groupMember.getMember().updateGroupMember(null);
         groupMemberRepository.delete(groupMember);
     }
@@ -156,5 +151,13 @@ public class GroupServiceImpl implements GroupService {
             }
         }
         return groupJoinStatus;
+    }
+
+    private GroupMember validGroupApply(Long memberId, Long groupMemberId){
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        if(member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
+        GroupMember groupMember = groupMemberRepository.findById(groupMemberId).orElseThrow(GroupMemberNotFoundException::new);
+        if(groupMember.getJoinType() != JoinType.APPLY) throw new GroupAlreadyJoinedException();
+        return groupMember;
     }
 }
