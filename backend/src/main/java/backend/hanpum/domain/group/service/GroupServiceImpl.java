@@ -11,11 +11,14 @@ import backend.hanpum.domain.group.enums.GroupJoinStatus;
 import backend.hanpum.domain.group.enums.JoinType;
 import backend.hanpum.domain.group.repository.GroupMemberRepository;
 import backend.hanpum.domain.group.repository.GroupRepository;
+import backend.hanpum.domain.group.repository.custom.GroupMemberRepositoryCustom;
 import backend.hanpum.domain.group.repository.custom.GroupRepositoryCustom;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
+import backend.hanpum.exception.exception.auth.NicknameExpiredException;
 import backend.hanpum.exception.exception.group.GroupAlreadyJoinedException;
+import backend.hanpum.exception.exception.group.GroupMemberFullException;
 import backend.hanpum.exception.exception.group.GroupMemberNotFoundException;
 import backend.hanpum.exception.exception.group.GroupNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +35,7 @@ public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
     private final GroupRepositoryCustom groupRepositoryCustom;
     private final GroupMemberRepository groupMemberRepository;
+    private final GroupMemberRepositoryCustom groupMemberRepositoryCustom;
 
     @Override
     @Transactional
@@ -88,8 +92,10 @@ public class GroupServiceImpl implements GroupService {
     @Transactional
     public void applyGroup(Long memberId, Long groupId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
-        Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
         if (member.getGroupMember() != null) throw new GroupAlreadyJoinedException();
+        Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
+        long countGroupMember = groupMemberRepositoryCustom.countGroupMember(groupId);
+        if(countGroupMember >= group.getRecruitmentCount()) throw new GroupMemberFullException();
 
         GroupMember groupMember = GroupMember.builder()
                 .joinType(JoinType.APPLY)
