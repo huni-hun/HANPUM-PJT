@@ -9,19 +9,20 @@ import backend.hanpum.domain.group.entity.Group;
 import backend.hanpum.domain.group.entity.GroupMember;
 import backend.hanpum.domain.group.enums.GroupJoinStatus;
 import backend.hanpum.domain.group.enums.JoinType;
+import backend.hanpum.domain.group.repository.GroupMemberRepository;
 import backend.hanpum.domain.group.repository.GroupRepository;
 import backend.hanpum.domain.group.repository.custom.GroupRepositoryCustom;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.group.GroupAlreadyJoinedException;
-import backend.hanpum.exception.exception.group.GroupDetailNotFoundException;
+import backend.hanpum.exception.exception.group.GroupMemberNotFoundException;
+import backend.hanpum.exception.exception.group.GroupNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +31,7 @@ public class GroupServiceImpl implements GroupService {
     private final MemberRepository memberRepository;
     private final GroupRepository groupRepository;
     private final GroupRepositoryCustom groupRepositoryCustom;
+    private final GroupMemberRepository groupMemberRepository;
 
     @Override
     @Transactional
@@ -52,7 +54,7 @@ public class GroupServiceImpl implements GroupService {
                 .build();
 
         group.getGroupMemberList().add(groupMember);
-        member.JoinGroupMember(groupMember);
+        member.updateGroupMember(groupMember);
         groupRepository.save(group);
 
         return GroupPostResDto.builder().groupId(group.getGroupId()).build();
@@ -69,7 +71,7 @@ public class GroupServiceImpl implements GroupService {
     @Transactional(readOnly = true)
     public GroupDetailGetResDto getGroupDetail(Long memberId, Long groupId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
-        GroupDetailGetResDto groupDetailGetResDto = groupRepositoryCustom.findGroupById(groupId).orElseThrow(GroupDetailNotFoundException::new);
+        GroupDetailGetResDto groupDetailGetResDto = groupRepositoryCustom.findGroupById(groupId).orElseThrow(GroupNotFoundException::new);
 
         return GroupDetailGetResDto.builder()
                 .title(groupDetailGetResDto.getTitle())
@@ -80,6 +82,37 @@ public class GroupServiceImpl implements GroupService {
                 .recruitedCount(groupDetailGetResDto.getRecruitedCount())
                 .groupJoinStatus(getGroupJoinStatus(member.getGroupMember(), groupId))
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public void applyGroup(Long memberId, Long groupId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
+        if (member.getGroupMember() != null) throw new GroupAlreadyJoinedException();
+
+        GroupMember groupMember = GroupMember.builder()
+                .joinType(JoinType.APPLY)
+                .group(group)
+                .member(member)
+                .build();
+        group.getGroupMemberList().add(groupMember);
+        groupMemberRepository.save(groupMember);
+        member.updateGroupMember(groupMember);
+        groupRepository.save(group);
+    }
+
+    @Override
+    @Transactional
+    public void removeApplyGroup(Long memberId, Long groupId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
+        if (member.getGroupMember() == null) throw new GroupMemberNotFoundException();
+        GroupMember groupMember =
+                groupMemberRepository.findByGroupAndMember(group, member).orElseThrow(GroupMemberNotFoundException::new);
+        member.updateGroupMember(null);
+        group.getGroupMemberList().remove(groupMember);
+        groupMemberRepository.delete(groupMember);
     }
 
     private GroupJoinStatus getGroupJoinStatus(GroupMember groupMember, Long groupId) {

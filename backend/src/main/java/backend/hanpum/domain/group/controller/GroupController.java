@@ -47,4 +47,20 @@ public class GroupController {
         GroupDetailGetResDto groupDetailGetResDto = groupService.getGroupDetail(userDetails.getMember().getMemberId(), groupId);
         return response.success(ResponseCode.GROUP_DETAIL_FETCHED, groupDetailGetResDto);
     }
+
+    @Operation(summary = "모임 신청", description = "모임 신청 API")
+    @PostMapping("/{groupId}/apply")
+    public ResponseEntity<?> applyGroup(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                            @PathVariable Long groupId) {
+        groupService.applyGroup(userDetails.getMember().getMemberId(), groupId);
+        return response.success(ResponseCode.GROUP_APPLY_SUCCESS);
+    }
+
+    @Operation(summary = "모임 신청 취소", description = "모임 신청 취소 API")
+    @DeleteMapping("/{groupId}/apply")
+    public ResponseEntity<?> removeApplyGroup(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                        @PathVariable Long groupId) {
+        groupService.removeApplyGroup(userDetails.getMember().getMemberId(), groupId);
+        return response.success(ResponseCode.GROUP_APPLY_REMOVE_SUCCESS);
+    }
 }

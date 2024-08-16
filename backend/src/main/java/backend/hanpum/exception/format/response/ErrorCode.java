@@ -24,7 +24,8 @@ public enum ErrorCode {
 
     /* 모임 */
     GROUP_ALREADY_JOINED(HttpStatus.BAD_REQUEST, "이미 가입된 모임이 있습니다."),
-    GROUP_DETAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 모임 상세정보가 없습니다."),
+    GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 모임을 찾을 수 없습니다."),
+    GROUP_MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "가입하거나 신청한 모임이 존재하지 않습니다."),
 
     /* 인증 */
     EMAIL_DUPLICATED(HttpStatus.CONFLICT, "이미 사용 중인 이메일입니다."),
