@@ -7,11 +7,12 @@ import backend.hanpum.domain.course.dto.responseDto.CourseListMapResDto;
 import backend.hanpum.domain.course.dto.responseDto.CourseReviewResDto;
 import backend.hanpum.domain.course.dto.responseDto.GetCourseDayResDto;
 import backend.hanpum.domain.course.enums.CourseTypes;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface CourseService {
-    CourseListMapResDto getCourseList(CourseTypes targetCourse);
+    CourseListMapResDto getCourseList(CourseTypes targetCourse, Pageable pageable);
     void makeCourse(MakeCourseReqDto makeCourseReqDto);
     void editCourse(EditCourseReqDto editCourseReqDto);
     void deleteCourse(Long memberId, Long courseId);

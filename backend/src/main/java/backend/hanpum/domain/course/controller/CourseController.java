@@ -32,11 +32,8 @@ public class CourseController {
 
     @Operation(summary = "경로 목록 조회", description = "경로 목록 조회 API")
     @GetMapping()
-    public ResponseEntity<?> getCourseList(@RequestParam CourseTypes targetCourse
-//    , Pageable pageable
-    ) {
-        CourseListMapResDto courseListMapResDto = courseService.getCourseList(targetCourse);
-
+    public ResponseEntity<?> getCourseList(@RequestParam CourseTypes targetCourse, Pageable pageable) {
+        CourseListMapResDto courseListMapResDto = courseService.getCourseList(targetCourse, pageable);
         return response.success(ResponseCode.COURSE_LIST_FETCHED, courseListMapResDto);
     }
 

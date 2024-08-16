@@ -3,10 +3,13 @@ package backend.hanpum.domain.course.repository.custom;
 import backend.hanpum.domain.course.dto.responseDto.*;
 import backend.hanpum.domain.course.entity.*;
 import backend.hanpum.domain.course.enums.CourseTypes;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,18 +22,29 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
     private final JPAQueryFactory query;
 
     @Override
-    public Optional<CourseListMapResDto> getCourseList(CourseTypes targetCourse) {
+    public Optional<CourseListMapResDto> getCourseList(CourseTypes targetCourse, Pageable pageable) {
         QCourse qCourse = QCourse.course;
         QReview qReview = QReview.review;
         QCourseType qCourseType = QCourseType.courseType;
 
-        NumberExpression<Double> avgScore = qReview.score.avg().coalesce(0.0);  // 평균 스코어
+        NumberExpression<Double> avgScore = qReview.score.avg().coalesce(0.0);
         NumberExpression<Integer> reviewCount = qReview.count().intValue().coalesce(0);
+        NumberExpression<Double> popularityScore = avgScore.multiply(reviewCount); // 인기순 -> 현재는 평균 * 리뷰수. 나중 가중치 고려필요
 
-        /*
-          경로타입에 따라 목록 조회
-          페이징 및 정렬은 나중에 추가
-        */
+        OrderSpecifier<?> orderSpecifier = null;
+        for (Sort.Order order : pageable.getSort()) {
+            String property = order.getProperty();
+            boolean isAscending = order.isAscending();
+
+            if (property.equalsIgnoreCase("review")) {
+                orderSpecifier = isAscending ? reviewCount.asc() : reviewCount.desc();
+            } else if (property.equalsIgnoreCase("distance")) {
+                orderSpecifier = isAscending ? qCourse.totalDistance.asc() : qCourse.totalDistance.desc();
+            } else if (property.equalsIgnoreCase("popularity")) {
+                orderSpecifier = isAscending ? popularityScore.asc() : popularityScore.desc();
+            }
+        }
+
         List<CourseResDto> courseList = query
                 .select(Projections.constructor(CourseResDto.class,
                         qCourse.courseId,
@@ -50,6 +64,9 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
                 .leftJoin(qReview).on(qCourse.courseId.eq(qReview.course.courseId))
                 .leftJoin(qCourseType).on(qCourse.courseId.eq(qCourseType.course.courseId))
                 .where(qCourseType.typeName.eq(targetCourse))
+                .orderBy(orderSpecifier)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .groupBy(qCourse.courseId)
                 .fetch();
 
