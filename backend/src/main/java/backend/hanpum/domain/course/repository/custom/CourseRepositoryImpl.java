@@ -40,6 +40,9 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
                         qCourse.writeState,
                         qCourse.openState,
                         qCourse.writeDate,
+                        qCourse.startPoint,
+                        qCourse.endPoint,
+                        qCourse.totalDistance,
                         qCourse.member.memberId,
                         avgScore.as("scoreAvg"),
                         reviewCount.as("commentCnt")))
@@ -80,6 +83,9 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
                         qCourse.writeState,
                         qCourse.openState,
                         qCourse.writeDate,
+                        qCourse.startPoint,
+                        qCourse.endPoint,
+                        qCourse.totalDistance,
                         qCourse.member.memberId))
                 .from(qCourse)
                 .where(qCourse.courseId.eq(courseId))

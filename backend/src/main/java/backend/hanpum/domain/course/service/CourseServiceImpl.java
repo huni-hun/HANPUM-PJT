@@ -47,7 +47,25 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Transactional
     public void makeCourse(MakeCourseReqDto makeCourseReqDto) {
+        Double allDayDistance = 0.0;
+        for (CourseDayReqDto courseDayReqDto : makeCourseReqDto.getCourseDayReqDtoList()) {
+            for (WayPointReqDto waypointReqDto : courseDayReqDto.getWayPointReqDtoList()) {
+                allDayDistance += Double.parseDouble(waypointReqDto.getDistance());
+            }
+        }
 
+        String startPoint = makeCourseReqDto.getCourseDayReqDtoList().stream()
+                .findFirst()
+                .flatMap(courseDayReqDto -> courseDayReqDto.getWayPointReqDtoList().stream().findFirst())
+                .map(WayPointReqDto::getName)
+                .orElse("Unknown");
+
+        String endPoint = makeCourseReqDto.getCourseDayReqDtoList().stream()
+                .reduce((first, second) -> second)
+                .flatMap(courseDayReqDto -> courseDayReqDto.getWayPointReqDtoList().stream().reduce((first, second) -> second))
+                .map(WayPointReqDto::getName)
+                .orElse("Unknown");
+        
         Date currentDate = new Date();
         Course course = Course.builder()
                 .courseName(makeCourseReqDto.getCourseName())
@@ -55,6 +73,9 @@ public class CourseServiceImpl implements CourseService {
                 .openState(makeCourseReqDto.isOpenState())
                 .writeState(makeCourseReqDto.isWriteState())
                 .writeDate(currentDate)
+                .startPoint(startPoint)
+                .endPoint(endPoint)
+                .totalDistance(allDayDistance)
                 .member(memberRepository.findById(makeCourseReqDto.getMemberId()).orElseThrow())  // 토큰으로 멤버정보 찾도록. 추후 변경
                 .backgroundImg("TEMP") // S3 미생성. 이미지 업로드 미구현. 추후 변경
                 .build();

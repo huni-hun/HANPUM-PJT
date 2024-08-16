@@ -42,6 +42,15 @@ public class Course {
     @Temporal(TemporalType.DATE)
     private Date writeDate;
 
+    @Column(name= "start_point")
+    private String startPoint;
+
+    @Column(name= "end_point")
+    private String endPoint;
+
+    @Column(name= "total_distance")
+    private Double totalDistance;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
