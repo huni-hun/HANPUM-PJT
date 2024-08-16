@@ -1,10 +1,7 @@
 package backend.hanpum.domain.group.service;
 
 import backend.hanpum.domain.group.dto.requestDto.GroupPostReqDto;
-import backend.hanpum.domain.group.dto.responseDto.GroupDetailGetResDto;
-import backend.hanpum.domain.group.dto.responseDto.GroupListGetResDto;
-import backend.hanpum.domain.group.dto.responseDto.GroupPostResDto;
-import backend.hanpum.domain.group.dto.responseDto.GroupResDto;
+import backend.hanpum.domain.group.dto.responseDto.*;
 import backend.hanpum.domain.group.entity.Group;
 import backend.hanpum.domain.group.entity.GroupMember;
 import backend.hanpum.domain.group.enums.GroupJoinStatus;
@@ -17,10 +14,7 @@ import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.auth.NicknameExpiredException;
-import backend.hanpum.exception.exception.group.GroupAlreadyJoinedException;
-import backend.hanpum.exception.exception.group.GroupMemberFullException;
-import backend.hanpum.exception.exception.group.GroupMemberNotFoundException;
-import backend.hanpum.exception.exception.group.GroupNotFoundException;
+import backend.hanpum.exception.exception.group.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -116,6 +110,16 @@ public class GroupServiceImpl implements GroupService {
         if (groupMember == null || groupMember.getGroup() != group) throw new GroupMemberNotFoundException();
         member.updateGroupMember(null);
         groupMemberRepository.delete(groupMember);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public GroupApplyListGetResDto getGroupApplyList(Long memberId, Long groupId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
+        if(member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException(); // 그룹 리더가 아니라는 예외 처리
+        List<GroupApplyResDto> groupApplyList = groupMemberRepositoryCustom.findGroupApplyList(groupId);
+        return GroupApplyListGetResDto.builder().groupApplyResList(groupApplyList).build();
     }
 
     private GroupJoinStatus getGroupJoinStatus(GroupMember groupMember, Long groupId) {
