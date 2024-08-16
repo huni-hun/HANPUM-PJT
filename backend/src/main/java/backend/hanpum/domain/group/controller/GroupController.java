@@ -73,11 +73,19 @@ public class GroupController {
         return response.success(ResponseCode.GROUP_APPLY_LIST_FETCHED, groupApplyListGetResDto);
     }
 
-    @Operation(summary = "모임 신청 리스트 조회", description = "모임 신청 리스트 조회 API")
-    @PutMapping ("/apply/{groupMemberId}/accept")
+    @Operation(summary = "모임 신청 수락", description = "모임 신청 수락 API")
+    @PutMapping("/apply/{groupMemberId}/accept")
     public ResponseEntity<?> acceptGroupApply(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                               @PathVariable Long groupMemberId) {
+                                              @PathVariable Long groupMemberId) {
         groupService.acceptGroupApply(userDetails.getMember().getMemberId(), groupMemberId);
         return response.success(ResponseCode.GROUP_APPLY_ACCEPT_SUCCESS);
+    }
+
+    @Operation(summary = "모임 신청 거절", description = "모임 신청 거절 API")
+    @DeleteMapping("/apply/{groupMemberId}/decline")
+    public ResponseEntity<?> declineGroupApply(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                               @PathVariable Long groupMemberId) {
+        groupService.declineGroupApply(userDetails.getMember().getMemberId(), groupMemberId);
+        return response.success(ResponseCode.GROUP_APPLY_DECLINE_SUCCESS);
     }
 }

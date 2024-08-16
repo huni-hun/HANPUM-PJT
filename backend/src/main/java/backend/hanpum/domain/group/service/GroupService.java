@@ -16,4 +16,5 @@ public interface GroupService {
     void removeApplyGroup(Long memberId, Long groupId);
     GroupApplyListGetResDto getGroupApplyList(Long memberId, Long groupId);
     void acceptGroupApply(Long memberId, Long groupMemberId);
+    void declineGroupApply(Long memberId, Long groupMemberId);
 }
