@@ -122,6 +122,15 @@ public class GroupServiceImpl implements GroupService {
         return GroupApplyListGetResDto.builder().groupApplyResList(groupApplyList).build();
     }
 
+    @Override
+    @Transactional
+    public void acceptGroupApply(Long memberId, Long groupMemberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        if(member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
+        GroupMember groupMember = groupMemberRepository.findById(groupMemberId).orElseThrow(GroupMemberNotFoundException::new);
+        groupMember.updateJoinType(JoinType.GROUP_MEMBER);
+    }
+
     private GroupJoinStatus getGroupJoinStatus(GroupMember groupMember, Long groupId) {
         GroupJoinStatus groupJoinStatus = GroupJoinStatus.NOT_JOINED_GROUP;
         if (groupMember != null) {

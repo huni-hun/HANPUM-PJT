@@ -72,4 +72,12 @@ public class GroupController {
         GroupApplyListGetResDto groupApplyListGetResDto = groupService.getGroupApplyList(userDetails.getMember().getMemberId(), groupId);
         return response.success(ResponseCode.GROUP_APPLY_LIST_FETCHED, groupApplyListGetResDto);
     }
+
+    @Operation(summary = "모임 신청 리스트 조회", description = "모임 신청 리스트 조회 API")
+    @PutMapping ("/apply/{groupMemberId}/accept")
+    public ResponseEntity<?> acceptGroupApply(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                               @PathVariable Long groupMemberId) {
+        groupService.acceptGroupApply(userDetails.getMember().getMemberId(), groupMemberId);
+        return response.success(ResponseCode.GROUP_APPLY_ACCEPT_SUCCESS);
+    }
 }

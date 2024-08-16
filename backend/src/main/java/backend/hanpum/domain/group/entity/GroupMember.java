@@ -32,4 +32,7 @@ public class GroupMember {
             fetch = FetchType.LAZY, optional = false)
     private Member member;
 
+    public void updateJoinType(JoinType joinType){
+        this.joinType = joinType;
+    }
 }

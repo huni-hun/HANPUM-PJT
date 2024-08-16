@@ -40,6 +40,7 @@ public enum ResponseCode {
     GROUP_APPLY_SUCCESS(HttpStatus.OK, "모임 신청이 성공적으로 완료되었습니다."),
     GROUP_APPLY_REMOVE_SUCCESS(HttpStatus.OK, "모임 신청 취소가 성공적으로 완료되었습니다."),
     GROUP_APPLY_LIST_FETCHED(HttpStatus.OK, "모임 신청 리스트가 성공적으로 조회되었습니다."),
+    GROUP_APPLY_ACCEPT_SUCCESS(HttpStatus.OK, "모임 신청 수락이 성공적으로 완료되었습니다."),
 
     /* 인증 */
     AUTHENTICATION_MAIL_SEND_SUCCESS(HttpStatus.OK, "인증 메일이 성공적으로 전송되었습니다."),
