@@ -106,11 +106,9 @@ public class GroupServiceImpl implements GroupService {
     public void removeApplyGroup(Long memberId, Long groupId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
-        if (member.getGroupMember() == null) throw new GroupMemberNotFoundException();
-        GroupMember groupMember =
-                groupMemberRepository.findByGroupAndMember(group, member).orElseThrow(GroupMemberNotFoundException::new);
+        GroupMember groupMember = member.getGroupMember();
+        if (groupMember == null || groupMember.getGroup() != group) throw new GroupMemberNotFoundException();
         member.updateGroupMember(null);
-        group.getGroupMemberList().remove(groupMember);
         groupMemberRepository.delete(groupMember);
     }
 
