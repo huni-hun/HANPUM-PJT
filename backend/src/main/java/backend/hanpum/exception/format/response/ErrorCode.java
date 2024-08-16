@@ -27,6 +27,7 @@ public enum ErrorCode {
     GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 모임을 찾을 수 없습니다."),
     GROUP_MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "가입하거나 신청한 모임이 존재하지 않습니다."),
     GROUP_MEMBER_FULL(HttpStatus.BAD_REQUEST, "해당 모임에 인원수가 초과하였습니다."),
+    GROUP_PERMISSION(HttpStatus.BAD_REQUEST, "해당 모임에 허가되지 않은 접근입니다."),
 
     /* 인증 */
     EMAIL_DUPLICATED(HttpStatus.CONFLICT, "이미 사용 중인 이메일입니다."),
