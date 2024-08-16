@@ -97,7 +97,6 @@ public class GroupServiceImpl implements GroupService {
                 .member(member)
                 .build();
         group.getGroupMemberList().add(groupMember);
-        groupMemberRepository.save(groupMember);
         member.updateGroupMember(groupMember);
         groupRepository.save(group);
     }
