@@ -42,6 +42,15 @@ public class Course {
     @Temporal(TemporalType.DATE)
     private Date writeDate;
 
+    @Column(name= "start_point")
+    private String startPoint;
+
+    @Column(name= "end_point")
+    private String endPoint;
+
+    @Column(name= "total_distance")
+    private Double totalDistance;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -57,4 +66,11 @@ public class Course {
     @Builder.Default
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CourseType> courseTypes = new ArrayList<>();
+
+    public void updateCourse(String courseName, String content, boolean openState, boolean writeSTate) {
+        this.courseName = courseName;
+        this.content = content;
+        this.openState = openState;
+        this.writeState = writeSTate;
+    }
 }

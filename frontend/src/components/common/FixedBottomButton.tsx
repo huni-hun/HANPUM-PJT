@@ -7,7 +7,7 @@ interface FixedBottomButtonProps {
   label: string;
   onClick: () => void;
   disabled?: boolean;
-  bottom?: string;
+  $bottom?: string;
 }
 
 /**
@@ -20,10 +20,10 @@ function FixedBottomButton({
   label,
   onClick,
   disabled,
-  bottom,
+  $bottom,
 }: FixedBottomButtonProps) {
   return (
-    <Container bottom={bottom}>
+    <Container $bottom={$bottom}>
       <BaseButton
         size="medium"
         $full={true}
@@ -36,11 +36,11 @@ function FixedBottomButton({
   );
 }
 
-const Container = styled.div<Pick<FixedBottomButtonProps, 'bottom'>>`
+const Container = styled.div<Pick<FixedBottomButtonProps, '$bottom'>>`
   position: fixed;
   left: 0px;
   right: 0px;
-  bottom: ${(props) => (props.bottom ? `${props.bottom}rem` : '0px')};
+  bottom: ${(props) => (props.$bottom ? `${props.$bottom}rem` : '0px')};
   background-color: ${colors.white};
   padding: 20px 10px 8px;
 `;

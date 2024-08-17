@@ -6,16 +6,18 @@ import Text from '@components/common/Text';
 import Course from '@components/Main/Course';
 import Meet from '@components/Main/Meet';
 import Header from '@/components/common/Header/Header';
+import { useNavigate } from 'react-router-dom';
 
 function MainPage() {
+  const navigate = useNavigate();
   return (
     <MainPageContainer>
-      <Header purpose="search" />
+      <Header purpose="search" clickBack={() => navigate(-1)} />
       <div className="padding-box">
         <Schedule />
-        <Text typography="t20">동동님을 위한 추천코스</Text>
+        <Text $typography="t20">동동님을 위한 추천코스</Text>
         <Course />
-        <Text typography="t20">모임추천</Text>
+        <Text $typography="t20">모임추천</Text>
       </div>
       <Meet />
       <BottomTab />

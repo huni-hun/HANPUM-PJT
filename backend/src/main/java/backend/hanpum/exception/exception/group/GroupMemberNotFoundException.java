@@ -4,10 +4,10 @@ import backend.hanpum.exception.format.response.ErrorCode;
 import lombok.Getter;
 
 @Getter
-public class GroupDetailNotFoundException extends RuntimeException {
+public class GroupMemberNotFoundException extends RuntimeException {
     public final ErrorCode errorCode;
 
-    public GroupDetailNotFoundException(){
-        this.errorCode = ErrorCode.GROUP_DETAIL_NOT_FOUND;
+    public GroupMemberNotFoundException(){
+        this.errorCode = ErrorCode.GROUP_MEMBER_NOT_FOUND;
     }
 }

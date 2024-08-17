@@ -1,11 +1,16 @@
 import * as S from '../Style/Signup/Terms.styled';
 import { APPLY } from '@/constants';
 import { MouseEvent, useState } from 'react';
-import { colors } from '@/styles/colorPalette';
 import FixedBottomButton from '../common/FixedBottomButton';
 
-function Terms({ clickNext }: { clickNext: () => void }) {
-  // 약관 동의 체크를 위한 객체
+function Terms({
+  clickNext,
+  pagenation,
+}: {
+  clickNext: () => void;
+  pagenation: () => React.ReactNode;
+}) {
+  // 약관 동의 체크를 위한 객체 생성
   // {01: false, 02: false, 03: true}
   const [termsAgreements, setTermsAgreements] = useState(() => {
     return APPLY.reduce<Record<string, boolean>>(
@@ -22,11 +27,9 @@ function Terms({ clickNext }: { clickNext: () => void }) {
 
   // 필수약관 모두 체크되었는지
   const isEssentialCheck = Object.entries(termsAgreements)
-    .filter(([key]) => key !== '03')
+    .filter(([key]) => key !== '04')
     .every(([, value]) => value);
-
-  console.log('isAllCheck ::', isAllCheck);
-
+  console.log('필수 ::', isEssentialCheck);
   // 전체 동의 누르는 함수
   const handleAllAgree = (
     _: MouseEvent<HTMLElement>,
@@ -53,6 +56,7 @@ function Terms({ clickNext }: { clickNext: () => void }) {
 
   return (
     <S.TermsContainer>
+      {pagenation()}
       <div className="title">한품 시작하기</div>
 
       <div className="desc">
@@ -90,7 +94,7 @@ function Terms({ clickNext }: { clickNext: () => void }) {
       <FixedBottomButton
         label="동의하고 시작하기"
         disabled={!isEssentialCheck}
-        bottom="5"
+        $bottom="5"
         onClick={() => (isEssentialCheck ? clickNext() : '')}
       />
     </S.TermsContainer>

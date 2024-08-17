@@ -77,7 +77,7 @@ public class Member {
     @JoinColumn(name = "group_member_id", unique = true)
     private GroupMember groupMember;
 
-    public void JoinGroupMember(GroupMember groupMember) {
+    public void updateGroupMember(GroupMember groupMember) {
         this.groupMember = groupMember;
     }
 

@@ -23,6 +23,7 @@ public enum ResponseCode {
     /* 경로 */
     COURSE_LIST_FETCHED(HttpStatus.OK, "경로 목록이 성공적으로 조회되었습니다."),
     COURSE_MAKE_SUCCESS(HttpStatus.OK, "경로 생성이 성공적으로 완료되었습니다."),
+    COURSE_EDIT_SUCCESS(HttpStatus.OK, "경로 수정이 성공적으로 완료되었습니다."),
     COURSE_DELETE_SUCCESS(HttpStatus.OK, "경로 삭제가 성공적으로 완료되었습니다."),
     COURSE_DETAIL_FETCHED(HttpStatus.OK, "경로 상세정보가 성공적으로 조회되었습니다."),
     COURSE_DAY_FETCHED(HttpStatus.OK, "경로 일차 정보가 성공적으로 조회되었습니다."),
@@ -37,6 +38,11 @@ public enum ResponseCode {
     GROUP_CREATED_SUCCESS(HttpStatus.OK, "모임이 성공적으로 생성되었습니다."),
     GROUP_LIST_FETCHED(HttpStatus.OK, "모임 리스트가 성공적으로 조회되었습니다."),
     GROUP_DETAIL_FETCHED(HttpStatus.OK, "모임 상세 정보가 성공적으로 조회되었습니다."),
+    GROUP_APPLY_SUCCESS(HttpStatus.OK, "모임 신청이 성공적으로 완료되었습니다."),
+    GROUP_APPLY_REMOVE_SUCCESS(HttpStatus.OK, "모임 신청 취소가 성공적으로 완료되었습니다."),
+    GROUP_APPLY_LIST_FETCHED(HttpStatus.OK, "모임 신청 리스트가 성공적으로 조회되었습니다."),
+    GROUP_APPLY_ACCEPT_SUCCESS(HttpStatus.OK, "모임 신청 수락이 성공적으로 완료되었습니다."),
+    GROUP_APPLY_DECLINE_SUCCESS(HttpStatus.OK, "모임 신청 거절이 성공적으로 완료되었습니다."),
 
     /* 인증 */
     AUTHENTICATION_MAIL_SEND_SUCCESS(HttpStatus.OK, "인증 메일이 성공적으로 전송되었습니다."),

@@ -4,8 +4,11 @@ import Button from '../../components/common/Button/Button';
 import PlusIcon from '../../assets/PlusIcon.svg';
 import Icon from '../../components/common/Icon/Icon';
 import Select from '../../components/common/Select/Select';
+import Header from '@/components/common/Header/Header';
+import { useNavigate } from 'react-router-dom';
 
 function AddSchedulePage() {
+  const navigate = useNavigate();
   const BtnClick = () => {
     /** 일정추가 버튼 -> move addSchedule.tsx */
   };
@@ -42,13 +45,12 @@ function AddSchedulePage() {
 
   return (
     <S.Container>
-      <S.HeaderContainer>
-        <S.HeaderContent>
-          <Icon name="IconBackArrow" size={20} />
-          <S.HeaderTitle>일정을 등록해주세요</S.HeaderTitle>
-          {/* <S.HeaderIcon src={HambergerIcon} /> */}
-        </S.HeaderContent>
-      </S.HeaderContainer>
+      <Header
+        purpose="title"
+        title="일정을 등록해주세요"
+        clickBack={() => navigate(-1)}
+      />
+
       <S.SchduleContainer>
         <S.DateWrap isExpanded={isExpanded} onClick={handleDatePickClick}>
           {isExpanded ? (
@@ -63,7 +65,7 @@ function AddSchedulePage() {
           )}
         </S.DateWrap>
 
-        <S.RouteWrap isExpanded={isExpanded}>
+        <S.RouteWrap isExpanded={isExpanded} onClick={handleDatePickClick}>
           <S.RouteTop>
             <S.H3>경로</S.H3>
             <S.RoutePointWrap>

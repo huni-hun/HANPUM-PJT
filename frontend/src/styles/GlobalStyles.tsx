@@ -5,14 +5,39 @@ import { colors } from './colorPalette';
 export const GlobalStyle = createGlobalStyle`
   ${reset}
 
+
+  html, body, #root {
+  /* margin: 0 auto; */
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  #root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
   html {
     font-size: 62.5%;
   }
 
   body {
-    height: 100vh;
     background-color: #F5F5F5;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+
   }
+
+  
 
   button {
     border: none;
@@ -26,6 +51,10 @@ export const GlobalStyle = createGlobalStyle`
     line-height: normal;
   }
 
+  ol, ul {
+    list-style: none;
+  }
+
   :root {
     --white: ${colors.white};
     --black: ${colors.black};
@@ -37,5 +66,6 @@ export const GlobalStyle = createGlobalStyle`
     --grey2 : ${colors.grey2};
     --grey3 : ${colors.grey3};
     --grey4 : ${colors.grey4};
+    --grey5 : ${colors.grey5};
   }
 `;

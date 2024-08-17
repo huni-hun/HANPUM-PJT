@@ -9,10 +9,10 @@ const Spacing = styled.div<SpacingProps>`
   ${({ size, direction = 'vertical' }) =>
     direction === 'vertical'
       ? `
-  height:${size}px;
+  height:${size}rem;
   `
       : `
-  width:${size}px;
+  width:${size}rem;
   `}
 `;
 

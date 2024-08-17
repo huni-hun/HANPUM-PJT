@@ -4,6 +4,7 @@ import backend.hanpum.domain.group.dto.responseDto.GroupDetailGetResDto;
 import backend.hanpum.domain.group.dto.responseDto.GroupResDto;
 import backend.hanpum.domain.group.entity.QGroup;
 import backend.hanpum.domain.group.entity.QGroupMember;
+import backend.hanpum.domain.group.enums.JoinType;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                 ))
                 .from(group)
                 .leftJoin(group.groupMemberList, groupMember)
+                .where(groupMember.joinType.ne(JoinType.APPLY))
                 .groupBy(group.groupId)
                 .fetch();
     }
@@ -53,6 +55,7 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                 .from(group)
                 .leftJoin(group.groupMemberList, groupMember)
                 .where(group.groupId.eq(groupId))
+                .where(groupMember.joinType.ne(JoinType.APPLY))
                 .groupBy(group.groupId)
                 .fetchOne());
     }
