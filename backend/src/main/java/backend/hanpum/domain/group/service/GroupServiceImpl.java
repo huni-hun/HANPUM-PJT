@@ -78,6 +78,7 @@ public class GroupServiceImpl implements GroupService {
                 .title(groupDetailGetResDto.getTitle())
                 .groupImg(groupDetailGetResDto.getGroupImg())
                 .description(groupDetailGetResDto.getDescription())
+                .likeCount(groupDetailGetResDto.getLikeCount())
                 .recruitmentCount(groupDetailGetResDto.getRecruitmentCount())
                 .recruitmentPeriod(groupDetailGetResDto.getRecruitmentPeriod())
                 .recruitedCount(groupDetailGetResDto.getRecruitedCount())
