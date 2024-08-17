@@ -7,6 +7,7 @@ import backend.hanpum.domain.course.dto.responseDto.CourseListMapResDto;
 import backend.hanpum.domain.course.dto.responseDto.CourseReviewResDto;
 import backend.hanpum.domain.course.dto.responseDto.GetCourseDayResDto;
 import backend.hanpum.domain.course.enums.CourseTypes;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public interface CourseService {
     GetCourseDayResDto getCourseDay(Long courseId, Integer day);
     void addInterestCourse(Long courseId, Long memberId);
     void deleteInterestCourse(Long courseId, Long memberId);
-    List<CourseReviewResDto> getCourseReviews(Long courseId);
+    List<CourseReviewResDto> getCourseReviews(Long courseId, Pageable pageable);
     void writeCourseReview(Long courseId, String content, Double score);
     void editCourseReview(Long reviewId, String content, Double score);
     void deleteCourseReview(Long courseId);

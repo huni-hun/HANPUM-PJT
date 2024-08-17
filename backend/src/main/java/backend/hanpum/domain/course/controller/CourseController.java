@@ -116,8 +116,8 @@ public class CourseController {
 
     @Operation(summary = "경로 리뷰 조회", description = "경로 리뷰 조회 API")
     @GetMapping("{course_id}/reviews")
-    public ResponseEntity<?> getCourseReviews(@PathVariable("course_id") Long courseId) {
-        List<CourseReviewResDto> courseReviwes = courseService.getCourseReviews(courseId);
+    public ResponseEntity<?> getCourseReviews(@PathVariable("course_id") Long courseId, Pageable pageable) {
+        List<CourseReviewResDto> courseReviwes = courseService.getCourseReviews(courseId, pageable);
 
         return response.success(ResponseCode.COURSE_REVIEWS_FETCHED, courseReviwes);
     }
