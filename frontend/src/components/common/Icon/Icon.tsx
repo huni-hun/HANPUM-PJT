@@ -14,7 +14,7 @@ const DEFAULT_SIZE = 24;
 
 export default function Icon({
   name,
-  size = DEFAULT_SIZE,
+  size,
   width,
   height,
   ...rest
