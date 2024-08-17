@@ -4,6 +4,7 @@ import backend.hanpum.config.redis.RedisDao;
 import backend.hanpum.domain.member.dto.requestDto.UpdateMemberInfoReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdateNicknameReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdatePasswordReqDto;
+import backend.hanpum.domain.member.dto.responseDto.MemberProfileResDto;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
@@ -20,6 +21,19 @@ public class MemberServiceImpl implements MemberService{
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final RedisDao redisDao;
+
+    @Override
+    @Transactional(readOnly = true)
+    public MemberProfileResDto getMemberProfile(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        return MemberProfileResDto.builder()
+                .name(member.getName())
+                .email(member.getEmail())
+                .phoneNumber(member.getPhoneNumber())
+                .birthDate(member.getBirthDate())
+                .gender(member.getGender())
+                .build();
+    }
 
     @Override
     @Transactional

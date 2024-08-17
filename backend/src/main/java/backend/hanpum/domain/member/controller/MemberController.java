@@ -4,6 +4,7 @@ import backend.hanpum.config.jwt.UserDetailsImpl;
 import backend.hanpum.domain.member.dto.requestDto.UpdateMemberInfoReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdateNicknameReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdatePasswordReqDto;
+import backend.hanpum.domain.member.dto.responseDto.MemberProfileResDto;
 import backend.hanpum.domain.member.service.MemberService;
 import backend.hanpum.exception.format.code.ApiResponse;
 import backend.hanpum.exception.format.response.ResponseCode;
@@ -23,6 +24,14 @@ public class MemberController {
 
     private final ApiResponse response;
     private final MemberService memberService;
+
+    @Operation(summary = "프로필 조회", description = "프로필 조회 API")
+    @GetMapping("/profile")
+    public ResponseEntity<?> getMemberProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        MemberProfileResDto memberProfileResDto =
+                memberService.getMemberProfile(userDetails.getMember().getMemberId());
+        return response.success(ResponseCode.MEMBER_PROFILE_FETCHED, memberProfileResDto);
+    }
 
     @Operation(summary = "닉네임 변경", description = "닉네임 변경 API")
     @PutMapping("/nickname-update")
