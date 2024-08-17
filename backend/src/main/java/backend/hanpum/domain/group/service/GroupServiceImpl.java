@@ -4,10 +4,12 @@ import backend.hanpum.domain.group.dto.requestDto.GroupPostReqDto;
 import backend.hanpum.domain.group.dto.responseDto.*;
 import backend.hanpum.domain.group.entity.Group;
 import backend.hanpum.domain.group.entity.GroupMember;
+import backend.hanpum.domain.group.entity.LikeGroup;
 import backend.hanpum.domain.group.enums.GroupJoinStatus;
 import backend.hanpum.domain.group.enums.JoinType;
 import backend.hanpum.domain.group.repository.GroupMemberRepository;
 import backend.hanpum.domain.group.repository.GroupRepository;
+import backend.hanpum.domain.group.repository.LikeGroupRepository;
 import backend.hanpum.domain.group.repository.custom.GroupMemberRepositoryCustom;
 import backend.hanpum.domain.group.repository.custom.GroupRepositoryCustom;
 import backend.hanpum.domain.member.entity.Member;
@@ -30,6 +32,7 @@ public class GroupServiceImpl implements GroupService {
     private final GroupRepositoryCustom groupRepositoryCustom;
     private final GroupMemberRepository groupMemberRepository;
     private final GroupMemberRepositoryCustom groupMemberRepositoryCustom;
+    private final LikeGroupRepository likeGroupRepository;
 
     @Override
     @Transactional
@@ -135,6 +138,27 @@ public class GroupServiceImpl implements GroupService {
         GroupMember groupMember = validGroupApply(memberId, groupMemberId);
         groupMember.getMember().updateGroupMember(null);
         groupMemberRepository.delete(groupMember);
+    }
+
+    @Override
+    @Transactional
+    public boolean likeGroup(Long memberId, Long groupId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
+
+        LikeGroup likeGroup = likeGroupRepository.findByMemberAndGroup(member, group);
+
+        if (likeGroup == null) {
+            likeGroup = LikeGroup.builder().member(member).group(group).build();
+            group.updateLikeCount(group.getLikeCount() + 1);
+            member.getLikeGroups().add(likeGroup);
+            memberRepository.save(member);
+            return true;
+        } else {
+            group.updateLikeCount(group.getLikeCount() - 1);
+            likeGroupRepository.delete(likeGroup);
+            return false;
+        }
     }
 
     private GroupJoinStatus getGroupJoinStatus(GroupMember groupMember, Long groupId) {

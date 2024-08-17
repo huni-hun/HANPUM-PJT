@@ -88,4 +88,13 @@ public class GroupController {
         groupService.declineGroupApply(userDetails.getMember().getMemberId(), groupMemberId);
         return response.success(ResponseCode.GROUP_APPLY_DECLINE_SUCCESS);
     }
+
+    @Operation(summary = "모임 관심 목록 등록", description = "모임 관심 목록 등록 API")
+    @PostMapping("/{groupId}/like")
+    public ResponseEntity<?> likeGroup(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                       @PathVariable Long groupId) {
+        boolean isLike = groupService.likeGroup(userDetails.getMember().getMemberId(), groupId);
+        if (isLike) return response.success(ResponseCode.GROUP_LIKE_SUCCESS);
+        else return response.success(ResponseCode.GROUP_UNLIKE_SUCCESS);
+    }
 }
