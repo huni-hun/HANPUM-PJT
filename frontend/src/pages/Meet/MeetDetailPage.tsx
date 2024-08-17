@@ -7,6 +7,20 @@ import Member from '@/components/Meet/Member';
 import { colors } from '@/styles/colorPalette';
 
 function MeetDetailPage() {
+  /** feed 더미 데이터 */
+  const dummyFeedData = {
+    leaderName: '김땡땡',
+    leaderImg: '/path/to/leaderImg.jpg',
+    courseTitle: '태종대 전망대',
+    courseDesc: '부산의 대표적인 관광지로...',
+    departDate: '2024.07.13',
+    arriveDate: '2024.07.26',
+    totalDistance: '52.8KM',
+    totalPeriod: '15박 16일',
+    memberCount: '6/8',
+    likeCount: 25,
+  };
+
   /** day[index]마다 스케줄 리스트 */
   const dummySchduleListData = [
     {
@@ -52,8 +66,7 @@ function MeetDetailPage() {
 
   return (
     <MeetDetailPageContainer>
-      <img src={DummyImg} alt="" />
-      <MeetInfo />
+      <MeetInfo feedData={dummyFeedData} />
       <div className="grayBox" />
       <MeetSchedule scheduleDataList={dummySchduleListData} />
       <MajorTour majorTourData={dummyTourData} />

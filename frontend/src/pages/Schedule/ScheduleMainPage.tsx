@@ -15,6 +15,20 @@ function ScheduleMainPage() {
 
   const [isSelected, setIsSelected] = useState<String>('Mine');
 
+  /** feed 더미 데이터 */
+  const dummyFeedData = {
+    leaderName: '김땡땡',
+    leaderImg: '/path/to/leaderImg.jpg',
+    courseTitle: '태종대 전망대',
+    courseDesc: '부산의 대표적인 관광지로...',
+    departDate: '2024.07.13',
+    arriveDate: '2024.07.26',
+    totalDistance: '52.8KM',
+    totalPeriod: '15박 16일',
+    memberCount: '6/8',
+    likeCount: 25,
+  };
+
   /** day[index]마다 스케줄 리스트 */
   const dummySchduleListData = [
     {
@@ -91,18 +105,15 @@ function ScheduleMainPage() {
         </S.SchduleTypeBox>
       </S.SchduleTypeContainer>
       <S.ScheduleMainContainer>
-        {/* <img src={img} alt="" /> */}
-        {/* <MeetInfo /> */}
-        <div className="grayBox" />
-        <MeetSchedule scheduleDataList={dummySchduleListData} />
-        <MajorTour majorTourData={dummyTourData} />
-        <Member memberData={dummyMemberData} />
-
         {/** 모임 피드 */}
+        <MeetInfo feedData={dummyFeedData} />
         {/** map */}
         {/** course */}
+        <MeetSchedule scheduleDataList={dummySchduleListData} />
         {/** 주요 관광지 */}
+        <MajorTour majorTourData={dummyTourData} />
         {/** 모임멤버 */}
+        <Member memberData={dummyMemberData} />
       </S.ScheduleMainContainer>
     </S.Container>
   );
