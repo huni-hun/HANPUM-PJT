@@ -3,11 +3,13 @@ package backend.hanpum.domain.member.service;
 import backend.hanpum.config.redis.RedisDao;
 import backend.hanpum.domain.member.dto.requestDto.UpdateMemberInfoReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdateNicknameReqDto;
+import backend.hanpum.domain.member.dto.requestDto.UpdatePasswordReqDto;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.auth.NicknameExpiredException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberServiceImpl implements MemberService{
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
     private final RedisDao redisDao;
 
     @Override
@@ -28,6 +31,17 @@ public class MemberServiceImpl implements MemberService{
         member.updateNickname(updateNicknameReqDto.getNickname());
         redisDao.deleteNickname(updateNicknameReqDto.getNickname());
     }
+
+    @Override
+    @Transactional
+    public void updatePassword(Long memberId, UpdatePasswordReqDto updatePasswordReqDto) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        if (!passwordEncoder.matches(updatePasswordReqDto.getCurrentPassword(), member.getPassword())) {
+            throw new LoginInfoInvalidException();
+        }
+        member.updateMemberPassword(passwordEncoder.encode(updatePasswordReqDto.getUpdatePassword()));
+    }
+
 
     @Override
     @Transactional

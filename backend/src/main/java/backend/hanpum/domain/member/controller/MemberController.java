@@ -3,6 +3,7 @@ package backend.hanpum.domain.member.controller;
 import backend.hanpum.config.jwt.UserDetailsImpl;
 import backend.hanpum.domain.member.dto.requestDto.UpdateMemberInfoReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdateNicknameReqDto;
+import backend.hanpum.domain.member.dto.requestDto.UpdatePasswordReqDto;
 import backend.hanpum.domain.member.service.MemberService;
 import backend.hanpum.exception.format.code.ApiResponse;
 import backend.hanpum.exception.format.response.ResponseCode;
@@ -29,6 +30,14 @@ public class MemberController {
                                             @RequestBody @Valid UpdateNicknameReqDto updateNicknameReqDto) {
         memberService.updateNickname(userDetails.getMember().getMemberId(), updateNicknameReqDto);
         return response.success(ResponseCode.NICKNAME_UPDATE_SUCCESS);
+    }
+
+    @Operation(summary = "비밀번호 변경", description = "비밀번호 변경 API")
+    @PutMapping("/password-update")
+    public ResponseEntity<?> updatePassword(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                            @RequestBody @Valid UpdatePasswordReqDto updatePasswordReqDto) {
+        memberService.updatePassword(userDetails.getMember().getMemberId(), updatePasswordReqDto);
+        return response.success(ResponseCode.PASSWORD_UPDATE_SUCCESS);
     }
 
     @Operation(summary = "회원정보 변경", description = "회원정보 변경 API")
