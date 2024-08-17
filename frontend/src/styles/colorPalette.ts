@@ -11,6 +11,7 @@ export const colors = {
   grey3: '#E1E1E1',
   grey4: '#E0E0E0',
   grey5: '#F3F4F8',
+  yellow: '#FEE500',
 };
 
 export type Colors = keyof typeof colors;
