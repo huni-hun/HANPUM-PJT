@@ -19,8 +19,6 @@ import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 import { STATUS } from '@/constants';
 import { AxiosError } from 'axios';
-import { useSetRecoilState } from 'recoil';
-import { signupStepAtom } from '@/atoms/signupStepAtom';
 
 // type InfoValues = Pick<
 //   SignupRequestValues,
