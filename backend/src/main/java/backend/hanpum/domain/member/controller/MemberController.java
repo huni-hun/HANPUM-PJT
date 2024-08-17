@@ -1,6 +1,8 @@
 package backend.hanpum.domain.member.controller;
 
 import backend.hanpum.config.jwt.UserDetailsImpl;
+import backend.hanpum.domain.group.dto.responseDto.GroupListGetResDto;
+import backend.hanpum.domain.group.service.GroupService;
 import backend.hanpum.domain.member.dto.requestDto.UpdateMemberInfoReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdateNicknameReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdatePasswordReqDto;
@@ -24,6 +26,7 @@ public class MemberController {
 
     private final ApiResponse response;
     private final MemberService memberService;
+    private final GroupService groupService;
 
     @Operation(summary = "프로필 조회", description = "프로필 조회 API")
     @GetMapping("/profile")
@@ -55,5 +58,13 @@ public class MemberController {
                                             @RequestBody @Valid UpdateMemberInfoReqDto updateMemberInfoReqDto) {
         memberService.updateMemberInfo(userDetails.getMember().getMemberId(), updateMemberInfoReqDto);
         return response.success(ResponseCode.MEMBER_INFO_UPDATE_SUCCESS);
+    }
+
+    @Operation(summary = "관심 모임 리스트 조회", description = "관심 모임 리스트 조회 API")
+    @GetMapping("/like-groups")
+    public ResponseEntity<?> getMemberLikeGroupList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        GroupListGetResDto groupListGetResDto =
+                groupService.getMemberLikeGroupList(userDetails.getMember().getMemberId());
+        return response.success(ResponseCode.MEMBER_LIKE_GROUP_LIST_FETCHED, groupListGetResDto);
     }
 }

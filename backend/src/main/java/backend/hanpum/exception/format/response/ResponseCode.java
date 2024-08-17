@@ -65,6 +65,7 @@ public enum ResponseCode {
     NICKNAME_UPDATE_SUCCESS(HttpStatus.OK, "닉네임이 성공적으로 변경되었습니다."),
     PASSWORD_UPDATE_SUCCESS(HttpStatus.OK, "닉네임이 성공적으로 변경되었습니다."),
     MEMBER_INFO_UPDATE_SUCCESS(HttpStatus.OK, "회원정보가 성공적으로 변경되었습니다."),
+    MEMBER_LIKE_GROUP_LIST_FETCHED(HttpStatus.OK, "관심 모임 리스트 조회가 성공적으로 조회되었습니다."),
     ;
 
     private final HttpStatus status;

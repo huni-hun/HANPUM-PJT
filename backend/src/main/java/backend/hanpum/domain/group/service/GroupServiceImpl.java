@@ -162,6 +162,23 @@ public class GroupServiceImpl implements GroupService {
         }
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public GroupListGetResDto getMemberLikeGroupList(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        List<LikeGroup> likeGroups = member.getLikeGroups();
+        List<GroupResDto> groupResDtoList = likeGroups.stream()
+                .map(likeGroup -> GroupResDto.builder()
+                        .title(likeGroup.getGroup().getTitle())
+                        .groupImg(likeGroup.getGroup().getGroupImg())
+                        .likeCount(likeGroup.getGroup().getLikeCount())
+                        .recruitedCount(groupMemberRepositoryCustom.countGroupMember(likeGroup.getGroup().getGroupId())) // 현재 모집된 인원 수
+                        .recruitmentCount(likeGroup.getGroup().getRecruitmentCount()) // 총 모집 인원 수
+                        .build())
+                .toList();
+        return GroupListGetResDto.builder().groupResDtoList(groupResDtoList).build();
+    }
+
     private GroupJoinStatus getGroupJoinStatus(GroupMember groupMember, Long groupId) {
         GroupJoinStatus groupJoinStatus = GroupJoinStatus.NOT_JOINED_GROUP;
         if (groupMember != null) {
