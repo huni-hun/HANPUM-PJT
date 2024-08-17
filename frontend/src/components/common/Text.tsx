@@ -5,7 +5,7 @@ import { Typography, typographyMap } from '@styles/typography';
 import styled from 'styled-components';
 
 interface TextProps {
-  typography?: Typography;
+  $typography?: Typography;
   color?: Colors;
   display?: CSSProperties['display'];
   textAlign?: CSSProperties['textAlign'];
@@ -28,7 +28,7 @@ const Text = styled.span<TextProps>(
     fontWeight: $bold ? 'bold' : fontWeight,
     display,
   }),
-  ({ typography = 't10' }) => typographyMap[typography],
+  ({ $typography = 't10' }) => typographyMap[$typography],
 );
 
 export default Text;

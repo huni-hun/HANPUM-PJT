@@ -2,10 +2,10 @@ import { CSSProperties } from 'react';
 import styled from 'styled-components';
 
 interface FlexProps {
-  align?: CSSProperties['alignItems'];
-  justify?: CSSProperties['justifyContent'];
+  $align?: CSSProperties['alignItems'];
+  $justify?: CSSProperties['justifyContent'];
   direction?: CSSProperties['flexDirection'];
-  gap?: CSSProperties['gap'];
+  $gap?: CSSProperties['gap'];
   wrap?: CSSProperties['flexWrap'];
 }
 
@@ -17,12 +17,12 @@ interface FlexProps {
  * @param {CSSProperties['wrap']} [wrap] wrap 속성
  */
 const Flex = styled.div<FlexProps>(
-  ({ align, justify, direction, gap, wrap }) => ({
+  ({ $align, $justify, direction, $gap, wrap }) => ({
     display: 'flex',
-    alignItems: align,
-    justifyContent: justify,
+    alignItems: $align,
+    justifyContent: $justify,
     flexDirection: direction,
-    gap: gap,
+    gap: $gap,
     wrap: wrap,
     width: '100%',
   }),

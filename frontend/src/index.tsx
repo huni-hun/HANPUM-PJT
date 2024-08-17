@@ -6,6 +6,7 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 import { GlobalStyle } from './styles/GlobalStyles';
 import { RecoilRoot } from 'recoil';
+import { AlertProvider } from './components/common/Modal/AlertProvider';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
@@ -20,7 +21,9 @@ root.render(
     <GlobalStyle />
     <RecoilRoot>
       <QueryClientProvider client={client}>
-        <App />
+        <AlertProvider>
+          <App />
+        </AlertProvider>
       </QueryClientProvider>
     </RecoilRoot>
   </>,

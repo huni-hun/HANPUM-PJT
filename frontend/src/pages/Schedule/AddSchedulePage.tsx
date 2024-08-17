@@ -5,8 +5,10 @@ import PlusIcon from '../../assets/PlusIcon.svg';
 import Icon from '../../components/common/Icon/Icon';
 import Select from '../../components/common/Select/Select';
 import Header from '@/components/common/Header/Header';
+import { useNavigate } from 'react-router-dom';
 
 function AddSchedulePage() {
+  const navigate = useNavigate();
   const BtnClick = () => {
     /** 일정추가 버튼 -> move addSchedule.tsx */
   };
@@ -43,7 +45,11 @@ function AddSchedulePage() {
 
   return (
     <S.Container>
-      <Header purpose="title" title="일정을 등록해주세요" />
+      <Header
+        purpose="title"
+        title="일정을 등록해주세요"
+        clickBack={() => navigate(-1)}
+      />
 
       <S.SchduleContainer>
         <S.DateWrap isExpanded={isExpanded} onClick={handleDatePickClick}>
