@@ -1,19 +1,15 @@
 import { signupStepAtom } from '@/atoms/signupStepAtom';
 import Header from '@/components/common/Header/Header';
 import ProfileConfig from '@/components/Signup/ProfileConfig';
-// import ProfileConfig from '@/components/signup/ProfileConfig';
 import Terms from '@/components/Signup/Terms';
 import UserInfo from '@/components/Signup/UserInfo';
-import {
-  SignupRequestValues,
-  SignupStep,
-  UserSignupFormValues,
-} from '@/models/signup';
+
+import { UserSignupFormValues } from '@/models/signup';
 // import { IncludeStepSignupValues, SignupRequestValues, SignupStep } from '@/models/signup';
 import { colors } from '@/styles/colorPalette';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 
 const SignupPage = () => {
