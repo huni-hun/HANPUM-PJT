@@ -1,6 +1,7 @@
 package backend.hanpum.domain.schedule.entity;
 
 import backend.hanpum.domain.course.entity.Course;
+import backend.hanpum.domain.group.entity.Group;
 import backend.hanpum.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
@@ -44,6 +45,10 @@ public class Schedule {
 
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ScheduleDay> scheduleDayList = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id")
+    private Group group;
 
     public void startAndStop(){
         this.state = !this.state;

@@ -1,7 +1,7 @@
 package backend.hanpum.domain.schedule.controller;
 
 import backend.hanpum.config.jwt.UserDetailsImpl;
-import backend.hanpum.domain.member.entity.Member;
+import backend.hanpum.domain.schedule.dto.requestDto.MemoPostReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.ScheduleRunReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.ScheduleStartReqDto;
@@ -37,12 +37,29 @@ public class ScheduleController {
         return response.success(ResponseCode.SCHEDULE_CREATED, scheduleId);
     }
 
+    @Operation(summary = "모임 일정 생성", description = "모임 일정 생성")
+    @PostMapping("/group")
+    public ResponseEntity<?> updateSchedule(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                            SchedulePostReqDto schedulePostReqDto) {
+        Long memberId = userDetails.getMember().getMemberId();
+        Long scheduleId = scheduleService.createGroupSchedule(memberId, schedulePostReqDto);
+        return response.success(ResponseCode.GROUP_SCHEDULE_CREATED, scheduleId);
+    }
+
     @Operation(summary = "멤버별 일정 조회", description = "멤버별 일정 조회")
     @GetMapping
+    public ResponseEntity<?> getGroupSchedule(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Long memberId = userDetails.getMember().getMemberId();
+        List<ScheduleResDto> scheduleResDto = scheduleService.getGroupScheduleList(memberId);
+        return response.success(ResponseCode.SCHEDULE_LIST_FETCHED, scheduleResDto);
+    }
+
+    @Operation(summary = "모임 일정 조회", description = "모임 일정 조회")
+    @GetMapping("/group")
     public ResponseEntity<?> getMySchedule(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         Long memberId = userDetails.getMember().getMemberId();
         List<ScheduleResDto> scheduleResDto = scheduleService.getMyScheduleList(memberId);
-        return response.success(ResponseCode.SCHEDULE_LIST_FETCHED, scheduleResDto);
+        return response.success(ResponseCode.GROUP_SCHEDULE_LIST_FETCHED, scheduleResDto);
     }
 
     @Operation(summary = "일차별 일정 조회", description = "일차별 일정 조회")
@@ -56,7 +73,7 @@ public class ScheduleController {
     }
 
     @Operation(summary = "전체 일정 시작, 종료", description = "정해진 날짜가 되면 전체 일정 시작용, 시작상태에서 사용하면 종료")
-    @PostMapping("/start")
+    @PutMapping("/start")
     public ResponseEntity<?> startAndStopSchedule(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                   @RequestBody ScheduleStartReqDto scheduleRunReqDto) {
         Long memberId = userDetails.getMember().getMemberId();
@@ -65,7 +82,7 @@ public class ScheduleController {
     }
 
     @Operation(summary = "일차별 일정 상태 전환", description = "쉴때, 걸을때 구분할 수 있는 트리거")
-    @PostMapping("/run")
+    @PutMapping("/run")
     public ResponseEntity<?> runAndStop(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                         @RequestBody ScheduleRunReqDto scheduleRunReqDto) {
         Long memberId = userDetails.getMember().getMemberId();
@@ -80,5 +97,14 @@ public class ScheduleController {
         Long memberId = userDetails.getMember().getMemberId();
         scheduleService.deleteSchedule(memberId, scheduleId);
         return response.success(ResponseCode.SCHEDULED_DELETED);
+    }
+
+    @Operation(summary = "메모 작성", description = "경유지 메모작성")
+    @PostMapping("/memo")
+    public ResponseEntity<?> createMemo(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                        MemoPostReqDto memoPostReqDto){
+        Long memberId = userDetails.getMember().getMemberId();
+        scheduleService.createMemo(memberId, memoPostReqDto);
+        return response.success(ResponseCode.MEMO_CREATED);
     }
 }
