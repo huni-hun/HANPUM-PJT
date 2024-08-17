@@ -14,6 +14,7 @@ import backend.hanpum.exception.exception.course.CourseListNotFoundException;
 import backend.hanpum.exception.exception.course.CourseNotFoundException;
 import backend.hanpum.exception.exception.course.CourseReviewsNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -361,17 +362,18 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CourseReviewResDto> getCourseReviews(Long courseId) {
+    public List<CourseReviewResDto> getCourseReviews(Long courseId, Pageable pageable) {
         List<CourseReviewResDto> courseReviewResDtoList = new ArrayList<>();
-        List<Review> ReviewList = reviewRepository.findByCourse_CourseId(courseId);
+        List<Review> ReviewList = reviewRepository.findByCourse_CourseId(courseId, pageable);
 
         if(ReviewList.isEmpty()) {
             throw new CourseReviewsNotFoundException();
         } else {
             for(Review review : ReviewList) {
                 CourseReviewResDto courseReviewResDto = CourseReviewResDto.builder()
-                        .memberId(review.getMember().getMemberId())
+                        .reviewId(review.getReviewId())
                         .courseId(review.getCourse().getCourseId())
+                        .memberNickname(review.getMember().getNickname())
                         .content(review.getContent())
                         .score(review.getScore())
                         .writeDate(review.getWriteDate())
