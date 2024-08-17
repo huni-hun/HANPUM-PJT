@@ -8,7 +8,9 @@ export const Container = styled.div`
 `;
 
 export const SchduleContainer = styled.div`
-  width: 100%;
+  width: 100vw;
+  height: 6vh;
+  margin-top: 5rem;
 `;
 export const DateWrap = styled.div<{ isExpanded: boolean }>`
   height: ${({ isExpanded }) => (isExpanded ? '75vh' : '11vh')};
