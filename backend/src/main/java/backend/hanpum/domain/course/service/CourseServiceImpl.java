@@ -40,8 +40,8 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional(readOnly = true)
-    public CourseListMapResDto getCourseList(CourseTypes targetCourse) {
-        CourseListMapResDto courseListMapResDto = courseRepository.getCourseList(targetCourse).orElseThrow(CourseListNotFoundException::new);
+    public CourseListMapResDto getCourseList(CourseTypes targetCourse, Pageable pageable) {
+        CourseListMapResDto courseListMapResDto = courseRepository.getCourseList(targetCourse, pageable).orElseThrow(CourseListNotFoundException::new);
 
         return courseListMapResDto;
     }
