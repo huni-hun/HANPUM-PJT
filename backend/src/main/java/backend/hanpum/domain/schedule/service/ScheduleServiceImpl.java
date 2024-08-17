@@ -25,6 +25,7 @@ import backend.hanpum.domain.schedule.repository.ScheduleWayPointRepository;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.auth.MemberInfoInvalidException;
 import backend.hanpum.exception.exception.group.GroupNotFoundException;
+import backend.hanpum.exception.exception.schedule.GroupScheduleNotFoundException;
 import backend.hanpum.exception.exception.schedule.InvalidDayFormatException;
 import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
 import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
@@ -143,6 +144,14 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Transactional(readOnly = true)
     @Override
+    public List<ScheduleResDto> getGroupScheduleList(Long memberId) {
+        List<ScheduleResDto> scheduleResDtoList = scheduleRepository.getGroupScheduleByMemberId(memberId).orElseThrow(GroupScheduleNotFoundException::new);
+
+        return List.of();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public ScheduleDayResDto getMyScheduleDay(Long memberId, Long ScheduleId, int day) {
         ScheduleDayResDto scheduleDayResDto = scheduleRepository.getScheduleDayResDto(memberId, ScheduleId, day).orElseThrow(ScheduleDayNotFoundException::new);
         return scheduleDayResDto;
@@ -161,7 +170,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         scheduleRepository.deleteById(ScheduleId);
     }
-
 
     @Transactional
     @Override

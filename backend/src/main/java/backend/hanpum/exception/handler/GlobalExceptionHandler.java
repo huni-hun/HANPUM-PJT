@@ -6,10 +6,7 @@ import backend.hanpum.exception.exception.course.CourseListNotFoundException;
 import backend.hanpum.exception.exception.course.CourseNotFoundException;
 import backend.hanpum.exception.exception.course.CourseReviewsNotFoundException;
 import backend.hanpum.exception.exception.group.*;
-import backend.hanpum.exception.exception.schedule.InvalidDayFormatException;
-import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
-import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
-import backend.hanpum.exception.exception.schedule.ScheduleWayPointNotFoundException;
+import backend.hanpum.exception.exception.schedule.*;
 import backend.hanpum.exception.exception.test.TestNotFoundException;
 import backend.hanpum.exception.format.code.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -66,6 +63,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ScheduleNotFoundException.class)
     protected ResponseEntity<?> handle(ScheduleNotFoundException e) {
         log.error("ScheduleNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(GroupScheduleNotFoundException.class)
+    protected ResponseEntity<?> handle(GroupScheduleNotFoundException e) {
+        log.error("GroupScheduleNotFoundException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }

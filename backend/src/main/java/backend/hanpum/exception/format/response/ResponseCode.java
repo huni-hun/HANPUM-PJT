@@ -15,6 +15,7 @@ public enum ResponseCode {
     SCHEDULE_CREATED(HttpStatus.OK, "일정이 성공적으로 생성되었습니다."),
     GROUP_SCHEDULE_CREATED(HttpStatus.OK, "모임 일정이 성공적으로 생성되었습니다."),
     SCHEDULE_LIST_FETCHED(HttpStatus.OK, "일정 정보가 성공적으로 조회되었습니다."),
+    GROUP_SCHEDULE_LIST_FETCHED(HttpStatus.OK, "모임 일정 정보가 성공적으로 조회되었습니다."),
     SCHEDULE_DAY_FETCHED(HttpStatus.OK, "세부일정이 성공적으로 조회되었습니다."),
     SCHEDULE_STATE_CHANGED(HttpStatus.OK, "진행 상태가 성공적으로 변경되었습니다."),
     SCHEDULE_RUN_STATE_CHANGED(HttpStatus.OK, "진행 상태가 성공적으로 변경되었습니다."),

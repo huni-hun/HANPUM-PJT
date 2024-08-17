@@ -38,7 +38,7 @@ public class ScheduleController {
     }
 
     @Operation(summary = "모임 일정 생성", description = "모임 일정 생성")
-    @PostMapping
+    @PostMapping("/group")
     public ResponseEntity<?> updateSchedule(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                             SchedulePostReqDto schedulePostReqDto) {
         Long memberId = userDetails.getMember().getMemberId();
@@ -48,10 +48,18 @@ public class ScheduleController {
 
     @Operation(summary = "멤버별 일정 조회", description = "멤버별 일정 조회")
     @GetMapping
+    public ResponseEntity<?> getGroupSchedule(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Long memberId = userDetails.getMember().getMemberId();
+        List<ScheduleResDto> scheduleResDto = scheduleService.getGroupScheduleList(memberId);
+        return response.success(ResponseCode.SCHEDULE_LIST_FETCHED, scheduleResDto);
+    }
+
+    @Operation(summary = "모임 일정 조회", description = "모임 일정 조회")
+    @GetMapping("/group")
     public ResponseEntity<?> getMySchedule(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         Long memberId = userDetails.getMember().getMemberId();
         List<ScheduleResDto> scheduleResDto = scheduleService.getMyScheduleList(memberId);
-        return response.success(ResponseCode.SCHEDULE_LIST_FETCHED, scheduleResDto);
+        return response.success(ResponseCode.GROUP_SCHEDULE_LIST_FETCHED, scheduleResDto);
     }
 
     @Operation(summary = "일차별 일정 조회", description = "일차별 일정 조회")

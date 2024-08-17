@@ -27,6 +27,7 @@ public interface ScheduleService {
     void deleteSchedule(Long memberId, Long ScheduleId);
 
     // 모임 일정 가져오기
+    List<ScheduleResDto> getGroupScheduleList(Long memberId);
 
     // 전체 일정 시작, 종료
     Long startAndStopSchedule(Long memberId, ScheduleStartReqDto scheduleRunReqDto);

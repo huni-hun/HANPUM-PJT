@@ -8,7 +8,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ScheduleRepositoryCustom {
+
     Optional<List<ScheduleResDto>> getMyScheduleByMemberId(Long memberId);
+
+    Optional<List<ScheduleResDto>> getGroupScheduleByMemberId(Long memberId);
+
     Optional<ScheduleDayResDto> getScheduleDayResDto(Long memberId, Long scheduleId, int day);
 
 }

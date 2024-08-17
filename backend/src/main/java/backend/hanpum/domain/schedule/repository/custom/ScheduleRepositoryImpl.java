@@ -1,8 +1,12 @@
 package backend.hanpum.domain.schedule.repository.custom;
 
+import backend.hanpum.domain.group.repository.GroupRepository;
+import backend.hanpum.domain.member.entity.Member;
+import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleWayPointResDto;
+import backend.hanpum.exception.exception.auth.MemberNotFoundException;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -22,20 +26,37 @@ import static backend.hanpum.domain.schedule.entity.QScheduleWayPoint.scheduleWa
 public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 
     private final JPAQueryFactory query;
+    private final MemberRepository memberRepository;
 
     @Override
     public Optional<List<ScheduleResDto>> getMyScheduleByMemberId(Long memberId) {
         return Optional.ofNullable(query.select(
                         Projections.constructor(ScheduleResDto.class,
                                 schedule.id,
+                                schedule.title,
                                 schedule.type,
                                 schedule.date,
-                                schedule.state,
-                                member.memberId,
-                                course.courseId
+                                schedule.state
                         )).from(schedule)
                 .where(schedule.member.memberId.eq(memberId))
                 .fetch());
+    }
+
+    @Override
+    public Optional<List<ScheduleResDto>> getGroupScheduleByMemberId(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+        Long groupId = member.getGroupMember().getGroup().getGroupId();
+        return Optional.ofNullable(query.select(
+                Projections.constructor(ScheduleResDto.class,
+                        schedule.id,
+                        schedule.title,
+                        schedule.type,
+                        schedule.date,
+                        schedule.state
+                        )).from(schedule)
+                .where(schedule.group.groupId.eq(groupId))
+                        .fetch());
+
     }
 
     @Override
