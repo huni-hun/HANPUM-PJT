@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ScheduleResDto {
     Long scheduleId;
+    String title;
     String type;
     String date;
     boolean state;
-//    Long memberId;
-//    Long courseId;
+
 }

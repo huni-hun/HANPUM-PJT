@@ -4,10 +4,10 @@ import backend.hanpum.exception.format.response.ErrorCode;
 import lombok.Getter;
 
 @Getter
-public class ScheduleDayNotFoundException extends RuntimeException {
+public class ScheduleWayPointNotFoundException extends RuntimeException {
     public final ErrorCode errorCode;
 
-    public ScheduleDayNotFoundException(){
-        this.errorCode = ErrorCode.SCHEDULE_DAY_NOT_FOUND;
+    public ScheduleWayPointNotFoundException() {
+        this.errorCode = ErrorCode.SCHEDULE_WAY_POINT_NOT_FOUND;
     }
 }
