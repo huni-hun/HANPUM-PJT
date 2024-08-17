@@ -14,6 +14,9 @@ public interface ScheduleService {
     // 개인 일정 생성하기
     Long createSchedule(Long memberId, SchedulePostReqDto schedulePostReqDto);
 
+    // 모임 일정 생성하기
+    Long createGroupSchedule(Long memberId, SchedulePostReqDto schedulePostReqDto);
+
     // 개인 일정 가져오기
     List<ScheduleResDto> getMyScheduleList(Long memberId);
 
@@ -22,8 +25,6 @@ public interface ScheduleService {
 
     // 일정 삭제
     void deleteSchedule(Long memberId, Long ScheduleId);
-
-    // 모임 일정 생성하기
 
     // 모임 일정 가져오기
 

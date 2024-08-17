@@ -37,6 +37,15 @@ public class ScheduleController {
         return response.success(ResponseCode.SCHEDULE_CREATED, scheduleId);
     }
 
+    @Operation(summary = "모임 일정 생성", description = "모임 일정 생성")
+    @PostMapping
+    public ResponseEntity<?> updateSchedule(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                            SchedulePostReqDto schedulePostReqDto) {
+        Long memberId = userDetails.getMember().getMemberId();
+        Long scheduleId = scheduleService.createGroupSchedule(memberId, schedulePostReqDto);
+        return response.success(ResponseCode.GROUP_SCHEDULE_CREATED, scheduleId);
+    }
+
     @Operation(summary = "멤버별 일정 조회", description = "멤버별 일정 조회")
     @GetMapping
     public ResponseEntity<?> getMySchedule(@AuthenticationPrincipal UserDetailsImpl userDetails) {
