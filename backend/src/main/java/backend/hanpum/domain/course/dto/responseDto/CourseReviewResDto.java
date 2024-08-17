@@ -12,8 +12,9 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class CourseReviewResDto {
-    Long memberId;
+    Long reviewId;
     Long courseId;
+    String memberNickname;
     String content;
     Double score;
     Date writeDate;
