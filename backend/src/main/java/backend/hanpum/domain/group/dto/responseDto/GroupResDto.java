@@ -13,6 +13,7 @@ public class GroupResDto {
 
     private String title;
     private String groupImg;
+    private int likeCount;
     private Long recruitedCount;
     private int recruitmentCount;
 }

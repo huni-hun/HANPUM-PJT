@@ -27,6 +27,7 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                         GroupResDto.class,
                         group.title,
                         group.groupImg,
+                        group.likeCount,
                         groupMember.member.memberId.count().as("recruitedCount"),
                         group.recruitmentCount
                 ))
@@ -48,6 +49,7 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                         group.title,
                         group.groupImg,
                         group.description,
+                        group.likeCount,
                         groupMember.member.memberId.count().as("recruitedCount"),
                         group.recruitmentCount,
                         group.recruitmentPeriod
