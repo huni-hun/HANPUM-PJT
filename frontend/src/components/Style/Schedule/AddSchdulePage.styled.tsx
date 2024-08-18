@@ -3,18 +3,19 @@ import styled from 'styled-components';
 export const Container = styled.div`
   width: 100%;
   height: 100%;
-  margin: 0 auto;
+
   box-sizing: border-box;
 `;
 
 export const SchduleContainer = styled.div`
-  width: 100vw;
+  width: 100%;
   height: 6vh;
+  margin: 0 auto;
   margin-top: 5rem;
 `;
 export const DateWrap = styled.div<{ isExpanded: boolean }>`
   height: ${({ isExpanded }) => (isExpanded ? '75vh' : '11vh')};
-  width: 90vw;
+  width: 96%;
   background-color: #fff;
   border-radius: 2rem;
   display: ${({ isExpanded }) => (isExpanded ? 'normal' : 'flex')};
@@ -45,7 +46,7 @@ export const DatePicker = styled.div`
 
 export const RouteWrap = styled.div<{ isExpanded: boolean }>`
   height: ${({ isExpanded }) => (isExpanded ? '11vh' : '75vh')};
-  width: 90vw;
+  width: 96%;
   background-color: #fff;
   border-radius: 2rem;
   padding: 1.2rem 2.4rem;
