@@ -26,6 +26,7 @@ const Header = ({ purpose, title, arrive, depart, clickBack }: HeaderProps) => {
   // merge(검색창, 북마크, 알림, user가 다 합쳐져 있는)
   // search-place(w장소이름, 주소 검색)
   // search(돋보기 검색창)
+  // back(뒤로가기)
 
   const renderHeader = () => {
     switch (purpose) {
@@ -128,6 +129,10 @@ const Header = ({ purpose, title, arrive, depart, clickBack }: HeaderProps) => {
             </div>
           </Flex>
         );
+
+      case 'back':
+        return <Flex style={{ marginLeft: '2rem' }} $align="start"></Flex>;
+
       default:
         return (
           <S.HeaderWrapper>

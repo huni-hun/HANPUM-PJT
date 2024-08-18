@@ -16,14 +16,16 @@ import {
   RouteAddDetailPage,
 } from './index'; // index.tsx에서 컴포넌트를 가져옵니다.
 import SignupPage from './Auth/SignupPage';
+import FindPage from './Auth/FindPage';
 
 export default function Router() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Navigate to={'/login'} replace={true} />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
+        <Route path="login" element={<LoginPage />} />
+        <Route path="signup" element={<SignupPage />} />
+        <Route path="find/:account" element={<FindPage />} />
 
         <Route path="main" element={<MainPage />} />
         <Route path="schedule/main" element={<ScheduleMainPage />} />

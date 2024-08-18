@@ -8,8 +8,10 @@ import Flex from '../common/Flex';
 
 import * as S from '../Style/Login/Entry.styled';
 import { Dispatch, SetStateAction } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Entry({ setInit }: { setInit: Dispatch<SetStateAction<boolean>> }) {
+  const navigate = useNavigate();
   return (
     <S.EntryContainer>
       <img src={logo} alt="logo" className="logo" />
@@ -23,7 +25,7 @@ function Entry({ setInit }: { setInit: Dispatch<SetStateAction<boolean>> }) {
         </Text>
       </Flex>
       <div className="round_bg">
-        <div className="circle" />
+        <div className="circle"></div>
         <img src={flag} alt="" className="flag_img" />
         <img src={human} alt="" className="human_img" />
         <div className="login_group">
@@ -40,8 +42,22 @@ function Entry({ setInit }: { setInit: Dispatch<SetStateAction<boolean>> }) {
             일반회원으로 시작하기
           </div>
           <div className="login_group-find">
-            <Text $typography="t12">아이디 찾기</Text>
-            <Text $typography="t12">비밀번호 찾기</Text>
+            <Text
+              $typography="t12"
+              onClick={() => {
+                navigate('/find/:id');
+              }}
+            >
+              아이디 찾기
+            </Text>
+            <Text
+              $typography="t12"
+              onClick={() => {
+                navigate('/find/:pw');
+              }}
+            >
+              비밀번호 찾기
+            </Text>
           </div>
         </div>
       </div>
