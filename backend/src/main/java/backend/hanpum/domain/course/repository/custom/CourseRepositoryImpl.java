@@ -111,6 +111,10 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
         QCourseDay qCourseDay = QCourseDay.courseDay;
         QAttraction qAttraction = QAttraction.attraction;
         QCourseType qCourseType = QCourseType.courseType;
+        QReview qReview = QReview.review;
+
+        NumberExpression<Double> avgScore = qReview.score.avg().coalesce(0.0);
+        NumberExpression<Integer> reviewCount = qReview.count().intValue().coalesce(0);
 
         List<CourseTypes> courseTypes = query
                 .select(qCourseType.typeName)
@@ -130,9 +134,13 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
                         qCourse.startPoint,
                         qCourse.endPoint,
                         qCourse.totalDistance,
-                        qCourse.member.memberId))
+                        qCourse.member.memberId,
+                        avgScore.as("scoreAvg"),
+                        reviewCount.as("commentCnt")))
                 .from(qCourse)
+                .leftJoin(qReview).on(qCourse.courseId.eq(qReview.course.courseId))
                 .where(qCourse.courseId.eq(courseId))
+                .groupBy(qCourse.courseId)
                 .fetchOne();
 
         if (courseResDto == null) {
