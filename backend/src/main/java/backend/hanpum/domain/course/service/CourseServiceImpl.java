@@ -10,6 +10,7 @@ import backend.hanpum.domain.course.enums.CourseTypes;
 import backend.hanpum.domain.course.repository.*;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
+import backend.hanpum.exception.exception.auth.MemberNotFoundException;
 import backend.hanpum.exception.exception.course.CourseDayNotFoundException;
 import backend.hanpum.exception.exception.course.CourseListNotFoundException;
 import backend.hanpum.exception.exception.course.CourseNotFoundException;
@@ -441,13 +442,14 @@ public class CourseServiceImpl implements CourseService {
     @Transactional
     public void addCourseUsageHistory(Long courseId, Long memberId) {
         Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
-        Member member = memberRepository.findById(memberId).orElseThrow();
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
 
         Date currentDate = new Date();
         CourseUsageHistory courseUsageHistory = CourseUsageHistory.builder()
                 .startDate(currentDate)
                 .endDate(null)
                 .useFlag(true)
+                .achieveRate(0.0)
                 .course(course)
                 .member(member)
                 .build();
@@ -457,11 +459,11 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
-    public void updateCourseUsageHistory(Long courseId, Long memberId) {
+    public void updateCourseUsageHistory(Long courseId, Long memberId, Double achieveRate) {
         CourseUsageHistory courseUsageHistory = courseUsageHistoryRepository.findByCourse_courseIdAndMember_memberId(courseId, memberId);
 
         Date currentDate = new Date();
-        courseUsageHistory.updateHistoryState(currentDate, false);
+        courseUsageHistory.updateHistoryState(currentDate, false, achieveRate);
     }
 
 }

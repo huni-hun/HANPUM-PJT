@@ -32,6 +32,9 @@ public class CourseUsageHistory {
     @Column(name = "use_flag")
     private Boolean useFlag;
 
+    @Column(name = "achieve_rate", scale = 1)
+    private Double achieveRate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
@@ -40,8 +43,9 @@ public class CourseUsageHistory {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    public void updateHistoryState(Date endDate, boolean useFlag) {
+    public void updateHistoryState(Date endDate, boolean useFlag, Double achieveRate) {
         this.endDate = endDate;
         this.useFlag = useFlag;
+        this.achieveRate = achieveRate;
     }
 }

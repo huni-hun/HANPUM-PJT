@@ -25,5 +25,5 @@ public interface CourseService {
     void editCourseReview(Long reviewId, String content, Double score);
     void deleteCourseReview(Long courseId);
     void addCourseUsageHistory(Long courseId, Long memberId);
-    void updateCourseUsageHistory(Long courseId, Long memberId);
+    void updateCourseUsageHistory(Long courseId, Long memberId, Double progressRate);
 }
