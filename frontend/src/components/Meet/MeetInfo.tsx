@@ -1,22 +1,50 @@
 import Icon from '../common/Icon/Icon';
 import * as S from '../Style/Meet/MeetInfo.styled';
 
-function MeetInfo() {
+interface FeedDataProps {
+  feedData: {
+    leaderName: string;
+    leaderImg: string;
+    courseTitle: string;
+    courseDesc: string;
+    departDate: string;
+    arriveDate: string;
+    totalDistance: string;
+    totalPeriod: string;
+    memberCount: string;
+    likeCount: number;
+  };
+}
+
+function MeetInfo({ feedData }: FeedDataProps) {
+  const {
+    leaderName,
+    leaderImg,
+    courseTitle,
+    courseDesc,
+    departDate,
+    arriveDate,
+    totalDistance,
+    totalPeriod,
+    memberCount,
+    likeCount,
+  } = feedData;
+
   return (
     <S.MeetInfoContainer>
       <div className="section">
         <div className="section_user">
           <div className="section_user-userImg">
-            {/* <img src="" alt="" /> */}
+            <img src={leaderImg} alt={leaderName} />
           </div>
-          <div className="section_user-name">모임 대장 이름</div>
+          <div className="section_user-name">{leaderName}</div>
         </div>
       </div>
 
       <div className="section">
         <div className="section_course">
-          <div className="section_course-title">태종대 전망대</div>
-          <div className="section_course-desc">모임 소개글</div>
+          <div className="section_course-title">{courseTitle}</div>
+          <div className="section_course-desc">{courseDesc}</div>
         </div>
       </div>
 
@@ -30,7 +58,7 @@ function MeetInfo() {
                   출발일
                 </div>
                 <div className="section_meetInfo-detail-date-flex-day">
-                  2024.07.13
+                  {departDate}
                 </div>
               </div>
               <div className="section_meetInfo-detail-date-flex arrive">
@@ -38,7 +66,7 @@ function MeetInfo() {
                   도착일
                 </div>
                 <div className="section_meetInfo-detail-date-flex-day">
-                  2024.07.26
+                  {arriveDate}
                 </div>
               </div>
             </div>
@@ -47,7 +75,9 @@ function MeetInfo() {
               <div className="section_meetInfo-detail-total-label">
                 총 이동거리
               </div>
-              <div className="section_meetInfo-detail-total-value">52.8KM</div>
+              <div className="section_meetInfo-detail-total-value">
+                {totalDistance}
+              </div>
             </div>
           </div>
 
@@ -58,7 +88,7 @@ function MeetInfo() {
                   출발일
                 </div>
                 <div className="section_meetInfo-detail-date-flex-day">
-                  2024.07.13
+                  {departDate}
                 </div>
               </div>
               <div className="section_meetInfo-detail-date-flex arrive">
@@ -66,7 +96,7 @@ function MeetInfo() {
                   도착일
                 </div>
                 <div className="section_meetInfo-detail-date-flex-day">
-                  2024.07.26
+                  {arriveDate}
                 </div>
               </div>
             </div>
@@ -76,7 +106,7 @@ function MeetInfo() {
                 총 일정기간
               </div>
               <div className="section_meetInfo-detail-total-value">
-                15박 16일
+                {totalPeriod}
               </div>
             </div>
           </div>
@@ -84,12 +114,12 @@ function MeetInfo() {
           <div className="section_meetInfo_items">
             <div className="section_meetInfo_items-item">
               <Icon name="IconSquareGreyFill" size={20} />
-              <span>6/8</span>
+              <span>{memberCount}</span>
             </div>
 
             <div className="section_meetInfo_items-item">
               <Icon name="IconHeartGreyFill" size={20} />
-              <span>25</span>
+              <span>{likeCount}</span>
             </div>
           </div>
         </div>

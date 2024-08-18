@@ -15,9 +15,11 @@ export const MeetInfoContainer = styled.div`
         height: 5rem;
         background-color: ${colors.grey1};
         border-radius: 50%;
+
         img {
           width: 100%;
           height: 100%;
+          box-sizing: border-box;
         }
       }
 
