@@ -33,7 +33,14 @@ const Header = ({ purpose, title, arrive, depart, back }: HeaderProps) => {
       case 'title':
         return (
           <Flex align="center" justify="center">
-            <Icon name="IconBackArrow" className="back-arrow" size={15} />
+            <Icon
+              name="IconBackArrow"
+              className="back-arrow"
+              size={15}
+              onClick={() => {
+                navigate(-1);
+              }}
+            />
             <Text as="div" $bold={true} typography="t20">
               {title}
             </Text>
@@ -147,7 +154,16 @@ const Header = ({ purpose, title, arrive, depart, back }: HeaderProps) => {
   return (
     <>
       <S.HeaderWrapper>
-        {back && <Icon name="IconBackArrow" className="back-arrow" size={15} />}
+        {back && (
+          <Icon
+            name="IconBackArrow"
+            className="back-arrow"
+            size={15}
+            onClick={() => {
+              navigate(-1);
+            }}
+          />
+        )}
         {renderHeader()}
       </S.HeaderWrapper>
       {/* <Outlet /> */}

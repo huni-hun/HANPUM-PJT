@@ -3,6 +3,7 @@ import Button from '../../components/common/Button/Button';
 import Icon from '../../components/common/Icon/Icon';
 import * as R from '../../components/Style/Route/RouteAddMainPage.styled';
 import Input from '../../components/common/Input/Input';
+import Header from '@/components/common/Header/Header';
 
 function RouteAddMainPage() {
   const [imgBoxClick, setImgBoxClick] = useState<boolean>(false);
@@ -41,11 +42,7 @@ function RouteAddMainPage() {
 
   return (
     <R.Container>
-      <R.Header>
-        <R.HeaderButton>
-          <Icon name="IconBackArrow" size={20} />
-        </R.HeaderButton>
-      </R.Header>
+      <Header purpose="title" title="기본정보 입력" />
       <R.MainContainer>
         <R.OverFlow>
           {!imgBoxClick ? (
