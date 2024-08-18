@@ -12,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface CourseService {
-    CourseListMapResDto getCourseList(CourseTypes targetCourse, Pageable pageable);
+    CourseListMapResDto getCourseList(CourseTypes targetCourse, Double maxDistance, Integer maxDays, List<CourseTypes> selectedTypes, String keyword, Pageable pageable);
     void makeCourse(MakeCourseReqDto makeCourseReqDto);
     void editCourse(EditCourseReqDto editCourseReqDto);
     void deleteCourse(Long memberId, Long courseId);
