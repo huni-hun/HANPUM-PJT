@@ -18,6 +18,8 @@ import Header from '@/components/common/Header/Header';
 import Map from '@/components/common/Map/Map';
 import RoutePlaceCard from '@/components/Style/Route/RoutePlaceCard';
 import Button from '@/components/common/Button/Button';
+import AttractionsCard from '@/components/Style/Route/AttractionsCard';
+import ReviewCard from '@/components/Style/Route/ReviewCard';
 
 function RouteDetailPage() {
   const { routeid } = useParams();
@@ -257,51 +259,12 @@ function RouteDetailPage() {
                     </>
                   ) : (
                     attractions.map((ele: AttractionsProps) => (
-                      <R.PlaceCardBox key={ele.attractionId}>
-                        <R.PlaceCard>
-                          <R.PlaceTextBox>
-                            <R.PlacetTitleBox>
-                              <R.Title>{ele.name}</R.Title>
-                            </R.PlacetTitleBox>
-                            <R.PlacetAddressBox>
-                              {ele.address}
-                            </R.PlacetAddressBox>
-                          </R.PlaceTextBox>
-                          <R.PlaceImg></R.PlaceImg>
-                        </R.PlaceCard>
-                      </R.PlaceCardBox>
+                      <AttractionsCard {...ele} />
                     ))
                   )
                 ) : (
-                  reviews.map((ele) => (
-                    <R.ReviewCardBox>
-                      <R.ReviewCard>
-                        <R.UserImgContainer>
-                          <R.UserImg>
-                            <Icon name="IconUser" size={43} />
-                          </R.UserImg>
-                        </R.UserImgContainer>
-                        <R.ReviewTextcontainer>
-                          <R.ReviewTextBox>
-                            <R.ReviewNameBox>
-                              <R.ReviewName>박뚱이</R.ReviewName>
-                              <Icon name="IconGrenStar" size={15} />
-                              <R.ReviewRate>{ele.score}</R.ReviewRate>
-                            </R.ReviewNameBox>
-                            <R.ReviewDetailBox>
-                              <R.ReviewDetail>{ele.content}</R.ReviewDetail>
-                            </R.ReviewDetailBox>
-                          </R.ReviewTextBox>
-                          <R.ReviewDateBox>
-                            <R.ReviewDate>2024.08.07</R.ReviewDate>
-                          </R.ReviewDateBox>
-                        </R.ReviewTextcontainer>
-                        <R.HeartBox>
-                          <Icon name="IconHeartGrey" size={15} />
-                          <R.HeartText>11</R.HeartText>
-                        </R.HeartBox>
-                      </R.ReviewCard>
-                    </R.ReviewCardBox>
+                  reviews.map((ele: RouteReviewProps) => (
+                    <ReviewCard {...ele} />
                   ))
                 )}
               </R.DetailMainOverflow>
