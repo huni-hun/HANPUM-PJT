@@ -9,11 +9,13 @@ import Member from '@/components/Meet/Member';
 import DummyImg from '../../assets/img/mountain.jpg';
 import { colors } from '@/styles/colorPalette';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 // import PlusIcon from '../../PlusIcon.svg';
 
 function ScheduleMainPage() {
   const BtnClick = () => {};
+  const navigate = useNavigate();
 
   const [isSelected, setIsSelected] = useState<String>('Mine');
 
@@ -76,7 +78,7 @@ function ScheduleMainPage() {
 
   return (
     <ScheduleMainPageContainer>
-      <Header purpose="user" />
+      <Header purpose="user" clickBack={() => navigate(-1)} />
 
       <S.SchduleTypeContainer>
         <S.SchduleTypeBox>
