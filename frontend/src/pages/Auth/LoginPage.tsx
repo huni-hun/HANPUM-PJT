@@ -5,8 +5,6 @@ import { useEffect, useState } from 'react';
 import Form from '@/components/Login/Form';
 
 function LoginPage() {
-  //TODO submit 함수 자식한테 뿌려주기 통신 로직만 page 컴포넌트에서
-
   const [init, setInit] = useState(true);
 
   useEffect(() => {

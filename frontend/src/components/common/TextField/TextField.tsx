@@ -46,23 +46,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     const [focused, setFocused] = useState(false);
 
     // 우선 순위 : 에러 > focus > 기본
-    const labelColor = hasError ? 'red' : focused ? 'main' : 'grey2';
-
-    // const checkLabel = () => {
-    //   if (hasError) {
-    //     return 'red';
-    //   } else if (hasError === false) {
-    //     return 'main';
-    //   }
-
-    //   if (focused) {
-    //     return 'main';
-    //   }
-
-    //   return 'grey2';
-    // };
-
-    // const labelColor = checkLabel();
+    // const labelColor = hasError ? 'red' : focused ? 'main' : 'grey2';
 
     const handleFocus: FocusEventHandler<HTMLInputElement> = (event) => {
       setFocused(true);
@@ -109,17 +93,6 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
 
           {rightElement}
         </Flex>
-
-        {helpMessage && (
-          <Text
-            $typography="t10"
-            color={labelColor}
-            display="inline-block"
-            style={{ marginBottom: 24, marginTop: 4 }}
-          >
-            {helpMessage}
-          </Text>
-        )}
 
         {bottomElement && <Flex $justify="end">{bottomElement}</Flex>}
       </S.TextFieldContainer>

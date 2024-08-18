@@ -13,7 +13,6 @@ import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 
 const SignupPage = () => {
-  // atom으로 관리 ->채운
   const [step, setStep] = useRecoilState(signupStepAtom);
 
   const navigate = useNavigate();
@@ -23,31 +22,9 @@ const SignupPage = () => {
     gender: null,
     profilePicture: '',
     birthDate: '',
+    nickname: '',
     // phoneNumber: '',
   });
-
-  // console.log('step ::', step);
-  // console.log('formValue ::', formValues);
-
-  // 기본정보에서 formValues 수정하는 handler 함수 -> 채운
-  // const handleInfoChange = (infoValue: Partial<SignupRequestValues>) => {
-  //   console.log('infoValue ::', infoValue);
-  //   setFormValues((prevValues) => ({
-  //     ...prevValues,
-  //     ...infoValue,
-  //   }));
-  // };
-
-  // // 프로필 정보
-  // const handleProfileConfigChange = (
-  //   profileInfo: Partial<SignupRequestValues>,
-  // ) => {
-  //   // console.log('infoValue ::', profileInfo);
-  //   setFormValues((prevValues) => ({
-  //     ...prevValues,
-  //     ...profileInfo,
-  //   }));
-  // };
 
   // pagenation 현재, 이전, 다음 style 분기 함수
   const activeClass = (paramStep: number) => {

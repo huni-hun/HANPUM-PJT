@@ -19,6 +19,7 @@ import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 import { STATUS } from '@/constants';
 import { AxiosError } from 'axios';
+import Message from '../common/Message';
 
 // type InfoValues = Pick<
 //   SignupRequestValues,
@@ -54,17 +55,9 @@ function UserInfo({
   >(null);
 
   // 초기 진입시 error message 뜨는 것 dirty로 분기처리
-  // const [dirty, setDirty] = useState<
-  //   Partial<Record<keyof SignupRequestValues, boolean>>
-  // >({});
-
-  // 아이디, 이메일 중복확인 상태
-  // const [infoValidate, setInfoValidate] = useState<
-  //   Partial<CertificationValidate>
-  // >({
-  //   checkId: '',
-  //   checkEmail: '',
-  // });
+  const [dirty, setDirty] = useState<
+    Partial<Record<keyof UserSignupFormValues, boolean>>
+  >({});
 
   // TODO checked랑 message로 타입 수정 terms 처럼
   // const [isSend, setIsSend] = useState<Partial<CertificationValidate>>({
@@ -86,13 +79,13 @@ function UserInfo({
     }));
   };
 
-  // const handleBlur = (e: ChangeEvent<HTMLInputElement>) => {
-  // const { name } = e.target;
-  // setDirty((prev) => ({
-  //   ...prev,
-  //   [name]: 'true',
-  // }));
-  // };
+  const handleBlur = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name } = e.target;
+    setDirty((prev) => ({
+      ...prev,
+      [name]: 'true',
+    }));
+  };
 
   // TODO ValidateMessage로 타입 수정
   // 인증 및 필드 유효성 검사
@@ -102,28 +95,36 @@ function UserInfo({
 
     // 아이디 유효성 검사
     const loginIdPattern = /^[a-zA-Z0-9]{6,13}$/;
-    if (!loginIdPattern.test(formValues.loginId || '')) {
+    if (!loginIdPattern.test(formValues.loginId?.trim() || '')) {
       errors.loginId = '※영문과 숫자를 조합하여 6~13자로 입력해 주세요.';
     }
 
     // 비밀번호 유효성 검사
     const passwordPattern =
       /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,16}$/;
-    if (!passwordPattern.test(formValues.password || '')) {
+    if (!passwordPattern.test(formValues.password?.trim() || '')) {
       errors.password =
         '※영문 대/소문자, 숫자, 특수문자를 조합하여 8~16자로 입력해 주세요.';
     }
 
     // 비밀번호 확인
-    if ((formValues.checkPassword || '').length === 0) {
+    if ((formValues.checkPassword?.trim() || '').length === 0) {
       errors.checkPassword = '비밀번호를 입력해주세요.';
-    } else if (formValues.password !== formValues.checkPassword) {
+    } else if (
+      formValues.password?.trim() !== formValues.checkPassword?.trim()
+    ) {
       errors.checkPassword = '비밀번호가 일치하지 않습니다.';
+    }
+
+    if ((formValues.name?.trim() || '').length === 0) {
+      errors.name = '이름을 입력해주세요.';
     }
 
     // 이메일 유효성 검사
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(formValues.email || '')) {
+    if ((formValues.email?.trim() || '').length === 0) {
+      errors.email = '이메일을 입력해주세요.';
+    } else if (!emailPattern.test(formValues.email?.trim() || '')) {
       errors.email = '유효한 이메일 형식을 입력해 주세요.';
     }
 
@@ -136,7 +137,7 @@ function UserInfo({
       errors.checkEmail = checkEmailMessage;
     }
 
-    if ((formValues.inputAuthCode || '')?.length === 0) {
+    if ((formValues.inputAuthCode?.trim() || '')?.length === 0) {
       errors.inputAuthCode = '인증번호를 입력해주세요.';
     } else if (checkInputCodeMessage) {
       errors.inputAuthCode = checkInputCodeMessage;
@@ -243,8 +244,6 @@ function UserInfo({
     },
   );
 
-  // console.log('values :::', formValues);
-
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (formValues.sendEmail && time > 0) {
@@ -266,12 +265,16 @@ function UserInfo({
     ).padStart(2, '0')}`;
   };
 
-  // console.log(time);
-
   if (checkEmailLoading) {
     // TODO UI 수정
     return <div>...메일 전송중</div>;
   }
+
+  // console.log('dirty ::', dirty);
+  // console.log('validate ::', validate);
+  // console.log(Boolean(validate.email));
+
+  console.log(formValues);
   return (
     <S.UserInfoContainer>
       {pagenation()}
@@ -281,7 +284,10 @@ function UserInfo({
         placeholder="김동산"
         onChange={handleInfoChange}
         value={formValues.loginId}
-        hasError={Boolean(validate.loginId || validate.checkLoginId)}
+        hasError={
+          dirty.loginId && Boolean(validate.loginId || validate.checkLoginId)
+        }
+        onBlur={handleBlur}
         helpMessage={
           validate.loginId ||
           validate.checkLoginId ||
@@ -296,8 +302,10 @@ function UserInfo({
               marginLeft: '8px',
             }}
             onClick={() => {
-              //TODO 글자 수 검사
-              if ((formValues.loginId || '').length !== 0) {
+              if (
+                (formValues.loginId?.trim() || '').length !== 0 &&
+                !validate.loginId
+              ) {
                 checkId(formValues.loginId || '');
               }
             }}
@@ -313,15 +321,29 @@ function UserInfo({
           </BaseButton>
         }
       />
+      <Message
+        hasError={
+          dirty.loginId && Boolean(validate.loginId || validate.checkLoginId)
+        }
+        text={
+          validate.loginId ||
+          validate.checkLoginId ||
+          '※영문, 숫자를 조합해서 입력해주세요.(6~13자)'
+        }
+      />
 
       <TextField
         label="비밀번호"
         type="password"
         name="password"
+        onBlur={handleBlur}
         value={formValues.password}
         onChange={handleInfoChange}
-        hasError={Boolean(validate.password)}
-        helpMessage={
+        hasError={dirty.password && Boolean(validate.password)}
+      />
+      <Message
+        hasError={dirty.password && Boolean(validate.password)}
+        text={
           validate.password ||
           '※영문 대/소문자, 숫자, 특수문자를 조합하여 8~16자로 입력해 주세요.'
         }
@@ -331,71 +353,135 @@ function UserInfo({
         label="비밀번호 확인"
         type="password"
         name="checkPassword"
+        onBlur={handleBlur}
         value={formValues.checkPassword}
         onChange={handleInfoChange}
-        hasError={Boolean(validate.checkPassword)}
+        hasError={dirty.checkPassword && Boolean(validate.checkPassword)}
         helpMessage={validate.checkPassword}
       />
 
-      {/* <Spacing size={4.2} /> */}
+      {dirty.checkPassword && Boolean(validate.checkPassword) ? (
+        <>
+          <Message
+            hasError={dirty.checkPassword && Boolean(validate.checkPassword)}
+            text={validate.checkPassword || ''}
+          />
+        </>
+      ) : (
+        <Spacing size={4.2} />
+      )}
+
+      <TextField
+        label="이름"
+        name="name"
+        onBlur={handleBlur}
+        value={formValues.name}
+        onChange={handleInfoChange}
+        hasError={dirty.name && Boolean(validate.name)}
+      />
+
+      {dirty.name && Boolean(validate.name) ? (
+        <Message
+          hasError={dirty.name && Boolean(validate.name)}
+          text={validate.name || ''}
+        />
+      ) : (
+        <Spacing size={4.2} />
+      )}
 
       <TextField
         label="이메일"
         name="email"
         onChange={handleInfoChange}
         value={formValues.email}
-        hasError={Boolean(validate.email || validate.checkEmail)}
-        helpMessage={validate.email || validate.checkEmail}
+        hasError={dirty.email && Boolean(validate.email || validate.checkEmail)}
+        onBlur={handleBlur}
         bottomElement={
-          <BaseButton
-            fontSize={1.2}
-            size="longRadius"
-            $weak={!formValues.sendEmail}
-            style={{ marginTop: 8 }}
-            onClick={() => {
-              if ((formValues.email || '').length !== 0) {
-                checkEmail(formValues.email || '');
-              }
-            }}
+          <Flex
+            $justify={
+              Boolean(validate.email || validate.checkEmail)
+                ? 'space-between'
+                : 'end'
+            }
+            $align="center"
           >
-            {formValues.sendEmail ? '인증번호 재발송' : '인증번호 발송'}
-          </BaseButton>
+            {dirty.email && Boolean(validate.email || validate.checkEmail) && (
+              <Message
+                hasError={
+                  dirty.email && Boolean(validate.email || validate.checkEmail)
+                }
+                text={validate.email || validate.checkEmail || ''}
+              />
+            )}
+
+            {!validate.email && !validate.checkEmail && (
+              <BaseButton
+                fontSize={1.2}
+                size="longRadius"
+                $weak={!formValues.sendEmail}
+                style={{ marginTop: 8 }}
+                onClick={() => {
+                  if ((formValues.email || '').length !== 0) {
+                    checkEmail(formValues.email || '');
+                  }
+                }}
+              >
+                {formValues.sendEmail ? '인증번호 재발송' : '인증번호 발송'}
+              </BaseButton>
+            )}
+          </Flex>
         }
       />
 
-      <TextField
-        label="인증번호"
-        name="inputAuthCode"
-        value={formValues.inputAuthCode}
-        onChange={handleInfoChange}
-        placeholder="123456"
-        hasError={Boolean(validate.inputAuthCode || validate.checkAuthCode)}
-        helpMessage={validate.inputAuthCode || validate.checkAuthCode}
-        hasFloat={formValues.sendAuthCode ? formatTime(time) : ''}
-        rightElement={
-          <BaseButton
-            size="radius"
-            fontSize={1.2}
-            $weak={!formValues.sendAuthCode}
-            style={{
-              marginLeft: '8px',
-            }}
-            onClick={() =>
-              certificationEmail({
-                email: formValues.email || '',
-                inputAuthCode: formValues.inputAuthCode || '',
-              })
+      <Spacing size={dirty.email && Boolean(validate.email) ? 1.7 : 0} />
+
+      {formValues.sendEmail && (
+        <>
+          <TextField
+            label="인증번호"
+            name="inputAuthCode"
+            value={formValues.inputAuthCode}
+            onChange={handleInfoChange}
+            placeholder="123456"
+            onBlur={handleBlur}
+            hasError={dirty.inputAuthCode && Boolean(validate.inputAuthCode)}
+            helpMessage={validate.inputAuthCode || validate.checkAuthCode}
+            hasFloat={formValues.sendEmail ? formatTime(time) : ''}
+            rightElement={
+              <BaseButton
+                size="radius"
+                fontSize={1.2}
+                $weak={!formValues.sendAuthCode}
+                style={{
+                  marginLeft: '8px',
+                }}
+                onClick={() =>
+                  certificationEmail({
+                    email: formValues.email || '',
+                    inputAuthCode: formValues.inputAuthCode || '',
+                  })
+                }
+              >
+                <Flex $align="center" $justify="center" $gap={4}>
+                  {formValues.sendAuthCode && time !== 0 && (
+                    <Icon name="IconCheck" size={9} />
+                  )}
+                  <span>인증</span>
+                </Flex>
+              </BaseButton>
             }
-          >
-            <Flex $align="center" $justify="center" $gap={4}>
-              {formValues.sendAuthCode && time !== 0 && (
-                <Icon name="IconCheck" size={9} />
-              )}
-              <span>인증</span>
-            </Flex>
-          </BaseButton>
-        }
-      />
+          />
+          {dirty.inputAuthCode && Boolean(validate.inputAuthCode) && (
+            <Message
+              hasError={
+                dirty.inputAuthCode &&
+                Boolean(validate.inputAuthCode || validate.inputAuthCode)
+              }
+              text={validate.inputAuthCode || ''}
+            />
+          )}
+        </>
+      )}
 
       <Spacing size={10} />
 
