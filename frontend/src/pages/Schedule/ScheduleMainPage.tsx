@@ -7,6 +7,8 @@ import MeetSchedule from '@/components/Meet/MeetSchedule';
 import MajorTour from '@/components/Meet/MajorTour';
 import Member from '@/components/Meet/Member';
 import DummyImg from '../../assets/img/mountain.jpg';
+import { colors } from '@/styles/colorPalette';
+import styled from 'styled-components';
 
 // import PlusIcon from '../../PlusIcon.svg';
 
@@ -73,7 +75,7 @@ function ScheduleMainPage() {
   ];
 
   return (
-    <S.Container>
+    <ScheduleMainPageContainer>
       <Header purpose="user" />
 
       <S.SchduleTypeContainer>
@@ -105,6 +107,7 @@ function ScheduleMainPage() {
         </S.SchduleTypeBox>
       </S.SchduleTypeContainer>
       <S.ScheduleMainContainer>
+        <img src={DummyImg} alt="" />
         {/** 모임 피드 */}
         <MeetInfo feedData={dummyFeedData} />
         {/** map */}
@@ -115,8 +118,24 @@ function ScheduleMainPage() {
         {/** 모임멤버 */}
         <Member memberData={dummyMemberData} />
       </S.ScheduleMainContainer>
-    </S.Container>
+    </ScheduleMainPageContainer>
   );
 }
 
 export default ScheduleMainPage;
+
+const ScheduleMainPageContainer = styled.div`
+  width: 100%;
+  height: 100%;
+
+  img {
+    width: 100%;
+    height: 29.5rem;
+  }
+
+  .grayBox {
+    width: 100%;
+    height: 35.8rem;
+    background-color: ${colors.grey1};
+  }
+`;

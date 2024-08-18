@@ -66,6 +66,8 @@ function MeetDetailPage() {
 
   return (
     <MeetDetailPageContainer>
+      <img src={DummyImg} alt="" />
+
       <MeetInfo feedData={dummyFeedData} />
       <div className="grayBox" />
       <MeetSchedule scheduleDataList={dummySchduleListData} />
