@@ -67,8 +67,6 @@ const SignupPage = () => {
     }));
   };
 
-  // console.log(formValues);
-
   const renderPagenation = (): React.ReactNode => {
     return (
       <div className="pagenation">
@@ -78,12 +76,6 @@ const SignupPage = () => {
       </div>
     );
   };
-
-  // const handleSubmit = () => {
-  //   // 회원가입 제출 로직
-  //   console.log('회원가입 데이터를 제출합니다:', formValues);
-  //   // 회원가입 API 호출 등을 여기에 추가
-  // };
 
   // // 스크롤 최상단으로 보내기
   useEffect(() => {

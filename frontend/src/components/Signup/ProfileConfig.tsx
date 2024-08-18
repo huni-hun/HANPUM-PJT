@@ -20,7 +20,7 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { dateFormat, telnumberFormat } from '@/ustils/util';
+import { dateFormat, telnumberFormat } from '@/utils/util';
 import { useMutation } from 'react-query';
 import { CheckNickname, SignUp } from '@/api/signup/POST';
 import { toast } from 'react-toastify';

@@ -58,7 +58,7 @@ export async function Logout() {
   return data;
 }
 
-// refreshToken TODO RequestBody가 refreshToken이 맞는지?
+// 토큰 재발급 TODO
 export async function GetRefreshToken() {
   const { data } = await api.post('/api/auth/reissue-token');
   return data;
