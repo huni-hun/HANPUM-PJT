@@ -45,7 +45,6 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
         if (keyword != null) {
             String formattedKeyword = "%" + keyword + "%";
 
-            System.out.println(formattedKeyword);
             whereClause.and(qCourse.courseName.like(formattedKeyword)
                     .or(qCourse.content.like(formattedKeyword)));
         }
