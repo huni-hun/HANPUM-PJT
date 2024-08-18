@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 import Entry from '@/components/login/Entry';
 import { useEffect, useState } from 'react';
+import Form from '@/components/login/Form';
 
 function LoginPage() {
   //TODO submit 함수 자식한테 뿌려주기 통신 로직만 page 컴포넌트에서
@@ -13,7 +14,7 @@ function LoginPage() {
   }, []);
   return (
     <LoginPageContainer>
-      {init && <Entry setInit={setInit} />} {!init && <div>폼양식나와야해</div>}
+      {init && <Entry setInit={setInit} />} {!init && <Form />}
     </LoginPageContainer>
   );
 }
