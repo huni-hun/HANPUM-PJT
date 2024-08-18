@@ -2,11 +2,18 @@ import * as C from './RouteCard.styled';
 
 import Icon from '../../common/Icon/Icon';
 import test from '../../../assets/img/mountain.jpg';
+import { useNavigate } from 'react-router-dom';
 import { RouteListProps } from '@/models/route';
 
 function RouteCard(props: RouteListProps) {
+  const navigator = useNavigate();
   return (
-    <C.Card img={test}>
+    <C.Card
+      onClick={() => {
+        navigator(`/route/detail/${props.routeId}`);
+      }}
+      img={test}
+    >
       <C.TopContent>
         <C.ContentContainer>
           <C.Content>

@@ -5,6 +5,7 @@ export const RouteListContainer = styled.div`
   height: 100%;
   box-sizing: border-box;
   overflow: scroll;
+  background-color: #ffffff;
 `;
 
 export const RouteListHeader = styled.div`
@@ -61,7 +62,7 @@ export const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  padding-bottom: 6vh;
+  padding-bottom: 8vh;
 `;
 
 export const ButtonContainer = styled.div`

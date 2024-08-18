@@ -9,16 +9,16 @@ interface HeaderProps {
   title?: string;
   arrive?: string;
   depart?: string;
+  back?: boolean;
 }
 
-const Header = ({ purpose, title, arrive, depart }: HeaderProps) => {
+const Header = ({ purpose, title, arrive, depart, back }: HeaderProps) => {
   const navigate = useNavigate();
   const onClickHandler = (to: string) => {
     navigate(`/${to}`);
   };
 
   const path = useLocation().pathname.substring(1);
-  console.log(path);
 
   //  default(알림, user만 있는)
   // title(약관동의, 회원정보 등)
@@ -73,8 +73,11 @@ const Header = ({ purpose, title, arrive, depart }: HeaderProps) => {
         );
       case 'merge':
         return (
-          <Flex style={{ marginLeft: '4.4rem' }} align="center">
-            <input type="text" />
+          <Flex align="center">
+            <div className="search-bar">
+              <Icon name="IconSearch" size={14} />
+              <input type="text" placeholder="경로 검색" />
+            </div>
             <Flex gap={20} style={{ width: 'auto', marginLeft: '9px' }}>
               <Icon
                 name="IconBookMarkInHeader"
@@ -115,6 +118,12 @@ const Header = ({ purpose, title, arrive, depart }: HeaderProps) => {
             </div>
           </Flex>
         );
+      case 'route-detail':
+        return (
+          <Flex style={{ marginLeft: '2rem' }} align="center" justify="end">
+            <Icon name="IconBookMarker" size={20} />
+          </Flex>
+        );
       default:
         return (
           <S.HeaderWrapper>
@@ -138,7 +147,7 @@ const Header = ({ purpose, title, arrive, depart }: HeaderProps) => {
   return (
     <>
       <S.HeaderWrapper>
-        <Icon name="IconBackArrow" className="back-arrow" size={15} />
+        {back && <Icon name="IconBackArrow" className="back-arrow" size={15} />}
         {renderHeader()}
       </S.HeaderWrapper>
       {/* <Outlet /> */}

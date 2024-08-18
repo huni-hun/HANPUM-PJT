@@ -1,15 +1,20 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
-import MainPage from './Main/MainPage';
 import Header from '@/components/common/Header/Header';
-import RouteAddMainPage from './Route/RouteAddMainPage';
-import RouteAddPlacePage from './Route/RouteAddPlacePage';
-import LoginPage from './Auth/LoginPage';
-import ScheduleMainPage from './Schedule/ScheduleMainPage';
-import RouteList from './Route/RouteList';
-import MeetPage from './Meet/MeetPage';
-import MeetDetailPage from './Meet/MeetDetailPage';
-import SignupPage from './Auth/SignupPage';
+
+import {
+  LoginPage,
+  MainPage,
+  ScheduleMainPage,
+  AddSchedulePage,
+  RouteList,
+  MeetPage,
+  MeetDetailPage,
+  RouteAddPlacePage,
+  RouteAddMainPage,
+  RouteDetailPage,
+  RouteAddDetailPage,
+} from './index'; // index.tsx에서 컴포넌트를 가져옵니다.
 
 export default function Router() {
   return (
@@ -18,18 +23,18 @@ export default function Router() {
         <Route path="/" element={<Navigate to={'/login'} replace={true} />} />
         <Route path="/login" element={<LoginPage />} />
 
-        {/* <Route path="/" element={<Header purpose={purpose} />}> */}
-        <Route path="signup" element={<SignupPage />} />
         <Route path="main" element={<MainPage />} />
         <Route path="schedule/main" element={<ScheduleMainPage />} />
-        <Route path="route/list" element={<RouteList />} />
+        <Route path="schedule/addSchedule" element={<AddSchedulePage />} />
 
+        <Route path="route/list" element={<RouteList />} />
+        <Route path="route/detail/:routeid" element={<RouteDetailPage />} />
         <Route path="route/addMain" element={<RouteAddMainPage />} />
+        <Route path="route/addDetail" element={<RouteAddDetailPage />} />
         <Route path="route/add" element={<RouteAddPlacePage />} />
 
         <Route path="meet" element={<MeetPage />} />
         <Route path="meet/:id" element={<MeetDetailPage />} />
-        {/* </Route> */}
       </Routes>
     </BrowserRouter>
   );

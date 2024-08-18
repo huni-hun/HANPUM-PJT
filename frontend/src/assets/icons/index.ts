@@ -19,7 +19,10 @@ export { ReactComponent as IconRouteGreen } from './RouteGreen.svg';
 export { ReactComponent as IconRouteGrey } from './RouteGrey.svg';
 
 export { ReactComponent as IconWhiteStar } from './WhiteStar.svg';
+export { ReactComponent as IconGreyStar } from './GreyStar.svg';
+export { ReactComponent as IconGrenStar } from './GrenStar.svg';
 export { ReactComponent as IconReview } from './Review.svg';
+export { ReactComponent as IconGreyReview } from './GreyReview.svg';
 
 // header
 export { ReactComponent as IconUser } from './user.svg';

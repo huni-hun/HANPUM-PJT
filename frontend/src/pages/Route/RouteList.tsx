@@ -36,7 +36,7 @@ function RouteList() {
   }, []);
   return (
     <R.RouteListContainer>
-      <Header purpose="merge" />
+      <Header purpose="merge" back={false} />
       <R.MainContainer>
         <R.RouteCardContainer>
           <R.RouteTypeHeader>
