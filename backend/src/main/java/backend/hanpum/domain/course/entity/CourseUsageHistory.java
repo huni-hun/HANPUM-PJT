@@ -39,4 +39,9 @@ public class CourseUsageHistory {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
+    public void updateHistoryState(Date endDate, boolean useFlag) {
+        this.endDate = endDate;
+        this.useFlag = useFlag;
+    }
 }

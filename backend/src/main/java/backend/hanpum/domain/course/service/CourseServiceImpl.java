@@ -438,6 +438,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional
     public void addCourseUsageHistory(Long courseId, Long memberId) {
         Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
         Member member = memberRepository.findById(memberId).orElseThrow();
@@ -452,6 +453,15 @@ public class CourseServiceImpl implements CourseService {
                 .build();
 
         courseUsageHistoryRepository.save(courseUsageHistory);
+    }
+
+    @Override
+    @Transactional
+    public void updateCourseUsageHistory(Long courseId, Long memberId) {
+        CourseUsageHistory courseUsageHistory = courseUsageHistoryRepository.findByCourse_courseIdAndMember_memberId(courseId, memberId);
+
+        Date currentDate = new Date();
+        courseUsageHistory.updateHistoryState(currentDate, false);
     }
 
 }
