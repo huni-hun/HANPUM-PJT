@@ -24,6 +24,7 @@ import backend.hanpum.domain.schedule.repository.ScheduleRepository;
 import backend.hanpum.domain.schedule.repository.ScheduleWayPointRepository;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.auth.MemberInfoInvalidException;
+import backend.hanpum.exception.exception.group.GroupMemberNotFoundException;
 import backend.hanpum.exception.exception.group.GroupNotFoundException;
 import backend.hanpum.exception.exception.schedule.GroupScheduleNotFoundException;
 import backend.hanpum.exception.exception.schedule.InvalidDayFormatException;
@@ -145,9 +146,13 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Transactional(readOnly = true)
     @Override
     public List<ScheduleResDto> getGroupScheduleList(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        if (member.getGroupMember() == null) {
+            throw new GroupMemberNotFoundException();
+        }
         List<ScheduleResDto> scheduleResDtoList = scheduleRepository.getGroupScheduleByMemberId(memberId).orElseThrow(GroupScheduleNotFoundException::new);
 
-        return List.of();
+        return scheduleResDtoList;
     }
 
     @Transactional(readOnly = true)
