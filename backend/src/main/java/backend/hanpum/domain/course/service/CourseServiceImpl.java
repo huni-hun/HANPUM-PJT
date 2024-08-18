@@ -8,6 +8,7 @@ import backend.hanpum.domain.course.dto.responseDto.GetCourseDayResDto;
 import backend.hanpum.domain.course.entity.*;
 import backend.hanpum.domain.course.enums.CourseTypes;
 import backend.hanpum.domain.course.repository.*;
+import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.course.CourseDayNotFoundException;
 import backend.hanpum.exception.exception.course.CourseListNotFoundException;
@@ -37,6 +38,7 @@ public class CourseServiceImpl implements CourseService {
     private final CourseDayRepository courseDayRepository;
     private final AttractionRepository attractionRepository;
     private final WaypointRepository waypointRepository;
+    private final CourseUsageHistoryRepository courseUsageHistoryRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -433,6 +435,23 @@ public class CourseServiceImpl implements CourseService {
     @Transactional
     public void deleteCourseReview(Long courseId) {
 //        reviewRepository.deleteByCourse_CourseIdAndMember_MemberId(courseId, memberId);
+    }
+
+    @Override
+    public void addCourseUsageHistory(Long courseId, Long memberId) {
+        Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
+        Member member = memberRepository.findById(memberId).orElseThrow();
+
+        Date currentDate = new Date();
+        CourseUsageHistory courseUsageHistory = CourseUsageHistory.builder()
+                .startDate(currentDate)
+                .endDate(null)
+                .useFlag(true)
+                .course(course)
+                .member(member)
+                .build();
+
+        courseUsageHistoryRepository.save(courseUsageHistory);
     }
 
 }
