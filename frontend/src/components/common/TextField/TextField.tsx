@@ -2,12 +2,14 @@ import {
   FocusEventHandler,
   forwardRef,
   InputHTMLAttributes,
+  useEffect,
   useState,
 } from 'react';
+import * as S from './TextField.styled';
 import Input from '@common/Input/Input';
 import Text from '@common/Text';
-import Flex from './Flex';
-import Spacing from './Spacing';
+import Flex from '../Flex';
+import Spacing from '../Spacing';
 
 interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: React.ReactNode;
@@ -15,6 +17,7 @@ interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   helpMessage?: React.ReactNode;
   rightElement?: React.ReactNode;
   bottomElement?: React.ReactNode;
+  hasFloat?: string | React.ReactNode;
 }
 
 /**
@@ -35,6 +38,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       helpMessage,
       onFocus,
       onBlur,
+      hasFloat,
       ...props
     },
     ref,
@@ -43,6 +47,22 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
 
     // 우선 순위 : 에러 > focus > 기본
     const labelColor = hasError ? 'red' : focused ? 'main' : 'grey2';
+
+    // const checkLabel = () => {
+    //   if (hasError) {
+    //     return 'red';
+    //   } else if (hasError === false) {
+    //     return 'main';
+    //   }
+
+    //   if (focused) {
+    //     return 'main';
+    //   }
+
+    //   return 'grey2';
+    // };
+
+    // const labelColor = checkLabel();
 
     const handleFocus: FocusEventHandler<HTMLInputElement> = (event) => {
       setFocused(true);
@@ -54,10 +74,10 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     };
 
     return (
-      <div>
+      <S.TextFieldContainer>
         {label ? (
           <Text
-            typography="t12"
+            $typography="t12"
             display="block"
             $bold={true}
             style={{ marginBottom: 12 }}
@@ -66,7 +86,18 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
           </Text>
         ) : null}
 
-        <Flex align="center">
+        <Flex $align="center">
+          {hasFloat && (
+            <span
+              className="float"
+              style={{
+                left: rightElement ? '200px' : '',
+                right: rightElement ? '' : '15px',
+              }}
+            >
+              {hasFloat}
+            </span>
+          )}
           <Input
             autoComplete="off"
             ref={ref}
@@ -79,11 +110,9 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
           {rightElement}
         </Flex>
 
-        {bottomElement && <Flex justify="end">{bottomElement}</Flex>}
-
         {helpMessage && (
           <Text
-            typography="t10"
+            $typography="t10"
             color={labelColor}
             display="inline-block"
             style={{ marginBottom: 24, marginTop: 4 }}
@@ -91,7 +120,9 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
             {helpMessage}
           </Text>
         )}
-      </div>
+
+        {bottomElement && <Flex $justify="end">{bottomElement}</Flex>}
+      </S.TextFieldContainer>
     );
   },
 );

@@ -15,19 +15,19 @@ function RouteList() {
 
   useEffect(() => {
     const data: RouteListProps[] = [];
-    getRouteList('초보자').then((result) => {
+    getRouteList('해안길').then((result) => {
       if (result.status === 200) {
         let response: RouteListProps = {
-          routeName: result.data.data.courseListMap.초보자[0].courseName,
-          routeContent: result.data.data.courseListMap.초보자[0].content,
-          routeScore: result.data.data.courseListMap.초보자[0].scoreAvg,
-          routeComment: result.data.data.courseListMap.초보자[0].commentCnt,
-          routeId: result.data.data.courseListMap.초보자[0].courseId,
-          img: result.data.data.courseListMap.초보자[0].backgroundImg,
-          writeState: result.data.data.courseListMap.초보자[0].writeState,
-          openState: result.data.data.courseListMap.초보자[0].openState,
-          memberId: result.data.data.courseListMap.초보자[0].memberId,
-          writeDate: result.data.data.courseListMap.초보자[0].writeDate,
+          routeName: result.data.data.courseListMap.해안길[0].courseName,
+          routeContent: result.data.data.courseListMap.해안길[0].content,
+          routeScore: result.data.data.courseListMap.해안길[0].scoreAvg,
+          routeComment: result.data.data.courseListMap.해안길[0].commentCnt,
+          routeId: result.data.data.courseListMap.해안길[0].courseId,
+          img: result.data.data.courseListMap.해안길[0].backgroundImg,
+          writeState: result.data.data.courseListMap.해안길[0].writeState,
+          openState: result.data.data.courseListMap.해안길[0].openState,
+          memberId: result.data.data.courseListMap.해안길[0].memberId,
+          writeDate: result.data.data.courseListMap.해안길[0].writeDate,
         };
         for (let i = 0; i < 5; i++) {
           data.push(response);
@@ -39,7 +39,7 @@ function RouteList() {
   }, []);
   return (
     <R.RouteListContainer>
-      <Header purpose="merge" back={false} />
+      <Header purpose="merge" back={false} clickBack={() => {}} />
       <R.MainContainer>
         <R.RouteCardContainer>
           <R.RouteTypeHeader>

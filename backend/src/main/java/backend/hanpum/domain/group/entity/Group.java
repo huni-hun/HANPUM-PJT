@@ -1,5 +1,6 @@
 package backend.hanpum.domain.group.entity;
 
+import backend.hanpum.domain.schedule.entity.Schedule;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,6 +33,9 @@ public class Group {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "like_count")
+    private int likeCount;
+
     @Column(name = "recruitment_count")
     private int recruitmentCount;
 
@@ -43,5 +47,10 @@ public class Group {
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<GroupMember> groupMemberList = new ArrayList<>();
 
-    // 일정 추가
+    @OneToOne(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Schedule schedule;
+
+    public void updateLikeCount(int count){
+        this.likeCount = count;
+    }
 }

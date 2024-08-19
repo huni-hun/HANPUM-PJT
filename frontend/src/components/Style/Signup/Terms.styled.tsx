@@ -4,19 +4,22 @@ import styled from 'styled-components';
 export const TermsContainer = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: start;
+
+  padding: 0 16px;
 
   .title {
     font-size: 2rem;
     font-weight: bold;
     color: ${colors.main};
-    padding-left: 24px;
+    padding-left: 8px;
     margin: 16px 0;
   }
 
   .desc {
     display: flex;
     flex-direction: column;
-    padding-left: 24px;
+    padding-left: 8px;
     p {
       font-size: 1.4rem;
       line-height: 22px;
@@ -27,8 +30,10 @@ export const TermsContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 32px;
-    padding: 0px 24px;
+    padding: 0px 8px;
     margin-top: 36px;
+    width: 100%;
+    box-sizing: border-box;
     .apply_item {
       display: flex;
       justify-content: space-between;
@@ -64,8 +69,8 @@ export const TermsContainer = styled.div`
   }
 
   .applyAll {
-    padding: 0 16px;
     margin-top: 51px;
+    width: 100%;
 
     .apply_item {
       display: flex;

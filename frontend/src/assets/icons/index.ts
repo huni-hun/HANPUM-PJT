@@ -52,3 +52,11 @@ export { ReactComponent as IconHeartGrey } from './heart_grey.svg';
 export { ReactComponent as IconHeartGreyFill } from './heart_grey_fill.svg';
 export { ReactComponent as IconSquareGreyFill } from './square_grey_fill.svg';
 export { ReactComponent as IconFlagBold } from './icon_flag_bold.svg';
+
+// 회원 가입 페이지
+export { ReactComponent as IconCheck } from './check.svg';
+export { ReactComponent as IconCamera } from './camera.svg';
+export { ReactComponent as IconSignupCalender } from './signupCalender.svg';
+
+// 로그인 페이지
+export { ReactComponent as IconKakaoLogo } from './kakao.svg';

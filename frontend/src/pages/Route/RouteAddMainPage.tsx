@@ -42,7 +42,7 @@ function RouteAddMainPage() {
 
   return (
     <R.Container>
-      <Header purpose="title" title="기본정보 입력" />
+      <Header purpose="title" title="기본정보 입력" clickBack={() => {}} />
       <R.MainContainer>
         <R.OverFlow>
           {!imgBoxClick ? (

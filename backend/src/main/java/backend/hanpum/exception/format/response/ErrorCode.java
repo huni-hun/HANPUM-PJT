@@ -13,8 +13,10 @@ public enum ErrorCode {
 
     /* 일정 */
     SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 일정이 없습니다."),
+    GROUP_SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 모임 일정이 없습니다."),
     SCHEDULE_DAY_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 세부 일정이 없습니다."),
     INVALID_DATE_FORMAT(HttpStatus.BAD_REQUEST, "유효하지 않은 날짜 형식입니다."),
+    SCHEDULE_WAY_POINT_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 경유지 정보가 없습니다."),
 
     /* 경로 */
     COURSE_LIST_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 경로 목록이 없습니다."),
@@ -24,7 +26,10 @@ public enum ErrorCode {
 
     /* 모임 */
     GROUP_ALREADY_JOINED(HttpStatus.BAD_REQUEST, "이미 가입된 모임이 있습니다."),
-    GROUP_DETAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 모임 상세정보가 없습니다."),
+    GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 모임을 찾을 수 없습니다."),
+    GROUP_MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "가입하거나 신청한 모임이 존재하지 않습니다."),
+    GROUP_MEMBER_FULL(HttpStatus.BAD_REQUEST, "해당 모임에 인원수가 초과하였습니다."),
+    GROUP_PERMISSION(HttpStatus.BAD_REQUEST, "해당 모임에 허가되지 않은 접근입니다."),
 
     /* 인증 */
     EMAIL_DUPLICATED(HttpStatus.CONFLICT, "이미 사용 중인 이메일입니다."),

@@ -1,6 +1,5 @@
 package backend.hanpum.exception.exception.schedule;
 
-import backend.hanpum.domain.schedule.entity.ScheduleDay;
 import backend.hanpum.exception.format.response.ErrorCode;
 import lombok.Getter;
 

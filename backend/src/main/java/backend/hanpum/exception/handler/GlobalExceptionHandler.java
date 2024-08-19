@@ -5,11 +5,8 @@ import backend.hanpum.exception.exception.course.CourseDayNotFoundException;
 import backend.hanpum.exception.exception.course.CourseListNotFoundException;
 import backend.hanpum.exception.exception.course.CourseNotFoundException;
 import backend.hanpum.exception.exception.course.CourseReviewsNotFoundException;
-import backend.hanpum.exception.exception.group.GroupAlreadyJoinedException;
-import backend.hanpum.exception.exception.group.GroupDetailNotFoundException;
-import backend.hanpum.exception.exception.schedule.InvalidDayFormatException;
-import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
-import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
+import backend.hanpum.exception.exception.group.*;
+import backend.hanpum.exception.exception.schedule.*;
 import backend.hanpum.exception.exception.test.TestNotFoundException;
 import backend.hanpum.exception.format.code.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -70,6 +67,13 @@ public class GlobalExceptionHandler {
         return response.error(e.getErrorCode());
     }
 
+    @ExceptionHandler(GroupScheduleNotFoundException.class)
+    protected ResponseEntity<?> handle(GroupScheduleNotFoundException e) {
+        log.error("GroupScheduleNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
     @ExceptionHandler(ScheduleDayNotFoundException.class)
     protected ResponseEntity<?> handle(ScheduleDayNotFoundException e) {
         log.error("ScheduleDayNotFoundException = {}", e.getErrorCode().getMessage());
@@ -85,6 +89,13 @@ public class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler(ScheduleWayPointNotFoundException.class)
+    protected ResponseEntity<?> handle(ScheduleWayPointNotFoundException e){
+        log.error("ScheduleWayPointNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
     /* 모임 */
     @ExceptionHandler(GroupAlreadyJoinedException.class)
     protected ResponseEntity<?> handle(GroupAlreadyJoinedException e) {
@@ -93,9 +104,30 @@ public class GlobalExceptionHandler {
         return response.error(e.getErrorCode());
     }
 
-    @ExceptionHandler(GroupDetailNotFoundException.class)
-    protected ResponseEntity<?> handle(GroupDetailNotFoundException e) {
-        log.error("GroupDetailNotFoundException = {}", e.getErrorCode().getMessage());
+    @ExceptionHandler(GroupNotFoundException.class)
+    protected ResponseEntity<?> handle(GroupNotFoundException e) {
+        log.error("GroupNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(GroupMemberNotFoundException.class)
+    protected ResponseEntity<?> handle(GroupMemberNotFoundException e) {
+        log.error("GroupMemberNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(GroupMemberFullException.class)
+    protected ResponseEntity<?> handle(GroupMemberFullException e) {
+        log.error("GroupMemberFullException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(GroupPermissionException.class)
+    protected ResponseEntity<?> handle(GroupPermissionException e) {
+        log.error("GroupPermissionException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }

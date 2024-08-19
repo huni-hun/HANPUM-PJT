@@ -11,6 +11,14 @@ export interface RouteListProps {
   writeDate: string;
 }
 
+export interface RouteDetailProps {
+  routeName: string;
+  routeContent: string;
+  writeDate: string;
+  routeScore: number;
+  routeComment: number;
+}
+
 export interface RouteDetailDayProps {
   dayNum: number;
   totalDistance: string;

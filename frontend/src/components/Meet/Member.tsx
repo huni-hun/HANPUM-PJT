@@ -1,43 +1,30 @@
 import * as S from '../Style/Meet/Member.styled';
 
-function Member() {
+interface MemberProps {
+  memberData: {
+    id: number;
+    name: string;
+    img: string;
+  }[];
+}
+
+function Member({ memberData }: MemberProps) {
   return (
     <S.MemberContainer>
       <div className="member-top">
-        <div className="title">모임맴버</div>
-        <span>인원 6/8</span>
+        <div className="title">모임 맴버</div>
+        <span>인원 {memberData.length}/8</span>
       </div>
 
       <div className="member-list">
-        <div className="member">
-          <div className="member-img"></div>
-          <div className="member-name">김땡이</div>
-        </div>
-
-        <div className="member">
-          <div className="member-img"></div>
-          <div className="member-name">김땡이</div>
-        </div>
-
-        <div className="member">
-          <div className="member-img"></div>
-          <div className="member-name">김땡이</div>
-        </div>
-
-        <div className="member">
-          <div className="member-img"></div>
-          <div className="member-name">김땡이</div>
-        </div>
-
-        <div className="member">
-          <div className="member-img"></div>
-          <div className="member-name">김땡이</div>
-        </div>
-
-        <div className="member">
-          <div className="member-img"></div>
-          <div className="member-name">김땡이</div>
-        </div>
+        {memberData.map((member) => (
+          <div className="member" key={member.id}>
+            <div className="member-img">
+              <img src={member.img} alt={member.name} />
+            </div>
+            <div className="member-name">{member.name}</div>
+          </div>
+        ))}
       </div>
     </S.MemberContainer>
   );

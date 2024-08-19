@@ -3,6 +3,7 @@ import * as S from './Header.styled';
 import Icon from '../Icon/Icon';
 import Flex from '../Flex';
 import Text from '../Text';
+import api from '@/api';
 
 interface HeaderProps {
   purpose: string;
@@ -10,15 +11,24 @@ interface HeaderProps {
   arrive?: string;
   depart?: string;
   back?: boolean;
+  clickBack: () => void;
 }
 
-const Header = ({ purpose, title, arrive, depart, back }: HeaderProps) => {
+const Header = ({
+  purpose,
+  title,
+  arrive,
+  depart,
+  back,
+  clickBack,
+}: HeaderProps) => {
   const navigate = useNavigate();
   const onClickHandler = (to: string) => {
     navigate(`/${to}`);
   };
 
   const path = useLocation().pathname.substring(1);
+  console.log(path);
 
   //  default(알림, user만 있는)
   // title(약관동의, 회원정보 등)
@@ -32,16 +42,9 @@ const Header = ({ purpose, title, arrive, depart, back }: HeaderProps) => {
     switch (purpose) {
       case 'title':
         return (
-          <Flex align="center" justify="center">
-            <Icon
-              name="IconBackArrow"
-              className="back-arrow"
-              size={15}
-              onClick={() => {
-                navigate(-1);
-              }}
-            />
-            <Text as="div" $bold={true} typography="t20">
+          <Flex $align="center" $justify="center">
+            <Icon name="IconBackArrow" className="back-arrow" size={15} />
+            <Text as="div" $bold={true} $typography="t20">
               {title}
             </Text>
           </Flex>
@@ -49,30 +52,37 @@ const Header = ({ purpose, title, arrive, depart, back }: HeaderProps) => {
 
       case 'result':
         return (
-          <Flex align="center" style={{ paddingLeft: '4.7rem' }}>
-            <Icon name="IconBackArrow" className="back-arrow" size={15} />
-            <Text as="div" $bold={true} typography="t20">
+          <Flex $align="center" style={{ paddingLeft: '4.7rem' }}>
+            <Icon
+              name="IconBackArrow"
+              className="back-arrow"
+              size={15}
+              onClick={() => {
+                clickBack();
+              }}
+            />
+            <Text as="div" $bold={true} $typography="t20">
               {title}
             </Text>
           </Flex>
         );
       case 'root':
         return (
-          <Flex align="center" justify="center">
-            <Flex direction="column" gap={4}>
-              <Text as="div" $bold={true} typography="t10" color="grey2">
+          <Flex $align="center" $justify="center">
+            <Flex direction="column" $gap={4}>
+              <Text as="div" $bold={true} $typography="t10" color="grey2">
                 출발지
               </Text>
-              <Text as="div" $bold={true} typography="t12">
+              <Text as="div" $bold={true} $typography="t12">
                 {depart}
               </Text>
             </Flex>
 
-            <Flex direction="column" gap={4}>
-              <Text as="div" $bold={true} typography="t10" color="grey2">
+            <Flex direction="column" $gap={4}>
+              <Text as="div" $bold={true} $typography="t10" color="grey2">
                 도착지
               </Text>
-              <Text as="div" $bold={true} typography="t12">
+              <Text as="div" $bold={true} $typography="t12">
                 {arrive}
               </Text>
             </Flex>
@@ -80,12 +90,12 @@ const Header = ({ purpose, title, arrive, depart, back }: HeaderProps) => {
         );
       case 'merge':
         return (
-          <Flex align="center">
+          <Flex $align="center" $justify="space-between">
             <div className="search-bar">
               <Icon name="IconSearch" size={14} />
-              <input type="text" placeholder="경로 검색" />
+              <input type="text" />
             </div>
-            <Flex gap={20} style={{ width: 'auto', marginLeft: '9px' }}>
+            <Flex $gap={20} style={{ width: 'auto', marginLeft: '9px' }}>
               <Icon
                 name="IconBookMarkInHeader"
                 size={14}
@@ -106,7 +116,7 @@ const Header = ({ purpose, title, arrive, depart, back }: HeaderProps) => {
         );
       case 'search-place':
         return (
-          <Flex style={{ marginLeft: '2rem' }} align="start">
+          <Flex style={{ marginLeft: '2rem' }} $align="start">
             <input
               className="place-input"
               style={{ height: '4.8rem' }}
@@ -118,7 +128,7 @@ const Header = ({ purpose, title, arrive, depart, back }: HeaderProps) => {
 
       case 'search':
         return (
-          <Flex style={{ marginLeft: '2rem' }} align="start">
+          <Flex style={{ marginLeft: '2rem' }} $align="start">
             <div className="search-bar">
               <Icon name="IconSearch" size={14} />
               <input type="text" />
@@ -127,14 +137,14 @@ const Header = ({ purpose, title, arrive, depart, back }: HeaderProps) => {
         );
       case 'route-detail':
         return (
-          <Flex style={{ marginLeft: '2rem' }} align="center" justify="end">
+          <Flex style={{ marginLeft: '2rem' }} $align="center" $justify="end">
             <Icon name="IconBookMarker" size={20} />
           </Flex>
         );
       default:
         return (
           <S.HeaderWrapper>
-            <Flex justify="end">
+            <Flex $justify="end">
               <Icon
                 name="IconNotification"
                 onClick={() => onClickHandler('noti')}
@@ -154,16 +164,7 @@ const Header = ({ purpose, title, arrive, depart, back }: HeaderProps) => {
   return (
     <>
       <S.HeaderWrapper>
-        {back && (
-          <Icon
-            name="IconBackArrow"
-            className="back-arrow"
-            size={15}
-            onClick={() => {
-              navigate(-1);
-            }}
-          />
-        )}
+        {back && <Icon name="IconBackArrow" className="back-arrow" size={15} />}
         {renderHeader()}
       </S.HeaderWrapper>
       {/* <Outlet /> */}

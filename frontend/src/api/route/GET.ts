@@ -1,7 +1,9 @@
 import api from '../index';
 
 export async function getRouteList(type: string) {
-  const response = await api.get(`/api/course?targetCourse=${type}`);
+  const response = await api.get(
+    `/api/course?targetCourse=${type}&size=10&page=0&sort=popularity,DESC`,
+  );
 
   return response;
 }

@@ -1,19 +1,22 @@
 import styled from 'styled-components';
+import { colors } from '@/styles/colorPalette';
 
 export const Container = styled.div`
-  width: 100vw;
+  width: 100%;
   height: 100vh;
+  .grayBox {
+    height: 35.8rem;
+    background-color: ${colors.grey1};
+  }
 `;
 
 export const HeaderContainer = styled.div`
-  width: 100vw;
   height: 10vh;
   display: flex;
   align-items: end;
 `;
 
 export const HeaderContent = styled.div`
-  width: 100vw;
   height: 2vh;
   display: flex;
   flex-direction: row;
@@ -33,7 +36,6 @@ export const HeaderIcon = styled.img<{ src: string }>`
 `;
 
 export const SchduleTypeContainer = styled.div`
-  width: 100vw;
   height: 6vh;
   display: flex;
   border-bottom: 0.2rem solid #f2f2f2;
@@ -50,15 +52,15 @@ export const SchduleTypeBox = styled.div`
 
 export const ScheduleType = styled.p<{ isSelected: boolean }>`
   font-size: 1.5rem;
-  color: ${(props) => (props.isSelected ? '#000000' : '#d9d9d9')};
+  color: ${(props) => (props.isSelected ? colors.main : colors.grey1)};
   font-weight: bold;
+  cursor: pointer;
 `;
 
 export const ScheduleMainContainer = styled.div`
-  width: 100vw;
   height: 69vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 6rem 0 0 0;
+  /* padding: 6rem 0 0 0; */
 `;
