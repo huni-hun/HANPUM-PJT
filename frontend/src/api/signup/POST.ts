@@ -44,7 +44,7 @@ export async function SignUp(signupReq: SignupRequestValues) {
   return data;
 }
 
-// 로그인TODO
+// 로그인
 export async function Login(loginId: string, password: string) {
   const { data } = await api.post('/api/auth/login', {
     loginId,

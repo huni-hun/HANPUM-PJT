@@ -1,11 +1,7 @@
+import { Token } from '@/models/user';
 import CryptoJS from 'crypto-js';
 
 const secretKey = process.env.REACT_APP_SECRET_KEY;
-
-interface Token {
-  accessToken: string;
-  refreshToken: string;
-}
 
 // 생년월일
 //2024-08-14T07:13:27.725Z -> 2024년01월14일
@@ -32,7 +28,7 @@ export function telnumberFormat(telnum: string | undefined) {
   }
 }
 
-// 토큰 암호화
+// 토큰 인코딩
 export function encodeToken(accessToken: string, refreshToken: string) {
   if (secretKey) {
     // console.log(CryptoJS.AES.encrypt(token, secretKey).toString());
@@ -40,12 +36,12 @@ export function encodeToken(accessToken: string, refreshToken: string) {
       accessToken: CryptoJS.AES.encrypt(accessToken, secretKey).toString(),
       refreshToken: CryptoJS.AES.encrypt(refreshToken, secretKey).toString(),
     };
-    console.log('암호화한 토큰 ::', token);
     return token;
     // return CryptoJS.AES.encrypt(token, secretKey).toString();
   }
 }
 
+// 토큰 디코딩
 export function decodeToken(tokenObj: Token) {
   if (secretKey) {
     const accesssTokenBytes = CryptoJS.AES.decrypt(
@@ -61,7 +57,6 @@ export function decodeToken(tokenObj: Token) {
       refreshToken: refreshTokenBytes.toString(CryptoJS.enc.Utf8),
     };
 
-    console.log('디코딩한 토큰 ::', byteTokenObj);
     return byteTokenObj;
   }
 }

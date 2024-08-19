@@ -1,3 +1,4 @@
+import { decodeToken } from '@/utils/util';
 import axios from 'axios';
 
 const api = axios.create({
@@ -5,11 +6,23 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const access_token = localStorage.getItem('accesstoken');
+  try {
+    const token = localStorage.getItem('token');
 
-  if (access_token) {
-    config.headers.Authorization = `Bearer ${access_token}`;
+    if (token) {
+      const tokenObj = decodeToken(JSON.parse(token));
+
+      // console.log(tokenObj);
+
+      if (tokenObj) {
+        const { accessToken } = tokenObj;
+        config.headers.Authorization = `Bearer ${accessToken}`;
+      }
+    }
+  } catch (error) {
+    console.error('Error parsing token from localStorage:', error);
   }
+
   return config;
 });
 

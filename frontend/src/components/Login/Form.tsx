@@ -15,7 +15,6 @@ import { isAuthEnticatedAtom } from '@/atoms/isAuthEnticatedAtom';
 
 const Form = () => {
   const setIsAuthenticated = useSetRecoilState(isAuthEnticatedAtom);
-  const navigate = useNavigate();
   const [loginReq, setLoginReq] = useState({
     loginId: '',
     password: '',
@@ -38,7 +37,10 @@ const Form = () => {
         if (res.status === STATUS.success) {
           const { accessToken, refreshToken } = res.data.tokenResDto;
           toast.success(res.message);
-          const token = encodeToken(accessToken, refreshToken);
+          const token = encodeToken(
+            accessToken.replace('Bearer', ''),
+            refreshToken.replace('Bearer', ''),
+          );
           localStorage.setItem('token', JSON.stringify(token));
           setIsAuthenticated(true);
         }
