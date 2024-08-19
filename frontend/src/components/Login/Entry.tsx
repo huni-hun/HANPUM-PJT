@@ -24,40 +24,42 @@ function Entry({ setInit }: { setInit: Dispatch<SetStateAction<boolean>> }) {
           한품과 함께해요!
         </Text>
       </Flex>
-      <div className="round_bg">
-        <div className="circle"></div>
-        <img src={flag} alt="" className="flag_img" />
-        <img src={human} alt="" className="human_img" />
-        <div className="login_group">
-          <div className="kakao_login">
-            <Icon name="IconKakaoLogo" />
-            <span>카카오로 시작하기</span>
-          </div>
-          <div
-            className="local_login"
-            onClick={() => {
-              setInit(false);
-            }}
-          >
-            일반회원으로 시작하기
-          </div>
-          <div className="login_group-find">
-            <Text
-              $typography="t12"
+      <div className="round">
+        <div className="round_bg">
+          <div className="circle"></div>
+          <img src={flag} alt="" className="flag_img" />
+          <img src={human} alt="" className="human_img" />
+          <div className="login_group">
+            <div className="kakao_login">
+              <Icon name="IconKakaoLogo" />
+              <span>카카오로 시작하기</span>
+            </div>
+            <div
+              className="local_login"
               onClick={() => {
-                navigate('/find/:id');
+                setInit(false);
               }}
             >
-              아이디 찾기
-            </Text>
-            <Text
-              $typography="t12"
-              onClick={() => {
-                navigate('/find/:pw');
-              }}
-            >
-              비밀번호 찾기
-            </Text>
+              일반회원으로 시작하기
+            </div>
+            <div className="login_group-find">
+              <Text
+                $typography="t12"
+                onClick={() => {
+                  navigate('/find/:id');
+                }}
+              >
+                아이디 찾기
+              </Text>
+              <Text
+                $typography="t12"
+                onClick={() => {
+                  navigate('/find/:pw');
+                }}
+              >
+                비밀번호 찾기
+              </Text>
+            </div>
           </div>
         </div>
       </div>
