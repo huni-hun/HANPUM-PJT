@@ -1,6 +1,8 @@
 package backend.hanpum.exception.handler;
 
 import backend.hanpum.exception.exception.auth.*;
+import backend.hanpum.exception.exception.common.JsonBadMappingException;
+import backend.hanpum.exception.exception.common.JsonBadProcessingException;
 import backend.hanpum.exception.exception.course.CourseDayNotFoundException;
 import backend.hanpum.exception.exception.course.CourseListNotFoundException;
 import backend.hanpum.exception.exception.course.CourseNotFoundException;
@@ -26,6 +28,21 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(TestNotFoundException.class)
     protected ResponseEntity<?> handle(TestNotFoundException e) {
         log.error("TestNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    /* 공통 */
+    @ExceptionHandler(JsonBadMappingException.class)
+    protected ResponseEntity<?> handle(JsonBadMappingException e) {
+        log.error("JsonBadMappingException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(JsonBadProcessingException.class)
+    protected ResponseEntity<?> handle(JsonBadProcessingException e) {
+        log.error("JsonBadProcessingException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }

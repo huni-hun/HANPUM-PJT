@@ -11,6 +11,11 @@ public enum ErrorCode {
     /* 예시 */
     TEST_NOT_FOUND(HttpStatus.NOT_FOUND, "NOT FOUND 에러 예시용 테스트 코드 입니다."),
 
+    /* 공통 */
+    JSON_MAPPING_ERROR(HttpStatus.BAD_REQUEST, "JSON 매핑 중 오류가 발생했습니다. JSON 구조와 Java 객체 간의 불일치로 인해 매핑이 실패하는 경우 발생합니다."),
+    JSON_PROCESSING_ERROR(HttpStatus.BAD_REQUEST, "JSON 처리 중 오류가 발생했습니다. JSON 데이터의 직렬화 또는 역직렬화 과정에서 발생하는 일반적인 예외입니다."),
+    URI_SYNTAX_ERROR(HttpStatus.BAD_REQUEST, "URI로 변환도중 오류가 발생했습니다. URI의 형식이나 구문이 잘못되어 URI 객체를 생성할 수 없는 경우에 이 예외가 발생합니다"),
+
     /* 일정 */
     SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 일정이 없습니다."),
     GROUP_SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 모임 일정이 없습니다."),
