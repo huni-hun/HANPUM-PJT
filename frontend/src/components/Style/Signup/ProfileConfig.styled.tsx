@@ -7,6 +7,8 @@ export const ProfileConfigContainer = styled.div`
   padding: 0 24px;
   padding-bottom: 10vh;
 
+  background-color: ${colors.white};
+
   .profile {
     display: flex;
     align-items: center;

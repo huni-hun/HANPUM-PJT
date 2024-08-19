@@ -4,7 +4,7 @@ import { atom } from 'recoil';
 export const signupStepAtom = atom<SignupStep>({
   key: 'signupStep',
   default: {
-    currStep: 2,
+    currStep: 3,
     totalStep: 3,
   },
 });

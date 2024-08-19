@@ -1,5 +1,6 @@
 import { signupStepAtom } from '@/atoms/signupStepAtom';
 import Header from '@/components/common/Header/Header';
+import Finish from '@/components/Signup/Finish';
 import ProfileConfig from '@/components/Signup/ProfileConfig';
 import Terms from '@/components/Signup/Terms';
 import UserInfo from '@/components/Signup/UserInfo';
@@ -63,13 +64,18 @@ const SignupPage = () => {
     <SignUpPageContainer>
       <Header
         purpose="title"
-        title={
-          step.currStep === 0
-            ? '약관 동의'
-            : step.currStep === 1
-              ? '기본정보'
-              : '프로필 설정'
-        }
+        title={(() => {
+          switch (step.currStep) {
+            case 0:
+              return '약관 동의';
+            case 1:
+              return '기본정보';
+            case 2:
+              return '프로필 설정';
+            case 3:
+              return '';
+          }
+        })()}
         clickBack={() => {
           if (step.currStep > 0) {
             setStep((prevStep) => ({
@@ -97,9 +103,10 @@ const SignupPage = () => {
           setFormValues={setFormValues}
           formValues={formValues}
           pagenation={renderPagenation}
-          // clickNext={clickNext}
+          clickNext={clickNext}
         />
       )}
+      {step.currStep === 3 && <Finish name={formValues.name || ''} />}
     </SignUpPageContainer>
   );
 };
@@ -108,7 +115,7 @@ export default SignupPage;
 
 const SignUpPageContainer = styled.div`
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   background-color: ${colors.white};
 
   .pagenation {

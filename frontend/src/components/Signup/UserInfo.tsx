@@ -37,13 +37,6 @@ function UserInfo({
   setFormValues: Dispatch<SetStateAction<Partial<SignupRequestValues>>>;
   formValues: Partial<UserSignupFormValues>;
 }) {
-  // const setStep = useSetRecoilState(signupStepAtom);
-
-  // 회원 정보에만 있는 state
-  // const [infoValues, setInfoValues] = useState<Partial<UserSignupFormValues>>(
-  //   {},
-  // );
-
   const [checkIdErrorMessage, setCheckIdErrorMessage] = useState<string | null>(
     null,
   );
@@ -59,16 +52,7 @@ function UserInfo({
     Partial<Record<keyof UserSignupFormValues, boolean>>
   >({});
 
-  // TODO checked랑 message로 타입 수정 terms 처럼
-  // const [isSend, setIsSend] = useState<Partial<CertificationValidate>>({
-  //   checkId: false,
-  //   checkEmail: false,
-  //   checkComplete: false,
-  // });
-
   const [time, setTime] = useState(300);
-
-  // const [isComplete, setIsComplete] = useState(false);
 
   const handleInfoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -87,9 +71,7 @@ function UserInfo({
     }));
   };
 
-  // TODO ValidateMessage로 타입 수정
   // 인증 및 필드 유효성 검사
-  // console.log('formValues ::', formValues);
   const validate = useMemo(() => {
     let errors: Partial<UserSignupFormValues> = {};
 
@@ -116,6 +98,7 @@ function UserInfo({
       errors.checkPassword = '비밀번호가 일치하지 않습니다.';
     }
 
+    // 이름 유효성 검사
     if ((formValues.name?.trim() || '').length === 0) {
       errors.name = '이름을 입력해주세요.';
     }
@@ -133,20 +116,17 @@ function UserInfo({
       errors.checkLoginId = checkIdErrorMessage;
     }
 
+    // 인증코드 전송 확인 에러
     if (checkEmailMessage) {
       errors.checkEmail = checkEmailMessage;
     }
 
+    // 이메일 인증 확인 에러
     if ((formValues.inputAuthCode?.trim() || '')?.length === 0) {
       errors.inputAuthCode = '인증번호를 입력해주세요.';
     } else if (checkInputCodeMessage) {
       errors.inputAuthCode = checkInputCodeMessage;
     }
-
-    // if (!infoValue.inputAuthCode) {
-    //   errors.inputAuthCode = '인증번호를 입력해 주세요.';
-    // }
-    // console.log('errors::', errors);
     return errors;
   }, [
     formValues,
@@ -190,7 +170,6 @@ function UserInfo({
     CheckEmail,
     {
       onSuccess: (res) => {
-        // console.log(res);
         if (res.status === STATUS.success) {
           toast.success(res.message);
           setCheckEmailMessage(null);
@@ -220,7 +199,6 @@ function UserInfo({
       CertificationEmail(email, inputAuthCode),
     {
       onSuccess: (res) => {
-        // console.log(res);
         if (res.status === STATUS.success) {
           toast.success(res.message);
           setCheckInputcodeMessage(null);
@@ -269,10 +247,6 @@ function UserInfo({
     // TODO UI 수정
     return <div>...메일 전송중</div>;
   }
-
-  // console.log('dirty ::', dirty);
-  // console.log('validate ::', validate);
-  // console.log(Boolean(validate.email));
 
   console.log(formValues);
   return (

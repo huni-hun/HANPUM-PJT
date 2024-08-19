@@ -32,12 +32,13 @@ function ProfileConfig({
   pagenation,
   setFormValues,
   formValues,
+  clickNext,
 }: {
   pagenation: () => React.ReactNode;
   setFormValues: Dispatch<SetStateAction<Partial<SignupRequestValues>>>;
   formValues: Partial<UserSignupFormValues>;
+  clickNext: () => void;
 }) {
-  // const setStep = useSetRecoilState(signupStepAtom);
   const genderList: Gender[] = [
     {
       label: '남성',
@@ -96,11 +97,6 @@ function ProfileConfig({
 
   // gender
   const handleClickGender = (value: string) => {
-    // setformValues((prevValue) => ({
-    //   ...prevValue,
-    //   gender: value,
-    // }));
-
     setFormValues((prevValue) => ({
       ...prevValue,
       gender: value,
@@ -111,7 +107,7 @@ function ProfileConfig({
     }
   };
 
-  // 달력
+  // birthDate
   const handleDate = (birthDate: string) => {
     setFormValues((prevValue) => ({
       ...prevValue,
@@ -198,8 +194,6 @@ function ProfileConfig({
       errors.phoneNumber = '유효한 휴대폰번호 형식을 입력해 주세요.';
     }
 
-    // console.log(errors);
-
     return errors;
   }, [formValues, chcekNicknameMessage]);
 
@@ -210,6 +204,7 @@ function ProfileConfig({
       console.log(res);
       if (res.status === STATUS.success) {
         toast.success(res.message);
+        clickNext();
       }
       if (res.status === STATUS.error) {
         toast.error(res.message);
@@ -366,7 +361,7 @@ function ProfileConfig({
       )}
 
       <FixedBottomButton
-        label="회원가입"
+        label="확인"
         onClick={() => {
           submitTemp();
         }}
