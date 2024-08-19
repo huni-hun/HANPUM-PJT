@@ -1,6 +1,7 @@
 package backend.hanpum.domain.member.service;
 
 import backend.hanpum.config.redis.RedisDao;
+import backend.hanpum.config.s3.S3ImageService;
 import backend.hanpum.domain.member.dto.requestDto.UpdateMemberInfoReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdateNicknameReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdatePasswordReqDto;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +22,7 @@ public class MemberServiceImpl implements MemberService{
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final S3ImageService s3ImageService;
     private final RedisDao redisDao;
 
     @Override
@@ -66,5 +69,17 @@ public class MemberServiceImpl implements MemberService{
                 updateMemberInfoReqDto.getBirthDate(),
                 updateMemberInfoReqDto.getGender(),
                 updateMemberInfoReqDto.getPhoneNumber());
+    }
+
+    @Override
+    @Transactional
+    public void updateMemberProfileImg(Long memberId, MultipartFile multipartFile) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        if(!multipartFile.isEmpty()){
+            String currentImage = member.getProfilePicture();
+            String updateImage = s3ImageService.uploadImage(multipartFile);
+            member.updateProfilePicture(updateImage);
+            s3ImageService.deleteImage(currentImage);
+        }
     }
 }

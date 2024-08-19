@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Member 컨트롤러", description = "Member Controller API")
 @RestController
@@ -34,6 +35,14 @@ public class MemberController {
         MemberProfileResDto memberProfileResDto =
                 memberService.getMemberProfile(userDetails.getMember().getMemberId());
         return response.success(ResponseCode.MEMBER_PROFILE_FETCHED, memberProfileResDto);
+    }
+
+    @Operation(summary = "프로필 이미지 변경", description = "프로필 이미지 변경 API")
+    @PutMapping("/image-update")
+    public ResponseEntity<?> updateMemberProfileImg(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                            @RequestPart MultipartFile multipartFile) {
+        memberService.updateMemberProfileImg(userDetails.getMember().getMemberId(), multipartFile);
+        return response.success(ResponseCode.PROFILE_IMAGE_UPDATE_SUCCESS);
     }
 
     @Operation(summary = "닉네임 변경", description = "닉네임 변경 API")
