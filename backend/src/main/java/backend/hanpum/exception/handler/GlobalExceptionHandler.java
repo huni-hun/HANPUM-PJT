@@ -1,5 +1,8 @@
 package backend.hanpum.exception.handler;
 
+import backend.hanpum.exception.exception.s3.FileDeleteFailedException;
+import backend.hanpum.exception.exception.s3.FileFormatUnsupportedException;
+import backend.hanpum.exception.exception.s3.FilePutFailedException;
 import backend.hanpum.exception.exception.auth.*;
 import backend.hanpum.exception.exception.common.JsonBadMappingException;
 import backend.hanpum.exception.exception.common.JsonBadProcessingException;
@@ -153,6 +156,28 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(GroupPermissionException.class)
     protected ResponseEntity<?> handle(GroupPermissionException e) {
         log.error("GroupPermissionException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    /* 이미지 업로드 */
+    @ExceptionHandler(FileFormatUnsupportedException.class)
+    protected ResponseEntity<?> handle(FileFormatUnsupportedException e) {
+        log.error("FileFormatUnsupportedException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(FilePutFailedException.class)
+    protected ResponseEntity<?> handle(FilePutFailedException e) {
+        log.error("FilePutFailedException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(FileDeleteFailedException.class)
+    protected ResponseEntity<?> handle(FileDeleteFailedException e) {
+        log.error("FileDeleteFailedException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }
