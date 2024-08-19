@@ -10,8 +10,11 @@ import { AxiosError } from 'axios';
 
 import { encodeToken } from '@/utils/util';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { isAuthEnticatedAtom } from '@/atoms/isAuthEnticatedAtom';
 
 const Form = () => {
+  const setIsAuthenticated = useSetRecoilState(isAuthEnticatedAtom);
   const navigate = useNavigate();
   const [loginReq, setLoginReq] = useState({
     loginId: '',
@@ -37,7 +40,7 @@ const Form = () => {
           toast.success(res.message);
           const token = encodeToken(accessToken, refreshToken);
           localStorage.setItem('token', JSON.stringify(token));
-          navigate('/');
+          setIsAuthenticated(true);
         }
         if (res.status === STATUS.error) {
           toast.error(res.message);
