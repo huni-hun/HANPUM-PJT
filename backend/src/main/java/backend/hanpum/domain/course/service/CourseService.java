@@ -2,10 +2,7 @@ package backend.hanpum.domain.course.service;
 
 import backend.hanpum.domain.course.dto.requestDto.EditCourseReqDto;
 import backend.hanpum.domain.course.dto.requestDto.MakeCourseReqDto;
-import backend.hanpum.domain.course.dto.responseDto.CourseDetailResDto;
-import backend.hanpum.domain.course.dto.responseDto.CourseListMapResDto;
-import backend.hanpum.domain.course.dto.responseDto.CourseReviewResDto;
-import backend.hanpum.domain.course.dto.responseDto.GetCourseDayResDto;
+import backend.hanpum.domain.course.dto.responseDto.*;
 import backend.hanpum.domain.course.enums.CourseTypes;
 import org.springframework.data.domain.Pageable;
 
@@ -26,4 +23,5 @@ public interface CourseService {
     void deleteCourseReview(Long courseId);
     void addCourseUsageHistory(Long courseId, Long memberId);
     void updateCourseUsageHistory(Long courseId, Long memberId, Double progressRate);
+    List<AttractionResDto> searchAttractionsByKeyword(String keyword, Integer contentType);
 }

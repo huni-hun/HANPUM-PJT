@@ -1,30 +1,40 @@
 package backend.hanpum.domain.course.service;
 
 import backend.hanpum.domain.course.dto.requestDto.*;
-import backend.hanpum.domain.course.dto.responseDto.CourseDetailResDto;
-import backend.hanpum.domain.course.dto.responseDto.CourseListMapResDto;
-import backend.hanpum.domain.course.dto.responseDto.CourseReviewResDto;
-import backend.hanpum.domain.course.dto.responseDto.GetCourseDayResDto;
+import backend.hanpum.domain.course.dto.responseDto.*;
 import backend.hanpum.domain.course.entity.*;
 import backend.hanpum.domain.course.enums.CourseTypes;
 import backend.hanpum.domain.course.repository.*;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.auth.MemberNotFoundException;
+import backend.hanpum.exception.exception.common.JsonBadMappingException;
+import backend.hanpum.exception.exception.common.JsonBadProcessingException;
+import backend.hanpum.exception.exception.common.UriBadSyntaxException;
 import backend.hanpum.exception.exception.course.CourseDayNotFoundException;
 import backend.hanpum.exception.exception.course.CourseListNotFoundException;
 import backend.hanpum.exception.exception.course.CourseNotFoundException;
 import backend.hanpum.exception.exception.course.CourseReviewsNotFoundException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -40,6 +50,9 @@ public class CourseServiceImpl implements CourseService {
     private final AttractionRepository attractionRepository;
     private final WaypointRepository waypointRepository;
     private final CourseUsageHistoryRepository courseUsageHistoryRepository;
+
+    @Value("${api.serviceKey}")
+    private String serviceKey;
 
     @Override
     @Transactional(readOnly = true)
@@ -464,6 +477,64 @@ public class CourseServiceImpl implements CourseService {
 
         Date currentDate = new Date();
         courseUsageHistory.updateHistoryState(currentDate, false, achieveRate);
+    }
+
+    @Override
+    public List<AttractionResDto> searchAttractionsByKeyword(String keyword, Integer contentType) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<?> entity = new HttpEntity<>(new HttpHeaders());
+
+        String BASE_URL = "https://apis.data.go.kr/B551011/KorService1";
+        String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/searchKeyword1")
+                .queryParam("serviceKey", serviceKey)
+                .queryParam("numOfRows", 10)
+                .queryParam("pageNo", 1)
+                .queryParam("MobileOS", "ETC")
+                .queryParam("MobileApp", "HANPUM")
+                .queryParam("_type", "json")
+                .queryParam("listYN", "Y")
+                .queryParam("arrange", "O")
+                .queryParam("keyword", keyword)
+                .queryParam("contentTypeId", contentType)
+                .toUriString();
+
+        URI uri = null;
+        try {
+            uri = new URI(url);
+        } catch (URISyntaxException e) {
+            throw new UriBadSyntaxException();
+        }
+
+        ResponseEntity<String> resultMap = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode root = null;
+        try {
+            root = objectMapper.readTree(resultMap.getBody());
+        } catch (JsonMappingException e) {
+            throw new JsonBadMappingException();
+        } catch (JsonProcessingException e) {
+            throw new JsonBadProcessingException();
+        }
+
+        JsonNode items = root.path("response").path("body").path("items").path("item");
+        List<AttractionResDto> attractions = new ArrayList<>();
+        if (items.isArray()) {
+            for (JsonNode item : items) {
+                AttractionResDto attraction = AttractionResDto.builder()
+                        .attractionId(null)
+                        .name(item.path("title").asText())
+                        .type(item.path("contenttypeid").asText())
+                        .address(item.path("addr1").asText())
+                        .lat(Float.parseFloat(item.path("mapx").asText()))
+                        .lon(Float.parseFloat(item.path("mapy").asText()))
+                        .img(item.path("firstimage").asText())
+                        .build();
+                attractions.add(attraction);
+            }
+        }
+
+        return attractions;
     }
 
 }

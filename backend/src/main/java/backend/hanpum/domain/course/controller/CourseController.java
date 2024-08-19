@@ -1,12 +1,7 @@
 package backend.hanpum.domain.course.controller;
 
-import backend.hanpum.domain.course.dto.requestDto.CourseReviewReqDto;
-import backend.hanpum.domain.course.dto.requestDto.EditCourseReqDto;
-import backend.hanpum.domain.course.dto.requestDto.MakeCourseReqDto;
-import backend.hanpum.domain.course.dto.responseDto.CourseDetailResDto;
-import backend.hanpum.domain.course.dto.responseDto.CourseListMapResDto;
-import backend.hanpum.domain.course.dto.responseDto.CourseReviewResDto;
-import backend.hanpum.domain.course.dto.responseDto.GetCourseDayResDto;
+import backend.hanpum.domain.course.dto.requestDto.*;
+import backend.hanpum.domain.course.dto.responseDto.*;
 import backend.hanpum.domain.course.enums.CourseTypes;
 import backend.hanpum.domain.course.service.CourseService;
 import backend.hanpum.exception.format.code.ApiResponse;
@@ -14,7 +9,6 @@ import backend.hanpum.exception.format.response.ResponseCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -161,5 +155,13 @@ public class CourseController {
         courseService.deleteCourseReview(courseId);
 
         return response.success(ResponseCode.COURSE_REVIEWS_DELETE_SUCCESS);
+    }
+
+    @Operation(summary = "경로생성 관광지 조회", description = "경로생성 관광지 조회 API")
+    @PostMapping("/search/attraction")
+    public ResponseEntity<?> searchAttractionList(@RequestBody SearchAttractionReqDto searchAttractionReqDto) {
+        List<AttractionResDto> attractionResDtoList = courseService.searchAttractionsByKeyword(searchAttractionReqDto.getKeyword(), searchAttractionReqDto.getContentTypeId());
+
+        return response.success(ResponseCode.COURSE_REVIEWS_DELETE_SUCCESS, attractionResDtoList);
     }
 }
