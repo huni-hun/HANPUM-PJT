@@ -1,3 +1,12 @@
+import CryptoJS from 'crypto-js';
+
+const secretKey = process.env.REACT_APP_SECRET_KEY;
+
+interface Token {
+  accessToken: string;
+  refreshToken: string;
+}
+
 // 생년월일
 //2024-08-14T07:13:27.725Z -> 2024년01월14일
 export function dateFormat(date: string | undefined) {
@@ -8,14 +17,10 @@ export function dateFormat(date: string | undefined) {
   }
 }
 
+// 휴대전화 - 붙이기
 export function telnumberFormat(telnum: string | undefined) {
   if (telnum) {
     telnum = telnum.replace(/\D/g, '');
-
-    // 11자리가 넘어가면 마지막 자리를 잘라내기
-    // if (telnum.length > 11) {
-    //   telnum = telnum.substring(0, 11);
-    // }
 
     if (telnum.length <= 3) {
       return telnum;
@@ -24,5 +29,39 @@ export function telnumberFormat(telnum: string | undefined) {
     } else {
       return `${telnum.slice(0, 3)}-${telnum.slice(3, 7)}-${telnum.slice(7, 11)}`;
     }
+  }
+}
+
+// 토큰 암호화
+export function encodeToken(accessToken: string, refreshToken: string) {
+  if (secretKey) {
+    // console.log(CryptoJS.AES.encrypt(token, secretKey).toString());
+    const token = {
+      accessToken: CryptoJS.AES.encrypt(accessToken, secretKey).toString(),
+      refreshToken: CryptoJS.AES.encrypt(refreshToken, secretKey).toString(),
+    };
+    console.log('암호화한 토큰 ::', token);
+    return token;
+    // return CryptoJS.AES.encrypt(token, secretKey).toString();
+  }
+}
+
+export function decodeToken(tokenObj: Token) {
+  if (secretKey) {
+    const accesssTokenBytes = CryptoJS.AES.decrypt(
+      tokenObj.accessToken,
+      secretKey,
+    );
+    const refreshTokenBytes = CryptoJS.AES.decrypt(
+      tokenObj.refreshToken,
+      secretKey,
+    );
+    const byteTokenObj = {
+      accessToken: accesssTokenBytes.toString(CryptoJS.enc.Utf8),
+      refreshToken: refreshTokenBytes.toString(CryptoJS.enc.Utf8),
+    };
+
+    console.log('디코딩한 토큰 ::', byteTokenObj);
+    return byteTokenObj;
   }
 }
