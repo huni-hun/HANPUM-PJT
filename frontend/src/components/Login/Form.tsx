@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useMemo, useState } from 'react';
 import TextField from '../common/TextField/TextField';
 import FixedBottomButton from '../common/FixedBottomButton';
 import * as S from '../Style/Login/Form.styled';
@@ -9,7 +9,6 @@ import { STATUS } from '@/constants';
 import { AxiosError } from 'axios';
 
 import { encodeToken } from '@/utils/util';
-import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { isAuthEnticatedAtom } from '@/atoms/isAuthEnticatedAtom';
 

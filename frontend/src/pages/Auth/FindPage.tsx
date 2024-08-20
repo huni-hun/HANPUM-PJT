@@ -2,8 +2,9 @@ import FixedBottomButton from '@/components/common/FixedBottomButton';
 import Header from '@/components/common/Header/Header';
 import Text from '@/components/common/Text';
 import TextField from '@/components/common/TextField/TextField';
+import { UserSignupFormValues } from '@/models/signup';
 import { colors } from '@/styles/colorPalette';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -41,6 +42,38 @@ function FindPage() {
     }));
   };
 
+  const [dirty, setDirty] = useState<
+    Partial<Record<keyof UserSignupFormValues, boolean>>
+  >({});
+
+  const handleBlur = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name } = e.target;
+    setDirty((prev) => ({
+      ...prev,
+      [name]: 'true',
+    }));
+  };
+
+  const validate = useMemo(() => {
+    let errors: Partial<UserSignupFormValues> = {};
+
+    if ((findIdReq.name?.trim() || '').length === 0) {
+      errors.name = '이름을 입력해주세요.';
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if ((findIdReq.email?.trim() || '').length === 0) {
+      errors.email = '이메일을 입력해주세요.';
+    } else if (!emailPattern.test(findIdReq.email?.trim() || '')) {
+      errors.email = '유효한 이메일 형식을 입력해 주세요.';
+    }
+
+    const loginIdPattern = /^[a-zA-Z0-9]{6,13}$/;
+    if (!loginIdPattern.test(findPwReq.loginId?.trim() || '')) {
+      errors.loginId = '※영문과 숫자를 조합하여 6~13자로 입력해 주세요.';
+    }
+  }, [findIdReq, findPwReq]);
+
   return (
     <FindPageContainer>
       <Header
@@ -63,6 +96,7 @@ function FindPage() {
           onChange={param === 'id' ? handleIdReq : handlePwReq}
           value={param === 'id' ? findIdReq.name : findPwReq.loginId}
           style={{ marginBottom: '24px' }}
+          onBlur={handleBlur}
         />
         <TextField
           label="이메일"
@@ -70,6 +104,7 @@ function FindPage() {
           placeholder="123456@naver.com"
           onChange={param === 'id' ? handleIdReq : handlePwReq}
           value={param === 'id' ? findIdReq.email : findPwReq.email}
+          onBlur={handleBlur}
         />
       </div>
       <FixedBottomButton
