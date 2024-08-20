@@ -1,3 +1,22 @@
+/** 첫번째 피드같이 생긴 유형 props추가 */
+export interface FeedProps {
+  routeData: {
+    routeName?: string;
+    routeContent?: string;
+    routeScore?: number;
+    routeComment?: string;
+  } | null;
+}
+
+export interface FeedInfoProps {
+  router?: string;
+  feedInfoTitle: string;
+  startDate: string;
+  endDate: string;
+  totalDistance: number;
+  dayData: { dayNum: number }[];
+}
+
 export interface RouteListProps {
   routeName: string;
   routeContent: string;
