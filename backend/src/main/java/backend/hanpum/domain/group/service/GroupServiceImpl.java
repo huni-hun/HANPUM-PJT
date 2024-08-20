@@ -151,6 +151,18 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public void exileGroupMember(Long memberId, Long groupMemberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        GroupMember groupLeader = member.getGroupMember();
+        if(groupLeader.getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
+        GroupMember groupMember = groupMemberRepository.findById(groupMemberId).orElseThrow(GroupMemberNotFoundException::new);
+        if(groupLeader.getGroup() == groupMember.getGroup()) {
+            groupMember.getMember().updateGroupMember(null);
+            groupMemberRepository.delete(groupMember);
+        }
+    }
+
+    @Override
     @Transactional
     public boolean likeGroup(Long memberId, Long groupId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);

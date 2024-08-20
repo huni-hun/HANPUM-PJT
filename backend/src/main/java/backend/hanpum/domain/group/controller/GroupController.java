@@ -94,6 +94,14 @@ public class GroupController {
         return response.success(ResponseCode.GROUP_MEMBER_LIST_FETCHED, groupMemberListGetResDto);
     }
 
+    @Operation(summary = "모임 멤버 추방", description = "모임 멤버 추방 API")
+    @DeleteMapping("/member/{groupMemberId}/exile")
+    public ResponseEntity<?> exileGroupMember(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                               @PathVariable Long groupMemberId) {
+        groupService.exileGroupMember(userDetails.getMember().getMemberId(), groupMemberId);
+        return response.success(ResponseCode.GROUP_MEMBER_EXILE_SUCCESS);
+    }
+
     @Operation(summary = "모임 관심 목록 등록", description = "모임 관심 목록 등록 API")
     @PostMapping("/{groupId}/like")
     public ResponseEntity<?> likeGroup(@AuthenticationPrincipal UserDetailsImpl userDetails,

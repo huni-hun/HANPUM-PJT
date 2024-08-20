@@ -47,6 +47,7 @@ public enum ResponseCode {
     GROUP_APPLY_ACCEPT_SUCCESS(HttpStatus.OK, "모임 신청 수락이 성공적으로 완료되었습니다."),
     GROUP_APPLY_DECLINE_SUCCESS(HttpStatus.OK, "모임 신청 거절이 성공적으로 완료되었습니다."),
     GROUP_MEMBER_LIST_FETCHED(HttpStatus.OK, "모임 멤버 리스트가 성공적으로 조회되었습니다."),
+    GROUP_MEMBER_EXILE_SUCCESS(HttpStatus.OK, "모임 멤버 추방이 성공적으로 완료되었습니다."),
     GROUP_LIKE_SUCCESS(HttpStatus.OK, "모임 관심 목록 등록이 성공적으로 완료되었습니다."),
     GROUP_UNLIKE_SUCCESS(HttpStatus.OK, "모임 관심 목록 삭제가 성공적으로 완료되었습니다."),
 
