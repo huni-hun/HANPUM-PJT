@@ -142,6 +142,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public GroupMemberListGetResDto getGroupMemberList(Long memberId, Long groupId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
@@ -151,6 +152,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    @Transactional
     public void exileGroupMember(Long memberId, Long groupMemberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         GroupMember groupLeader = member.getGroupMember();
