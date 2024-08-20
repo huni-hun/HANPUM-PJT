@@ -60,10 +60,10 @@ pipeline {
                                 wget -O ${PROJECT_NAME}/${BACKEND_DIR}/src/main/resources/application.yml --header="Authorization: token ${GITHUB_TOKEN}" "https://raw.githubusercontent.com/HANPUM-PJT/config/main/application.yml"
                             """
                         } else if (env.COMMIT_MESSAGE.contains("[FE]")) {
-                            echo ".env downloading..."
+                            echo ".env, .npmrc downloading..."
                             sh """
                                 wget -O ${PROJECT_NAME}/${FRONTEND_DIR}/.env --header="Authorization: token ${GITHUB_TOKEN}" "https://raw.githubusercontent.com/HANPUM-PJT/config/main/.env"
-                                wget -O ${PROJECT_NAME}/${FRONTEND_DIR}/.env --header="Authorization: token ${GITHUB_TOKEN}" "https://raw.githubusercontent.com/HANPUM-PJT/config/main/.npmrc"
+                                wget -O ${PROJECT_NAME}/${FRONTEND_DIR}/.npmrc --header="Authorization: token ${GITHUB_TOKEN}" "https://raw.githubusercontent.com/HANPUM-PJT/config/main/.npmrc"
                             """
                         }
                     }
