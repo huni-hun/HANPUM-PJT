@@ -142,6 +142,29 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public GroupMemberListGetResDto getGroupMemberList(Long memberId, Long groupId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
+        if(member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
+        List<GroupMemberResDto> groupMemberList = groupMemberRepositoryCustom.findGroupMemberList(groupId);
+        return GroupMemberListGetResDto.builder().groupMemberResList(groupMemberList).build();
+    }
+
+    @Override
+    @Transactional
+    public void exileGroupMember(Long memberId, Long groupMemberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        GroupMember groupLeader = member.getGroupMember();
+        if(groupLeader.getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
+        GroupMember groupMember = groupMemberRepository.findById(groupMemberId).orElseThrow(GroupMemberNotFoundException::new);
+        if(groupLeader.getGroup() == groupMember.getGroup()) {
+            groupMember.getMember().updateGroupMember(null);
+            groupMemberRepository.delete(groupMember);
+        }
+    }
+
+    @Override
     @Transactional
     public boolean likeGroup(Long memberId, Long groupId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
