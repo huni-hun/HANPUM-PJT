@@ -35,6 +35,7 @@ public enum ResponseCode {
     COURSE_REVIEWS_WRITE_SUCCESS(HttpStatus.OK, "경로 리뷰 작성이 성공적으로 완료되었습니다."),
     COURSE_REVIEWS_EDIT_SUCCESS(HttpStatus.OK, "경로 리뷰 수정이 성공적으로 완료되었습니다."),
     COURSE_REVIEWS_DELETE_SUCCESS(HttpStatus.OK, "경로 리뷰 삭제가 성공적으로 완료되었습니다."),
+    SEARCH_ATTRACTION_RESTAPI_SUCCESS(HttpStatus.OK, "한국관광공사 관광지 데이터가 성공적으로 검색되었습니다."),
 
     /* 모임 */
     GROUP_CREATED_SUCCESS(HttpStatus.OK, "모임이 성공적으로 생성되었습니다."),
@@ -45,6 +46,8 @@ public enum ResponseCode {
     GROUP_APPLY_LIST_FETCHED(HttpStatus.OK, "모임 신청 리스트가 성공적으로 조회되었습니다."),
     GROUP_APPLY_ACCEPT_SUCCESS(HttpStatus.OK, "모임 신청 수락이 성공적으로 완료되었습니다."),
     GROUP_APPLY_DECLINE_SUCCESS(HttpStatus.OK, "모임 신청 거절이 성공적으로 완료되었습니다."),
+    GROUP_MEMBER_LIST_FETCHED(HttpStatus.OK, "모임 멤버 리스트가 성공적으로 조회되었습니다."),
+    GROUP_MEMBER_EXILE_SUCCESS(HttpStatus.OK, "모임 멤버 추방이 성공적으로 완료되었습니다."),
     GROUP_LIKE_SUCCESS(HttpStatus.OK, "모임 관심 목록 등록이 성공적으로 완료되었습니다."),
     GROUP_UNLIKE_SUCCESS(HttpStatus.OK, "모임 관심 목록 삭제가 성공적으로 완료되었습니다."),
 
@@ -61,8 +64,12 @@ public enum ResponseCode {
     TEMPORARY_PASSWORD_MAIL_SEND_SUCCESS(HttpStatus.OK, "임시 비밀번호 메일이 성공적으로 전송되었습니다."),
 
     /* 멤버 */
+    MEMBER_PROFILE_FETCHED(HttpStatus.OK, "회원 프로필이 성공적으로 조회되었습니다."),
+    PROFILE_IMAGE_UPDATE_SUCCESS(HttpStatus.OK, "프로필 이미지가 성공적으로 변경되었습니다."),
     NICKNAME_UPDATE_SUCCESS(HttpStatus.OK, "닉네임이 성공적으로 변경되었습니다."),
+    PASSWORD_UPDATE_SUCCESS(HttpStatus.OK, "비밀번호가 성공적으로 변경되었습니다."),
     MEMBER_INFO_UPDATE_SUCCESS(HttpStatus.OK, "회원정보가 성공적으로 변경되었습니다."),
+    MEMBER_LIKE_GROUP_LIST_FETCHED(HttpStatus.OK, "관심 모임 리스트 조회가 성공적으로 조회되었습니다."),
     ;
 
     private final HttpStatus status;

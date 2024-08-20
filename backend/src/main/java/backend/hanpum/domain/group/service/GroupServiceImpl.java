@@ -142,6 +142,29 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public GroupMemberListGetResDto getGroupMemberList(Long memberId, Long groupId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
+        if(member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
+        List<GroupMemberResDto> groupMemberList = groupMemberRepositoryCustom.findGroupMemberList(groupId);
+        return GroupMemberListGetResDto.builder().groupMemberResList(groupMemberList).build();
+    }
+
+    @Override
+    @Transactional
+    public void exileGroupMember(Long memberId, Long groupMemberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        GroupMember groupLeader = member.getGroupMember();
+        if(groupLeader.getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
+        GroupMember groupMember = groupMemberRepository.findById(groupMemberId).orElseThrow(GroupMemberNotFoundException::new);
+        if(groupLeader.getGroup() == groupMember.getGroup()) {
+            groupMember.getMember().updateGroupMember(null);
+            groupMemberRepository.delete(groupMember);
+        }
+    }
+
+    @Override
     @Transactional
     public boolean likeGroup(Long memberId, Long groupId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
@@ -160,6 +183,23 @@ public class GroupServiceImpl implements GroupService {
             likeGroupRepository.delete(likeGroup);
             return false;
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public GroupListGetResDto getMemberLikeGroupList(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        List<LikeGroup> likeGroups = member.getLikeGroups();
+        List<GroupResDto> groupResDtoList = likeGroups.stream()
+                .map(likeGroup -> GroupResDto.builder()
+                        .title(likeGroup.getGroup().getTitle())
+                        .groupImg(likeGroup.getGroup().getGroupImg())
+                        .likeCount(likeGroup.getGroup().getLikeCount())
+                        .recruitedCount(groupMemberRepositoryCustom.countGroupMember(likeGroup.getGroup().getGroupId())) // 현재 모집된 인원 수
+                        .recruitmentCount(likeGroup.getGroup().getRecruitmentCount()) // 총 모집 인원 수
+                        .build())
+                .toList();
+        return GroupListGetResDto.builder().groupResDtoList(groupResDtoList).build();
     }
 
     private GroupJoinStatus getGroupJoinStatus(GroupMember groupMember, Long groupId) {

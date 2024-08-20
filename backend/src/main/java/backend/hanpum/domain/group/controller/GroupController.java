@@ -2,10 +2,7 @@ package backend.hanpum.domain.group.controller;
 
 import backend.hanpum.config.jwt.UserDetailsImpl;
 import backend.hanpum.domain.group.dto.requestDto.GroupPostReqDto;
-import backend.hanpum.domain.group.dto.responseDto.GroupApplyListGetResDto;
-import backend.hanpum.domain.group.dto.responseDto.GroupDetailGetResDto;
-import backend.hanpum.domain.group.dto.responseDto.GroupListGetResDto;
-import backend.hanpum.domain.group.dto.responseDto.GroupPostResDto;
+import backend.hanpum.domain.group.dto.responseDto.*;
 import backend.hanpum.domain.group.service.GroupService;
 import backend.hanpum.exception.format.code.ApiResponse;
 import backend.hanpum.exception.format.response.ResponseCode;
@@ -87,6 +84,22 @@ public class GroupController {
                                                @PathVariable Long groupMemberId) {
         groupService.declineGroupApply(userDetails.getMember().getMemberId(), groupMemberId);
         return response.success(ResponseCode.GROUP_APPLY_DECLINE_SUCCESS);
+    }
+
+    @Operation(summary = "모임 멤버 리스트 조회", description = "모임 멤버 리스트 조회 API")
+    @GetMapping("/{groupId}/member-list")
+    public ResponseEntity<?> getGroupMemberList(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                               @PathVariable Long groupId) {
+        GroupMemberListGetResDto groupMemberListGetResDto = groupService.getGroupMemberList(userDetails.getMember().getMemberId(), groupId);
+        return response.success(ResponseCode.GROUP_MEMBER_LIST_FETCHED, groupMemberListGetResDto);
+    }
+
+    @Operation(summary = "모임 멤버 추방", description = "모임 멤버 추방 API")
+    @DeleteMapping("/member/{groupMemberId}/exile")
+    public ResponseEntity<?> exileGroupMember(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                               @PathVariable Long groupMemberId) {
+        groupService.exileGroupMember(userDetails.getMember().getMemberId(), groupMemberId);
+        return response.success(ResponseCode.GROUP_MEMBER_EXILE_SUCCESS);
     }
 
     @Operation(summary = "모임 관심 목록 등록", description = "모임 관심 목록 등록 API")

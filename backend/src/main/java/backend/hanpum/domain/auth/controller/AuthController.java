@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Auth 컨트롤러", description = "Auth Controller API")
 @RestController
@@ -58,8 +59,9 @@ public class AuthController {
 
     @Operation(summary = "회원가입", description = "회원가입 API")
     @PostMapping("/sign-up")
-    public ResponseEntity<?> signUp(@RequestBody @Valid SignUpReqDto signUpReqDto) {
-        authService.signUp(signUpReqDto);
+    public ResponseEntity<?> signUp(@RequestPart(required = false) MultipartFile multipartFile,
+                                    @RequestPart @Valid SignUpReqDto signUpReqDto) {
+        authService.signUp(multipartFile, signUpReqDto);
         return response.success(ResponseCode.SING_UP_SUCCESS);
     }
 

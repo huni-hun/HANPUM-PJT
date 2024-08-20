@@ -100,4 +100,8 @@ public class Member {
     public void updateMemberPassword(String password){
         this.password = password;
     }
+
+    public void updateProfilePicture(String profilePicture){
+        this.profilePicture = profilePicture;
+    }
 }
