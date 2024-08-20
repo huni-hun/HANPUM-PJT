@@ -63,6 +63,7 @@ public enum ResponseCode {
 
     /* 멤버 */
     MEMBER_PROFILE_FETCHED(HttpStatus.OK, "회원 프로필이 성공적으로 조회되었습니다."),
+    PROFILE_IMAGE_UPDATE_SUCCESS(HttpStatus.OK, "프로필 이미지가 성공적으로 변경되었습니다."),
     NICKNAME_UPDATE_SUCCESS(HttpStatus.OK, "닉네임이 성공적으로 변경되었습니다."),
     PASSWORD_UPDATE_SUCCESS(HttpStatus.OK, "비밀번호가 성공적으로 변경되었습니다."),
     MEMBER_INFO_UPDATE_SUCCESS(HttpStatus.OK, "회원정보가 성공적으로 변경되었습니다."),
