@@ -248,7 +248,7 @@ function UserInfo({
     return <div>...메일 전송중</div>;
   }
 
-  console.log(formValues);
+  // console.log(formValues);
   return (
     <S.UserInfoContainer>
       {pagenation()}

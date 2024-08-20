@@ -37,9 +37,21 @@ export async function CheckNickname(nickname: string) {
 
 // 회원가입
 export async function SignUp(signupReq: SignupRequestValues) {
-  console.log(signupReq);
-  const { data } = await api.post('/api/auth/sign-up', {
-    ...signupReq,
+  console.log(signupReq.multipartFile);
+  const formData = new FormData();
+
+  Object.entries(signupReq).forEach(([key, value]) => {
+    formData.append(key, value);
+  });
+
+  formData.forEach((value, key) => {
+    console.log(key, value);
+  });
+
+  const { data } = await api.post('/api/auth/sign-up', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
   });
   return data;
 }

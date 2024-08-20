@@ -8,5 +8,6 @@ export async function FindId(name: string, email: string) {
       email,
     },
   });
+
   return data;
 }

@@ -59,7 +59,7 @@ function ProfileConfig({
     Partial<Record<keyof UserSignupFormValues, boolean>>
   >({});
 
-  console.log('dirty :::', dirty);
+  // console.log('dirty :::', dirty);
 
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
@@ -71,15 +71,23 @@ function ProfileConfig({
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      // const reader = new FileReader();
+      // reader.onloadend = () => {
+      //   setPreviewImage(reader.result as string);
+      // };
+      // reader.readAsDataURL(file);
+      const blob = new Blob([file], { type: file.type });
+
+      const imageUrl = URL.createObjectURL(blob);
+      setPreviewImage(imageUrl);
+
+      // const blob = file;
+
+      console.log(typeof blob);
 
       setFormValues((prevValue) => ({
         ...prevValue,
-        multipartFile: file.name,
+        multipartFile: blob,
       }));
     }
   };
@@ -131,7 +139,7 @@ function ProfileConfig({
     open({
       purpose: 'calender',
       onButtonClick: (cancel?: boolean) => {
-        console.log(cancel);
+        // console.log(cancel);
         if (cancel) {
           console.log('취소');
           setFormValues((prev) => ({
@@ -202,13 +210,13 @@ function ProfileConfig({
   const { mutate } = useMutation(SignUp, {
     onSuccess: (res) => {
       console.log(res);
-      if (res.status === STATUS.success) {
-        toast.success(res.message);
-        clickNext();
-      }
-      if (res.status === STATUS.error) {
-        toast.error(res.message);
-      }
+      // if (res.status === STATUS.success) {
+      //   toast.success(res.message);
+      //   clickNext();
+      // }
+      // if (res.status === STATUS.error) {
+      //   toast.error(res.message);
+      // }
     },
     onError: (error: AxiosError) => {
       toast.error(error.message);
@@ -232,7 +240,7 @@ function ProfileConfig({
     mutate({ ...signupReq });
   };
 
-  console.log(formValues);
+  // console.log(formValues);
 
   return (
     <S.ProfileConfigContainer>

@@ -15,7 +15,7 @@ export interface SignupRequestValues {
   loginId: string;
   password: string;
   email: string;
-  multipartFile: string;
+  multipartFile: Blob | string;
   name: string;
   birthDate: string;
   gender: string | null;
