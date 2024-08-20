@@ -63,6 +63,7 @@ pipeline {
                             echo ".env downloading..."
                             sh """
                                 wget -O ${PROJECT_NAME}/${FRONTEND_DIR}/.env --header="Authorization: token ${GITHUB_TOKEN}" "https://raw.githubusercontent.com/HANPUM-PJT/config/main/.env"
+                                wget -O ${PROJECT_NAME}/${FRONTEND_DIR}/.env --header="Authorization: token ${GITHUB_TOKEN}" "https://raw.githubusercontent.com/HANPUM-PJT/config/main/.npmrc"
                             """
                         }
                     }
