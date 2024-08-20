@@ -1,10 +1,7 @@
 package backend.hanpum.domain.group.service;
 
 import backend.hanpum.domain.group.dto.requestDto.GroupPostReqDto;
-import backend.hanpum.domain.group.dto.responseDto.GroupApplyListGetResDto;
-import backend.hanpum.domain.group.dto.responseDto.GroupDetailGetResDto;
-import backend.hanpum.domain.group.dto.responseDto.GroupListGetResDto;
-import backend.hanpum.domain.group.dto.responseDto.GroupPostResDto;
+import backend.hanpum.domain.group.dto.responseDto.*;
 import backend.hanpum.domain.member.entity.Member;
 
 public interface GroupService {
@@ -17,6 +14,7 @@ public interface GroupService {
     GroupApplyListGetResDto getGroupApplyList(Long memberId, Long groupId);
     void acceptGroupApply(Long memberId, Long groupMemberId);
     void declineGroupApply(Long memberId, Long groupMemberId);
+    GroupMemberListGetResDto getGroupMemberList(Long memberId, Long groupId);
     boolean likeGroup(Long memberId, Long groupId);
     GroupListGetResDto getMemberLikeGroupList(Long memberId);
 }

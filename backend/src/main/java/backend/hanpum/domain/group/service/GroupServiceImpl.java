@@ -142,6 +142,15 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public GroupMemberListGetResDto getGroupMemberList(Long memberId, Long groupId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
+        if(member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
+        List<GroupMemberResDto> groupMemberList = groupMemberRepositoryCustom.findGroupMemberList(groupId);
+        return GroupMemberListGetResDto.builder().groupMemberResList(groupMemberList).build();
+    }
+
+    @Override
     @Transactional
     public boolean likeGroup(Long memberId, Long groupId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);

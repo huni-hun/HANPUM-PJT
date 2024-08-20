@@ -1,6 +1,7 @@
 package backend.hanpum.domain.group.repository.custom;
 
 import backend.hanpum.domain.group.dto.responseDto.GroupApplyResDto;
+import backend.hanpum.domain.group.dto.responseDto.GroupMemberResDto;
 import backend.hanpum.domain.group.entity.QGroupMember;
 import backend.hanpum.domain.group.enums.JoinType;
 import com.querydsl.core.types.Projections;
@@ -39,6 +40,22 @@ public class GroupMemberRepositoryImpl implements GroupMemberRepositoryCustom {
                 .from(groupMember)
                 .where(groupMember.group.groupId.eq(groupId)
                         .and(groupMember.joinType.eq(JoinType.APPLY)))
+                .fetch();
+    }
+
+    @Override
+    public List<GroupMemberResDto> findGroupMemberList(Long groupId) {
+        QGroupMember groupMember = QGroupMember.groupMember;
+        return query
+                .select(Projections.constructor(
+                        GroupMemberResDto.class,
+                        groupMember.member.memberId,
+                        groupMember.groupMemberId,
+                        groupMember.joinType
+                ))
+                .from(groupMember)
+                .where(groupMember.group.groupId.eq(groupId)
+                        .and(groupMember.joinType.ne(JoinType.APPLY)))
                 .fetch();
     }
 }
