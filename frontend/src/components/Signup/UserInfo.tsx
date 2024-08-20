@@ -262,11 +262,11 @@ function UserInfo({
           dirty.loginId && Boolean(validate.loginId || validate.checkLoginId)
         }
         onBlur={handleBlur}
-        helpMessage={
-          validate.loginId ||
-          validate.checkLoginId ||
-          '※영문, 숫자를 조합해서 입력해주세요.(6~13자)'
-        }
+        // helpMessage={
+        //   validate.loginId ||
+        //   validate.checkLoginId ||
+        //   '※영문, 숫자를 조합해서 입력해주세요.(6~13자)'
+        // }
         rightElement={
           <BaseButton
             size="radius"

@@ -21,7 +21,7 @@ const SignupPage = () => {
   // 최상단에서 data관리
   const [formValues, setFormValues] = useState<Partial<UserSignupFormValues>>({
     gender: null,
-    profilePicture: '',
+    multipartFile: '',
     birthDate: '',
     nickname: '',
     // phoneNumber: '',

@@ -79,7 +79,7 @@ function ProfileConfig({
 
       setFormValues((prevValue) => ({
         ...prevValue,
-        profilePicture: file.name,
+        multipartFile: file.name,
       }));
     }
   };
@@ -220,7 +220,7 @@ function ProfileConfig({
       loginId: formValues.loginId || '',
       password: formValues.password || '',
       email: formValues.email || '',
-      profilePicture: formValues.profilePicture || '',
+      multipartFile: formValues.multipartFile || '',
       name: formValues.name || '',
       birthDate: formValues.birthDate || '',
       gender: formValues.gender || '',
