@@ -24,4 +24,5 @@ public interface CourseService {
     void addCourseUsageHistory(Long courseId, Long memberId);
     void updateCourseUsageHistory(Long courseId, Long memberId, Double progressRate);
     List<AttractionResDto> searchAttractionsByKeyword(String keyword, Integer contentType);
+    SearchWaypointResDto searchWaypointByKeyword(String keyword);
 }

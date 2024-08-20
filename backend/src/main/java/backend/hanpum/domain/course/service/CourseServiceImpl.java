@@ -21,12 +21,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -53,6 +49,9 @@ public class CourseServiceImpl implements CourseService {
 
     @Value("${api.serviceKey}")
     private String serviceKey;
+
+    @Value("${api.kakaoAppKey}")
+    private String kakaoAppKey;
 
     @Override
     @Transactional(readOnly = true)
@@ -535,6 +534,50 @@ public class CourseServiceImpl implements CourseService {
         }
 
         return attractions;
+    }
+
+    @Override
+    public SearchWaypointResDto searchWaypointByKeyword(String keyword) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "KakaoAK " + kakaoAppKey);
+        HttpEntity<?> entity = new HttpEntity<>("", headers);
+
+        String BASE_URL = "https://dapi.kakao.com/v2/local";
+        String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/search/keyword.json")
+                .queryParam("query", keyword)
+                .toUriString();
+
+        URI uri = null;
+        try {
+            uri = new URI(url);
+        } catch (URISyntaxException e) {
+            throw new UriBadSyntaxException();
+        }
+
+        ResponseEntity<String> resultMap = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode root = null;
+        try {
+            root = objectMapper.readTree(resultMap.getBody());
+        } catch (JsonMappingException e) {
+            throw new JsonBadMappingException();
+        } catch (JsonProcessingException e) {
+            throw new JsonBadProcessingException();
+        }
+
+        JsonNode document = root.path("documents").get(0);
+        return SearchWaypointResDto.builder()
+                .placeName(document.path("place_name").asText())
+                .address(document.path("address_name").asText())
+                .lat(Float.parseFloat(document.path("x").asText()))
+                .lon(Float.parseFloat(document.path("y").asText()))
+                .phone("phone")
+                .build();
     }
 
 }
