@@ -1,5 +1,6 @@
 package backend.hanpum.domain.auth.service;
 
+import backend.hanpum.config.s3.S3ImageService;
 import backend.hanpum.config.jwt.JwtProvider;
 import backend.hanpum.config.redis.RedisDao;
 import backend.hanpum.domain.auth.dto.requestDto.*;
@@ -17,13 +18,13 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
@@ -35,6 +36,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final RedisDao redisDao;
+    private final S3ImageService s3ImageService;
 
     @Override
     @Transactional(readOnly = true)
@@ -100,7 +102,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public void signUp(SignUpReqDto signUpReqDto) {
+    public void signUp(MultipartFile multipartFile, SignUpReqDto signUpReqDto) {
         checkLoginIdAuthenticated(signUpReqDto.getLoginId());
         checkEmailAuthenticated(signUpReqDto.getEmail());
         checkNicknameAuthenticated(signUpReqDto.getNickname());
@@ -109,7 +111,6 @@ public class AuthServiceImpl implements AuthService {
                 .loginId(signUpReqDto.getLoginId())
                 .password((passwordEncoder.encode(signUpReqDto.getPassword())))
                 .email(signUpReqDto.getEmail())
-                .profilePicture(signUpReqDto.getProfilePicture())
                 .name(signUpReqDto.getName())
                 .birthDate(signUpReqDto.getBirthDate())
                 .gender(signUpReqDto.getGender())
@@ -117,6 +118,10 @@ public class AuthServiceImpl implements AuthService {
                 .nickname(signUpReqDto.getNickname())
                 .memberType(signUpReqDto.getMemberType())
                 .build();
+
+        if(!multipartFile.isEmpty()) {
+            member.updateProfilePicture(s3ImageService.uploadImage(multipartFile));
+        }
         memberRepository.save(member);
 
         redisDao.deleteEmail(signUpReqDto.getEmail());

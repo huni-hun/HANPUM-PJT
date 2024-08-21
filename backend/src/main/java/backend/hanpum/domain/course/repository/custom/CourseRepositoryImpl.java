@@ -3,6 +3,7 @@ package backend.hanpum.domain.course.repository.custom;
 import backend.hanpum.domain.course.dto.responseDto.*;
 import backend.hanpum.domain.course.entity.*;
 import backend.hanpum.domain.course.enums.CourseTypes;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.NumberExpression;
@@ -22,10 +23,31 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
     private final JPAQueryFactory query;
 
     @Override
-    public Optional<CourseListMapResDto> getCourseList(CourseTypes targetCourse, Pageable pageable) {
+    public Optional<CourseListMapResDto> getCourseList(CourseTypes targetCourse, Double maxDistance, Integer maxDays, List<CourseTypes> selectedTypes, String keyword, Pageable pageable) {
         QCourse qCourse = QCourse.course;
         QReview qReview = QReview.review;
         QCourseType qCourseType = QCourseType.courseType;
+        QCourseDay qCourseDay = QCourseDay.courseDay;
+
+        BooleanBuilder whereClause = new BooleanBuilder();
+        if (targetCourse != null) {
+            whereClause.and(qCourseType.typeName.eq(targetCourse));
+        }
+        if (maxDistance != null) {
+            whereClause.and(qCourse.totalDistance.loe(maxDistance));
+        }
+        if (maxDays != null) {
+            whereClause.and(qCourse.courseDays.size().loe(maxDays));
+        }
+        if (selectedTypes != null && !selectedTypes.isEmpty()) {
+            whereClause.and(qCourseType.typeName.in(selectedTypes));
+        }
+        if (keyword != null) {
+            String formattedKeyword = "%" + keyword + "%";
+
+            whereClause.and(qCourse.courseName.like(formattedKeyword)
+                    .or(qCourse.content.like(formattedKeyword)));
+        }
 
         NumberExpression<Double> avgScore = qReview.score.avg().coalesce(0.0);
         NumberExpression<Integer> reviewCount = qReview.count().intValue().coalesce(0);
@@ -63,7 +85,7 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
                 .from(qCourse)
                 .leftJoin(qReview).on(qCourse.courseId.eq(qReview.course.courseId))
                 .leftJoin(qCourseType).on(qCourse.courseId.eq(qCourseType.course.courseId))
-                .where(qCourseType.typeName.eq(targetCourse))
+                .where(whereClause)
                 .orderBy(orderSpecifier)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -73,7 +95,12 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
         CourseListMapResDto courseListMapResDto = new CourseListMapResDto();
         Map<String, List<CourseResDto>> courseListMap = new HashMap<>();
         courseListMapResDto = courseListMapResDto.builder().CourseListMap(courseListMap).build();
-        courseListMapResDto.getCourseListMap().put(targetCourse.name(), courseList);
+        if(targetCourse != null) {
+            courseListMapResDto.getCourseListMap().put(targetCourse.name(), courseList);
+        } else {
+            courseListMapResDto.getCourseListMap().put("searchResult", courseList);
+
+        }
 
         return Optional.of(courseListMapResDto);
     }
@@ -84,6 +111,10 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
         QCourseDay qCourseDay = QCourseDay.courseDay;
         QAttraction qAttraction = QAttraction.attraction;
         QCourseType qCourseType = QCourseType.courseType;
+        QReview qReview = QReview.review;
+
+        NumberExpression<Double> avgScore = qReview.score.avg().coalesce(0.0);
+        NumberExpression<Integer> reviewCount = qReview.count().intValue().coalesce(0);
 
         List<CourseTypes> courseTypes = query
                 .select(qCourseType.typeName)
@@ -103,9 +134,13 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
                         qCourse.startPoint,
                         qCourse.endPoint,
                         qCourse.totalDistance,
-                        qCourse.member.memberId))
+                        qCourse.member.memberId,
+                        avgScore.as("scoreAvg"),
+                        reviewCount.as("commentCnt")))
                 .from(qCourse)
+                .leftJoin(qReview).on(qCourse.courseId.eq(qReview.course.courseId))
                 .where(qCourse.courseId.eq(courseId))
+                .groupBy(qCourse.courseId)
                 .fetchOne();
 
         if (courseResDto == null) {

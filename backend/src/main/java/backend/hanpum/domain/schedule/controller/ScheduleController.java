@@ -46,7 +46,15 @@ public class ScheduleController {
         return response.success(ResponseCode.GROUP_SCHEDULE_CREATED, scheduleId);
     }
 
-    @Operation(summary = "멤버별 일정 조회", description = "멤버별 일정 조회")
+    @Operation(summary = "멤버별 일정 조회", description = "내 개인 일정 조회")
+    @GetMapping("/group")
+    public ResponseEntity<?> getMySchedule(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Long memberId = userDetails.getMember().getMemberId();
+        List<ScheduleResDto> scheduleResDto = scheduleService.getMyScheduleList(memberId);
+        return response.success(ResponseCode.GROUP_SCHEDULE_LIST_FETCHED, scheduleResDto);
+    }
+
+    @Operation(summary = "모임 일정 조회", description = "내가 속해있는 모임 일정 조회")
     @GetMapping
     public ResponseEntity<?> getGroupSchedule(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         Long memberId = userDetails.getMember().getMemberId();
@@ -54,13 +62,6 @@ public class ScheduleController {
         return response.success(ResponseCode.SCHEDULE_LIST_FETCHED, scheduleResDto);
     }
 
-    @Operation(summary = "모임 일정 조회", description = "모임 일정 조회")
-    @GetMapping("/group")
-    public ResponseEntity<?> getMySchedule(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        Long memberId = userDetails.getMember().getMemberId();
-        List<ScheduleResDto> scheduleResDto = scheduleService.getMyScheduleList(memberId);
-        return response.success(ResponseCode.GROUP_SCHEDULE_LIST_FETCHED, scheduleResDto);
-    }
 
     @Operation(summary = "일차별 일정 조회", description = "일차별 일정 조회")
     @GetMapping("/day/{dayNumber}")

@@ -4,6 +4,7 @@ import backend.hanpum.domain.auth.dto.requestDto.*;
 import backend.hanpum.domain.auth.dto.responseDto.FindMemberLoginIdResDto;
 import backend.hanpum.domain.auth.dto.responseDto.LoginResDto;
 import backend.hanpum.domain.auth.dto.responseDto.ReissueAccessTokenResDto;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface AuthService {
 
@@ -12,7 +13,7 @@ public interface AuthService {
     void checkEmailAuthCode(CheckEmailAuthCodeReqDto checkEmailAuthCodeReqDto);
     void checkLoginIdDuplication(CheckLoginIdDuplicationReqDto checkLoginIdDuplicationReqDto);
     void checkNicknameDuplication(CheckNicknameDuplicationReqDto checkNicknameDuplicationReqDto);
-    void signUp(SignUpReqDto signUpReqDto);
+    void signUp(MultipartFile multipartFile, SignUpReqDto signUpReqDto);
     LoginResDto login(LoginReqDto loginReqDto);
     void logout(String accessToken);
     ReissueAccessTokenResDto reissueToken(String accessToken, TokenReissueReqDto tokenReissueReqDto);
