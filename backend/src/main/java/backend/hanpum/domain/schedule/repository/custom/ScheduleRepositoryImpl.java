@@ -1,6 +1,5 @@
 package backend.hanpum.domain.schedule.repository.custom;
 
-import backend.hanpum.domain.group.repository.GroupRepository;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
@@ -14,10 +13,8 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.Optional;
 
-import static backend.hanpum.domain.course.entity.QCourse.course;
 import static backend.hanpum.domain.course.entity.QCourseDay.courseDay;
 import static backend.hanpum.domain.course.entity.QWaypoint.waypoint;
-import static backend.hanpum.domain.member.entity.QMember.member;
 import static backend.hanpum.domain.schedule.entity.QSchedule.schedule;
 import static backend.hanpum.domain.schedule.entity.QScheduleDay.scheduleDay;
 import static backend.hanpum.domain.schedule.entity.QScheduleWayPoint.scheduleWayPoint;
@@ -35,7 +32,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                                 schedule.id,
                                 schedule.title,
                                 schedule.type,
-                                schedule.date,
+                                schedule.startDate,
                                 schedule.state
                         )).from(schedule)
                 .where(schedule.member.memberId.eq(memberId))
@@ -47,15 +44,15 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         Long groupId = member.getGroupMember().getGroup().getGroupId();
         return Optional.ofNullable(query.select(
-                Projections.constructor(ScheduleResDto.class,
-                        schedule.id,
-                        schedule.title,
-                        schedule.type,
-                        schedule.date,
-                        schedule.state
+                        Projections.constructor(ScheduleResDto.class,
+                                schedule.id,
+                                schedule.title,
+                                schedule.type,
+                                schedule.startDate,
+                                schedule.state
                         )).from(schedule)
                 .where(schedule.group.groupId.eq(groupId))
-                        .fetch());
+                .fetch());
 
     }
 
@@ -86,5 +83,15 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .leftJoin(scheduleWayPoint.waypoint, waypoint)
                 .where(scheduleDay.schedule.id.eq(scheduleId).and(scheduleDay.courseDay.dayNumber.eq(day)).and(scheduleDay.schedule.member.memberId.eq(memberId)))
                 .fetchOne());
+    }
+
+    @Override
+    public int activateScheduleForToday(String startDate) {
+        long updatedCount = query.update(schedule)
+                .set(schedule.state, true)
+                .where(schedule.state.isFalse()
+                        .and(schedule.startDate.eq(startDate)))
+                .execute();
+        return (int) updatedCount;
     }
 }

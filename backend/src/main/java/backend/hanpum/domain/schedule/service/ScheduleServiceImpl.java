@@ -8,11 +8,9 @@ import backend.hanpum.domain.group.entity.Group;
 import backend.hanpum.domain.group.repository.GroupRepository;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
-import backend.hanpum.domain.schedule.dto.requestDto.MemoPostReqDto;
-import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
-import backend.hanpum.domain.schedule.dto.requestDto.ScheduleRunReqDto;
-import backend.hanpum.domain.schedule.dto.requestDto.ScheduleStartReqDto;
+import backend.hanpum.domain.schedule.dto.requestDto.*;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
+import backend.hanpum.domain.schedule.dto.responseDto.ScheduleInProgressResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
 import backend.hanpum.domain.schedule.entity.Memo;
 import backend.hanpum.domain.schedule.entity.Schedule;
@@ -26,11 +24,9 @@ import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.auth.MemberInfoInvalidException;
 import backend.hanpum.exception.exception.group.GroupMemberNotFoundException;
 import backend.hanpum.exception.exception.group.GroupNotFoundException;
-import backend.hanpum.exception.exception.schedule.GroupScheduleNotFoundException;
-import backend.hanpum.exception.exception.schedule.InvalidDayFormatException;
-import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
-import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
+import backend.hanpum.exception.exception.schedule.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,6 +47,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final MemoRepository memoRepository;
     private final GroupRepository groupRepository;
 
+
     @Transactional
     @Override
     public Long createSchedule(Long memberId, SchedulePostReqDto schedulePostReqDto) {
@@ -63,7 +60,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule schedule = Schedule.builder()
                 .title(schedulePostReqDto.getTitle())
                 .type("private")
-                .date(startDate)
+                .startDate(startDate)
                 .member(member)
                 .course(course)
                 .build();
@@ -87,7 +84,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule schedule = Schedule.builder()
                 .title(schedulePostReqDto.getTitle())
                 .type("group")
-                .date(startDate)
+                .startDate(startDate)
                 .group(group)
                 .course(course)
                 .build();
@@ -230,5 +227,22 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .build();
 
         memoRepository.save(memo);
+    }
+
+    @Scheduled(cron = "0 0 * * * *")
+    @Transactional
+    @Override
+    public void activateSchedules() {
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        int updatedCount = scheduleRepository.activateScheduleForToday(today);
+        if(updatedCount == 0) {
+            throw new ValidScheduleNotFoundException();
+        }
+    }
+
+    @Override
+    public ScheduleInProgressResDto getRunningSchedule(ScheduleInProgressReqDto scheduleInProgressReqDto) {
+        ScheduleInProgressResDto scheduleInProgressResDto = ScheduleInProgressResDto.builder().build();
+        return null;
     }
 }

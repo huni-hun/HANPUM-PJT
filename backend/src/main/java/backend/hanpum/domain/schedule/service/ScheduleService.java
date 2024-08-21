@@ -1,10 +1,8 @@
 package backend.hanpum.domain.schedule.service;
 
-import backend.hanpum.domain.schedule.dto.requestDto.MemoPostReqDto;
-import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
-import backend.hanpum.domain.schedule.dto.requestDto.ScheduleRunReqDto;
-import backend.hanpum.domain.schedule.dto.requestDto.ScheduleStartReqDto;
+import backend.hanpum.domain.schedule.dto.requestDto.*;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
+import backend.hanpum.domain.schedule.dto.responseDto.ScheduleInProgressResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
 
 import java.util.List;
@@ -38,8 +36,11 @@ public interface ScheduleService {
     // WayPoint 메모 작성
     void createMemo(Long memberId, MemoPostReqDto memoPostReqDto);
 
-    // 진행중인 일정 표시
+    // 일정 활성화
+    void activateSchedules();
 
+    // 진행중인 일정 표시
+    ScheduleInProgressResDto getRunningSchedule(ScheduleInProgressReqDto scheduleInProgressReqDto);
 
     // 주변 관광지 정보 가져오기
 

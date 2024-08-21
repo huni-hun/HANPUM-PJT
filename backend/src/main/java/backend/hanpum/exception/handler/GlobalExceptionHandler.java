@@ -125,6 +125,13 @@ public class GlobalExceptionHandler {
         return response.error(e.getErrorCode());
     }
 
+    @ExceptionHandler(ValidScheduleNotFoundException.class)
+    protected ResponseEntity<?> handle(ValidScheduleNotFoundException e){
+        log.error("ValidScheduleNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
     /* 날씨 */
     @ExceptionHandler(WeatherParsingException.class)
     protected ResponseEntity<?> handle(WeatherParsingException e) {

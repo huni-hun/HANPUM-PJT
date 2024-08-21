@@ -2,7 +2,9 @@ package backend.hanpum.domain.schedule.dto.responseDto;
 
 import backend.hanpum.domain.course.dto.responseDto.AttractionResDto;
 import backend.hanpum.domain.course.dto.responseDto.GetCourseDayResDto;
+import backend.hanpum.domain.weather.dto.WeatherResDto;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +13,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ScheduleInProgressResDto {
     Long scheduleId;        // 일정 ID
     String startPoint;      // 출발지
@@ -19,7 +22,7 @@ public class ScheduleInProgressResDto {
     String endDate;         // 종료일
     String totalDistance;   // 총 거리
     String rate;            // 달성률
-    String weather;         // 날씨
+    WeatherResDto weatherResDto;         // 날씨
     List<GetCourseDayResDto> courseDays; // 일정 정보
     List<AttractionResDto> attractions;     // 관광지
 }
