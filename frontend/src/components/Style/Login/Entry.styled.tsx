@@ -82,18 +82,6 @@ export const EntryContainer = styled.div`
           justify-content: center;
           font-size: 1.6rem;
         }
-        &-find {
-          display: flex;
-          width: 22.2rem;
-          span {
-            flex: 1;
-            text-align: center;
-          }
-
-          span:nth-child(2) {
-            border-left: 1px solid #000;
-          }
-        }
       }
     }
   }
