@@ -36,6 +36,7 @@ public enum ResponseCode {
     COURSE_REVIEWS_EDIT_SUCCESS(HttpStatus.OK, "경로 리뷰 수정이 성공적으로 완료되었습니다."),
     COURSE_REVIEWS_DELETE_SUCCESS(HttpStatus.OK, "경로 리뷰 삭제가 성공적으로 완료되었습니다."),
     SEARCH_ATTRACTION_RESTAPI_SUCCESS(HttpStatus.OK, "한국관광공사 관광지 데이터가 성공적으로 검색되었습니다."),
+    SEARCH_WAYPOINT_RESTAPI_SUCCESS(HttpStatus.OK, "카카오 디벨로퍼 키워드기반 장소 데이터가 성공적으로 검색되었습니다."),
 
     /* 모임 */
     GROUP_CREATED_SUCCESS(HttpStatus.OK, "모임이 성공적으로 생성되었습니다."),
