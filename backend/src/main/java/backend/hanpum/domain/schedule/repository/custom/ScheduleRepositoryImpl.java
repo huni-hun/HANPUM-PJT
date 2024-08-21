@@ -2,9 +2,7 @@ package backend.hanpum.domain.schedule.repository.custom;
 
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
-import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
-import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
-import backend.hanpum.domain.schedule.dto.responseDto.ScheduleWayPointResDto;
+import backend.hanpum.domain.schedule.dto.responseDto.*;
 import backend.hanpum.exception.exception.auth.MemberNotFoundException;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -86,6 +84,36 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     }
 
     @Override
+    public Optional<List<ScheduleDayResDto>> getScheduleDayResDtoList(Long memberId, Long scheduleId) {
+        return Optional.ofNullable(query.select(
+                        Projections.constructor(ScheduleDayResDto.class,
+                                scheduleDay.id,
+                                scheduleDay.date,
+                                scheduleDay.running,
+                                courseDay.totalDistance,
+                                courseDay.totalDuration,
+                                courseDay.totalCalorie,
+                                Projections.list(
+                                        Projections.constructor(ScheduleWayPointResDto.class,
+                                                scheduleWayPoint.id,
+                                                waypoint.name,
+                                                waypoint.type,
+                                                waypoint.address,
+                                                waypoint.lat,
+                                                waypoint.lon
+                                        )
+                                )
+                        )
+                ).from(scheduleDay)
+                .leftJoin(scheduleDay.courseDay, courseDay)
+                .leftJoin(scheduleDay.scheduleWayPointList, scheduleWayPoint)
+                .leftJoin(scheduleWayPoint.waypoint, waypoint)
+                .where(scheduleDay.schedule.id.eq(scheduleId).and(scheduleDay.schedule.member.memberId.eq(memberId)))
+                .orderBy(scheduleDay.courseDay.dayNumber.asc())
+                .fetch());
+    }
+
+    @Override
     public int activateScheduleForToday(String startDate) {
         long updatedCount = query.update(schedule)
                 .set(schedule.state, true)
@@ -93,5 +121,18 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         .and(schedule.startDate.eq(startDate)))
                 .execute();
         return (int) updatedCount;
+    }
+
+    @Override
+    public Optional<ScheduleTempResDto> getScheduleTempResDto(Long memberId) {
+        return Optional.ofNullable(query.select(Projections.constructor(ScheduleTempResDto.class,
+                        schedule.id,
+                        schedule.course.startPoint,
+                        schedule.course.endPoint,
+                        schedule.startDate,
+                        schedule.endDate,
+                        schedule.course.totalDistance
+                )).from(schedule).where(schedule.member.memberId.eq(memberId).and(schedule.state.eq(true)))
+                .fetchOne());
     }
 }

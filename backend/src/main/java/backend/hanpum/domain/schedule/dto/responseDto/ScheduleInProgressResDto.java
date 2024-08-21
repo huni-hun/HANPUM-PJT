@@ -23,6 +23,6 @@ public class ScheduleInProgressResDto {
     String totalDistance;   // 총 거리
     String rate;            // 달성률
     WeatherResDto weatherResDto;         // 날씨
-    List<GetCourseDayResDto> courseDays; // 일정 정보
+    List<ScheduleDayResDto> scheduleDayResDtoList;
     List<AttractionResDto> attractions;     // 관광지
 }

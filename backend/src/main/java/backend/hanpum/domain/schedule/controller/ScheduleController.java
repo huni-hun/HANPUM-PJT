@@ -6,6 +6,7 @@ import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.ScheduleRunReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.ScheduleStartReqDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
+import backend.hanpum.domain.schedule.dto.responseDto.ScheduleInProgressResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
 import backend.hanpum.domain.schedule.service.ScheduleService;
 import backend.hanpum.exception.format.code.ApiResponse;
@@ -103,9 +104,20 @@ public class ScheduleController {
     @Operation(summary = "메모 작성", description = "경유지 메모작성")
     @PostMapping("/memo")
     public ResponseEntity<?> createMemo(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                        MemoPostReqDto memoPostReqDto){
+                                        MemoPostReqDto memoPostReqDto) {
         Long memberId = userDetails.getMember().getMemberId();
         scheduleService.createMemo(memberId, memoPostReqDto);
         return response.success(ResponseCode.MEMO_CREATED);
     }
+
+    @Operation(summary = "진행중인 일정", description = "진행중 일정 조회")
+    @GetMapping("/running")
+    public ResponseEntity<?> getRunningSchedule(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                @RequestParam double lat,
+                                                @RequestParam double lon) {
+        Long memberId = userDetails.getMember().getMemberId();
+        ScheduleInProgressResDto result = scheduleService.getRunningSchedule(memberId, lat, lon);
+        return response.success(ResponseCode.RUNNING_SCHEDULE_FETCHED, result);
+    }
+
 }

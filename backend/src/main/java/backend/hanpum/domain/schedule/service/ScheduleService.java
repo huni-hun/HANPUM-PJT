@@ -40,7 +40,7 @@ public interface ScheduleService {
     void activateSchedules();
 
     // 진행중인 일정 표시
-    ScheduleInProgressResDto getRunningSchedule(ScheduleInProgressReqDto scheduleInProgressReqDto);
+    ScheduleInProgressResDto getRunningSchedule(Long memberId, double lat, double lon);
 
     // 주변 관광지 정보 가져오기
 

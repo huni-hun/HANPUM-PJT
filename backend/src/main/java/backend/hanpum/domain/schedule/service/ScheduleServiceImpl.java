@@ -12,6 +12,7 @@ import backend.hanpum.domain.schedule.dto.requestDto.*;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleInProgressResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
+import backend.hanpum.domain.schedule.dto.responseDto.ScheduleTempResDto;
 import backend.hanpum.domain.schedule.entity.Memo;
 import backend.hanpum.domain.schedule.entity.Schedule;
 import backend.hanpum.domain.schedule.entity.ScheduleDay;
@@ -20,6 +21,8 @@ import backend.hanpum.domain.schedule.repository.MemoRepository;
 import backend.hanpum.domain.schedule.repository.ScheduleDayRepository;
 import backend.hanpum.domain.schedule.repository.ScheduleRepository;
 import backend.hanpum.domain.schedule.repository.ScheduleWayPointRepository;
+import backend.hanpum.domain.weather.dto.WeatherResDto;
+import backend.hanpum.domain.weather.service.WeatherService;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.auth.MemberInfoInvalidException;
 import backend.hanpum.exception.exception.group.GroupMemberNotFoundException;
@@ -46,6 +49,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final MemberRepository memberRepository;
     private final MemoRepository memoRepository;
     private final GroupRepository groupRepository;
+    private final WeatherService weatherService;
 
 
     @Transactional
@@ -235,14 +239,30 @@ public class ScheduleServiceImpl implements ScheduleService {
     public void activateSchedules() {
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         int updatedCount = scheduleRepository.activateScheduleForToday(today);
-        if(updatedCount == 0) {
+        if (updatedCount == 0) {
             throw new ValidScheduleNotFoundException();
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public ScheduleInProgressResDto getRunningSchedule(ScheduleInProgressReqDto scheduleInProgressReqDto) {
-        ScheduleInProgressResDto scheduleInProgressResDto = ScheduleInProgressResDto.builder().build();
-        return null;
+    public ScheduleInProgressResDto getRunningSchedule(Long memberId, double lat, double lon) {
+        WeatherResDto weatherResDto = weatherService.getDayWeather(lat, lon);
+        ScheduleTempResDto scheduleTempResDto = scheduleRepository.getScheduleTempResDto(memberId).orElseThrow(ValidScheduleNotFoundException::new);
+        List<ScheduleDayResDto> scheduleDayResDtoList = scheduleRepository.getScheduleDayResDtoList(memberId, scheduleTempResDto.getScheduleId()).orElseThrow(ScheduleNotFoundException::new
+        );
+        ScheduleInProgressResDto result = ScheduleInProgressResDto.builder()
+                .scheduleId(scheduleTempResDto.getScheduleId())
+                .startPoint(scheduleTempResDto.getStartPoint())
+                .endPoint(scheduleTempResDto.getEndPoint())
+                .startDate(scheduleTempResDto.getStartDate())
+                .endDate(scheduleTempResDto.getEndDate())
+                .totalDistance(scheduleTempResDto.getTotalDistance())
+//                .rate()
+                .weatherResDto(weatherResDto)
+                .scheduleDayResDtoList(scheduleDayResDtoList)
+//                .attractions()
+                .build();
+        return result;
     }
 }
