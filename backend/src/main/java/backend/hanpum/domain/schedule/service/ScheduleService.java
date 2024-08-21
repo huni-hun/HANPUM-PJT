@@ -37,4 +37,10 @@ public interface ScheduleService {
 
     // WayPoint 메모 작성
     void createMemo(Long memberId, MemoPostReqDto memoPostReqDto);
+
+    // 진행중인 일정 표시
+
+
+    // 주변 관광지 정보 가져오기
+
 }
