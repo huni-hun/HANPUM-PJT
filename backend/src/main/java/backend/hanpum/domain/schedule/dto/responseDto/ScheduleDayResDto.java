@@ -4,6 +4,7 @@ import backend.hanpum.domain.course.dto.responseDto.AttractionResDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -18,6 +19,8 @@ public class ScheduleDayResDto {
     String totalDistance;
     String totalDuration;
     String totalCalories;
+    @Setter
     List<ScheduleWayPointResDto> scheduleWayPointList;
+    @Setter
     List<AttractionResDto> attractionList;
 }

@@ -3,7 +3,10 @@ package backend.hanpum.domain.schedule.repository.custom;
 import backend.hanpum.domain.course.dto.responseDto.AttractionResDto;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
-import backend.hanpum.domain.schedule.dto.responseDto.*;
+import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
+import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
+import backend.hanpum.domain.schedule.dto.responseDto.ScheduleTempResDto;
+import backend.hanpum.domain.schedule.dto.responseDto.ScheduleWayPointResDto;
 import backend.hanpum.exception.exception.auth.MemberNotFoundException;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -56,9 +59,12 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 
     }
 
+
+    /* case 1 */
     @Override
     public Optional<ScheduleDayResDto> getScheduleDayResDto(Long memberId, Long scheduleId, int day) {
-        return Optional.ofNullable(query.select(
+        // ScheduleDay의 주요 정보를 한 번의 쿼리로 가져옴
+        ScheduleDayResDto scheduleDayResDto = query.select(
                         Projections.constructor(ScheduleDayResDto.class,
                                 scheduleDay.id,
                                 scheduleDay.date,
@@ -66,45 +72,31 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                                 scheduleDay.running,
                                 scheduleDay.courseDay.totalDistance,
                                 scheduleDay.courseDay.totalDuration,
-                                scheduleDay.courseDay.totalCalorie,
-                                Projections.list(
-                                        Projections.constructor(ScheduleWayPointResDto.class,
-                                                scheduleWayPoint.id,
-                                                waypoint.name,
-                                                waypoint.type,
-                                                waypoint.address,
-                                                waypoint.lat,
-                                                waypoint.lon,
-                                                scheduleWayPoint.visit
-                                        )
-                                ),
-                                Projections.list(
-                                        Projections.constructor(AttractionResDto.class,
-                                                attraction.attractionId,
-                                                attraction.name,
-                                                attraction.type,
-                                                attraction.address,
-                                                attraction.lat,
-                                                attraction.lon,
-                                                attraction.img
-                                        )
-                                )
-                        )
-                )
+                                scheduleDay.courseDay.totalCalorie
+                        ))
                 .from(scheduleDay)
                 .leftJoin(scheduleDay.courseDay, courseDay)
-                .leftJoin(scheduleDay.scheduleWayPointList, scheduleWayPoint)
-                .leftJoin(scheduleWayPoint.waypoint, waypoint)
-                .leftJoin(courseDay.attractions, attraction)
                 .where(scheduleDay.schedule.id.eq(scheduleId)
                         .and(scheduleDay.courseDay.dayNumber.eq(day))
                         .and(scheduleDay.schedule.member.memberId.eq(memberId)))
-                .fetchOne());
+                .fetchOne();
+
+        if (scheduleDayResDto != null) {
+            // 연관된 ScheduleWayPoint 데이터를 서브 쿼리로 가져옴
+            List<ScheduleWayPointResDto> wayPoints = getScheduleWayPointResDtoList(scheduleDayResDto.getScheduleDayId());
+            scheduleDayResDto.setScheduleWayPointList(wayPoints);
+
+            // 연관된 Attraction 데이터를 서브 쿼리로 가져옴
+            List<AttractionResDto> attractions = getAttractionResDtoList(scheduleDayResDto.getScheduleDayId());
+            scheduleDayResDto.setAttractionList(attractions);
+        }
+
+        return Optional.ofNullable(scheduleDayResDto);
     }
 
     @Override
     public Optional<List<ScheduleDayResDto>> getScheduleDayResDtoList(Long memberId, Long scheduleId) {
-        return Optional.ofNullable(query.select(
+        List<ScheduleDayResDto> scheduleDays = query.select(
                         Projections.constructor(ScheduleDayResDto.class,
                                 scheduleDay.id,
                                 scheduleDay.date,
@@ -112,40 +104,150 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                                 scheduleDay.running,
                                 scheduleDay.courseDay.totalDistance,
                                 scheduleDay.courseDay.totalDuration,
-                                scheduleDay.courseDay.totalCalorie,
-                                Projections.list(
-                                        Projections.constructor(ScheduleWayPointResDto.class,
-                                                scheduleWayPoint.id,
-                                                waypoint.name,
-                                                waypoint.type,
-                                                waypoint.address,
-                                                waypoint.lat,
-                                                waypoint.lon
-                                        )
-                                ),
-                                Projections.list(
-                                        Projections.constructor(AttractionResDto.class,
-                                                attraction.attractionId,
-                                                attraction.name,
-                                                attraction.type,
-                                                attraction.address,
-                                                attraction.lat,
-                                                attraction.lon,
-                                                attraction.img
-                                        )
-                                )
-                        )
-                )
+                                scheduleDay.courseDay.totalCalorie
+                        ))
                 .from(scheduleDay)
-                .leftJoin(scheduleDay.scheduleWayPointList, scheduleWayPoint)
-                .leftJoin(scheduleWayPoint.waypoint, waypoint)
                 .leftJoin(scheduleDay.courseDay, courseDay)
-                .leftJoin(courseDay.attractions, attraction) // ScheduleDay.courseDay.attractions로 접근
                 .where(scheduleDay.schedule.id.eq(scheduleId)
                         .and(scheduleDay.schedule.member.memberId.eq(memberId)))
                 .orderBy(scheduleDay.courseDay.dayNumber.asc())
-                .fetch());
+                .fetch();
+
+        if (scheduleDays != null && !scheduleDays.isEmpty()) {
+            for (ScheduleDayResDto scheduleDayResDto : scheduleDays) {
+                // 연관된 ScheduleWayPoint 데이터를 서브 쿼리로 가져옴
+                List<ScheduleWayPointResDto> wayPoints = getScheduleWayPointResDtoList(scheduleDayResDto.getScheduleDayId());
+                scheduleDayResDto.setScheduleWayPointList(wayPoints);
+
+                // 연관된 Attraction 데이터를 서브 쿼리로 가져옴
+                List<AttractionResDto> attractions = getAttractionResDtoList(scheduleDayResDto.getScheduleDayId());
+                scheduleDayResDto.setAttractionList(attractions);
+            }
+        }
+
+        return Optional.ofNullable(scheduleDays);
     }
+
+    private List<ScheduleWayPointResDto> getScheduleWayPointResDtoList(Long scheduleDayId) {
+        return query.select(Projections.constructor(ScheduleWayPointResDto.class,
+                        scheduleWayPoint.id,
+                        waypoint.name,
+                        waypoint.type,
+                        waypoint.address,
+                        waypoint.lat,
+                        waypoint.lon,
+                        scheduleWayPoint.visit))
+                .from(scheduleWayPoint)
+                .leftJoin(scheduleWayPoint.waypoint, waypoint)
+                .where(scheduleWayPoint.scheduleDay.id.eq(scheduleDayId))
+                .fetch();
+    }
+
+    private List<AttractionResDto> getAttractionResDtoList(Long scheduleDayId) {
+        return query.select(Projections.constructor(AttractionResDto.class,
+                        attraction.attractionId,
+                        attraction.name,
+                        attraction.type,
+                        attraction.address,
+                        attraction.lat,
+                        attraction.lon,
+                        attraction.img))
+                .from(attraction)
+                .where(attraction.courseDay.scheduleDayList.any().id.eq(scheduleDayId))
+                .fetch();
+    }
+
+    /* case 2 */
+//    @Override
+//    public Optional<ScheduleDayResDto> getScheduleDayResDto(Long memberId, Long scheduleId, int day) {
+//        return Optional.ofNullable(query.select(
+//                        Projections.constructor(ScheduleDayResDto.class,
+//                                scheduleDay.id,
+//                                scheduleDay.date,
+//                                scheduleDay.visit,
+//                                scheduleDay.running,
+//                                courseDay.totalDistance,
+//                                courseDay.totalDuration,
+//                                courseDay.totalCalorie,
+//                                Projections.list(
+//                                        Projections.constructor(ScheduleWayPointResDto.class,
+//                                                scheduleWayPoint.id,
+//                                                waypoint.name,
+//                                                waypoint.type,
+//                                                waypoint.address,
+//                                                waypoint.lat,
+//                                                waypoint.lon,
+//                                                scheduleWayPoint.visit
+//                                        )
+//                                ),
+//                                Projections.list(
+//                                        Projections.constructor(AttractionResDto.class,
+//                                                attraction.attractionId,
+//                                                attraction.name,
+//                                                attraction.type,
+//                                                attraction.address,
+//                                                attraction.lat,
+//                                                attraction.lon,
+//                                                attraction.img
+//                                        )
+//                                )
+//                        ))
+//                .from(scheduleDay)
+//                .leftJoin(scheduleDay.courseDay, courseDay)
+//                .leftJoin(scheduleDay.scheduleWayPointList, scheduleWayPoint).fetchJoin()
+//                .leftJoin(scheduleWayPoint.waypoint, waypoint)
+//                .leftJoin(courseDay.attractions, attraction).fetchJoin()
+//                .where(scheduleDay.schedule.id.eq(scheduleId)
+//                        .and(scheduleDay.courseDay.dayNumber.eq(day))
+//                        .and(scheduleDay.schedule.member.memberId.eq(memberId)))
+//                .fetchOne());
+//    }
+
+//    @Override
+//    public Optional<List<ScheduleDayResDto>> getScheduleDayResDtoList(Long memberId, Long scheduleId) {
+//        return Optional.ofNullable(query.select(
+//                        Projections.constructor(ScheduleDayResDto.class,
+//                                scheduleDay.id,
+//                                scheduleDay.date,
+//                                scheduleDay.visit,
+//                                scheduleDay.running,
+//                                courseDay.totalDistance,
+//                                courseDay.totalDuration,
+//                                courseDay.totalCalorie,
+//                                Projections.list(
+//                                        Projections.constructor(ScheduleWayPointResDto.class,
+//                                                scheduleWayPoint.id,
+//                                                waypoint.name,
+//                                                waypoint.type,
+//                                                waypoint.address,
+//                                                waypoint.lat,
+//                                                waypoint.lon
+//                                        )
+//                                ),
+//                                Projections.list(
+//                                        Projections.constructor(AttractionResDto.class,
+//                                                attraction.attractionId,
+//                                                attraction.name,
+//                                                attraction.type,
+//                                                attraction.address,
+//                                                attraction.lat,
+//                                                attraction.lon,
+//                                                attraction.img
+//                                        )
+//                                )
+//                        ))
+//                .from(scheduleDay)
+//                .leftJoin(scheduleDay.courseDay, courseDay)
+//                .leftJoin(scheduleDay.scheduleWayPointList, scheduleWayPoint).fetchJoin()
+//                .leftJoin(scheduleWayPoint.waypoint, waypoint)
+//                .leftJoin(courseDay.attractions, attraction).fetchJoin()
+//                .where(scheduleDay.schedule.id.eq(scheduleId)
+//                        .and(scheduleDay.schedule.member.memberId.eq(memberId)))
+//                .orderBy(scheduleDay.courseDay.dayNumber.asc())
+//                .fetch());
+//    }
+
+/* */
 
     @Override
     public int activateScheduleForToday(String startDate) {
