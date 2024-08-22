@@ -140,7 +140,6 @@ public class AuthServiceImpl implements AuthService {
         member.kakaoSingUpComplete(
                 kakaoSignUpCompleteReqDto.getNickname(),
                 kakaoSignUpCompleteReqDto.getGender(),
-                kakaoSignUpCompleteReqDto.getName(),
                 kakaoSignUpCompleteReqDto.getBirthDate(),
                 kakaoSignUpCompleteReqDto.getPhoneNumber(),
                 MemberType.KAKAO

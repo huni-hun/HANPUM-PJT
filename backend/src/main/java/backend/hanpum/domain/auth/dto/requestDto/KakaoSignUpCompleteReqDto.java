@@ -15,7 +15,6 @@ import java.util.Date;
 public class KakaoSignUpCompleteReqDto {
     private String nickname;
     private Gender gender;
-    private String name;
     private Date birthDate;
     private String phoneNumber;
 }

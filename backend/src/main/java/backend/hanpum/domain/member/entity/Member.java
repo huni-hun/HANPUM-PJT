@@ -105,11 +105,10 @@ public class Member {
         this.profilePicture = profilePicture;
     }
 
-    public void kakaoSingUpComplete(String nickname, Gender gender, String name, Date birthDate,
+    public void kakaoSingUpComplete(String nickname, Gender gender, Date birthDate,
                                     String phoneNumber, MemberType memberType){
         this.nickname = nickname;
         this.gender = gender;
-        this.name = name;
         this.birthDate = birthDate;
         this.phoneNumber = phoneNumber;
         this.memberType = memberType;
