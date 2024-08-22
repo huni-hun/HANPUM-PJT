@@ -21,8 +21,7 @@ public class ScheduleInProgressResDto {
     String startDate;       // 시작일
     String endDate;         // 종료일
     String totalDistance;   // 총 거리
-    String rate;            // 달성률
+    int rate;            // 달성률
     WeatherResDto weatherResDto;         // 날씨
     List<ScheduleDayResDto> scheduleDayResDtoList;
-    List<AttractionResDto> attractions;     // 관광지
 }

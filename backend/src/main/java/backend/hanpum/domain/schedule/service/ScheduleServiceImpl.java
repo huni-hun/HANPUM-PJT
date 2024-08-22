@@ -9,10 +9,7 @@ import backend.hanpum.domain.group.repository.GroupRepository;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.domain.schedule.dto.requestDto.*;
-import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
-import backend.hanpum.domain.schedule.dto.responseDto.ScheduleInProgressResDto;
-import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
-import backend.hanpum.domain.schedule.dto.responseDto.ScheduleTempResDto;
+import backend.hanpum.domain.schedule.dto.responseDto.*;
 import backend.hanpum.domain.schedule.entity.Memo;
 import backend.hanpum.domain.schedule.entity.Schedule;
 import backend.hanpum.domain.schedule.entity.ScheduleDay;
@@ -233,7 +230,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         memoRepository.save(memo);
     }
 
-    @Scheduled(cron = "0 0 * * * *")
+    @Scheduled(cron = "0 0 0 * * *")
     @Transactional
     @Override
     public void activateSchedules() {
@@ -247,22 +244,72 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Transactional(readOnly = true)
     @Override
     public ScheduleInProgressResDto getRunningSchedule(Long memberId, double lat, double lon) {
-        WeatherResDto weatherResDto = weatherService.getDayWeather(lat, lon);
+        // 진행중인 일정 정보 가져오기
         ScheduleTempResDto scheduleTempResDto = scheduleRepository.getScheduleTempResDto(memberId).orElseThrow(ValidScheduleNotFoundException::new);
-        List<ScheduleDayResDto> scheduleDayResDtoList = scheduleRepository.getScheduleDayResDtoList(memberId, scheduleTempResDto.getScheduleId()).orElseThrow(ScheduleNotFoundException::new
-        );
+
+        Long scheduleId = scheduleTempResDto.getScheduleId();
+
+        // ScheduleDayResDto
+        List<ScheduleDayResDto> scheduleDayResDtoList = scheduleRepository.getScheduleDayResDtoList(memberId, scheduleId).orElseThrow(ScheduleNotFoundException::new);
+
+        // 날씨 정보
+        WeatherResDto weatherResDto = weatherService.getDayWeather(lat, lon);
+
+        // 달성률
+        int rate = getScheduleGoalRate(scheduleDayResDtoList);
+
         ScheduleInProgressResDto result = ScheduleInProgressResDto.builder()
-                .scheduleId(scheduleTempResDto.getScheduleId())
+                .scheduleId(scheduleId)
                 .startPoint(scheduleTempResDto.getStartPoint())
                 .endPoint(scheduleTempResDto.getEndPoint())
                 .startDate(scheduleTempResDto.getStartDate())
                 .endDate(scheduleTempResDto.getEndDate())
                 .totalDistance(scheduleTempResDto.getTotalDistance())
-//                .rate()
+                .rate(rate)
                 .weatherResDto(weatherResDto)
                 .scheduleDayResDtoList(scheduleDayResDtoList)
-//                .attractions()
                 .build();
         return result;
+    }
+
+    private int getScheduleGoalRate(List<ScheduleDayResDto> scheduleDayResDtoList) {
+
+        int rate = 0;
+        int size = scheduleDayResDtoList.size();
+        int dayRate = 100 / size;
+
+        // 첫쨰날도 방문 안했을때
+        if (!scheduleDayResDtoList.get(0).isVisit()) {
+            List<ScheduleWayPointResDto> scheduleWayPointResDtoList = scheduleDayResDtoList.get(0).getScheduleWayPointList();
+            int wayPointSize = scheduleWayPointResDtoList.size();
+            int wayPointCount = 0;
+            for (ScheduleWayPointResDto scheduleWayPointResDto : scheduleWayPointResDtoList) {
+                if (scheduleWayPointResDto.isVisit()) {
+                    wayPointCount++;
+                }
+            }
+            rate = dayRate * (wayPointCount / wayPointSize);
+            return rate;
+        }
+
+        int dayCount = 0;
+        for (ScheduleDayResDto scheduleDayResDto : scheduleDayResDtoList) {
+            if (scheduleDayResDto.isVisit()) {
+                dayCount++;
+            } else {
+                List<ScheduleWayPointResDto> scheduleWayPointResDtoList = scheduleDayResDto.getScheduleWayPointList();
+                int wayPointSize = scheduleWayPointResDtoList.size();
+                int wayPointCount = 0;
+                for (ScheduleWayPointResDto scheduleWayPointResDto : scheduleWayPointResDtoList) {
+                    if (scheduleWayPointResDto.isVisit()) {
+                        wayPointCount++;
+                    }
+                }
+                rate += dayRate * (wayPointCount / wayPointSize);
+            }
+        }
+        rate += (dayCount * dayRate);
+
+        return rate;
     }
 }

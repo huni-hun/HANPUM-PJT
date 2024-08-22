@@ -1,5 +1,6 @@
 package backend.hanpum.domain.schedule.repository.custom;
 
+import backend.hanpum.domain.course.dto.responseDto.AttractionResDto;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.domain.schedule.dto.responseDto.*;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.Optional;
 
+import static backend.hanpum.domain.course.entity.QAttraction.attraction;
 import static backend.hanpum.domain.course.entity.QCourseDay.courseDay;
 import static backend.hanpum.domain.course.entity.QWaypoint.waypoint;
 import static backend.hanpum.domain.schedule.entity.QSchedule.schedule;
@@ -60,10 +62,11 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         Projections.constructor(ScheduleDayResDto.class,
                                 scheduleDay.id,
                                 scheduleDay.date,
+                                scheduleDay.visit,
                                 scheduleDay.running,
-                                courseDay.totalDistance,
-                                courseDay.totalDuration,
-                                courseDay.totalCalorie,
+                                scheduleDay.courseDay.totalDistance,
+                                scheduleDay.courseDay.totalDuration,
+                                scheduleDay.courseDay.totalCalorie,
                                 Projections.list(
                                         Projections.constructor(ScheduleWayPointResDto.class,
                                                 scheduleWayPoint.id,
@@ -71,15 +74,31 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                                                 waypoint.type,
                                                 waypoint.address,
                                                 waypoint.lat,
-                                                waypoint.lon
+                                                waypoint.lon,
+                                                scheduleWayPoint.visit
+                                        )
+                                ),
+                                Projections.list(
+                                        Projections.constructor(AttractionResDto.class,
+                                                attraction.attractionId,
+                                                attraction.name,
+                                                attraction.type,
+                                                attraction.address,
+                                                attraction.lat,
+                                                attraction.lon,
+                                                attraction.img
                                         )
                                 )
                         )
-                ).from(scheduleDay)
+                )
+                .from(scheduleDay)
                 .leftJoin(scheduleDay.courseDay, courseDay)
                 .leftJoin(scheduleDay.scheduleWayPointList, scheduleWayPoint)
                 .leftJoin(scheduleWayPoint.waypoint, waypoint)
-                .where(scheduleDay.schedule.id.eq(scheduleId).and(scheduleDay.courseDay.dayNumber.eq(day)).and(scheduleDay.schedule.member.memberId.eq(memberId)))
+                .leftJoin(courseDay.attractions, attraction)
+                .where(scheduleDay.schedule.id.eq(scheduleId)
+                        .and(scheduleDay.courseDay.dayNumber.eq(day))
+                        .and(scheduleDay.schedule.member.memberId.eq(memberId)))
                 .fetchOne());
     }
 
@@ -89,10 +108,11 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         Projections.constructor(ScheduleDayResDto.class,
                                 scheduleDay.id,
                                 scheduleDay.date,
+                                scheduleDay.visit,
                                 scheduleDay.running,
-                                courseDay.totalDistance,
-                                courseDay.totalDuration,
-                                courseDay.totalCalorie,
+                                scheduleDay.courseDay.totalDistance,
+                                scheduleDay.courseDay.totalDuration,
+                                scheduleDay.courseDay.totalCalorie,
                                 Projections.list(
                                         Projections.constructor(ScheduleWayPointResDto.class,
                                                 scheduleWayPoint.id,
@@ -102,13 +122,27 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                                                 waypoint.lat,
                                                 waypoint.lon
                                         )
+                                ),
+                                Projections.list(
+                                        Projections.constructor(AttractionResDto.class,
+                                                attraction.attractionId,
+                                                attraction.name,
+                                                attraction.type,
+                                                attraction.address,
+                                                attraction.lat,
+                                                attraction.lon,
+                                                attraction.img
+                                        )
                                 )
                         )
-                ).from(scheduleDay)
-                .leftJoin(scheduleDay.courseDay, courseDay)
+                )
+                .from(scheduleDay)
                 .leftJoin(scheduleDay.scheduleWayPointList, scheduleWayPoint)
                 .leftJoin(scheduleWayPoint.waypoint, waypoint)
-                .where(scheduleDay.schedule.id.eq(scheduleId).and(scheduleDay.schedule.member.memberId.eq(memberId)))
+                .leftJoin(scheduleDay.courseDay, courseDay)
+                .leftJoin(courseDay.attractions, attraction) // ScheduleDay.courseDay.attractions로 접근
+                .where(scheduleDay.schedule.id.eq(scheduleId)
+                        .and(scheduleDay.schedule.member.memberId.eq(memberId)))
                 .orderBy(scheduleDay.courseDay.dayNumber.asc())
                 .fetch());
     }
