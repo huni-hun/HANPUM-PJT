@@ -9,6 +9,7 @@ import backend.hanpum.domain.schedule.dto.responseDto.ScheduleTempResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleWayPointResDto;
 import backend.hanpum.exception.exception.auth.MemberNotFoundException;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -247,7 +248,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 //                .fetch());
 //    }
 
-/* */
+    /* */
 
     @Override
     public int activateScheduleForToday(String startDate) {
@@ -261,6 +262,10 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 
     @Override
     public Optional<ScheduleTempResDto> getScheduleTempResDto(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+
+        Long groupId = member.getGroupMember() != null ? member.getGroupMember().getGroup().getGroupId() : null;
+
         return Optional.ofNullable(query.select(Projections.constructor(ScheduleTempResDto.class,
                         schedule.id,
                         schedule.course.startPoint,
@@ -268,7 +273,19 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         schedule.startDate,
                         schedule.endDate,
                         schedule.course.totalDistance
-                )).from(schedule).where(schedule.member.memberId.eq(memberId).and(schedule.state.eq(true)))
+                )).from(schedule)
+                .where(schedule.state.eq(true).and(memberCondition(memberId))
+                )
                 .fetchOne());
+    }
+
+    private BooleanExpression memberCondition(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+        Long groupId = member.getGroupMember() == null ? null : member.getGroupMember().getGroup().getGroupId();
+        if (groupId != null) {
+            return schedule.member.memberId.eq(memberId).or(schedule.group.groupId.eq(groupId));
+        } else {
+            return schedule.member.memberId.eq(memberId);
+        }
     }
 }
