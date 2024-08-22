@@ -136,8 +136,8 @@ public class AuthServiceImpl implements AuthService {
         if (!passwordEncoder.matches(loginReqDto.getPassword(), member.getPassword())) {
             throw new LoginInfoInvalidException();
         }
-        TokenResDto tokenResDto = jwtProvider.createTokenByLogin(member.getEmail(), member.getMemberType());
-        return new LoginResDto(member.getEmail(), tokenResDto);
+        TokenResDto tokenResDto = jwtProvider.createTokenByLogin(member.getLoginId(), member.getMemberType());
+        return new LoginResDto(member.getMemberId(), member.getMemberType(), tokenResDto);
     }
 
     @Override
@@ -148,9 +148,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional(readOnly = true)
-    public ReissueAccessTokenResDto reissueToken(String accessToken, TokenReissueReqDto tokenReissueReqDto) {
-        Member member = memberRepository.findMemberByEmail(jwtProvider.getEmailFromExpiredToken(accessToken)).orElseThrow(EmailNotFoundException::new);
-        return jwtProvider.reissueAccessToken(member.getEmail(), member.getMemberType(), tokenReissueReqDto.getRefreshToken());
+    public ReissueAccessTokenResDto reissueToken(String accessToken) {
+        Member member = memberRepository.findMemberByLoginId(jwtProvider.getLoginIdFromExpiredToken(accessToken)).orElseThrow(LoginInfoInvalidException::new);
+        return jwtProvider.reissueAccessToken(member.getLoginId(), member.getMemberType());
     }
 
     @Override

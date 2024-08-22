@@ -16,7 +16,7 @@ public interface AuthService {
     void signUp(MultipartFile multipartFile, SignUpReqDto signUpReqDto);
     LoginResDto login(LoginReqDto loginReqDto);
     void logout(String accessToken);
-    ReissueAccessTokenResDto reissueToken(String accessToken, TokenReissueReqDto tokenReissueReqDto);
+    ReissueAccessTokenResDto reissueToken(String accessToken);
     FindMemberLoginIdResDto findMemberLoginId(FindMemberLoginIdReqDto findMemberPasswordReqDto);
     void findMemberPassword(FindMemberPasswordReqDto findMemberPasswordReqDto);
 }

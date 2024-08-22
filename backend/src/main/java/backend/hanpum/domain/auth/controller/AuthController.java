@@ -5,7 +5,6 @@ import backend.hanpum.config.jwt.UserDetailsImpl;
 import backend.hanpum.domain.auth.dto.requestDto.*;
 import backend.hanpum.domain.auth.dto.responseDto.LoginResDto;
 import backend.hanpum.domain.auth.service.AuthService;
-import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.exception.format.code.ApiResponse;
 import backend.hanpum.exception.format.response.ResponseCode;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,7 +14,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -81,8 +79,8 @@ public class AuthController {
 
     @Operation(summary = "토큰 재발급", description = "토큰 재발급 API")
     @PostMapping("/reissue-token")
-    public ResponseEntity<?> reissueToken(@RequestBody TokenReissueReqDto tokenReissueReqDto, HttpServletRequest request) {
-        return response.success(ResponseCode.TOKEN_REISSUE_SUCCESS, authService.reissueToken(jwtProvider.getJwtFromRequest(request), tokenReissueReqDto));
+    public ResponseEntity<?> reissueToken(HttpServletRequest request) {
+        return response.success(ResponseCode.TOKEN_REISSUE_SUCCESS, authService.reissueToken(jwtProvider.getJwtFromRequest(request)));
     }
 
     @Operation(summary = "로그인 아이디 찾기", description = "로그인 아이디 찾기 API")
