@@ -22,6 +22,10 @@ public class ScheduleWayPoint {
     @Column(name = "schedule_waypoint_id")
     private Long id;
 
+    @Builder.Default
+    @Column(name = "visit")
+    private boolean visit= false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Waypoint waypoint;
 
