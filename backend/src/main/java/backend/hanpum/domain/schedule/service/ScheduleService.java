@@ -1,6 +1,7 @@
 package backend.hanpum.domain.schedule.service;
 
 import backend.hanpum.domain.schedule.dto.requestDto.*;
+import backend.hanpum.domain.schedule.dto.responseDto.NearByAttractionResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleInProgressResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
@@ -43,5 +44,6 @@ public interface ScheduleService {
     ScheduleInProgressResDto getRunningSchedule(Long memberId, double lat, double lon);
 
     // 주변 관광지 정보 가져오기
+    List<NearByAttractionResDto> getNearByAttractionList(String OS, int distance, double lat, double lon);
 
 }

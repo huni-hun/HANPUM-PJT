@@ -5,6 +5,7 @@ import backend.hanpum.domain.schedule.dto.requestDto.MemoPostReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.ScheduleRunReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.ScheduleStartReqDto;
+import backend.hanpum.domain.schedule.dto.responseDto.NearByAttractionResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleInProgressResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
@@ -118,6 +119,16 @@ public class ScheduleController {
         Long memberId = userDetails.getMember().getMemberId();
         ScheduleInProgressResDto result = scheduleService.getRunningSchedule(memberId, lat, lon);
         return response.success(ResponseCode.RUNNING_SCHEDULE_FETCHED, result);
+    }
+
+    @Operation(summary = "주변 관광지 정보 가져오기", description = "주변 관광지 정보 가져오기")
+    @GetMapping("/nearby")
+    public ResponseEntity<?> getNearByAttractionList(@RequestParam String OS,
+                                                     @RequestParam int distance,
+                                                     @RequestParam double lat,
+                                                     @RequestParam double lon) {
+        List<NearByAttractionResDto> result = scheduleService.getNearByAttractionList(OS, distance, lat, lon);
+        return response.success(ResponseCode.NEARBY_ATTRACTION_LIST_FETCHED, result);
     }
 
 }

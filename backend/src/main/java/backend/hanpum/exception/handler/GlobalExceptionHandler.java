@@ -132,6 +132,13 @@ public class GlobalExceptionHandler {
         return response.error(e.getErrorCode());
     }
 
+    @ExceptionHandler(NearByAttractionNotFoundException.class)
+    protected ResponseEntity<?> handle(NearByAttractionNotFoundException e){
+        log.error("NearByAttractionNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
     /* 날씨 */
     @ExceptionHandler(WeatherParsingException.class)
     protected ResponseEntity<?> handle(WeatherParsingException e) {

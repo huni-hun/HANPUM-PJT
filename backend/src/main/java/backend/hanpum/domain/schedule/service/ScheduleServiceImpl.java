@@ -22,16 +22,25 @@ import backend.hanpum.domain.weather.dto.WeatherResDto;
 import backend.hanpum.domain.weather.service.WeatherService;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.auth.MemberInfoInvalidException;
+import backend.hanpum.exception.exception.common.JsonBadMappingException;
+import backend.hanpum.exception.exception.common.UriBadSyntaxException;
 import backend.hanpum.exception.exception.group.GroupMemberNotFoundException;
 import backend.hanpum.exception.exception.group.GroupNotFoundException;
 import backend.hanpum.exception.exception.schedule.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -47,7 +56,10 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final MemoRepository memoRepository;
     private final GroupRepository groupRepository;
     private final WeatherService weatherService;
+    private final RestTemplate restTemplate;
 
+    @Value("${api.serviceKey}")
+    private String serviceKey;
 
     @Transactional
     @Override
@@ -273,6 +285,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         return result;
     }
 
+
     private int getScheduleGoalRate(List<ScheduleDayResDto> scheduleDayResDtoList) {
 
         int rate = 0;
@@ -313,9 +326,72 @@ public class ScheduleServiceImpl implements ScheduleService {
         if (dayCount == size) {
             return 100;
         }
-        
+
         rate += (dayCount * dayRate);
 
         return rate;
+    }
+
+    @Override
+    public List<NearByAttractionResDto> getNearByAttractionList(String OS, int distance, double lat, double lon) {
+        String url = new StringBuilder("https://apis.data.go.kr/B551011/KorService1/locationBasedList1")
+                .append("?numOfRows=10")
+                .append("&pageNo=1")
+                .append("&MobileOS=").append(OS)
+                .append("&MobileApp=HANPUM")
+                .append("&_type=JSON")
+                .append("&arrange=O")
+                .append("&mapX=").append(lon)
+                .append("&mapY=").append(lat)
+                .append("&radius=").append(distance)
+                .append("&contentTypeId=12")
+                .append("&serviceKey=").append(serviceKey)
+                .toString();
+
+        try {
+            URI uri = new URI(url);
+            ResponseEntity<String> response = restTemplate.getForEntity(uri, String.class);
+            return parseAttractionResponse(response.getBody());
+        } catch (NearByAttractionNotFoundException e) {
+            throw e;
+        } catch (JsonBadMappingException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new UriBadSyntaxException();
+        }
+    }
+
+    private List<NearByAttractionResDto> parseAttractionResponse(String responseBody) {
+        List<NearByAttractionResDto> attractions = new ArrayList<>();
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode root = objectMapper.readTree(responseBody);
+            JsonNode items = root.path("response").path("body").path("items").path("item");
+
+            if (items.size() == 0) {
+                throw new NearByAttractionNotFoundException();
+            }
+
+            if (items.isArray()) {  // items가 배열인지 확인
+                for (JsonNode item : items) {
+                    NearByAttractionResDto attraction = NearByAttractionResDto.builder()
+                            .title(item.path("title").asText())
+                            .address(item.path("addr1").asText())
+                            .tel(item.path("tel").asText())
+                            .image1(item.path("firstimage").asText())
+                            .lat(item.path("mapy").asDouble())
+                            .lon(item.path("mapx").asDouble())
+                            .build();  // Builder 패턴으로 객체 생성
+
+                    attractions.add(attraction);  // 생성된 객체를 리스트에 추가
+                }
+            }
+
+            return attractions;
+        } catch (NearByAttractionNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new JsonBadMappingException();
+        }
     }
 }
