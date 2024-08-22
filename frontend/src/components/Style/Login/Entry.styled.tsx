@@ -14,14 +14,13 @@ export const EntryContainer = styled.div`
   .round {
     width: 100%;
     height: 100%;
-    /* background-color: pink; */
     .round_bg {
       margin-top: 32px;
       height: 100%;
       position: relative;
       overflow: hidden;
       width: 100%;
-      padding-bottom: 10rem;
+      padding-bottom: 5rem;
 
       .circle {
         width: 560px;

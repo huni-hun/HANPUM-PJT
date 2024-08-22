@@ -24,5 +24,5 @@ export default LoginPage;
 
 const LoginPageContainer = styled.div`
   width: 100vw;
-  height: 100vh;
+  height: 100%;
 `;
