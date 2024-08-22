@@ -8,8 +8,12 @@ import Flex from '../common/Flex';
 
 import * as S from '../Style/Login/Entry.styled';
 import { Dispatch, SetStateAction } from 'react';
+import { Link } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
+import { isInitAtom } from '@/atoms/isAuthEnticatedAtom';
 
-function Entry({ setInit }: { setInit: Dispatch<SetStateAction<boolean>> }) {
+function Entry() {
+  const setInit = useSetRecoilState(isInitAtom);
   return (
     <S.EntryContainer>
       <img src={logo} alt="logo" className="logo" />
@@ -32,12 +36,7 @@ function Entry({ setInit }: { setInit: Dispatch<SetStateAction<boolean>> }) {
               <Icon name="IconKakaoLogo" />
               <span>카카오로 시작하기</span>
             </div>
-            <div
-              className="local_login"
-              onClick={() => {
-                setInit(false);
-              }}
-            >
+            <div className="local_login" onClick={() => setInit(false)}>
               일반회원으로 시작하기
             </div>
           </div>

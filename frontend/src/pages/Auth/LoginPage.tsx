@@ -3,16 +3,19 @@ import styled from 'styled-components';
 import Entry from '@/components/Login/Entry';
 import { useEffect, useState } from 'react';
 import Form from '@/components/Login/Form';
+import { useRecoilValue } from 'recoil';
+import { isInitAtom } from '@/atoms/isAuthEnticatedAtom';
 
 function LoginPage() {
-  const [init, setInit] = useState(true);
+  // const [init, setInit] = useState(true);
+  const init = useRecoilValue(isInitAtom);
 
-  useEffect(() => {
-    setInit(true);
-  }, []);
+  // useEffect(() => {
+  //   setInit(true);
+  // }, []);
   return (
     <LoginPageContainer>
-      {init && <Entry setInit={setInit} />} {!init && <Form />}
+      {init && <Entry />} {!init && <Form />}
     </LoginPageContainer>
   );
 }

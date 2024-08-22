@@ -1,6 +1,12 @@
 import Text from './Text';
 
-function Message({ text, hasError }: { text: string; hasError?: boolean }) {
+function Message({
+  text,
+  hasError,
+}: {
+  text: string | null;
+  hasError?: boolean;
+}) {
   const labelColor = hasError ? 'red' : 'grey2';
   return (
     <Text

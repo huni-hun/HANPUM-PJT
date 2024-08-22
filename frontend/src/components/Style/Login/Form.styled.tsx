@@ -26,6 +26,13 @@ export const FormContainer = styled.div`
         border: 1px solid ${colors.grey2};
         box-sizing: border-box;
       }
+      .auto-check {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: ${colors.main};
+        border: none;
+      }
     }
   }
 
