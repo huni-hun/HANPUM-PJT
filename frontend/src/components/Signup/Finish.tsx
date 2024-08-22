@@ -7,7 +7,7 @@ import { useSetRecoilState } from 'recoil';
 import { signupStepAtom } from '@/atoms/signupStepAtom';
 import { useNavigate } from 'react-router-dom';
 
-function Finish({ name }: { name: string }) {
+function Finish({ nickname }: { nickname: string }) {
   const setStep = useSetRecoilState(signupStepAtom);
   const navigate = useNavigate();
   return (
@@ -16,7 +16,7 @@ function Finish({ name }: { name: string }) {
 
       <Flex $justify="center" direction="column" $align="center">
         <Text $typography="t20" $bold={true}>
-          {name}님
+          {nickname}님
         </Text>
         <p>
           <span>한품</span> 가입을 완료했어요

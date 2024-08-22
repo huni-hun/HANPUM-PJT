@@ -5,6 +5,7 @@ import Flex from '../common/Flex';
 import Icon from '../common/Icon/Icon';
 import Spacing from '../common/Spacing';
 import FixedBottomButton from '../common/FixedBottomButton';
+
 import { CertificationEmail, CheckEmail, CheckId } from '@/api/signup/POST';
 import { SignupRequestValues, UserSignupFormValues } from '@/models/signup';
 import {
@@ -302,6 +303,24 @@ function UserInfo({
       />
 
       <TextField
+        label="이름"
+        name="name"
+        onBlur={handleBlur}
+        value={formValues.name}
+        onChange={handleInfoChange}
+        hasError={dirty.name && Boolean(validate.name)}
+      />
+
+      {dirty.name && Boolean(validate.name) ? (
+        <Message
+          hasError={dirty.name && Boolean(validate.name)}
+          text={validate.name || ''}
+        />
+      ) : (
+        <Spacing size={4.2} />
+      )}
+
+      <TextField
         label="비밀번호"
         type="password"
         name="password"
@@ -336,24 +355,6 @@ function UserInfo({
             text={validate.checkPassword || ''}
           />
         </>
-      ) : (
-        <Spacing size={4.2} />
-      )}
-
-      <TextField
-        label="이름"
-        name="name"
-        onBlur={handleBlur}
-        value={formValues.name}
-        onChange={handleInfoChange}
-        hasError={dirty.name && Boolean(validate.name)}
-      />
-
-      {dirty.name && Boolean(validate.name) ? (
-        <Message
-          hasError={dirty.name && Boolean(validate.name)}
-          text={validate.name || ''}
-        />
       ) : (
         <Spacing size={4.2} />
       )}

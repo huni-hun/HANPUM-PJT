@@ -106,7 +106,7 @@ const SignupPage = () => {
           clickNext={clickNext}
         />
       )}
-      {step.currStep === 3 && <Finish name={formValues.name || ''} />}
+      {step.currStep === 3 && <Finish nickname={formValues.nickname || ''} />}
     </SignUpPageContainer>
   );
 };

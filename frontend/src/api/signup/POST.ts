@@ -1,5 +1,6 @@
 import { SignupRequestValues } from '@/models/signup';
 import api from '../index';
+import CryptoJS from 'crypto-js';
 
 // 아이디 중복확인
 export async function CheckId(loginId: string) {
@@ -39,8 +40,16 @@ export async function CheckNickname(nickname: string) {
 export async function SignUp(signupReq: SignupRequestValues) {
   const formData = new FormData();
 
-  const { multipartFile, ...rest } = signupReq;
-  const signUpReqDto = new Blob([JSON.stringify(rest)], {
+  const { multipartFile, password, ...rest } = signupReq;
+
+  // 비밀번호 hash화
+  const hashedPassword = CryptoJS.SHA256(password).toString();
+
+  const updatedRest = { ...rest, password: hashedPassword };
+
+  console.log(updatedRest);
+
+  const signUpReqDto = new Blob([JSON.stringify(updatedRest)], {
     type: 'application/json',
   });
 
