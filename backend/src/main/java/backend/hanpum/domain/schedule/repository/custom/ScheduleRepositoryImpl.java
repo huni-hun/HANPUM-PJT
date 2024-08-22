@@ -262,9 +262,6 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 
     @Override
     public Optional<ScheduleTempResDto> getScheduleTempResDto(Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
-
-        Long groupId = member.getGroupMember() != null ? member.getGroupMember().getGroup().getGroupId() : null;
 
         return Optional.ofNullable(query.select(Projections.constructor(ScheduleTempResDto.class,
                         schedule.id,

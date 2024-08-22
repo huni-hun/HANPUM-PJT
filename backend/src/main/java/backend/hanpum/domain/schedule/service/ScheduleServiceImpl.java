@@ -244,6 +244,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Transactional(readOnly = true)
     @Override
     public ScheduleInProgressResDto getRunningSchedule(Long memberId, double lat, double lon) {
+
         // 진행중인 일정 정보 가져오기
         ScheduleTempResDto scheduleTempResDto = scheduleRepository.getScheduleTempResDto(memberId).orElseThrow(ValidScheduleNotFoundException::new);
 
@@ -308,6 +309,11 @@ public class ScheduleServiceImpl implements ScheduleService {
                 rate += dayRate * (wayPointCount / wayPointSize);
             }
         }
+
+        if (dayCount == size) {
+            return 100;
+        }
+        
         rate += (dayCount * dayRate);
 
         return rate;
