@@ -20,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/course")
 public class CourseController {
+    //test
 
     private final ApiResponse response;
     private final CourseService courseService;
@@ -171,5 +172,13 @@ public class CourseController {
         SearchWaypointResDto searchWaypointResDto = courseService.searchWaypointByKeyword(searchWaypointReqDto.getKeyword());
 
         return response.success(ResponseCode.SEARCH_WAYPOINT_RESTAPI_SUCCESS, searchWaypointResDto);
+    }
+
+    @Operation(summary = "다중 경유지 경로 조회", description = "다중 경유지 경로 조회 API")
+    @PostMapping("/search/multiWaypoint")
+    public ResponseEntity<?> searchMultiWaypointCourse(@RequestBody List<MultiWaypointSearchReqDto> multiWaypointSearchReqDtoList) {
+        List<MultiWaypointSearchResDto> multiWaypointSearchResDtoList = courseService.searchMultiWaypointCourse(multiWaypointSearchReqDtoList);
+
+        return response.success(ResponseCode.SEARCH_MULTI_WAYPOINT_COURSE_RESTAPI_SUCCESS, multiWaypointSearchResDtoList);
     }
 }

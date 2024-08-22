@@ -2,6 +2,8 @@ package backend.hanpum.domain.course.service;
 
 import backend.hanpum.domain.course.dto.requestDto.EditCourseReqDto;
 import backend.hanpum.domain.course.dto.requestDto.MakeCourseReqDto;
+import backend.hanpum.domain.course.dto.requestDto.MultiWaypointSearchReqDto;
+import backend.hanpum.domain.course.dto.requestDto.SearchWaypointReqDto;
 import backend.hanpum.domain.course.dto.responseDto.*;
 import backend.hanpum.domain.course.enums.CourseTypes;
 import org.springframework.data.domain.Pageable;
@@ -25,4 +27,5 @@ public interface CourseService {
     void updateCourseUsageHistory(Long courseId, Long memberId, Double progressRate);
     List<AttractionResDto> searchAttractionsByKeyword(String keyword, Integer contentType);
     SearchWaypointResDto searchWaypointByKeyword(String keyword);
+    List<MultiWaypointSearchResDto> searchMultiWaypointCourse(List<MultiWaypointSearchReqDto> multiWaypointSearchReqDtoList);
 }
