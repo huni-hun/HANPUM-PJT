@@ -25,7 +25,7 @@ public class JwtProvider {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String AUTHORIZATION_KEY = "type";
-    private static final String BEARER_PREFIX = "Bearer ";
+    private static final String BEARER_PREFIX = "Bearer+";
 
     private static final long ACCESS_TOKEN_TIME = 1000 * 60 * 30L; // 30 분 1000ms(=1s) *60=(1min)*30 =(30min)
     private static final long REFRESH_TOKEN_TIME = 1000 * 60 * 60 * 24 * 14L; // 14일
