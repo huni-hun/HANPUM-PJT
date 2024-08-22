@@ -20,8 +20,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/course")
 public class CourseController {
-    //test
-
     private final ApiResponse response;
     private final CourseService courseService;
 
