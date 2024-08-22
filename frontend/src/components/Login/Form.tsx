@@ -17,6 +17,7 @@ import BaseButton from '../common/BaseButton';
 import { UserSignupFormValues } from '@/models/signup';
 import Message from '../common/Message';
 import Icon from '../common/Icon/Icon';
+import CryptoJS from 'crypto-js';
 
 const Form = () => {
   const navigate = useNavigate();
@@ -74,7 +75,7 @@ const Form = () => {
 
   const { mutate } = useMutation(
     ({ loginId, password }: { loginId: string; password: string }) =>
-      Login(loginId, password),
+      Login(loginId, CryptoJS.SHA256(password).toString()),
     {
       onSuccess: (res) => {
         if (res.status === STATUS.success) {
