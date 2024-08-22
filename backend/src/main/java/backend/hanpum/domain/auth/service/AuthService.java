@@ -14,6 +14,7 @@ public interface AuthService {
     void checkLoginIdDuplication(CheckLoginIdDuplicationReqDto checkLoginIdDuplicationReqDto);
     void checkNicknameDuplication(CheckNicknameDuplicationReqDto checkNicknameDuplicationReqDto);
     void signUp(MultipartFile multipartFile, SignUpReqDto signUpReqDto);
+    void kakaoSingUpComplete(Long memberId, MultipartFile multipartFile, KakaoSignUpCompleteReqDto kakaoSignUpCompleteReqDto);
     LoginResDto login(LoginReqDto loginReqDto);
     void logout(String accessToken);
     ReissueAccessTokenResDto reissueToken(String accessToken);

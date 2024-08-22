@@ -9,6 +9,7 @@ import backend.hanpum.domain.auth.dto.responseDto.LoginResDto;
 import backend.hanpum.domain.auth.dto.responseDto.ReissueAccessTokenResDto;
 import backend.hanpum.domain.auth.dto.responseDto.TokenResDto;
 import backend.hanpum.domain.member.entity.Member;
+import backend.hanpum.domain.member.enums.MemberType;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.auth.*;
 import lombok.RequiredArgsConstructor;
@@ -127,6 +128,27 @@ public class AuthServiceImpl implements AuthService {
         redisDao.deleteEmail(signUpReqDto.getEmail());
         redisDao.deleteLoginId(signUpReqDto.getLoginId());
         redisDao.deleteNickname(signUpReqDto.getNickname());
+    }
+
+    @Override
+    @Transactional
+    public void kakaoSingUpComplete(Long memberId, MultipartFile multipartFile,
+                                    KakaoSignUpCompleteReqDto kakaoSignUpCompleteReqDto) {
+        Member member = memberRepository.findByMemberIdAndMemberType(memberId, MemberType.KAKAO_INCOMPLETE)
+                .orElseThrow(MemberNotFoundException::new);
+        checkNicknameAuthenticated(kakaoSignUpCompleteReqDto.getNickname());
+        member.kakaoSingUpComplete(
+                kakaoSignUpCompleteReqDto.getNickname(),
+                kakaoSignUpCompleteReqDto.getGender(),
+                kakaoSignUpCompleteReqDto.getName(),
+                kakaoSignUpCompleteReqDto.getBirthDate(),
+                kakaoSignUpCompleteReqDto.getPhoneNumber(),
+                MemberType.KAKAO
+        );
+        if (!multipartFile.isEmpty()) {
+            member.updateProfilePicture(s3ImageService.uploadImage(multipartFile));
+        }
+        redisDao.deleteNickname(kakaoSignUpCompleteReqDto.getNickname());
     }
 
     @Override

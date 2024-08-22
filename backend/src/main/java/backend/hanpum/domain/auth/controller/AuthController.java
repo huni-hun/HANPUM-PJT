@@ -63,6 +63,15 @@ public class AuthController {
         return response.success(ResponseCode.SING_UP_SUCCESS);
     }
 
+    @Operation(summary = "카카오 회원 가입 완료", description = "카카오 회원 가입 완료 API")
+    @PostMapping("/complete-signup/kakao")
+    public ResponseEntity<?> kakaoSingUpComplete(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                 @RequestPart(required = false) MultipartFile multipartFile,
+                                                 @RequestPart @Valid KakaoSignUpCompleteReqDto kakaoSignUpCompleteReqDto) {
+        authService.kakaoSingUpComplete(userDetails.getMember().getMemberId(), multipartFile, kakaoSignUpCompleteReqDto);
+        return response.success(ResponseCode.KAKAO_SING_UP_SUCCESS);
+    }
+
     @Operation(summary = "로그인", description = "로그인 API")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid LoginReqDto loginReqDto) {
