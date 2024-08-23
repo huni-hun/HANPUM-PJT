@@ -44,6 +44,12 @@ export const buttonSizeMap = {
     height: 4.8rem;
     border-radius: 7px;
   `,
+
+  large: css`
+    width: 26.9rem;
+    height: 4.8rem;
+    border-radius: 7px;
+  `,
 };
 
 export type ButtonColor = keyof typeof buttonColorMap;

@@ -1,11 +1,9 @@
 import Icon from '../common/Icon/Icon';
 import Text from '../common/Text';
 import * as S from '../Style/Signup/ProfileConfig.styled';
-import img from '../../assets/img/img1.jpg';
 import TextField from '../common/TextField/TextField';
 import BaseButton from '../common/BaseButton';
 import { useAlert } from '@/hooks/global/useAlert';
-import CalenderAlert from '../common/Modal/CalenderAlert';
 import Calender from './Calender';
 import {
   Gender,
@@ -15,12 +13,11 @@ import {
 import {
   ChangeEvent,
   Dispatch,
-  MouseEvent,
   SetStateAction,
   useMemo,
   useState,
 } from 'react';
-import { dateFormat, telnumberFormat } from '@/ustils/util';
+import { dateFormat, telnumberFormat } from '@/utils/util';
 import { useMutation } from 'react-query';
 import { CheckNickname, SignUp } from '@/api/signup/POST';
 import { toast } from 'react-toastify';
@@ -28,20 +25,20 @@ import { STATUS } from '@/constants';
 import { AxiosError } from 'axios';
 import FixedBottomButton from '../common/FixedBottomButton';
 import Flex from '../common/Flex';
-import { signupStepAtom } from '@/atoms/signupStepAtom';
-import { useSetRecoilState } from 'recoil';
-import { profile } from 'console';
+import Message from '../common/Message';
+import Spacing from '../common/Spacing';
 
 function ProfileConfig({
   pagenation,
   setFormValues,
   formValues,
+  clickNext,
 }: {
   pagenation: () => React.ReactNode;
   setFormValues: Dispatch<SetStateAction<Partial<SignupRequestValues>>>;
   formValues: Partial<UserSignupFormValues>;
+  clickNext: () => void;
 }) {
-  // const setStep = useSetRecoilState(signupStepAtom);
   const genderList: Gender[] = [
     {
       label: '남성',
@@ -58,21 +55,31 @@ function ProfileConfig({
   ];
   const { open } = useAlert();
 
-  // 프로필 기본 정보
-  // const [formValues, setformValues] = useState<Partial<UserSignupFormValues>>(
-  //   {
-  //     gender: null,
-  //     profilePicture: '',
-  //     birthDate: '',
-  //     phoneNumber: '',
-  //   },
-  // );
+  const [dirty, setDirty] = useState<
+    Partial<Record<keyof UserSignupFormValues, boolean>>
+  >({});
+
+  // console.log('dirty :::', dirty);
+
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const [chcekNicknameMessage, setCheckNicknameMessage] = useState<
     string | null
   >(null);
 
-  // console.log(formValues);
+  // 프로필 이미지
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setPreviewImage(imageUrl);
+
+      setFormValues((prevValue) => ({
+        ...prevValue,
+        multipartFile: file,
+      }));
+    }
+  };
 
   const handleInfoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
@@ -87,38 +94,48 @@ function ProfileConfig({
 
   // gender
   const handleClickGender = (value: string) => {
-    // setformValues((prevValue) => ({
-    //   ...prevValue,
-    //   gender: value,
-    // }));
-
     setFormValues((prevValue) => ({
       ...prevValue,
       gender: value,
     }));
+
+    if (!dirty.gender) {
+      setDirty((prev) => ({ ...prev, gender: true }));
+    }
   };
 
-  // 달력
+  // birthDate
   const handleDate = (birthDate: string) => {
     setFormValues((prevValue) => ({
       ...prevValue,
       birthDate: birthDate,
     }));
+
+    if (!dirty.birthDate) {
+      setDirty((prev) => ({ ...prev, birthDate: true }));
+    }
   };
 
-  // const handleBlur = (e: ChangeEvent<HTMLInputElement>) => {
-  //   const { name } = e.target;
-  //   setDirty((prev) => ({
-  //     ...prev,
-  //     [name]: 'true',
-  //   }));
-  // };
+  const handleBlur = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name } = e.target;
+    setDirty((prev) => ({
+      ...prev,
+      [name]: 'true',
+    }));
+  };
 
   const handleClickAlert = () => {
     open({
       purpose: 'calender',
-      onButtonClick: () => {
-        // console.log('버튼이 클릭되었습니다.');
+      onButtonClick: (cancel?: boolean) => {
+        // console.log(cancel);
+        if (cancel) {
+          console.log('취소');
+          setFormValues((prev) => ({
+            ...prev,
+            birthDate: '',
+          }));
+        }
       },
       element: <Calender onChange={handleDate} />,
     });
@@ -126,9 +143,7 @@ function ProfileConfig({
 
   const { mutate: checkNickname } = useMutation(CheckNickname, {
     onSuccess: (res) => {
-      // console.log(res);
       if (res.status === STATUS.success) {
-        // console.log('성공');
         toast.success(res.message);
         setCheckNicknameMessage(null);
         setFormValues((prev) => ({
@@ -137,7 +152,6 @@ function ProfileConfig({
         }));
       }
       if (res.status === STATUS.error) {
-        // console.log('실패');
         toast.error(res.message);
         setCheckNicknameMessage(res.message);
         setFormValues((prev) => ({
@@ -155,7 +169,7 @@ function ProfileConfig({
     let errors: Partial<UserSignupFormValues> = {};
 
     const nickNamePattern = /^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]{3,8}$/;
-    if (!nickNamePattern.test(formValues.nickname || '')) {
+    if (!nickNamePattern.test(formValues.nickname?.trim() || '')) {
       errors.nickname = '※특수 문자는 제외해 주세요.(3~8자)';
     }
 
@@ -167,17 +181,15 @@ function ProfileConfig({
       errors.gender = '성별을 선택해주세요.';
     }
 
-    if (formValues.birthDate?.length === 0) {
+    if (formValues.birthDate?.trim().length === 0) {
       errors.birthDate = '생년월일을 선택해주세요.';
     }
 
-    if (formValues.phoneNumber?.length === 0) {
+    if (formValues.phoneNumber?.trim().length === 0) {
       errors.phoneNumber = '휴대폰번호를 입력해주세요.';
-    } else if (formValues.phoneNumber?.length !== 13) {
+    } else if (formValues.phoneNumber?.trim().length !== 13) {
       errors.phoneNumber = '유효한 휴대폰번호 형식을 입력해 주세요.';
     }
-
-    console.log(errors);
 
     return errors;
   }, [formValues, chcekNicknameMessage]);
@@ -186,9 +198,9 @@ function ProfileConfig({
 
   const { mutate } = useMutation(SignUp, {
     onSuccess: (res) => {
-      console.log(res);
       if (res.status === STATUS.success) {
         toast.success(res.message);
+        clickNext();
       }
       if (res.status === STATUS.error) {
         toast.error(res.message);
@@ -200,15 +212,12 @@ function ProfileConfig({
   });
 
   const submitTemp = () => {
-    // console.log(formValues);
-    // console.log('회원가입에 필요한 데이터는', formValues);
-
     const signupReq: SignupRequestValues = {
       loginId: formValues.loginId || '',
       password: formValues.password || '',
       email: formValues.email || '',
-      profilePicture: formValues.profilePicture || '',
-      name: '심채운',
+      multipartFile: formValues.multipartFile || '',
+      name: formValues.name || '',
       birthDate: formValues.birthDate || '',
       gender: formValues.gender || '',
       phoneNumber: formValues.phoneNumber || '',
@@ -219,6 +228,8 @@ function ProfileConfig({
     mutate({ ...signupReq });
   };
 
+  // console.log(formValues);
+
   return (
     <S.ProfileConfigContainer>
       {pagenation()}
@@ -226,10 +237,14 @@ function ProfileConfig({
         <Text $typography="t16" $bold={true}>
           프로필 이미지
         </Text>
-        <div className="profile-prev_img">{/* <img src={img} alt="" /> */}</div>
+        <div className="profile-prev_img">
+          {previewImage && (
+            <img src={previewImage} alt="프로필 이미지 미리보기" />
+          )}
+        </div>
 
         <div className="profile-icon_box">
-          <input type="file" accept="image/*" />
+          <input type="file" accept="image/*" onChange={handleImageChange} />
           <Icon name="IconCamera" size={19} />
         </div>
       </div>
@@ -238,13 +253,10 @@ function ProfileConfig({
         label="닉네임"
         name="nickname"
         value={formValues.nickname}
-        // onBlur={handleBlur}
+        onBlur={handleBlur}
         onChange={handleInfoChange}
-        hasError={Boolean(validate.nickname || validate.checkNickname)}
-        helpMessage={
-          validate.nickname ||
-          validate.checkNickname ||
-          '※특수 문자는 제외해 주세요.(3~8자)'
+        hasError={
+          dirty.nickname && Boolean(validate.nickname || validate.checkNickname)
         }
         rightElement={
           <BaseButton
@@ -267,6 +279,16 @@ function ProfileConfig({
               '중복확인'
             )}
           </BaseButton>
+        }
+      />
+      <Message
+        hasError={
+          dirty.nickname && Boolean(validate.nickname || validate.checkNickname)
+        }
+        text={
+          validate.nickname ||
+          validate.checkNickname ||
+          '※특수 문자는 제외해 주세요.(3~8자)'
         }
       />
 
@@ -301,37 +323,43 @@ function ProfileConfig({
             onClick={handleClickAlert}
           />
         }
-        hasError={Boolean(validate.birthDate)}
+        hasError={dirty.birthDate && Boolean(validate.birthDate)}
         helpMessage={validate.birthDate}
       />
+
+      {dirty.birthDate && Boolean(validate.birthDate) ? (
+        <Message
+          hasError={Boolean(validate.birthDate)}
+          text={validate.birthDate || ''}
+        />
+      ) : (
+        <Spacing size={4.2} />
+      )}
 
       <TextField
         label="전화번호"
         name="phoneNumber"
         placeholder="010-0000-0000"
         onChange={handleInfoChange}
+        maxLength={13}
         value={telnumberFormat(formValues.phoneNumber)}
-        hasError={Boolean(validate.phoneNumber)}
-        helpMessage={validate.phoneNumber}
-        // onBlur={handleBlur}
+        hasError={dirty.phoneNumber && Boolean(validate.phoneNumber)}
+        onBlur={handleBlur}
       />
 
+      {dirty.phoneNumber && Boolean(validate.phoneNumber) ? (
+        <Message
+          hasError={Boolean(validate.phoneNumber)}
+          text={validate.phoneNumber || ''}
+        />
+      ) : (
+        <Spacing size={4.2} />
+      )}
+
       <FixedBottomButton
-        label="회원가입"
+        label="확인"
         onClick={() => {
           submitTemp();
-          // console.log(formValues);
-          // const { birthDate, gender, nickname, phoneNumber, profilePicture } =
-          //   formValues;
-
-          // const filteredValues: Partial<SignupRequestValues> = {
-          //   birthDate,
-          //   gender,
-          //   nickname,
-          //   phoneNumber: phoneNumber?.slice(0, 13),
-          //   profilePicture,
-          // };
-          // clickNext(filteredValues);
         }}
         disabled={!(formValues.sendNickname && noError)}
       />

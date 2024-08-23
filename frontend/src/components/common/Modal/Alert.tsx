@@ -11,7 +11,7 @@ interface AlertProps {
   description?: React.ReactNode;
   buttonLabel?: string;
   element?: React.ReactNode;
-  onButtonClick: () => void;
+  onButtonClick: (cancle?: boolean) => void;
 }
 
 function Alert({
@@ -42,7 +42,7 @@ function Alert({
 
         <Flex $justify="flex-end">
           <BaseButton
-            onClick={onButtonClick}
+            onClick={() => onButtonClick()}
             $weak={true}
             style={{ marginTop: 12, border: 'none' }}
           >

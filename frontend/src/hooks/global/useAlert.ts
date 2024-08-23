@@ -15,9 +15,9 @@ export function useAlert() {
     setAlertState({
       ...options,
       open: true,
-      onButtonClick: () => {
+      onButtonClick: (cancel?: boolean) => {
         close();
-        onButtonClick();
+        onButtonClick(cancel);
       },
     });
   };

@@ -8,8 +8,12 @@ import Flex from '../common/Flex';
 
 import * as S from '../Style/Login/Entry.styled';
 import { Dispatch, SetStateAction } from 'react';
+import { Link } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
+import { isInitAtom } from '@/atoms/isAuthEnticatedAtom';
 
-function Entry({ setInit }: { setInit: Dispatch<SetStateAction<boolean>> }) {
+function Entry() {
+  const setInit = useSetRecoilState(isInitAtom);
   return (
     <S.EntryContainer>
       <img src={logo} alt="logo" className="logo" />
@@ -22,26 +26,19 @@ function Entry({ setInit }: { setInit: Dispatch<SetStateAction<boolean>> }) {
           한품과 함께해요!
         </Text>
       </Flex>
-      <div className="round_bg">
-        <div className="circle" />
-        <img src={flag} alt="" className="flag_img" />
-        <img src={human} alt="" className="human_img" />
-        <div className="login_group">
-          <div className="kakao_login">
-            <Icon name="IconKakaoLogo" />
-            <span>카카오로 시작하기</span>
-          </div>
-          <div
-            className="local_login"
-            onClick={() => {
-              setInit(false);
-            }}
-          >
-            일반회원으로 시작하기
-          </div>
-          <div className="login_group-find">
-            <Text $typography="t12">아이디 찾기</Text>
-            <Text $typography="t12">비밀번호 찾기</Text>
+      <div className="round">
+        <div className="round_bg">
+          <div className="circle"></div>
+          <img src={flag} alt="" className="flag_img" />
+          <img src={human} alt="" className="human_img" />
+          <div className="login_group">
+            <div className="kakao_login">
+              <Icon name="IconKakaoLogo" />
+              <span>카카오로 시작하기</span>
+            </div>
+            <div className="local_login" onClick={() => setInit(false)}>
+              일반회원으로 시작하기
+            </div>
           </div>
         </div>
       </div>
