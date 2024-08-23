@@ -4,6 +4,7 @@ import backend.hanpum.domain.course.entity.Course;
 import backend.hanpum.domain.course.entity.CourseDay;
 import backend.hanpum.domain.course.entity.Waypoint;
 import backend.hanpum.domain.course.repository.CourseRepository;
+import backend.hanpum.domain.course.service.CourseService;
 import backend.hanpum.domain.group.entity.Group;
 import backend.hanpum.domain.group.repository.GroupRepository;
 import backend.hanpum.domain.member.entity.Member;
@@ -58,6 +59,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final WeatherService weatherService;
     private final RestTemplate restTemplate;
 
+    private final CourseService courseService;
+
     @Value("${api.serviceKey}")
     private String serviceKey;
 
@@ -65,20 +68,28 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public Long createSchedule(Long memberId, SchedulePostReqDto schedulePostReqDto) {
 
-        Course course = courseRepository.findById(schedulePostReqDto.getCourseId()).orElseThrow(ScheduleNotFoundException::new);
+        Long courseId = schedulePostReqDto.getCourseId();
+
+        Course course = courseRepository.findById(courseId).orElseThrow(ScheduleNotFoundException::new);
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
 
         String startDate = schedulePostReqDto.getStartDate();
+//        int daySize = course.getDate()
+//        String endDate = calculateDate(startDate, daySize);
 
         Schedule schedule = Schedule.builder()
                 .title(schedulePostReqDto.getTitle())
                 .type("private")
                 .startDate(startDate)
+//                .endDate(endDate)
                 .member(member)
                 .course(course)
                 .build();
         scheduleRepository.save(schedule);
         createScheduleDays(course, schedule, startDate);
+
+        // history 생성
+        courseService.addCourseUsageHistory(courseId, memberId);
         return schedule.getId();
     }
 
