@@ -1,10 +1,7 @@
 package backend.hanpum.domain.schedule.service;
 
 import backend.hanpum.domain.schedule.dto.requestDto.*;
-import backend.hanpum.domain.schedule.dto.responseDto.NearByAttractionResDto;
-import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
-import backend.hanpum.domain.schedule.dto.responseDto.ScheduleInProgressResDto;
-import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
+import backend.hanpum.domain.schedule.dto.responseDto.*;
 
 import java.util.List;
 
@@ -19,14 +16,14 @@ public interface ScheduleService {
     // 개인 일정 가져오기
     List<ScheduleResDto> getMyScheduleList(Long memberId);
 
+    // 모임 일정 가져오기
+    GroupScheduleResDto getGroupScheduleList(Long memberId);
+
     // 일차별 일정 조회
     ScheduleDayResDto getMyScheduleDay(Long memberId, Long ScheduleId, int day);
 
     // 일정 삭제
     void deleteSchedule(Long memberId, Long ScheduleId);
-
-    // 모임 일정 가져오기
-    List<ScheduleResDto> getGroupScheduleList(Long memberId);
 
     // 전체 일정 시작, 종료
     Long startAndStopSchedule(Long memberId, ScheduleStartReqDto scheduleRunReqDto);

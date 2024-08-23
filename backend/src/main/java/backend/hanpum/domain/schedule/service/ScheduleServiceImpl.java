@@ -5,8 +5,11 @@ import backend.hanpum.domain.course.entity.CourseDay;
 import backend.hanpum.domain.course.entity.Waypoint;
 import backend.hanpum.domain.course.repository.CourseRepository;
 import backend.hanpum.domain.course.service.CourseService;
+import backend.hanpum.domain.group.dto.responseDto.GroupMemberResDto;
 import backend.hanpum.domain.group.entity.Group;
+import backend.hanpum.domain.group.repository.GroupMemberRepository;
 import backend.hanpum.domain.group.repository.GroupRepository;
+import backend.hanpum.domain.group.repository.custom.GroupMemberRepositoryCustom;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.domain.schedule.dto.requestDto.*;
@@ -58,6 +61,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final GroupRepository groupRepository;
     private final WeatherService weatherService;
     private final RestTemplate restTemplate;
+    private final GroupMemberRepositoryCustom groupMemberRepositoryCustom;
 
     private final CourseService courseService;
 
@@ -160,20 +164,37 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Transactional(readOnly = true)
     @Override
     public List<ScheduleResDto> getMyScheduleList(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         List<ScheduleResDto> scheduleResDtoList = scheduleRepository.getMyScheduleByMemberId(memberId).orElseThrow(ScheduleNotFoundException::new);
         return scheduleResDtoList;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<ScheduleResDto> getGroupScheduleList(Long memberId) {
+    public GroupScheduleResDto getGroupScheduleList(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         if (member.getGroupMember() == null) {
             throw new GroupMemberNotFoundException();
         }
-        List<ScheduleResDto> scheduleResDtoList = scheduleRepository.getGroupScheduleByMemberId(memberId).orElseThrow(GroupScheduleNotFoundException::new);
+        Long groupId = member.getGroupMember().getGroup().getGroupId();
 
-        return scheduleResDtoList;
+        ScheduleResDto scheduleResDto = scheduleRepository.getGroupScheduleByMemberId(memberId).orElseThrow(GroupScheduleNotFoundException::new);
+        List<GroupMemberResDto> groupMemberList = groupMemberRepositoryCustom.findGroupMemberList(groupId);
+
+        GroupScheduleResDto groupScheduleResDto = GroupScheduleResDto.builder()
+                .scheduleId(scheduleResDto.getScheduleId())
+                .backgroundImg(scheduleResDto.getBackgroundImg())
+                .title(scheduleResDto.getTitle())
+                .type(scheduleResDto.getType())
+                .startPoint(scheduleResDto.getStartPoint())
+                .endPoint(scheduleResDto.getEndPoint())
+                .startDate(scheduleResDto.getStartDate())
+                .endDate(scheduleResDto.getEndDate())
+                .state(scheduleResDto.isState())
+                .groupMemberResDtoList(groupMemberList)
+                .build();
+
+        return groupScheduleResDto;
     }
 
     @Transactional(readOnly = true)
