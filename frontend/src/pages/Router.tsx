@@ -25,6 +25,7 @@ import SignupPage from './Auth/SignupPage';
 import FindPage from './Auth/FindPage';
 import { useEffect, useState } from 'react';
 import useIsAuth from '@/hooks/auth/useIsAuth';
+import MyPage from './Auth/MyPage';
 
 export default function Router() {
   const isAuthEnticated = useIsAuth();
@@ -32,7 +33,7 @@ export default function Router() {
   return (
     <BrowserRouter>
       <Routes>
-        {isAuthEnticated ? (
+        {/* {isAuthEnticated ? (
           <>
             <Route path="/" element={<MainPage />} />
             <Route path="/schedule/main" element={<ScheduleMainPage />} />
@@ -56,7 +57,33 @@ export default function Router() {
             <Route path="/find/:account" element={<FindPage />} />
             <Route path="*" element={<Navigate to="/login" />} />
           </>
-        )}
+        )} */}
+
+        <Route path="/" element={<MainPage />} />
+        <Route path="/schedule/main" element={<ScheduleMainPage />} />
+        <Route path="/schedule/addSchedule" element={<AddSchedulePage />} />
+
+        <Route path="/route/list" element={<RouteList />} />
+        <Route path="/route/detail" element={<RouteDetailPage />} />
+        <Route path="/route/addMain" element={<RouteAddMainPage />} />
+        <Route path="/route/addDetail" element={<RouteAddDetailPage />} />
+        <Route path="/route/add" element={<RouteAddPlacePage />} />
+
+        <Route path="/meet" element={<MeetPage />} />
+        <Route path="/meet/:id" element={<MeetDetailPage />} />
+
+        <Route path="*" element={<Navigate to="/" />} />
+
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/find/:account" element={<FindPage />} />
+
+        <Route path="/mypage" element={<MyPage />} />
+        {/* 관심 목록 */}
+        <Route path="/mypage:interest" element={<MyPage />} />
+        <Route path="/mypage:myroot" element={<MyPage />} />
+        <Route path="/mypage:finish" element={<MyPage />} />
+        {/* <Route path="*" element={<Navigate to="/login" />} /> */}
       </Routes>
     </BrowserRouter>
   );

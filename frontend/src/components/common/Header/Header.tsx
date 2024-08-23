@@ -27,6 +27,7 @@ const Header = ({ purpose, title, arrive, depart, clickBack }: HeaderProps) => {
   // search-place(w장소이름, 주소 검색)
   // search(돋보기 검색창)
   // back(뒤로가기)
+  // mypage(우측에 톱니바퀴)
 
   const renderHeader = () => {
     switch (purpose) {
@@ -132,6 +133,32 @@ const Header = ({ purpose, title, arrive, depart, clickBack }: HeaderProps) => {
 
       case 'back':
         return <Flex style={{ marginLeft: '2rem' }} $align="start"></Flex>;
+
+      case 'mypage':
+        return (
+          <Flex $align="center" $justify="center">
+            <Icon
+              name="IconBackArrow"
+              className="back-arrow"
+              size={15}
+              onClick={() => {
+                clickBack();
+              }}
+            />
+            <Text as="div" $bold={true} $typography="t20">
+              {title}
+            </Text>
+
+            <div
+              style={{ position: 'absolute', right: 16 }}
+              onClick={() => {
+                // 프로필 편집으로
+              }}
+            >
+              <Icon name="IconConfig" />
+            </div>
+          </Flex>
+        );
 
       default:
         return (

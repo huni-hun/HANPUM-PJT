@@ -53,3 +53,9 @@ export { ReactComponent as IconSignupCalender } from './signupCalender.svg';
 // 로그인 페이지
 export { ReactComponent as IconKakaoLogo } from './kakao.svg';
 export { ReactComponent as IconCheckInSignIn } from './check_signin.svg';
+
+// 마이페이지
+export { ReactComponent as IconConfig } from './config.svg';
+export { ReactComponent as IconfinishedRoot } from './finishedRoot.svg';
+export { ReactComponent as IconInterestList } from './interestList.svg';
+export { ReactComponent as IconMyRoute } from './myRoute.svg';
