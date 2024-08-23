@@ -43,7 +43,7 @@ function RouteList() {
       <R.MainContainer>
         <R.RouteCardContainer>
           <R.RouteTypeHeader>
-            <R.TypeTitle>지금 가장 인기 있는 코스</R.TypeTitle>
+            <R.TypeTitle>김미미님에게 잘 맞는 경로</R.TypeTitle>
             <R.MoreButton>
               <R.MoreText>더보기</R.MoreText>
               <Icon name="IconLeftBlackArrow" size={10} />
@@ -52,9 +52,7 @@ function RouteList() {
           <R.CardContainer>
             <R.BlankBox />
             <R.OverFlow>
-              {arr.map((ele) => (
-                <RouteCard {...ele} />
-              ))}
+              <RouteCard {...arr[0]} />
             </R.OverFlow>
           </R.CardContainer>
         </R.RouteCardContainer>
@@ -92,21 +90,33 @@ function RouteList() {
             </R.OverFlow>
           </R.CardContainer>
         </R.RouteCardContainer>
-        <R.MentContainer>🤔찾으시는 코스가 없으신가요?</R.MentContainer>
+        <R.RouteCardContainer>
+          <R.RouteTypeHeader>
+            <R.TypeTitle>지금 가장 인기 있는 코스</R.TypeTitle>
+            <R.MoreButton>
+              <R.MoreText>더보기</R.MoreText>
+              <Icon name="IconLeftBlackArrow" size={10} />
+            </R.MoreButton>
+          </R.RouteTypeHeader>
+          <R.CardContainer>
+            <R.BlankBox />
+            <R.OverFlow>
+              {arr.map((ele) => (
+                <RouteCard {...ele} />
+              ))}
+            </R.OverFlow>
+          </R.CardContainer>
+        </R.RouteCardContainer>
         <R.ButtonContainer>
-          <Button
-            width={90}
-            height={7}
-            fontColor="ffffff"
-            backgroundColor="#A0A0A0"
-            radius={0.7}
-            fontSize={1.6}
-            children="나의 경로 만들기"
-            color=""
-            onClick={() => {
-              navigator('/route/addMain');
-            }}
-          />
+          <R.RouteAddBtn>
+            <R.RouteAddBtnTextBox>
+              <R.RouteAddBasicText>
+                찾으시는 경로가 없으신가요?
+              </R.RouteAddBasicText>
+              <R.RouteAddBoldText>나의 경로 만들기</R.RouteAddBoldText>
+            </R.RouteAddBtnTextBox>
+            <Icon name="IconRouteAdd" size={70} />
+          </R.RouteAddBtn>
         </R.ButtonContainer>
       </R.MainContainer>
       <BottomTab />

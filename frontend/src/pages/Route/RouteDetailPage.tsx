@@ -28,6 +28,7 @@ function RouteDetailPage() {
 
   useEffect(() => {
     if (dayData.length === 0) {
+      console.log(routeid);
       getRouteDetail(routeid as string).then((result) => {
         if (result.status === 200) {
           let num = 0;

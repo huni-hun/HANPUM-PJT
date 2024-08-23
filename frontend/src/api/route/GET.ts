@@ -9,8 +9,9 @@ export async function getRouteList(type: string) {
 }
 
 export async function getRouteDetail(id: string) {
+  console.log(id);
   const response = await api.get(`/api/course/${id}`);
-
+  console.log(response);
   return response;
 }
 

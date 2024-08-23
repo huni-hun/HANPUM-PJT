@@ -25,13 +25,14 @@ export { ReactComponent as IconReview } from './Review.svg';
 export { ReactComponent as IconGreyReview } from './GreyReview.svg';
 export { ReactComponent as IconUserBasicImg } from './UserBasicImg.svg';
 export { ReactComponent as IconRouteAddComplete } from './RouteAddComplete.svg';
+export { ReactComponent as IconBookMarkInHeader } from './bookmark_in_header.svg';
 
 // header
 export { ReactComponent as IconUser } from './user.svg';
 export { ReactComponent as IconNotification } from './Notification.svg';
 export { ReactComponent as IconBackArrow } from './BackArrow.svg';
 export { ReactComponent as IconSearch } from './search.svg';
-export { ReactComponent as IconBookMarkInHeader } from './bookmark_in_header.svg';
+export { ReactComponent as IconRouteAdd } from './RouteAddIcon.svg';
 
 // 진행중인 일정
 export { ReactComponent as IconSun } from './sun.svg';
@@ -39,7 +40,6 @@ export { ReactComponent as IconInprogress } from './inprogress.svg';
 
 // 추천 코스
 export { ReactComponent as IconLeftWhiteArrow } from './leftWhiteArrow.svg';
-
 // 모임 추천
 export { ReactComponent as IconMember } from './member.svg';
 export { ReactComponent as IconHeart } from './heart.svg';
