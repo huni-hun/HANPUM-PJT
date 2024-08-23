@@ -58,4 +58,5 @@ export { ReactComponent as IconCheckInSignIn } from './check_signin.svg';
 export { ReactComponent as IconConfig } from './config.svg';
 export { ReactComponent as IconfinishedRoot } from './finishedRoot.svg';
 export { ReactComponent as IconInterestList } from './interestList.svg';
-export { ReactComponent as IconMyRoute } from './myRoute.svg';
+export { ReactComponent as IconMyRoot } from './myRoot.svg';
+export { ReactComponent as IconMyRooteClose } from './myRootClose.svg';

@@ -26,6 +26,7 @@ import FindPage from './Auth/FindPage';
 import { useEffect, useState } from 'react';
 import useIsAuth from '@/hooks/auth/useIsAuth';
 import MyPage from './Auth/MyPage';
+import ActivityLayout from '@/components/My/ActivityLayout';
 
 export default function Router() {
   const isAuthEnticated = useIsAuth();
@@ -79,10 +80,7 @@ export default function Router() {
         <Route path="/find/:account" element={<FindPage />} />
 
         <Route path="/mypage" element={<MyPage />} />
-        {/* 관심 목록 */}
-        <Route path="/mypage:interest" element={<MyPage />} />
-        <Route path="/mypage:myroot" element={<MyPage />} />
-        <Route path="/mypage:finish" element={<MyPage />} />
+        <Route path="/mypage/:active" element={<ActivityLayout />} />
         {/* <Route path="*" element={<Navigate to="/login" />} /> */}
       </Routes>
     </BrowserRouter>
