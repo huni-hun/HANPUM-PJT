@@ -10,14 +10,25 @@ interface HeaderProps {
   title?: string;
   arrive?: string;
   depart?: string;
+  back?: boolean;
   clickBack: () => void;
 }
 
-const Header = ({ purpose, title, arrive, depart, clickBack }: HeaderProps) => {
+const Header = ({
+  purpose,
+  title,
+  arrive,
+  depart,
+  back,
+  clickBack,
+}: HeaderProps) => {
   const navigate = useNavigate();
   const onClickHandler = (to: string) => {
     navigate(`/${to}`);
   };
+
+  const path = useLocation().pathname.substring(1);
+  console.log(path);
 
   //  default(알림, user만 있는)
   // title(약관동의, 회원정보 등)
@@ -33,14 +44,7 @@ const Header = ({ purpose, title, arrive, depart, clickBack }: HeaderProps) => {
       case 'title':
         return (
           <Flex $align="center" $justify="center">
-            <Icon
-              name="IconBackArrow"
-              className="back-arrow"
-              size={15}
-              onClick={() => {
-                clickBack();
-              }}
-            />
+            <Icon name="IconBackArrow" className="back-arrow" size={15} />
             <Text as="div" $bold={true} $typography="t20">
               {title}
             </Text>
@@ -87,8 +91,11 @@ const Header = ({ purpose, title, arrive, depart, clickBack }: HeaderProps) => {
         );
       case 'merge':
         return (
-          <Flex style={{ marginLeft: '4.4rem' }} $align="center">
-            <input type="text" />
+          <Flex $align="center" $justify="space-between">
+            <div className="search-bar">
+              <Icon name="IconSearch" size={14} />
+              <input type="text" />
+            </div>
             <Flex $gap={20} style={{ width: 'auto', marginLeft: '9px' }}>
               <Icon
                 name="IconBookMarkInHeader"
@@ -129,10 +136,6 @@ const Header = ({ purpose, title, arrive, depart, clickBack }: HeaderProps) => {
             </div>
           </Flex>
         );
-
-      case 'back':
-        return <Flex style={{ marginLeft: '2rem' }} $align="start"></Flex>;
-
       default:
         return (
           <S.HeaderWrapper>
@@ -156,14 +159,7 @@ const Header = ({ purpose, title, arrive, depart, clickBack }: HeaderProps) => {
   return (
     <>
       <S.HeaderWrapper>
-        <Icon
-          name="IconBackArrow"
-          className="back-arrow"
-          size={15}
-          onClick={() => {
-            clickBack();
-          }}
-        />
+        {back && <Icon name="IconBackArrow" className="back-arrow" size={15} />}
         {renderHeader()}
       </S.HeaderWrapper>
       {/* <Outlet /> */}

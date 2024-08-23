@@ -3,7 +3,6 @@ import { colors } from '@styles/colorPalette';
 
 export const HeaderWrapper = styled.div`
   height: 6.8rem;
-  /* box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25); */
   display: flex;
   align-items: center;
   gap: 2rem;

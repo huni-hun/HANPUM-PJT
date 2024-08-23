@@ -1,75 +1,113 @@
 import Icon from '@/components/common/Icon/Icon';
 import * as R from '@/components/Style/Route/RouteDetailPage.styled';
-import { useState } from 'react';
-import Select from '@/components/common/Select/Select';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { getRouteDetail } from '@/api/route/GET';
+import {
+  AttractionsProps,
+  RouteDetailDayProps,
+  RouteDetailProps,
+} from '@/models/route';
+import Header from '@/components/common/Header/Header';
+import Button from '@/components/common/Button/Button';
+import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
 
 function RouteDetailPage() {
+  const { routeid } = useParams();
   const [selected, setSelected] = useState<string>('course');
   const [selectedDay, setSelectedDay] = useState<number>(1);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [routeData, setRouteData] = useState<RouteDetailProps>(null!);
+  const [dayData, setDayData] = useState<RouteDetailDayProps[]>([]);
+  const [totalDistance, setTotalDistance] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [latitude, setLatitude] = useState<number>(0);
+  const [longitude, setLongitude] = useState<number>(0);
+  const [attractions, setAttractions] = useState<AttractionsProps[]>([]);
+  const [linePath, setLinePath] = useState([]);
 
-  const dummyData = [
-    {
-      day: 1,
-      name: '대천 해수욕장',
-      address: '충남 보령시',
-    },
-    {
-      day: 2,
-      name: '대천 해수욕장',
-      address: '충남 보령시',
-    },
-    {
-      day: 3,
-      name: '대천 해수욕장',
-      address: '충남 보령시',
-    },
-    {
-      day: 4,
-      name: '대천 해수욕장',
-      address: '충남 보령시',
-    },
-    {
-      day: 5,
-      name: '대천 해수욕장',
-      address: '충남 보령시',
-    },
-    {
-      day: 6,
-      name: '대천 해수욕장',
-      address: '충남 보령시',
-    },
-    {
-      day: 7,
-      name: '대천 해수욕장',
-      address: '충남 보령시',
-    },
-    {
-      day: 8,
-      name: '대천 해수욕장',
-      address: '충남 보령시',
-    },
-    {
-      day: 9,
-      name: '대천 해수욕장',
-      address: '충남 보령시',
-    },
-  ];
+  useEffect(() => {
+    if (dayData.length === 0) {
+      getRouteDetail(routeid as string).then((result) => {
+        if (result.status === 200) {
+          let num = 0;
+          let rd: RouteDetailProps = {
+            routeName: result.data.data.course.courseName,
+            routeContent: result.data.data.course.content,
+            writeDate: result.data.data.course.writeDate,
+            routeComment: 3,
+            routeScore: 3.5,
+          };
+          setRouteData(rd);
+          result.data.data.courseDays.map((ele: any) => {
+            let data: RouteDetailDayProps = {
+              dayNum: ele.dayNumber,
+              totalDistance: ele.total_distance,
+              totalCalorie: ele.total_calorie,
+              totalDuration: ele.total_duration,
+            };
+            setDayData((pre) => [...pre, data]);
+            num += Number(ele.total_distance.split('k')[0]);
+          });
+          setTotalDistance(num);
+          setLatitude(result.data.data.attractions[0].lat);
+          setLongitude(result.data.data.attractions[0].lon);
 
-  return (
+          let attArr: AttractionsProps[] = [];
+          result.data.data.attractions.map((ele: any) => {
+            let attData: AttractionsProps = {
+              name: ele.name,
+              type: ele.type,
+              attractionId: ele.attractionId,
+              address: ele.address,
+              latitude: ele.lat,
+              longitude: ele.lon,
+            };
+            attArr.push(attData);
+          });
+          setAttractions(attArr);
+        }
+
+        setLoading(true);
+      });
+    }
+  }, []);
+
+  return loading ? (
     <R.Container>
-      <R.Header>
-        <R.HeaderButton>
-          <Icon name="IconBackArrow" size={20} />
-        </R.HeaderButton>
-      </R.Header>
+      <Header purpose="route-detail" back={true} clickBack={() => {}} />
       <R.Main>
         <R.Overflow>
           <R.RouteInfoContainer>
             <R.ImgBox></R.ImgBox>
+            <R.UserContainer>
+              <R.UserImgBox>
+                <Icon name="IconUserBasicImg" size={42} />
+              </R.UserImgBox>
+              <R.UserName>작성자</R.UserName>
+            </R.UserContainer>
             <R.RouteNameInfo>
-              <R.RouteName>대천 해수욕장</R.RouteName>
-              <R.RouteInfo>경로 상세 설명</R.RouteInfo>
+              <R.RouteNameInfoContainer>
+                <R.RouteName>{routeData.routeName}</R.RouteName>
+                <R.RouteInfo>{routeData.routeContent}</R.RouteInfo>
+              </R.RouteNameInfoContainer>
+              <R.RouteReviewContainer>
+                <R.IconContainer>
+                  <R.IconBox>
+                    <Icon name="IconGreyStar" size={10} />
+                    {routeData.routeScore}
+                  </R.IconBox>
+                  <R.IconBox>
+                    <Icon
+                      name="IconGreyReview"
+                      size={10}
+                      style={{ marginLeft: '0.9rem' }}
+                    />
+                    {routeData.routeComment}
+                  </R.IconBox>
+                </R.IconContainer>
+                <R.WriteDateBox>{routeData.writeDate}</R.WriteDateBox>
+              </R.RouteReviewContainer>
             </R.RouteNameInfo>
             <R.RouteDateBox>
               <R.StartDateBox>
@@ -79,7 +117,7 @@ function RouteDetailPage() {
                 </R.DateBox>
                 <R.DistanceBox>
                   <R.DistanceText>총 이동거리</R.DistanceText>
-                  <R.Distance>56.8Km</R.Distance>
+                  <R.Distance>{totalDistance}km</R.Distance>
                 </R.DistanceBox>
               </R.StartDateBox>
               <R.EndDateBox>
@@ -89,7 +127,10 @@ function RouteDetailPage() {
                 </R.DateBox>
                 <R.DistanceBox>
                   <R.DistanceText>총 일정기간</R.DistanceText>
-                  <R.Distance>11박 12일</R.Distance>
+                  <R.Distance>
+                    {dayData[dayData.length - 1].dayNum - 1}박{' '}
+                    {dayData[dayData.length - 1].dayNum}일
+                  </R.Distance>
                 </R.DistanceBox>
               </R.EndDateBox>
             </R.RouteDateBox>
@@ -121,99 +162,37 @@ function RouteDetailPage() {
             </R.ContentSelecContainer>
           </R.RouteInfoContainer>
           <R.RouteDetailInfoContainer>
-            <R.DetailHeader>
-              <R.HeaderOverflow>
-                {selected === 'course' ? (
-                  dummyData.map((ele) => (
-                    <R.DayContainer>
-                      <R.DayBox
-                        isSelected={ele.day === selectedDay}
-                        onClick={() => {
-                          setSelectedDay(ele.day);
-                        }}
-                      >{`Day ${ele.day}`}</R.DayBox>
-                    </R.DayContainer>
-                  ))
-                ) : selected === 'information' ? (
-                  <R.DetailHeaderTitle>주요 관광지</R.DetailHeaderTitle>
-                ) : (
-                  <Select
-                    list={['최근 수정순', '별점순']}
-                    width={20}
-                    height={2}
-                    radius={0}
-                    border=""
-                    fontSize={1.5}
-                    fontColor="a0a0a0"
-                    padding={0}
-                    isOpen={isOpen}
-                    setOpen={() => {
-                      setIsOpen(!isOpen);
-                    }}
-                    onClick={() => {}}
-                  />
-                )}
-              </R.HeaderOverflow>
-            </R.DetailHeader>
-            <R.DetailMain>
-              <R.DetailMainOverflow>
-                {selected != 'review' ? (
-                  <R.PlaceCardBox>
-                    <R.PlaceCard>
-                      <R.PlaceTextBox>
-                        <R.CircleBox>
-                          <R.Circle />
-                        </R.CircleBox>
-                        <R.TextBox>
-                          <R.PlacetTitleBox>
-                            <R.Title>대천 해수욕장</R.Title>
-                            <R.TypeBox>관광지</R.TypeBox>
-                          </R.PlacetTitleBox>
-                          <R.PlacetAddressBox>충남 보령시</R.PlacetAddressBox>
-                        </R.TextBox>
-                      </R.PlaceTextBox>
-                      <R.PlaceImgBox>
-                        <R.PlaceImg />
-                      </R.PlaceImgBox>
-                    </R.PlaceCard>
-                  </R.PlaceCardBox>
-                ) : (
-                  <R.PlaceCardBox>
-                    <R.PlaceCard>
-                      <R.UserImgContainer>
-                        <R.UserImg>
-                          <Icon name="IconUser" size={30} />
-                        </R.UserImg>
-                      </R.UserImgContainer>
-                      <R.ReviewTextcontainer>
-                        <R.ReviewTextBox>
-                          <R.ReviewNameBox>
-                            <R.ReviewName>박뚱이</R.ReviewName>
-                            {/* <Icon name="IconStar" size={15} /> */}
-                            <R.ReviewRate>3.5</R.ReviewRate>
-                          </R.ReviewNameBox>
-                          <R.ReviewDetailBox>
-                            <R.ReviewDetail>테스트입니다.</R.ReviewDetail>
-                          </R.ReviewDetailBox>
-                        </R.ReviewTextBox>
-                        <R.ReviewDateBox>
-                          <R.ReviewDate>2024.08.07</R.ReviewDate>
-                        </R.ReviewDateBox>
-                      </R.ReviewTextcontainer>
-                      <R.HeartBox>
-                        <Icon name="IconHeart" size={15} />
-                        <R.HeartText>11</R.HeartText>
-                      </R.HeartBox>
-                    </R.PlaceCard>
-                  </R.PlaceCardBox>
-                )}
-              </R.DetailMainOverflow>
-            </R.DetailMain>
+            <RouteDetailInfo
+              linePath={linePath}
+              selected={selected}
+              selectedDay={selectedDay}
+              latitude={latitude}
+              longitude={longitude}
+              dayData={dayData}
+              attractions={attractions}
+              setLoading={setLoading}
+              setSelectedDay={setSelectedDay}
+            />
           </R.RouteDetailInfoContainer>
         </R.Overflow>
       </R.Main>
+      <R.BottomContainer>
+        <R.ButtonBox>
+          <Button
+            width={35}
+            height={6}
+            fontColor="ffffff"
+            backgroundColor="#1A823B"
+            radius={0.7}
+            fontSize={1.6}
+            children="일정 생성"
+            color="#ffffff"
+            onClick={() => {}}
+          />
+        </R.ButtonBox>
+      </R.BottomContainer>
     </R.Container>
-  );
+  ) : null;
 }
 
 export default RouteDetailPage;

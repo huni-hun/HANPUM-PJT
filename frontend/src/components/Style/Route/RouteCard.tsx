@@ -1,36 +1,45 @@
 import * as C from './RouteCard.styled';
 
 import Icon from '../../common/Icon/Icon';
+import test from '../../../assets/img/mountain.jpg';
+import { useNavigate } from 'react-router-dom';
+import { RouteListProps } from '@/models/route';
 
-function RouteCard() {
+function RouteCard(props: RouteListProps) {
+  const navigator = useNavigate();
   return (
-    <C.Card img={''}>
+    <C.Card
+      onClick={() => {
+        navigator(`/route/detail/${props.routeId}`);
+      }}
+      img={test}
+    >
       <C.TopContent>
         <C.ContentContainer>
           <C.Content>
-            <Icon name="IconRoute" size={25} />
-            <C.ContentText>70.5km</C.ContentText>
+            <Icon name="IconWhiteStar" size={13} fill="#ffffff" />
+            <C.ContentText>{props.routeScore}</C.ContentText>
           </C.Content>
           <C.Content>
-            <Icon name="IconCalendar" size={25} />
-            <C.ContentText>5박 6일</C.ContentText>
+            <Icon name="IconReview" size={13} />
+            <C.ContentText>{props.routeComment}</C.ContentText>
           </C.Content>
         </C.ContentContainer>
         <Icon name="IconBookMarkerWhite" size={20} />
       </C.TopContent>
       <C.BottomContent>
-        <Icon name="IconFlag" size={30} />
         <C.RouteNTitleBox>
           <C.RouteBox>
             <C.RouteText>인천</C.RouteText>
             <Icon name="IconArrowWhite" size={10} path="" />
             <C.RouteText>당진</C.RouteText>
           </C.RouteBox>
-          <C.TitleBox>무더위 사냥</C.TitleBox>
+          <C.TitleBox>{props.routeName}</C.TitleBox>
         </C.RouteNTitleBox>
-        <C.Datecontainer>
-          <C.DateBox>5박6일</C.DateBox>
-        </C.Datecontainer>
+        <C.BContent>
+          <Icon name="IconRoute" size={25} />
+          <C.ContentText>70.5km</C.ContentText>
+        </C.BContent>
       </C.BottomContent>
     </C.Card>
   );

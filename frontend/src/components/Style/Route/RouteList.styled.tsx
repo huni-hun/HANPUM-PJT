@@ -1,8 +1,11 @@
 import styled from 'styled-components';
 
 export const RouteListContainer = styled.div`
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: scroll;
+  background-color: #ffffff;
 `;
 
 export const RouteListHeader = styled.div`
@@ -55,10 +58,11 @@ export const IconBox = styled.div`
 
 export const MainContainer = styled.div`
   width: 100vw;
-  height: 83vh;
+  height: auto;
   display: flex;
   flex-direction: column;
-  overflow-x: auto;
+  overflow-y: auto;
+  padding-bottom: 8vh;
 `;
 
 export const ButtonContainer = styled.div`
@@ -71,7 +75,7 @@ export const ButtonContainer = styled.div`
 
 export const RouteCardContainer = styled.div`
   width: 100vw;
-  height: 25vh;
+  height: 23.5rem;
   display: flex;
   flex-direction: column;
   overflow-x: auto;
@@ -79,7 +83,7 @@ export const RouteCardContainer = styled.div`
 
 export const RouteTypeHeader = styled.div`
   width: 100vw;
-  height: 5vh;
+  height: 3 vh;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -108,7 +112,7 @@ export const MoreText = styled.p`
 
 export const CardContainer = styled.div`
   width: 100vw;
-  height: 19vh;
+  height: 20rem;
   display: flex;
   flex-direction: row;
 `;
@@ -129,4 +133,14 @@ export const BlankBox = styled.div`
   width: 2rem;
   height: 100%;
   display: block;
+`;
+
+export const MentContainer = styled.div`
+  width: 100%;
+  height: 5vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
 `;
