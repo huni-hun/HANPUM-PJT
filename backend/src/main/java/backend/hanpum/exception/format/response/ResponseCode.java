@@ -61,6 +61,7 @@ public enum ResponseCode {
     LOGIN_ID_CHECK_SUCCESS(HttpStatus.OK, "사용할 수 있는 아이디입니다."),
     NICKNAME_CHECK_SUCCESS(HttpStatus.OK, "사용할 수 있는 닉네임입니다."),
     SING_UP_SUCCESS(HttpStatus.OK, "회원가입이 성공적으로 완료되었습니다."),
+    KAKAO_SING_UP_SUCCESS(HttpStatus.OK, "카카오 회원가입이 성공적으로 완료되었습니다."),
     LOGIN_SUCCESS(HttpStatus.OK, "로그인이 성공적으로 완료되었습니다."),
     LOGOUT_SUCCESS(HttpStatus.OK, "로그아웃이 성공적으로 완료되었습니다."),
     TOKEN_REISSUE_SUCCESS(HttpStatus.OK, "토큰이 성공적으로 재발급되었습니다."),

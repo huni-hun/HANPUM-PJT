@@ -9,6 +9,7 @@ import backend.hanpum.domain.auth.dto.responseDto.LoginResDto;
 import backend.hanpum.domain.auth.dto.responseDto.ReissueAccessTokenResDto;
 import backend.hanpum.domain.auth.dto.responseDto.TokenResDto;
 import backend.hanpum.domain.member.entity.Member;
+import backend.hanpum.domain.member.enums.MemberType;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.auth.*;
 import lombok.RequiredArgsConstructor;
@@ -130,14 +131,34 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
+    public void kakaoSingUpComplete(Long memberId, MultipartFile multipartFile,
+                                    KakaoSignUpCompleteReqDto kakaoSignUpCompleteReqDto) {
+        Member member = memberRepository.findByMemberIdAndMemberType(memberId, MemberType.KAKAO_INCOMPLETE)
+                .orElseThrow(MemberNotFoundException::new);
+        checkNicknameAuthenticated(kakaoSignUpCompleteReqDto.getNickname());
+        member.kakaoSingUpComplete(
+                kakaoSignUpCompleteReqDto.getNickname(),
+                kakaoSignUpCompleteReqDto.getGender(),
+                kakaoSignUpCompleteReqDto.getBirthDate(),
+                kakaoSignUpCompleteReqDto.getPhoneNumber(),
+                MemberType.KAKAO
+        );
+        if (!multipartFile.isEmpty()) {
+            member.updateProfilePicture(s3ImageService.uploadImage(multipartFile));
+        }
+        redisDao.deleteNickname(kakaoSignUpCompleteReqDto.getNickname());
+    }
+
+    @Override
     public LoginResDto login(LoginReqDto loginReqDto) {
         Member member = memberRepository.findMemberByLoginId(loginReqDto.getLoginId())
                 .orElseThrow(LoginInfoInvalidException::new);
         if (!passwordEncoder.matches(loginReqDto.getPassword(), member.getPassword())) {
             throw new LoginInfoInvalidException();
         }
-        TokenResDto tokenResDto = jwtProvider.createTokenByLogin(member.getEmail(), member.getMemberType());
-        return new LoginResDto(member.getEmail(), tokenResDto);
+        TokenResDto tokenResDto = jwtProvider.createTokenByLogin(member.getLoginId(), member.getMemberType());
+        return new LoginResDto(member.getMemberId(), member.getMemberType(), tokenResDto);
     }
 
     @Override
@@ -148,9 +169,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional(readOnly = true)
-    public ReissueAccessTokenResDto reissueToken(String accessToken, TokenReissueReqDto tokenReissueReqDto) {
-        Member member = memberRepository.findMemberByEmail(jwtProvider.getEmailFromExpiredToken(accessToken)).orElseThrow(EmailNotFoundException::new);
-        return jwtProvider.reissueAccessToken(member.getEmail(), member.getMemberType(), tokenReissueReqDto.getRefreshToken());
+    public ReissueAccessTokenResDto reissueToken(String accessToken) {
+        Member member = memberRepository.findMemberByLoginId(jwtProvider.getLoginIdFromExpiredToken(accessToken)).orElseThrow(LoginInfoInvalidException::new);
+        return jwtProvider.reissueAccessToken(member.getLoginId(), member.getMemberType());
     }
 
     @Override
