@@ -525,8 +525,8 @@ public class CourseServiceImpl implements CourseService {
                         .name(item.path("title").asText())
                         .type(item.path("contenttypeid").asText())
                         .address(item.path("addr1").asText())
-                        .lat(Float.parseFloat(item.path("mapx").asText()))
-                        .lon(Float.parseFloat(item.path("mapy").asText()))
+                        .lat(Double.parseDouble(item.path("mapx").asText()))
+                        .lon(Double.parseDouble(item.path("mapy").asText()))
                         .img(item.path("firstimage").asText())
                         .build();
                 attractions.add(attraction);
@@ -537,7 +537,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public SearchWaypointResDto searchWaypointByKeyword(String keyword) {
+    public List<SearchWaypointResDto> searchWaypointByKeyword(String keyword) {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -570,14 +570,19 @@ public class CourseServiceImpl implements CourseService {
             throw new JsonBadProcessingException();
         }
 
-        JsonNode document = root.path("documents").get(0);
-        return SearchWaypointResDto.builder()
-                .placeName(document.path("place_name").asText())
-                .address(document.path("address_name").asText())
-                .lat(Float.parseFloat(document.path("x").asText()))
-                .lon(Float.parseFloat(document.path("y").asText()))
-                .phone("phone")
-                .build();
+        List<SearchWaypointResDto> result = new ArrayList<>();
+        JsonNode documents = root.path("documents");
+        for(JsonNode document : documents) {
+            result.add(SearchWaypointResDto.builder()
+                    .placeName(document.path("place_name").asText())
+                    .address(document.path("address_name").asText())
+                    .lat(Double.parseDouble(document.path("x").asText()))
+                    .lon(Double.parseDouble(document.path("y").asText()))
+                    .phone("phone")
+                    .build());
+        }
+
+        return result;
     }
 
     @Override
