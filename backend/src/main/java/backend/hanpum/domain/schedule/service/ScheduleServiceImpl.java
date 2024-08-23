@@ -8,12 +8,8 @@ import backend.hanpum.domain.group.entity.Group;
 import backend.hanpum.domain.group.repository.GroupRepository;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
-import backend.hanpum.domain.schedule.dto.requestDto.MemoPostReqDto;
-import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
-import backend.hanpum.domain.schedule.dto.requestDto.ScheduleRunReqDto;
-import backend.hanpum.domain.schedule.dto.requestDto.ScheduleStartReqDto;
-import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
-import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
+import backend.hanpum.domain.schedule.dto.requestDto.*;
+import backend.hanpum.domain.schedule.dto.responseDto.*;
 import backend.hanpum.domain.schedule.entity.Memo;
 import backend.hanpum.domain.schedule.entity.Schedule;
 import backend.hanpum.domain.schedule.entity.ScheduleDay;
@@ -22,20 +18,29 @@ import backend.hanpum.domain.schedule.repository.MemoRepository;
 import backend.hanpum.domain.schedule.repository.ScheduleDayRepository;
 import backend.hanpum.domain.schedule.repository.ScheduleRepository;
 import backend.hanpum.domain.schedule.repository.ScheduleWayPointRepository;
+import backend.hanpum.domain.weather.dto.WeatherResDto;
+import backend.hanpum.domain.weather.service.WeatherService;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.auth.MemberInfoInvalidException;
+import backend.hanpum.exception.exception.common.JsonBadMappingException;
+import backend.hanpum.exception.exception.common.UriBadSyntaxException;
 import backend.hanpum.exception.exception.group.GroupMemberNotFoundException;
 import backend.hanpum.exception.exception.group.GroupNotFoundException;
-import backend.hanpum.exception.exception.schedule.GroupScheduleNotFoundException;
-import backend.hanpum.exception.exception.schedule.InvalidDayFormatException;
-import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
-import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
+import backend.hanpum.exception.exception.schedule.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -50,6 +55,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final MemberRepository memberRepository;
     private final MemoRepository memoRepository;
     private final GroupRepository groupRepository;
+    private final WeatherService weatherService;
+    private final RestTemplate restTemplate;
+
+    @Value("${api.serviceKey}")
+    private String serviceKey;
 
     @Transactional
     @Override
@@ -63,7 +73,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule schedule = Schedule.builder()
                 .title(schedulePostReqDto.getTitle())
                 .type("private")
-                .date(startDate)
+                .startDate(startDate)
                 .member(member)
                 .course(course)
                 .build();
@@ -87,7 +97,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule schedule = Schedule.builder()
                 .title(schedulePostReqDto.getTitle())
                 .type("group")
-                .date(startDate)
+                .startDate(startDate)
                 .group(group)
                 .course(course)
                 .build();
@@ -230,5 +240,158 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .build();
 
         memoRepository.save(memo);
+    }
+
+    @Scheduled(cron = "0 0 0 * * *")
+    @Transactional
+    @Override
+    public void activateSchedules() {
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        int updatedCount = scheduleRepository.activateScheduleForToday(today);
+        if (updatedCount == 0) {
+            throw new ValidScheduleNotFoundException();
+        }
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public ScheduleInProgressResDto getRunningSchedule(Long memberId, double lat, double lon) {
+
+        // 진행중인 일정 정보 가져오기
+        ScheduleTempResDto scheduleTempResDto = scheduleRepository.getScheduleTempResDto(memberId).orElseThrow(ValidScheduleNotFoundException::new);
+
+        Long scheduleId = scheduleTempResDto.getScheduleId();
+
+        // ScheduleDayResDto
+        List<ScheduleDayResDto> scheduleDayResDtoList = scheduleRepository.getScheduleDayResDtoList(memberId, scheduleId).orElseThrow(ScheduleNotFoundException::new);
+
+        // 날씨 정보
+        WeatherResDto weatherResDto = weatherService.getDayWeather(lat, lon);
+
+        // 달성률
+        int rate = getScheduleGoalRate(scheduleDayResDtoList);
+
+        ScheduleInProgressResDto result = ScheduleInProgressResDto.builder()
+                .scheduleId(scheduleId)
+                .startPoint(scheduleTempResDto.getStartPoint())
+                .endPoint(scheduleTempResDto.getEndPoint())
+                .startDate(scheduleTempResDto.getStartDate())
+                .endDate(scheduleTempResDto.getEndDate())
+                .totalDistance(scheduleTempResDto.getTotalDistance())
+                .rate(rate)
+                .weatherResDto(weatherResDto)
+                .scheduleDayResDtoList(scheduleDayResDtoList)
+                .build();
+        return result;
+    }
+
+
+    private int getScheduleGoalRate(List<ScheduleDayResDto> scheduleDayResDtoList) {
+
+        int rate = 0;
+        int size = scheduleDayResDtoList.size();
+        int dayRate = 100 / size;
+
+        // 첫쨰날도 방문 안했을때
+        if (!scheduleDayResDtoList.get(0).isVisit()) {
+            List<ScheduleWayPointResDto> scheduleWayPointResDtoList = scheduleDayResDtoList.get(0).getScheduleWayPointList();
+            int wayPointSize = scheduleWayPointResDtoList.size();
+            int wayPointCount = 0;
+            for (ScheduleWayPointResDto scheduleWayPointResDto : scheduleWayPointResDtoList) {
+                if (scheduleWayPointResDto.isVisit()) {
+                    wayPointCount++;
+                }
+            }
+            rate = dayRate * (wayPointCount / wayPointSize);
+            return rate;
+        }
+
+        int dayCount = 0;
+        for (ScheduleDayResDto scheduleDayResDto : scheduleDayResDtoList) {
+            if (scheduleDayResDto.isVisit()) {
+                dayCount++;
+            } else {
+                List<ScheduleWayPointResDto> scheduleWayPointResDtoList = scheduleDayResDto.getScheduleWayPointList();
+                int wayPointSize = scheduleWayPointResDtoList.size();
+                int wayPointCount = 0;
+                for (ScheduleWayPointResDto scheduleWayPointResDto : scheduleWayPointResDtoList) {
+                    if (scheduleWayPointResDto.isVisit()) {
+                        wayPointCount++;
+                    }
+                }
+                rate += dayRate * (wayPointCount / wayPointSize);
+            }
+        }
+
+        if (dayCount == size) {
+            return 100;
+        }
+
+        rate += (dayCount * dayRate);
+
+        return rate;
+    }
+
+    @Override
+    public List<NearByAttractionResDto> getNearByAttractionList(String OS, int distance, double lat, double lon) {
+        String url = new StringBuilder("https://apis.data.go.kr/B551011/KorService1/locationBasedList1")
+                .append("?numOfRows=10")
+                .append("&pageNo=1")
+                .append("&MobileOS=").append(OS)
+                .append("&MobileApp=HANPUM")
+                .append("&_type=JSON")
+                .append("&arrange=O")
+                .append("&mapX=").append(lon)
+                .append("&mapY=").append(lat)
+                .append("&radius=").append(distance)
+                .append("&contentTypeId=12")
+                .append("&serviceKey=").append(serviceKey)
+                .toString();
+
+        try {
+            URI uri = new URI(url);
+            ResponseEntity<String> response = restTemplate.getForEntity(uri, String.class);
+            return parseAttractionResponse(response.getBody());
+        } catch (NearByAttractionNotFoundException e) {
+            throw e;
+        } catch (JsonBadMappingException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new UriBadSyntaxException();
+        }
+    }
+
+    private List<NearByAttractionResDto> parseAttractionResponse(String responseBody) {
+        List<NearByAttractionResDto> attractions = new ArrayList<>();
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode root = objectMapper.readTree(responseBody);
+            JsonNode items = root.path("response").path("body").path("items").path("item");
+
+            if (items.size() == 0) {
+                throw new NearByAttractionNotFoundException();
+            }
+
+            if (items.isArray()) {  // items가 배열인지 확인
+                for (JsonNode item : items) {
+                    NearByAttractionResDto attraction = NearByAttractionResDto.builder()
+                            .title(item.path("title").asText())
+                            .address(item.path("addr1").asText())
+                            .tel(item.path("tel").asText())
+                            .image1(item.path("firstimage").asText())
+                            .lat(item.path("mapy").asDouble())
+                            .lon(item.path("mapx").asDouble())
+                            .build();  // Builder 패턴으로 객체 생성
+
+                    attractions.add(attraction);  // 생성된 객체를 리스트에 추가
+                }
+            }
+
+            return attractions;
+        } catch (NearByAttractionNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new JsonBadMappingException();
+        }
     }
 }

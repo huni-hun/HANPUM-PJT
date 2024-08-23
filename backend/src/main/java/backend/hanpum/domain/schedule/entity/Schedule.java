@@ -27,8 +27,11 @@ public class Schedule {
     @Column(name = "type")
     private String type;
 
-    @Column(name = "date")
-    private String date;
+    @Column(name = "start_date")
+    private String startDate;
+
+    @Column(name = "end_date")
+    private String endDate;
 
     @Builder.Default
     @Column(name = "state")

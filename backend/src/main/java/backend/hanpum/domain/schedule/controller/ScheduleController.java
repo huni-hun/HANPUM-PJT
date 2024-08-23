@@ -5,7 +5,9 @@ import backend.hanpum.domain.schedule.dto.requestDto.MemoPostReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.ScheduleRunReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.ScheduleStartReqDto;
+import backend.hanpum.domain.schedule.dto.responseDto.NearByAttractionResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
+import backend.hanpum.domain.schedule.dto.responseDto.ScheduleInProgressResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
 import backend.hanpum.domain.schedule.service.ScheduleService;
 import backend.hanpum.exception.format.code.ApiResponse;
@@ -47,19 +49,19 @@ public class ScheduleController {
     }
 
     @Operation(summary = "멤버별 일정 조회", description = "내 개인 일정 조회")
-    @GetMapping("/group")
+    @GetMapping
     public ResponseEntity<?> getMySchedule(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         Long memberId = userDetails.getMember().getMemberId();
         List<ScheduleResDto> scheduleResDto = scheduleService.getMyScheduleList(memberId);
-        return response.success(ResponseCode.GROUP_SCHEDULE_LIST_FETCHED, scheduleResDto);
+        return response.success(ResponseCode.SCHEDULE_LIST_FETCHED, scheduleResDto);
     }
 
     @Operation(summary = "모임 일정 조회", description = "내가 속해있는 모임 일정 조회")
-    @GetMapping
+    @GetMapping("/group")
     public ResponseEntity<?> getGroupSchedule(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         Long memberId = userDetails.getMember().getMemberId();
         List<ScheduleResDto> scheduleResDto = scheduleService.getGroupScheduleList(memberId);
-        return response.success(ResponseCode.SCHEDULE_LIST_FETCHED, scheduleResDto);
+        return response.success(ResponseCode.GROUP_SCHEDULE_LIST_FETCHED, scheduleResDto);
     }
 
 
@@ -103,9 +105,30 @@ public class ScheduleController {
     @Operation(summary = "메모 작성", description = "경유지 메모작성")
     @PostMapping("/memo")
     public ResponseEntity<?> createMemo(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                        MemoPostReqDto memoPostReqDto){
+                                        MemoPostReqDto memoPostReqDto) {
         Long memberId = userDetails.getMember().getMemberId();
         scheduleService.createMemo(memberId, memoPostReqDto);
         return response.success(ResponseCode.MEMO_CREATED);
     }
+
+    @Operation(summary = "진행중인 일정", description = "진행중 일정 조회")
+    @GetMapping("/running")
+    public ResponseEntity<?> getRunningSchedule(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                @RequestParam double lat,
+                                                @RequestParam double lon) {
+        Long memberId = userDetails.getMember().getMemberId();
+        ScheduleInProgressResDto result = scheduleService.getRunningSchedule(memberId, lat, lon);
+        return response.success(ResponseCode.RUNNING_SCHEDULE_FETCHED, result);
+    }
+
+    @Operation(summary = "주변 관광지 정보 가져오기", description = "주변 관광지 정보 가져오기")
+    @GetMapping("/nearby")
+    public ResponseEntity<?> getNearByAttractionList(@RequestParam String OS,
+                                                     @RequestParam int distance,
+                                                     @RequestParam double lat,
+                                                     @RequestParam double lon) {
+        List<NearByAttractionResDto> result = scheduleService.getNearByAttractionList(OS, distance, lat, lon);
+        return response.success(ResponseCode.NEARBY_ATTRACTION_LIST_FETCHED, result);
+    }
+
 }

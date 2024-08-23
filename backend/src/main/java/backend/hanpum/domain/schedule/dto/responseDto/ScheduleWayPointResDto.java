@@ -12,6 +12,7 @@ public class ScheduleWayPointResDto {
     String name;
     String type;
     String address;
-    Float lat;
-    Float lon;
+    double lat;
+    double lon;
+    boolean visit;
 }

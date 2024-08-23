@@ -29,7 +29,7 @@ function Terms({
   const isEssentialCheck = Object.entries(termsAgreements)
     .filter(([key]) => key !== '04')
     .every(([, value]) => value);
-  console.log('필수 ::', isEssentialCheck);
+
   // 전체 동의 누르는 함수
   const handleAllAgree = (
     _: MouseEvent<HTMLElement>,
@@ -90,7 +90,6 @@ function Terms({
         ))}
       </div>
 
-      {/* TODO FixedBottom 생성 후 disable props 추가 */}
       <FixedBottomButton
         label="동의하고 시작하기"
         disabled={!isEssentialCheck}
@@ -102,8 +101,3 @@ function Terms({
 }
 
 export default Terms;
-
-//  style={{
-//           backgroundColor: isEssentialCheck ? colors.main : undefined,
-//         }}
-//

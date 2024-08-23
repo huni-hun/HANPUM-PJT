@@ -5,4 +5,6 @@ export const UserInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 24px;
+
+  background-color: ${colors.white};
 `;

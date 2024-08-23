@@ -580,4 +580,71 @@ public class CourseServiceImpl implements CourseService {
                 .build();
     }
 
+    @Override
+    public List<MultiWaypointSearchResDto> searchMultiWaypointCourse(List<MultiWaypointSearchReqDto> multiWaypointSearchReqDtoList) {
+        RestTemplate restTemplate = new RestTemplate();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        MultiWaypointSearchReqDto origin = multiWaypointSearchReqDtoList.get(0);
+        MultiWaypointSearchReqDto destination = multiWaypointSearchReqDtoList.get(multiWaypointSearchReqDtoList.size() - 1);
+        List<MultiWaypointSearchReqDto> waypoints = multiWaypointSearchReqDtoList.subList(1, multiWaypointSearchReqDtoList.size() - 1);
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("origin", origin);
+        requestBody.put("destination", destination);
+        requestBody.put("waypoints", waypoints);
+        requestBody.put("avoid", new String[]{"toll", "motorway", "uturn", "ferries"});
+        requestBody.put("car_types", 7);
+
+        String jsonBody = null;
+        try {
+            jsonBody = objectMapper.writeValueAsString(requestBody);
+        } catch (JsonProcessingException e) {
+            throw new JsonBadProcessingException();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "KakaoAK " + kakaoAppKey);
+        HttpEntity<?> entity = new HttpEntity<>(jsonBody, headers);
+
+        if (multiWaypointSearchReqDtoList == null || multiWaypointSearchReqDtoList.size() < 2) {
+            throw new IllegalArgumentException("dtoList must contain at least origin and destination");
+        }
+
+        String BASE_URL = "https://apis-navi.kakaomobility.com/v1";
+        ResponseEntity<String> resultMap = restTemplate.exchange(BASE_URL + "/waypoints/directions", HttpMethod.POST, entity, String.class);
+
+        JsonNode root = null;
+        try {
+            root = objectMapper.readTree(resultMap.getBody());
+        } catch (JsonMappingException e) {
+            throw new JsonBadMappingException();
+        } catch (JsonProcessingException e) {
+            throw new JsonBadProcessingException();
+        }
+
+        List<MultiWaypointSearchResDto> multiWaypointSearchResDtoList = new ArrayList<>();
+        JsonNode routesNode = root.path("routes").get(0);
+        for (JsonNode sectionNode : routesNode.path("sections")) {
+            List<Double> Vertexes = new ArrayList<>();
+            String sectionDistance = sectionNode.path("distance").asText();
+
+            for (JsonNode roadNode : sectionNode.path("roads")) {
+                JsonNode vertexesNode = roadNode.path("vertexes");
+                for (int i = 0; i < vertexesNode.size(); i++) {
+                    Vertexes.add(vertexesNode.get(i).asDouble());
+                }
+            }
+            MultiWaypointSearchResDto multiWaypointSearchResDto = new MultiWaypointSearchResDto();
+            multiWaypointSearchResDtoList.add(multiWaypointSearchResDto.builder()
+                    .distance(sectionDistance)
+                    .vertexes(Vertexes)
+                    .build());
+        }
+
+        return multiWaypointSearchResDtoList;
+    }
+
 }

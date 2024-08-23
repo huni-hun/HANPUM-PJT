@@ -1,5 +1,6 @@
 import { SignupRequestValues } from '@/models/signup';
 import api from '../index';
+import CryptoJS from 'crypto-js';
 
 // 아이디 중복확인
 export async function CheckId(loginId: string) {
@@ -37,17 +38,37 @@ export async function CheckNickname(nickname: string) {
 
 // 회원가입
 export async function SignUp(signupReq: SignupRequestValues) {
-  console.log(signupReq);
-  const { data } = await api.post('/api/auth/sign-up', {
-    ...signupReq,
+  const formData = new FormData();
+
+  const { multipartFile, password, ...rest } = signupReq;
+
+  // 비밀번호 hash화
+  const hashedPassword = CryptoJS.SHA256(password).toString();
+
+  const updatedRest = { ...rest, password: hashedPassword };
+
+  console.log(updatedRest);
+
+  const signUpReqDto = new Blob([JSON.stringify(updatedRest)], {
+    type: 'application/json',
+  });
+
+  formData.append('signUpReqDto', signUpReqDto);
+  formData.append('multipartFile', multipartFile);
+
+  const { data } = await api.post('/api/auth/sign-up', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
   });
   return data;
 }
 
-// 로그인TODO
-export async function Login(loginReq: any) {
+// 로그인
+export async function Login(loginId: string, password: string) {
   const { data } = await api.post('/api/auth/login', {
-    loginReq,
+    loginId,
+    password,
   });
   return data;
 }
@@ -58,7 +79,7 @@ export async function Logout() {
   return data;
 }
 
-// refreshToken TODO RequestBody가 refreshToken이 맞는지?
+// 토큰 재발급 TODO
 export async function GetRefreshToken() {
   const { data } = await api.post('/api/auth/reissue-token');
   return data;

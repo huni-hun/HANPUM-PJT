@@ -5,24 +5,26 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
+import java.util.Map;
 
 @Getter
 @NoArgsConstructor
-public class UserDetailsImpl implements UserDetails {
+public class UserDetailsImpl implements UserDetails, OAuth2User {
 
-    private Member member;
-    private String email;
+    private transient Member member;
+    private transient Map<String,Object> attributes;
     private Collection<? extends GrantedAuthority> authorities;
 
     public UserDetailsImpl(Member member){
         this.member = member;
     }
 
-    public UserDetailsImpl(Member member, String email) {
+    public UserDetailsImpl(Member member, Map<String,Object> attributes) {
         this.member = member;
-        this.email = email;
+        this.attributes = attributes;
     }
 
     @Override
@@ -58,5 +60,10 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String getName() {
+        return null;
     }
 }

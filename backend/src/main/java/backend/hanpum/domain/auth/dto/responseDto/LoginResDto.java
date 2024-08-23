@@ -1,5 +1,6 @@
 package backend.hanpum.domain.auth.dto.responseDto;
 
+import backend.hanpum.domain.member.enums.MemberType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class LoginResDto {
-    String email;
+    Long memberId;
+    MemberType memberType;
     TokenResDto tokenResDto;
 }

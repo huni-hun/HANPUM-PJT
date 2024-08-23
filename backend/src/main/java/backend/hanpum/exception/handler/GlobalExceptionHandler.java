@@ -14,6 +14,7 @@ import backend.hanpum.exception.exception.course.CourseReviewsNotFoundException;
 import backend.hanpum.exception.exception.group.*;
 import backend.hanpum.exception.exception.schedule.*;
 import backend.hanpum.exception.exception.test.TestNotFoundException;
+import backend.hanpum.exception.exception.weather.WeatherParsingException;
 import backend.hanpum.exception.format.code.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -120,6 +121,28 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ScheduleWayPointNotFoundException.class)
     protected ResponseEntity<?> handle(ScheduleWayPointNotFoundException e){
         log.error("ScheduleWayPointNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(ValidScheduleNotFoundException.class)
+    protected ResponseEntity<?> handle(ValidScheduleNotFoundException e){
+        log.error("ValidScheduleNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(NearByAttractionNotFoundException.class)
+    protected ResponseEntity<?> handle(NearByAttractionNotFoundException e){
+        log.error("NearByAttractionNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    /* 날씨 */
+    @ExceptionHandler(WeatherParsingException.class)
+    protected ResponseEntity<?> handle(WeatherParsingException e) {
+        log.error("WeatherParsingException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }

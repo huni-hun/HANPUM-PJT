@@ -25,7 +25,7 @@ public class JwtProvider {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String AUTHORIZATION_KEY = "type";
-    private static final String BEARER_PREFIX = "Bearer ";
+    private static final String BEARER_PREFIX = "Bearer+";
 
     private static final long ACCESS_TOKEN_TIME = 1000 * 60 * 30L; // 30 분 1000ms(=1s) *60=(1min)*30 =(30min)
     private static final long REFRESH_TOKEN_TIME = 1000 * 60 * 60 * 24 * 14L; // 14일
@@ -50,12 +50,12 @@ public class JwtProvider {
         return null;
     }
 
-    private String createToken(String email, MemberType role, Long tokenExpireTime) {
+    private String createToken(String loginId, MemberType role, Long tokenExpireTime) {
         Date date = new Date();
         String token =
                 BEARER_PREFIX + Jwts.builder()
                         .claim(AUTHORIZATION_KEY, role)
-                        .setSubject(email)
+                        .setSubject(loginId)
                         .setIssuedAt(date)
                         .setExpiration(new Date(date.getTime() + tokenExpireTime))
                         .signWith(key, SignatureAlgorithm.HS256)
@@ -63,18 +63,18 @@ public class JwtProvider {
         return token;
     }
 
-    public TokenResDto createTokenByLogin(String email, MemberType role) {
-        String accessToken = createToken(email, role, ACCESS_TOKEN_TIME);
+    public TokenResDto createTokenByLogin(String loginId, MemberType role) {
+        String accessToken = createToken(loginId, role, ACCESS_TOKEN_TIME);
         String refreshToken = createToken(null, null, REFRESH_TOKEN_TIME);
-        redisDao.setRefreshToken(email, refreshToken, REFRESH_TOKEN_TIME);
-        return new TokenResDto(accessToken, refreshToken);
+        redisDao.setRefreshToken(loginId, refreshToken, REFRESH_TOKEN_TIME);
+        return new TokenResDto(accessToken);
     }
 
-    public ReissueAccessTokenResDto reissueAccessToken(String email, MemberType role, String reToken) {
-        if (!redisDao.getRefreshToken(email).equals(reToken)) {
+    public ReissueAccessTokenResDto reissueAccessToken(String loginId, MemberType role) {
+        if (redisDao.getRefreshToken(loginId) == null) {
             throw new RefreshTokenNotFoundException();
         }
-        String accessToken = createToken(email, role, ACCESS_TOKEN_TIME);
+        String accessToken = createToken(loginId, role, ACCESS_TOKEN_TIME);
         return new ReissueAccessTokenResDto(accessToken);
     }
 
@@ -87,7 +87,7 @@ public class JwtProvider {
         return claims.getSubject();
     }
 
-    public String getEmailFromExpiredToken(String token) {
+    public String getLoginIdFromExpiredToken(String token) {
         try {
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(key)

@@ -37,6 +37,7 @@ const Header = ({
   // merge(검색창, 북마크, 알림, user가 다 합쳐져 있는)
   // search-place(w장소이름, 주소 검색)
   // search(돋보기 검색창)
+  // back(뒤로가기)
 
   const renderHeader = () => {
     switch (purpose) {
@@ -133,12 +134,6 @@ const Header = ({
               <Icon name="IconSearch" size={14} />
               <input type="text" />
             </div>
-          </Flex>
-        );
-      case 'route-detail':
-        return (
-          <Flex style={{ marginLeft: '2rem' }} $align="center" $justify="end">
-            <Icon name="IconBookMarker" size={20} />
           </Flex>
         );
       default:
