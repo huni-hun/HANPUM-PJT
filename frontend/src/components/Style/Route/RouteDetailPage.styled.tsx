@@ -74,8 +74,10 @@ export const UserImgBox = styled.div`
   width: 5rem;
   height: 5rem;
   border-radius: 50%;
-  background-color: ${colors.grey1};
   margin-left: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const UserName = styled.p`

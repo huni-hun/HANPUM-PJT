@@ -24,6 +24,7 @@ function RouteDetailPage() {
   const [latitude, setLatitude] = useState<number>(0);
   const [longitude, setLongitude] = useState<number>(0);
   const [attractions, setAttractions] = useState<AttractionsProps[]>([]);
+  const [linePath, setLinePath] = useState([]);
 
   useEffect(() => {
     if (dayData.length === 0) {
@@ -80,7 +81,9 @@ function RouteDetailPage() {
           <R.RouteInfoContainer>
             <R.ImgBox></R.ImgBox>
             <R.UserContainer>
-              <R.UserImgBox></R.UserImgBox>
+              <R.UserImgBox>
+                <Icon name="IconUserBasicImg" size={42} />
+              </R.UserImgBox>
               <R.UserName>작성자</R.UserName>
             </R.UserContainer>
             <R.RouteNameInfo>
@@ -160,6 +163,7 @@ function RouteDetailPage() {
           </R.RouteInfoContainer>
           <R.RouteDetailInfoContainer>
             <RouteDetailInfo
+              linePath={linePath}
               selected={selected}
               selectedDay={selectedDay}
               latitude={latitude}

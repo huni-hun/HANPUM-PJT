@@ -8,7 +8,7 @@ function ReviewCard(ele: RouteReviewProps) {
       <R.ReviewCard>
         <R.UserImgContainer>
           <R.UserImg>
-            <Icon name="IconUser" size={43} />
+            <Icon name="IconUserBasicImg" size={43} />
           </R.UserImg>
         </R.UserImgContainer>
         <R.ReviewTextcontainer>

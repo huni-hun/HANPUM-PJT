@@ -71,3 +71,10 @@ export interface RouteReviewProps {
   score: number;
   writeDate: string;
 }
+
+export interface searchPlaceProps {
+  placeName: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+}

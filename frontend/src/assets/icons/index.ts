@@ -23,6 +23,8 @@ export { ReactComponent as IconGreyStar } from './GreyStar.svg';
 export { ReactComponent as IconGrenStar } from './GrenStar.svg';
 export { ReactComponent as IconReview } from './Review.svg';
 export { ReactComponent as IconGreyReview } from './GreyReview.svg';
+export { ReactComponent as IconUserBasicImg } from './UserBasicImg.svg';
+export { ReactComponent as IconRouteAddComplete } from './RouteAddComplete.svg';
 
 // header
 export { ReactComponent as IconUser } from './user.svg';

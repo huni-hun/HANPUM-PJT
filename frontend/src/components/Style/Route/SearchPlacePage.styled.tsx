@@ -46,4 +46,16 @@ export const MainContainer = styled.div`
   width: 100vw;
   height: 93vh;
   display: flex;
+  flex-direction: column;
+`;
+
+export const PlaceBox = styled.div`
+  width: 100%;
+  height: 1.9rem;
+  display: flex;
+`;
+
+export const PlaceText = styled.p`
+  font-size: 1.4rem;
+  margin-left: 6rem;
 `;

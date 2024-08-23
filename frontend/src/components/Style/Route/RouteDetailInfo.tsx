@@ -24,6 +24,7 @@ interface RouteDetailInfoProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedDay: React.Dispatch<React.SetStateAction<number>>;
   //   reviews: RouteReviewProps[];
+  linePath: any[];
 }
 
 function RouteDetailInfo(props: RouteDetailInfoProps) {
@@ -81,7 +82,11 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
         return (
           <>
             <R.MapBox>
-              <Map latitude={props.latitude} longitude={props.longitude} />
+              <Map
+                linePath={props.linePath}
+                latitude={props.latitude}
+                longitude={props.longitude}
+              />
             </R.MapBox>
             <R.DetailHeader>
               <R.HeaderOverflow>
