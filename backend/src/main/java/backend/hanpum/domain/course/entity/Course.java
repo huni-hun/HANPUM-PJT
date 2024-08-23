@@ -70,11 +70,13 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CourseType> courseTypes = new ArrayList<>();
 
-    public void updateCourse(String courseName, String content, boolean openState, boolean writeSTate, Integer totalDays) {
+    public void updateCourse(String courseName, String content, boolean openState, boolean writeSTate, String startPoint, String endPoint, Integer totalDays) {
         this.courseName = courseName;
         this.content = content;
         this.openState = openState;
         this.writeState = writeSTate;
+        this.startPoint = startPoint;
+        this.endPoint = endPoint;
         this.totalDays = totalDays;
     }
 

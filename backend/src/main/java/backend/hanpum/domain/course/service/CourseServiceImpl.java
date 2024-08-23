@@ -47,8 +47,13 @@ public class CourseServiceImpl implements CourseService {
     private final AttractionRepository attractionRepository;
     private final WaypointRepository waypointRepository;
     private final CourseUsageHistoryRepository courseUsageHistoryRepository;
-
     private final S3ImageService s3ImageService;
+    
+    private static final List<String> SIDO_LIST = Arrays.asList(
+            "서울", "부산", "대구", "인천", "광주",
+            "대전", "울산", "세종특별자치시", "경기", "강원특별자치도",
+            "충북", "충남", "전북특별자치도", "전남", "경북", "경남", "제주특별자치도"
+    );
 
     @Value("${api.serviceKey}")
     private String serviceKey;
@@ -74,17 +79,17 @@ public class CourseServiceImpl implements CourseService {
             }
         }
 
-        String startPoint = makeCourseReqDto.getCourseDayReqDtoList().stream()
+        String startPoint = extractSido(makeCourseReqDto.getCourseDayReqDtoList().stream()
                 .findFirst()
                 .flatMap(courseDayReqDto -> courseDayReqDto.getWayPointReqDtoList().stream().findFirst())
-                .map(WayPointReqDto::getName)
-                .orElse("Unknown");
+                .map(WayPointReqDto::getAddress)
+                .orElse("Unknown"));
 
-        String endPoint = makeCourseReqDto.getCourseDayReqDtoList().stream()
+        String endPoint = extractSido(makeCourseReqDto.getCourseDayReqDtoList().stream()
                 .reduce((first, second) -> second)
                 .flatMap(courseDayReqDto -> courseDayReqDto.getWayPointReqDtoList().stream().reduce((first, second) -> second))
-                .map(WayPointReqDto::getName)
-                .orElse("Unknown");
+                .map(WayPointReqDto::getAddress)
+                .orElse("Unknown"));
         
         Date currentDate = new Date();
         Course course = Course.builder()
@@ -164,16 +169,39 @@ public class CourseServiceImpl implements CourseService {
         }
     }
 
+    public static String extractSido(String address) {
+        System.out.println(address);
+
+        return SIDO_LIST.stream()
+                .filter(address::contains)
+                .findFirst()
+                .orElse("필터링 실패");
+    }
+
     @Override
     @Transactional
     public void editCourse(EditCourseReqDto editCourseReqDto) {
         Course course = courseRepository.findById(editCourseReqDto.getCourseId()).orElseThrow(CourseNotFoundException::new);
+
+        String startPoint = extractSido(editCourseReqDto.getCourseDayReqDtoList().stream()
+                .findFirst()
+                .flatMap(courseDayReqDto -> courseDayReqDto.getWayPointReqDtoList().stream().findFirst())
+                .map(WayPointReqDto::getAddress)
+                .orElse("Unknown"));
+
+        String endPoint = extractSido(editCourseReqDto.getCourseDayReqDtoList().stream()
+                .reduce((first, second) -> second)
+                .flatMap(courseDayReqDto -> courseDayReqDto.getWayPointReqDtoList().stream().reduce((first, second) -> second))
+                .map(WayPointReqDto::getAddress)
+                .orElse("Unknown"));
 
         course.updateCourse(
                 editCourseReqDto.getCourseName(),
                 editCourseReqDto.getContent(),
                 editCourseReqDto.isOpenState(),
                 editCourseReqDto.isWriteState(),
+                startPoint,
+                endPoint,
                 editCourseReqDto.getCourseDayReqDtoList().size()
         );
 
