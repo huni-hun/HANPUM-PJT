@@ -5,11 +5,13 @@ import backend.hanpum.domain.course.entity.CourseDay;
 import backend.hanpum.domain.course.entity.Waypoint;
 import backend.hanpum.domain.course.repository.CourseRepository;
 import backend.hanpum.domain.course.service.CourseService;
+import backend.hanpum.domain.group.dto.responseDto.GroupMemberListGetResDto;
 import backend.hanpum.domain.group.dto.responseDto.GroupMemberResDto;
 import backend.hanpum.domain.group.entity.Group;
 import backend.hanpum.domain.group.repository.GroupMemberRepository;
 import backend.hanpum.domain.group.repository.GroupRepository;
 import backend.hanpum.domain.group.repository.custom.GroupMemberRepositoryCustom;
+import backend.hanpum.domain.group.service.GroupService;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.domain.schedule.dto.requestDto.*;
@@ -61,8 +63,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final GroupRepository groupRepository;
     private final WeatherService weatherService;
     private final RestTemplate restTemplate;
-    private final GroupMemberRepositoryCustom groupMemberRepositoryCustom;
-
+    private final GroupService groupService;
     private final CourseService courseService;
 
     @Value("${api.serviceKey}")
@@ -179,7 +180,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         Long groupId = member.getGroupMember().getGroup().getGroupId();
 
         ScheduleResDto scheduleResDto = scheduleRepository.getGroupScheduleByMemberId(memberId).orElseThrow(GroupScheduleNotFoundException::new);
-        List<GroupMemberResDto> groupMemberList = groupMemberRepositoryCustom.findGroupMemberList(groupId);
+        GroupMemberListGetResDto groupMemberListGetResDto = groupService.getGroupMemberList(memberId, groupId);
 
         GroupScheduleResDto groupScheduleResDto = GroupScheduleResDto.builder()
                 .scheduleId(scheduleResDto.getScheduleId())
@@ -191,7 +192,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .startDate(scheduleResDto.getStartDate())
                 .endDate(scheduleResDto.getEndDate())
                 .state(scheduleResDto.isState())
-                .groupMemberResDtoList(groupMemberList)
+                .groupMemberResDtoList(groupMemberListGetResDto.getGroupMemberResList())
                 .build();
 
         return groupScheduleResDto;
