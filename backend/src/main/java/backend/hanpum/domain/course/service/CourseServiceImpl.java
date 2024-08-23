@@ -617,7 +617,7 @@ public class CourseServiceImpl implements CourseService {
                     .address(document.path("address_name").asText())
                     .lat(Double.parseDouble(document.path("x").asText()))
                     .lon(Double.parseDouble(document.path("y").asText()))
-                    .phone("phone")
+                    .phone(document.path("address_name").asText())
                     .build());
         }
 
