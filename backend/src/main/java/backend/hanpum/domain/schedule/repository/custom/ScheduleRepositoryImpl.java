@@ -34,12 +34,16 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         return Optional.ofNullable(query.select(
                         Projections.constructor(ScheduleResDto.class,
                                 schedule.id,
+                                schedule.course.backgroundImg,
                                 schedule.title,
                                 schedule.type,
+                                schedule.course.startPoint,
+                                schedule.course.endPoint,
                                 schedule.startDate,
+                                schedule.endDate,
                                 schedule.state
                         )).from(schedule)
-                .where(schedule.member.memberId.eq(memberId))
+                .where(schedule.member.memberId.eq(memberId).and(schedule.type.eq("private")))
                 .fetch());
     }
 

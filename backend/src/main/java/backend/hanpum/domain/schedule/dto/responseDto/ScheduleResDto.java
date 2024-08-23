@@ -9,9 +9,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ScheduleResDto {
     Long scheduleId;
+    String backgroundImg;
     String title;
     String type;
-    String date;
+    String startPoint;
+    String endPoint;
+    String startDate;
+    String endDate;
     boolean state;
 
 }
