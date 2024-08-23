@@ -1,5 +1,6 @@
 package backend.hanpum.domain.course.service;
 
+import backend.hanpum.config.s3.S3ImageService;
 import backend.hanpum.domain.course.dto.requestDto.*;
 import backend.hanpum.domain.course.dto.responseDto.*;
 import backend.hanpum.domain.course.entity.*;
@@ -47,6 +48,8 @@ public class CourseServiceImpl implements CourseService {
     private final WaypointRepository waypointRepository;
     private final CourseUsageHistoryRepository courseUsageHistoryRepository;
 
+    private final S3ImageService s3ImageService;
+
     @Value("${api.serviceKey}")
     private String serviceKey;
 
@@ -93,9 +96,13 @@ public class CourseServiceImpl implements CourseService {
                 .startPoint(startPoint)
                 .endPoint(endPoint)
                 .totalDistance(allDayDistance)
+                .totalDays(makeCourseReqDto.getCourseDayReqDtoList().size())
                 .member(memberRepository.findById(makeCourseReqDto.getMemberId()).orElseThrow())  // 토큰으로 멤버정보 찾도록. 추후 변경
-                .backgroundImg("TEMP") // S3 미생성. 이미지 업로드 미구현. 추후 변경
                 .build();
+
+        if(!makeCourseReqDto.getBgImage().isEmpty()) {
+            course.updateBackgroundImg(s3ImageService.uploadImage(makeCourseReqDto.getBgImage()));
+        }
         courseRepository.save(course);
 
         for (String courseTypeName : makeCourseReqDto.getCourseTypeList()) {
@@ -166,11 +173,15 @@ public class CourseServiceImpl implements CourseService {
                 editCourseReqDto.getCourseName(),
                 editCourseReqDto.getContent(),
                 editCourseReqDto.isOpenState(),
-                editCourseReqDto.isWriteState()
+                editCourseReqDto.isWriteState(),
+                editCourseReqDto.getCourseDayReqDtoList().size()
         );
 
         if(editCourseReqDto.getBgImage() != null) {
-            // S3 image update 로직
+            String currentImage = course.getBackgroundImg();
+            String updateImage = s3ImageService.uploadImage(editCourseReqDto.getBgImage());
+            course.updateBackgroundImg(updateImage);
+            s3ImageService.deleteImage(currentImage);
         }
 
         List<CourseType> courseTypeList = courseTypeRepository.findByCourse_courseId(editCourseReqDto.getCourseId());

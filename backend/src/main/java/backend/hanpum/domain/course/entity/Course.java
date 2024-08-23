@@ -51,6 +51,9 @@ public class Course {
     @Column(name= "total_distance")
     private Double totalDistance;
 
+    @Column(name= "total_days")
+    private Integer totalDays;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -67,10 +70,15 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CourseType> courseTypes = new ArrayList<>();
 
-    public void updateCourse(String courseName, String content, boolean openState, boolean writeSTate) {
+    public void updateCourse(String courseName, String content, boolean openState, boolean writeSTate, Integer totalDays) {
         this.courseName = courseName;
         this.content = content;
         this.openState = openState;
         this.writeState = writeSTate;
+        this.totalDays = totalDays;
+    }
+
+    public void updateBackgroundImg(String backgroundImg){
+        this.backgroundImg = backgroundImg;
     }
 }
