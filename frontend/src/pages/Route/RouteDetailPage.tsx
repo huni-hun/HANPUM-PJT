@@ -12,6 +12,7 @@ import Header from '@/components/common/Header/Header';
 import Button from '@/components/common/Button/Button';
 import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
 import BottomSheet from '@/components/Style/Route/BottomSheet';
+import ReviewModal from '@/components/Style/Route/ReviewModal';
 
 function RouteDetailPage() {
   const { routeid } = useParams();
@@ -31,6 +32,7 @@ function RouteDetailPage() {
   const [linePath, setLinePath] = useState([]);
   const [bsType, setBsType] = useState<string>('설정');
   const [reviewType, setReviewType] = useState<string>('최신순');
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (dayData.length === 0) {
@@ -172,7 +174,7 @@ function RouteDetailPage() {
                   setSelected('information');
                 }}
               >
-                정보
+                관광지
               </R.ContentBox>
               <R.ContentBox
                 isSelected={selected === 'review'}
@@ -203,9 +205,16 @@ function RouteDetailPage() {
         </R.Overflow>
       </R.Main>
       <R.BottomContainer>
+        <R.WriteTextBox
+          onClick={() => {
+            setIsModalOpen(true);
+          }}
+        >
+          리뷰쓰기
+        </R.WriteTextBox>
         <R.ButtonBox>
           <Button
-            width={35}
+            width={65}
             height={6}
             fontColor="ffffff"
             backgroundColor="#1A823B"
@@ -225,6 +234,7 @@ function RouteDetailPage() {
           setIsOpen={setIsOpen}
         />
       )}
+      {isModalOpen && <ReviewModal setIsOpen={setIsModalOpen} />}
     </R.Container>
   ) : null;
 }

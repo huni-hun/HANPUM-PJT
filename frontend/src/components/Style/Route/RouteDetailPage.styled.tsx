@@ -647,7 +647,7 @@ export const BottomContainer = styled.div`
 `;
 
 export const ButtonBox = styled.div`
-  width: 85%;
+  width: 75%;
   height: 70%;
   display: flex;
   align-items: start;
@@ -676,4 +676,13 @@ export const ReviewHeader = styled.div`
   display: flex;
   padding: 0 0 0 2.4rem;
   align-items: center;
+`;
+
+export const WriteTextBox = styled.div`
+  width: 15%;
+  height: 70%;
+  display: flex;
+  justify-content: end;
+  padding: 4rem 0 0 0;
+  font-size: 1.4rem;
 `;
