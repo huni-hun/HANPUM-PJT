@@ -3,10 +3,11 @@ package backend.hanpum.domain.group.service;
 import backend.hanpum.domain.group.dto.requestDto.GroupPostReqDto;
 import backend.hanpum.domain.group.dto.responseDto.*;
 import backend.hanpum.domain.member.entity.Member;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface GroupService {
 
-    GroupPostResDto createGroup(Long memberId, GroupPostReqDto groupPostReqDto);
+    GroupPostResDto createGroup(Long memberId, MultipartFile multipartFile, GroupPostReqDto groupPostReqDto);
     GroupListGetResDto getGroupList(Long memberId);
     GroupDetailGetResDto getGroupDetail(Long memberId, Long groupId);
     void applyGroup(Long memberId, Long groupId);

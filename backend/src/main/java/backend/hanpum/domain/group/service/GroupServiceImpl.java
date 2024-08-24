@@ -1,5 +1,6 @@
 package backend.hanpum.domain.group.service;
 
+import backend.hanpum.config.s3.S3ImageService;
 import backend.hanpum.domain.group.dto.requestDto.GroupPostReqDto;
 import backend.hanpum.domain.group.dto.responseDto.*;
 import backend.hanpum.domain.group.entity.Group;
@@ -15,11 +16,11 @@ import backend.hanpum.domain.group.repository.custom.GroupRepositoryCustom;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
-import backend.hanpum.exception.exception.auth.NicknameExpiredException;
 import backend.hanpum.exception.exception.group.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -33,16 +34,16 @@ public class GroupServiceImpl implements GroupService {
     private final GroupMemberRepository groupMemberRepository;
     private final GroupMemberRepositoryCustom groupMemberRepositoryCustom;
     private final LikeGroupRepository likeGroupRepository;
+    private final S3ImageService s3ImageService;
 
     @Override
     @Transactional
-    public GroupPostResDto createGroup(Long memberId, GroupPostReqDto groupPostReqDto) {
+    public GroupPostResDto createGroup(Long memberId, MultipartFile multipartFile, GroupPostReqDto groupPostReqDto) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         if (member.getGroupMember() != null) throw new GroupAlreadyJoinedException();
 
         Group group = Group.builder()
                 .title(groupPostReqDto.getTitle())
-                .groupImg(groupPostReqDto.getGroupImg())
                 .description(groupPostReqDto.getDescription())
                 .recruitmentCount(groupPostReqDto.getRecruitmentCount())
                 .recruitmentPeriod(groupPostReqDto.getRecruitmentPeriod())
@@ -57,6 +58,10 @@ public class GroupServiceImpl implements GroupService {
         group.getGroupMemberList().add(groupMember);
         member.updateGroupMember(groupMember);
         groupRepository.save(group);
+
+        if(!multipartFile.isEmpty()) {
+            group.updateGroupImg(s3ImageService.uploadImage(multipartFile));
+        }
 
         return GroupPostResDto.builder().groupId(group.getGroupId()).build();
     }
