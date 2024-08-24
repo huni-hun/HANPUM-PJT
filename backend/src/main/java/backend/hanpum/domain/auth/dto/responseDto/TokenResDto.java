@@ -10,7 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class TokenResDto {
-
     private String accessToken;
-    private String refreshToken;
 }

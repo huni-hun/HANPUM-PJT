@@ -12,7 +12,7 @@ interface AlertProps {
   buttonConfirm?: string;
   buttonCancel?: string;
   element?: React.ReactNode;
-  onButtonClick: () => void;
+  onButtonClick: (cancel?: boolean) => void;
 }
 
 function CalenderAlert({
@@ -47,7 +47,7 @@ function CalenderAlert({
           {buttonCancel && (
             <BaseButton
               color="cancel"
-              onClick={onButtonClick}
+              onClick={() => onButtonClick(true)}
               style={{ flex: 1, borderRadius: '0' }}
             >
               {buttonCancel}
@@ -55,7 +55,7 @@ function CalenderAlert({
           )}
           {buttonConfirm && (
             <BaseButton
-              onClick={onButtonClick}
+              onClick={() => onButtonClick(false)}
               style={{ flex: 1, borderRadius: '0' }}
             >
               {buttonConfirm}

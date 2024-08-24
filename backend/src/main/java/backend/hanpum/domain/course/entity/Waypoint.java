@@ -39,10 +39,10 @@ public class Waypoint {
     private String address;
 
     @Column(name = "lat")
-    private Float lat;
+    private Double lat;
 
     @Column(name = "lon")
-    private Float lon;
+    private Double lon;
 
     @Column(name = "point_number", length = 2)
     private String pointNumber;
@@ -59,7 +59,7 @@ public class Waypoint {
     @OneToMany(mappedBy = "waypoint", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ScheduleWayPoint> scheduleWayPointList = new ArrayList<>();
 
-    public void updateWayPoint(String type, String name, String address, Float lat, Float lon, String pointNumber, String distance, String duration, String calorie) {
+    public void updateWayPoint(String type, String name, String address, Double lat, Double lon, String pointNumber, String distance, String duration, String calorie) {
         this.type = type;
         this.name = name;
         this.address = address;

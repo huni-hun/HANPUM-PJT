@@ -1,9 +1,8 @@
 import styled from 'styled-components';
 
 export const Card = styled.div<{ img: string }>`
-  min-width: 15rem;
-  height: 15rem;
-  border: 1px solid;
+  min-width: 14.6rem;
+  height: 14.6rem;
   border-radius: 1.2rem;
   display: flex;
   margin-right: 0.8rem;
@@ -29,21 +28,38 @@ export const ContentContainer = styled.div`
   height: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
 `;
 
 export const Content = styled.div`
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.8rem;
+  margin-right: 0.8rem;
+`;
+
+export const BContent = styled.div`
   width: 4.3rem;
   height: 4.3rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: #000000;
   border-radius: 0.8rem;
+  background: #000000;
+  margin-right: 0.8rem;
 `;
 
 export const ContentText = styled.p`
+  font-size: 1rem;
+  color: #ffffff;
+  margin-left: 0.4rem;
+`;
+
+export const BContentText = styled.p`
   font-size: 1rem;
   color: #ffffff;
 `;
@@ -54,6 +70,7 @@ export const BottomContent = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
 `;
 
 export const RouteNTitleBox = styled.div`
@@ -86,6 +103,8 @@ export const TitleBox = styled.div`
   font-size: 1.4rem;
   font-weight: 800;
   color: #ffffff;
+  overflow: hidden;
+  white-space: nowrap;
 `;
 
 export const Datecontainer = styled.div`

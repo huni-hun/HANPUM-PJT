@@ -1,8 +1,10 @@
+import { colors } from '@/styles/colorPalette';
 import styled from 'styled-components';
 
 export const Container = styled.div`
   width: 100vw;
   height: 100vh;
+  position: absolute;
 `;
 
 export const Header = styled.div`
@@ -42,28 +44,56 @@ export const PlaceBottomContainer = styled.div`
   background-color: #ffffff;
   justify-content: center;
   z-index: 30;
+  box-shadow: 2px -2px 0 0 rgba(0, 0, 0, 0.25);
+  flex-direction: column;
+  align-items: center;
 `;
 
 export const PlaceContainer = styled.div`
-  width: 90vw;
-  height: 20vh;
+  width: 90%;
+  height: 85%;
   display: flex;
   flex-direction: column;
-  margin-top: 4rem;
 `;
 
 export const PlaceContent = styled.div`
   width: 100%;
-  height: 70%;
+  height: 60%;
   display: flex;
   flex-dircetion: row;
-  justify-content: space-between;
+  border-bottom: 0.1rem solid ${colors.grey1};
 `;
 
-export const PlaceImg = styled.img<{ src: string }>`
-  width: 45%;
-  height: 90%;
-  border-radius: 1.2rem;
+export const CircleContainer = styled.div`
+  height: 100%;
+  width: 1.5rem;
+  display: flex;
+  margin-right: 0.4rem;
+`;
+
+export const CircleBox = styled.div`
+  width: 100%;
+  height: 50%;
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+`;
+
+export const CircleBorder = styled.div`
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  border: 0.2rem solid ${colors.main};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const Circle = styled.div`
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 50%;
+  background-color: ${colors.main};
 `;
 
 export const PlaceTextBox = styled.div`
@@ -107,6 +137,6 @@ export const AddBtnContainer = styled.div`
   width: 100%;
   height: 30%;
   display: flex;
-  justify-content: end;
+  justify-content: space-between;
   align-items: end;
 `;

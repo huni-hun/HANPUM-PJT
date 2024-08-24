@@ -1,5 +1,6 @@
 package backend.hanpum.domain.group.service;
 
+import backend.hanpum.config.s3.S3ImageService;
 import backend.hanpum.domain.group.dto.requestDto.GroupPostReqDto;
 import backend.hanpum.domain.group.dto.responseDto.*;
 import backend.hanpum.domain.group.entity.Group;
@@ -15,11 +16,11 @@ import backend.hanpum.domain.group.repository.custom.GroupRepositoryCustom;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
-import backend.hanpum.exception.exception.auth.NicknameExpiredException;
 import backend.hanpum.exception.exception.group.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -33,16 +34,16 @@ public class GroupServiceImpl implements GroupService {
     private final GroupMemberRepository groupMemberRepository;
     private final GroupMemberRepositoryCustom groupMemberRepositoryCustom;
     private final LikeGroupRepository likeGroupRepository;
+    private final S3ImageService s3ImageService;
 
     @Override
     @Transactional
-    public GroupPostResDto createGroup(Long memberId, GroupPostReqDto groupPostReqDto) {
+    public GroupPostResDto createGroup(Long memberId, MultipartFile multipartFile, GroupPostReqDto groupPostReqDto) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         if (member.getGroupMember() != null) throw new GroupAlreadyJoinedException();
 
         Group group = Group.builder()
                 .title(groupPostReqDto.getTitle())
-                .groupImg(groupPostReqDto.getGroupImg())
                 .description(groupPostReqDto.getDescription())
                 .recruitmentCount(groupPostReqDto.getRecruitmentCount())
                 .recruitmentPeriod(groupPostReqDto.getRecruitmentPeriod())
@@ -57,6 +58,10 @@ public class GroupServiceImpl implements GroupService {
         group.getGroupMemberList().add(groupMember);
         member.updateGroupMember(groupMember);
         groupRepository.save(group);
+
+        if(!multipartFile.isEmpty()) {
+            group.updateGroupImg(s3ImageService.uploadImage(multipartFile));
+        }
 
         return GroupPostResDto.builder().groupId(group.getGroupId()).build();
     }
@@ -142,6 +147,29 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public GroupMemberListGetResDto getGroupMemberList(Long memberId, Long groupId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
+        if(member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
+        List<GroupMemberResDto> groupMemberList = groupMemberRepositoryCustom.findGroupMemberList(groupId);
+        return GroupMemberListGetResDto.builder().groupMemberResList(groupMemberList).build();
+    }
+
+    @Override
+    @Transactional
+    public void exileGroupMember(Long memberId, Long groupMemberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        GroupMember groupLeader = member.getGroupMember();
+        if(groupLeader.getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
+        GroupMember groupMember = groupMemberRepository.findById(groupMemberId).orElseThrow(GroupMemberNotFoundException::new);
+        if(groupLeader.getGroup() == groupMember.getGroup()) {
+            groupMember.getMember().updateGroupMember(null);
+            groupMemberRepository.delete(groupMember);
+        }
+    }
+
+    @Override
     @Transactional
     public boolean likeGroup(Long memberId, Long groupId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
@@ -160,6 +188,36 @@ public class GroupServiceImpl implements GroupService {
             likeGroupRepository.delete(likeGroup);
             return false;
         }
+    }
+
+    @Override
+    @Transactional
+    public void quitJoinGroup(Long memberId, Long groupId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
+        GroupMember groupMember = member.getGroupMember();
+        if(groupMember == null ||  groupMember.getGroup() != group || groupMember.getJoinType() != JoinType.GROUP_MEMBER) {
+            throw new GroupMemberNotFoundException();
+        }
+        member.updateGroupMember(null);
+        groupMemberRepository.delete(groupMember);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public GroupListGetResDto getMemberLikeGroupList(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        List<LikeGroup> likeGroups = member.getLikeGroups();
+        List<GroupResDto> groupResDtoList = likeGroups.stream()
+                .map(likeGroup -> GroupResDto.builder()
+                        .title(likeGroup.getGroup().getTitle())
+                        .groupImg(likeGroup.getGroup().getGroupImg())
+                        .likeCount(likeGroup.getGroup().getLikeCount())
+                        .recruitedCount(groupMemberRepositoryCustom.countGroupMember(likeGroup.getGroup().getGroupId())) // 현재 모집된 인원 수
+                        .recruitmentCount(likeGroup.getGroup().getRecruitmentCount()) // 총 모집 인원 수
+                        .build())
+                .toList();
+        return GroupListGetResDto.builder().groupResDtoList(groupResDtoList).build();
     }
 
     private GroupJoinStatus getGroupJoinStatus(GroupMember groupMember, Long groupId) {

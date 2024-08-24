@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import Router from '@pages/Router';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useEffect, useState } from 'react';
 
 function App() {
   return (

@@ -29,26 +29,26 @@ public class Member {
     @Column(name = "member_id", nullable = false)
     private Long memberId;
 
-    @Column(name = "login_id", unique = true, length = 13)
+    @Column(name = "login_id", unique = true)
     private String loginId;
 
-    @Column(name = "password", nullable = false, length = 60)
+    @Column(name = "password", length = 60)
     private String password;
 
-    @Column(name = "email", unique = true, nullable = false, length = 50)
+    @Column(name = "email", length = 50)
     private String email;
 
     @Column(name = "profile_picture")
     private String profilePicture;
 
-    @Column(name = "name", nullable = false, length = 20)
+    @Column(name = "name", length = 20)
     private String name;
 
     @Column(name = "birth_date")
     @Temporal(TemporalType.DATE)
     private Date birthDate;
 
-    @Column(name = "gender", nullable = false)
+    @Column(name = "gender")
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
@@ -90,14 +90,36 @@ public class Member {
         this.nickname = nickname;
     }
 
-    public void updateMemberInfo(String name, Date birthDate, Gender gender, String phoneNumber){
+    public void updateName(String name){
         this.name = name;
+    }
+
+    public void updateBirthDate(Date birthDate){
         this.birthDate = birthDate;
+    }
+
+    public void updateGender(Gender gender){
         this.gender = gender;
+    }
+
+    public void updatePhoneNumber(String phoneNumber){
         this.phoneNumber = phoneNumber;
     }
 
     public void updateMemberPassword(String password){
         this.password = password;
+    }
+
+    public void updateProfilePicture(String profilePicture){
+        this.profilePicture = profilePicture;
+    }
+
+    public void kakaoSingUpComplete(String nickname, Gender gender, Date birthDate,
+                                    String phoneNumber, MemberType memberType){
+        this.nickname = nickname;
+        this.gender = gender;
+        this.birthDate = birthDate;
+        this.phoneNumber = phoneNumber;
+        this.memberType = memberType;
     }
 }

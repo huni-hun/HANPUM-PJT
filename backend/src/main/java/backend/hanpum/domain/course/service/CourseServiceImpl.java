@@ -1,28 +1,37 @@
 package backend.hanpum.domain.course.service;
 
+import backend.hanpum.config.s3.S3ImageService;
 import backend.hanpum.domain.course.dto.requestDto.*;
-import backend.hanpum.domain.course.dto.responseDto.CourseDetailResDto;
-import backend.hanpum.domain.course.dto.responseDto.CourseListMapResDto;
-import backend.hanpum.domain.course.dto.responseDto.CourseReviewResDto;
-import backend.hanpum.domain.course.dto.responseDto.GetCourseDayResDto;
+import backend.hanpum.domain.course.dto.responseDto.*;
 import backend.hanpum.domain.course.entity.*;
 import backend.hanpum.domain.course.enums.CourseTypes;
 import backend.hanpum.domain.course.repository.*;
+import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
+import backend.hanpum.exception.exception.auth.MemberNotFoundException;
+import backend.hanpum.exception.exception.common.JsonBadMappingException;
+import backend.hanpum.exception.exception.common.JsonBadProcessingException;
+import backend.hanpum.exception.exception.common.UriBadSyntaxException;
 import backend.hanpum.exception.exception.course.CourseDayNotFoundException;
 import backend.hanpum.exception.exception.course.CourseListNotFoundException;
 import backend.hanpum.exception.exception.course.CourseNotFoundException;
 import backend.hanpum.exception.exception.course.CourseReviewsNotFoundException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -37,11 +46,25 @@ public class CourseServiceImpl implements CourseService {
     private final CourseDayRepository courseDayRepository;
     private final AttractionRepository attractionRepository;
     private final WaypointRepository waypointRepository;
+    private final CourseUsageHistoryRepository courseUsageHistoryRepository;
+    private final S3ImageService s3ImageService;
+    
+    private static final List<String> SIDO_LIST = Arrays.asList(
+            "서울", "부산", "대구", "인천", "광주",
+            "대전", "울산", "세종특별자치시", "경기", "강원특별자치도",
+            "충북", "충남", "전북특별자치도", "전남", "경북", "경남", "제주특별자치도"
+    );
+
+    @Value("${api.serviceKey}")
+    private String serviceKey;
+
+    @Value("${api.kakaoAppKey}")
+    private String kakaoAppKey;
 
     @Override
     @Transactional(readOnly = true)
-    public CourseListMapResDto getCourseList(CourseTypes targetCourse, Pageable pageable) {
-        CourseListMapResDto courseListMapResDto = courseRepository.getCourseList(targetCourse, pageable).orElseThrow(CourseListNotFoundException::new);
+    public CourseListMapResDto getCourseList(CourseTypes targetCourse, Double maxDistance, Integer maxDays, List<CourseTypes> selectedTypes, String keyword, Pageable pageable) {
+        CourseListMapResDto courseListMapResDto = courseRepository.getCourseList(targetCourse, maxDistance, maxDays, selectedTypes, keyword, pageable).orElseThrow(CourseListNotFoundException::new);
 
         return courseListMapResDto;
     }
@@ -56,17 +79,17 @@ public class CourseServiceImpl implements CourseService {
             }
         }
 
-        String startPoint = makeCourseReqDto.getCourseDayReqDtoList().stream()
+        String startPoint = extractSido(makeCourseReqDto.getCourseDayReqDtoList().stream()
                 .findFirst()
                 .flatMap(courseDayReqDto -> courseDayReqDto.getWayPointReqDtoList().stream().findFirst())
-                .map(WayPointReqDto::getName)
-                .orElse("Unknown");
+                .map(WayPointReqDto::getAddress)
+                .orElse("Unknown"));
 
-        String endPoint = makeCourseReqDto.getCourseDayReqDtoList().stream()
+        String endPoint = extractSido(makeCourseReqDto.getCourseDayReqDtoList().stream()
                 .reduce((first, second) -> second)
                 .flatMap(courseDayReqDto -> courseDayReqDto.getWayPointReqDtoList().stream().reduce((first, second) -> second))
-                .map(WayPointReqDto::getName)
-                .orElse("Unknown");
+                .map(WayPointReqDto::getAddress)
+                .orElse("Unknown"));
         
         Date currentDate = new Date();
         Course course = Course.builder()
@@ -78,9 +101,13 @@ public class CourseServiceImpl implements CourseService {
                 .startPoint(startPoint)
                 .endPoint(endPoint)
                 .totalDistance(allDayDistance)
+                .totalDays(makeCourseReqDto.getCourseDayReqDtoList().size())
                 .member(memberRepository.findById(makeCourseReqDto.getMemberId()).orElseThrow())  // 토큰으로 멤버정보 찾도록. 추후 변경
-                .backgroundImg("TEMP") // S3 미생성. 이미지 업로드 미구현. 추후 변경
                 .build();
+
+        if(!makeCourseReqDto.getBgImage().isEmpty()) {
+            course.updateBackgroundImg(s3ImageService.uploadImage(makeCourseReqDto.getBgImage()));
+        }
         courseRepository.save(course);
 
         for (String courseTypeName : makeCourseReqDto.getCourseTypeList()) {
@@ -142,20 +169,47 @@ public class CourseServiceImpl implements CourseService {
         }
     }
 
+    public static String extractSido(String address) {
+        System.out.println(address);
+
+        return SIDO_LIST.stream()
+                .filter(address::contains)
+                .findFirst()
+                .orElse("필터링 실패");
+    }
+
     @Override
     @Transactional
     public void editCourse(EditCourseReqDto editCourseReqDto) {
         Course course = courseRepository.findById(editCourseReqDto.getCourseId()).orElseThrow(CourseNotFoundException::new);
 
+        String startPoint = extractSido(editCourseReqDto.getCourseDayReqDtoList().stream()
+                .findFirst()
+                .flatMap(courseDayReqDto -> courseDayReqDto.getWayPointReqDtoList().stream().findFirst())
+                .map(WayPointReqDto::getAddress)
+                .orElse("Unknown"));
+
+        String endPoint = extractSido(editCourseReqDto.getCourseDayReqDtoList().stream()
+                .reduce((first, second) -> second)
+                .flatMap(courseDayReqDto -> courseDayReqDto.getWayPointReqDtoList().stream().reduce((first, second) -> second))
+                .map(WayPointReqDto::getAddress)
+                .orElse("Unknown"));
+
         course.updateCourse(
                 editCourseReqDto.getCourseName(),
                 editCourseReqDto.getContent(),
                 editCourseReqDto.isOpenState(),
-                editCourseReqDto.isWriteState()
+                editCourseReqDto.isWriteState(),
+                startPoint,
+                endPoint,
+                editCourseReqDto.getCourseDayReqDtoList().size()
         );
 
         if(editCourseReqDto.getBgImage() != null) {
-            // S3 image update 로직
+            String currentImage = course.getBackgroundImg();
+            String updateImage = s3ImageService.uploadImage(editCourseReqDto.getBgImage());
+            course.updateBackgroundImg(updateImage);
+            s3ImageService.deleteImage(currentImage);
         }
 
         List<CourseType> courseTypeList = courseTypeRepository.findByCourse_courseId(editCourseReqDto.getCourseId());
@@ -433,6 +487,208 @@ public class CourseServiceImpl implements CourseService {
     @Transactional
     public void deleteCourseReview(Long courseId) {
 //        reviewRepository.deleteByCourse_CourseIdAndMember_MemberId(courseId, memberId);
+    }
+
+    @Override
+    @Transactional
+    public void addCourseUsageHistory(Long courseId, Long memberId) {
+        Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+
+        Date currentDate = new Date();
+        CourseUsageHistory courseUsageHistory = CourseUsageHistory.builder()
+                .startDate(currentDate)
+                .endDate(null)
+                .useFlag(true)
+                .achieveRate(0.0)
+                .course(course)
+                .member(member)
+                .build();
+
+        courseUsageHistoryRepository.save(courseUsageHistory);
+    }
+
+    @Override
+    @Transactional
+    public void updateCourseUsageHistory(Long courseId, Long memberId, Double achieveRate) {
+        CourseUsageHistory courseUsageHistory = courseUsageHistoryRepository.findByCourse_courseIdAndMember_memberId(courseId, memberId);
+
+        Date currentDate = new Date();
+        courseUsageHistory.updateHistoryState(currentDate, false, achieveRate);
+    }
+
+    @Override
+    public List<AttractionResDto> searchAttractionsByKeyword(String keyword, Integer contentType) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<?> entity = new HttpEntity<>(new HttpHeaders());
+
+        String BASE_URL = "https://apis.data.go.kr/B551011/KorService1";
+        String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/searchKeyword1")
+                .queryParam("serviceKey", serviceKey)
+                .queryParam("numOfRows", 10)
+                .queryParam("pageNo", 1)
+                .queryParam("MobileOS", "ETC")
+                .queryParam("MobileApp", "HANPUM")
+                .queryParam("_type", "json")
+                .queryParam("listYN", "Y")
+                .queryParam("arrange", "O")
+                .queryParam("keyword", keyword)
+                .queryParam("contentTypeId", contentType)
+                .toUriString();
+
+        URI uri = null;
+        try {
+            uri = new URI(url);
+        } catch (URISyntaxException e) {
+            throw new UriBadSyntaxException();
+        }
+
+        ResponseEntity<String> resultMap = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode root = null;
+        try {
+            root = objectMapper.readTree(resultMap.getBody());
+        } catch (JsonMappingException e) {
+            throw new JsonBadMappingException();
+        } catch (JsonProcessingException e) {
+            throw new JsonBadProcessingException();
+        }
+
+        JsonNode items = root.path("response").path("body").path("items").path("item");
+        List<AttractionResDto> attractions = new ArrayList<>();
+        if (items.isArray()) {
+            for (JsonNode item : items) {
+                AttractionResDto attraction = AttractionResDto.builder()
+                        .attractionId(null)
+                        .name(item.path("title").asText())
+                        .type(item.path("contenttypeid").asText())
+                        .address(item.path("addr1").asText())
+                        .lat(Double.parseDouble(item.path("mapx").asText()))
+                        .lon(Double.parseDouble(item.path("mapy").asText()))
+                        .img(item.path("firstimage").asText())
+                        .build();
+                attractions.add(attraction);
+            }
+        }
+
+        return attractions;
+    }
+
+    @Override
+    public List<SearchWaypointResDto> searchWaypointByKeyword(String keyword) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "KakaoAK " + kakaoAppKey);
+        HttpEntity<?> entity = new HttpEntity<>("", headers);
+
+        String BASE_URL = "https://dapi.kakao.com/v2/local";
+        String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/search/keyword.json")
+                .queryParam("query", keyword)
+                .toUriString();
+
+        URI uri = null;
+        try {
+            uri = new URI(url);
+        } catch (URISyntaxException e) {
+            throw new UriBadSyntaxException();
+        }
+
+        ResponseEntity<String> resultMap = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode root = null;
+        try {
+            root = objectMapper.readTree(resultMap.getBody());
+        } catch (JsonMappingException e) {
+            throw new JsonBadMappingException();
+        } catch (JsonProcessingException e) {
+            throw new JsonBadProcessingException();
+        }
+
+        List<SearchWaypointResDto> result = new ArrayList<>();
+        JsonNode documents = root.path("documents");
+        for(JsonNode document : documents) {
+            result.add(SearchWaypointResDto.builder()
+                    .placeName(document.path("place_name").asText())
+                    .address(document.path("address_name").asText())
+                    .lat(Double.parseDouble(document.path("x").asText()))
+                    .lon(Double.parseDouble(document.path("y").asText()))
+                    .phone(document.path("address_name").asText())
+                    .build());
+        }
+
+        return result;
+    }
+
+    @Override
+    public List<MultiWaypointSearchResDto> searchMultiWaypointCourse(List<MultiWaypointSearchReqDto> multiWaypointSearchReqDtoList) {
+        RestTemplate restTemplate = new RestTemplate();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        MultiWaypointSearchReqDto origin = multiWaypointSearchReqDtoList.get(0);
+        MultiWaypointSearchReqDto destination = multiWaypointSearchReqDtoList.get(multiWaypointSearchReqDtoList.size() - 1);
+        List<MultiWaypointSearchReqDto> waypoints = multiWaypointSearchReqDtoList.subList(1, multiWaypointSearchReqDtoList.size() - 1);
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("origin", origin);
+        requestBody.put("destination", destination);
+        requestBody.put("waypoints", waypoints);
+        requestBody.put("avoid", new String[]{"toll", "motorway", "uturn", "ferries"});
+        requestBody.put("car_types", 7);
+
+        String jsonBody = null;
+        try {
+            jsonBody = objectMapper.writeValueAsString(requestBody);
+        } catch (JsonProcessingException e) {
+            throw new JsonBadProcessingException();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "KakaoAK " + kakaoAppKey);
+        HttpEntity<?> entity = new HttpEntity<>(jsonBody, headers);
+
+        if (multiWaypointSearchReqDtoList == null || multiWaypointSearchReqDtoList.size() < 2) {
+            throw new IllegalArgumentException("dtoList must contain at least origin and destination");
+        }
+
+        String BASE_URL = "https://apis-navi.kakaomobility.com/v1";
+        ResponseEntity<String> resultMap = restTemplate.exchange(BASE_URL + "/waypoints/directions", HttpMethod.POST, entity, String.class);
+
+        JsonNode root = null;
+        try {
+            root = objectMapper.readTree(resultMap.getBody());
+        } catch (JsonMappingException e) {
+            throw new JsonBadMappingException();
+        } catch (JsonProcessingException e) {
+            throw new JsonBadProcessingException();
+        }
+
+        List<MultiWaypointSearchResDto> multiWaypointSearchResDtoList = new ArrayList<>();
+        JsonNode routesNode = root.path("routes").get(0);
+        for (JsonNode sectionNode : routesNode.path("sections")) {
+            List<Double> Vertexes = new ArrayList<>();
+            String sectionDistance = sectionNode.path("distance").asText();
+
+            for (JsonNode roadNode : sectionNode.path("roads")) {
+                JsonNode vertexesNode = roadNode.path("vertexes");
+                for (int i = 0; i < vertexesNode.size(); i++) {
+                    Vertexes.add(vertexesNode.get(i).asDouble());
+                }
+            }
+            MultiWaypointSearchResDto multiWaypointSearchResDto = new MultiWaypointSearchResDto();
+            multiWaypointSearchResDtoList.add(multiWaypointSearchResDto.builder()
+                    .distance(sectionDistance)
+                    .vertexes(Vertexes)
+                    .build());
+        }
+
+        return multiWaypointSearchResDtoList;
     }
 
 }

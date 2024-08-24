@@ -7,8 +7,14 @@ import Course from '@components/Main/Course';
 import Meet from '@components/Main/Meet';
 import Header from '@/components/common/Header/Header';
 import { useNavigate } from 'react-router-dom';
+import { decodeToken } from '@/utils/util';
+import { Token } from '@/models/user';
 
 function MainPage() {
+  // const decodeTokenObj = JSON.parse(localStorage.getItem('token') || '');
+  // const temp = decodeToken(decodeTokenObj);
+  // console.log(temp?.accessToken);
+  // console.log(temp?.refreshToken);
   const navigate = useNavigate();
   return (
     <MainPageContainer>

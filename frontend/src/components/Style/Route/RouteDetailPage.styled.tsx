@@ -1,3 +1,4 @@
+import { colors } from '@/styles/colorPalette';
 import styled from 'styled-components';
 
 export const Container = styled.div`
@@ -55,10 +56,34 @@ export const RouteInfoContainer = styled.div`
 `;
 
 export const ImgBox = styled.div`
-  width: 85vw;
-  height: 30vh;
+  width: 100%;
+  height: 29.3rem;
   background-color: #d9d9d9;
-  border-radius: 1.2rem;
+`;
+
+export const UserContainer = styled.div`
+  width: 100%;
+  height: 7.8rem;
+  display: flex;
+  flex-direction: row;
+  border-bottom: 0.1rem solid ${colors.grey2};
+  align-items: center;
+`;
+
+export const UserImgBox = styled.div`
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  margin-left: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const UserName = styled.p`
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-left: 1.8rem;
 `;
 
 export const RouteNameInfo = styled.div`
@@ -68,6 +93,53 @@ export const RouteNameInfo = styled.div`
   flex-direction: column;
   border-bottom: 0.1rem solid #d9d9d9;
   padding: 2.4rem 0 1rem 0;
+`;
+
+export const RouteNameInfoContainer = styled.div`
+  width: 100%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const RouteReviewContainer = styled.div`
+  width: 100%;
+  height: 10%;
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  justify-content: space-between;
+  padding: 0 0.9rem 0 0.9rem;
+`;
+
+export const IconContainer = styled.div`
+  width: 30%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  color: ${colors.grey2};
+`;
+
+export const IconBox = styled.div`
+  width: 30%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  justify-content: space-around;
+  color: ${colors.grey2};
+`;
+
+export const WriteDateBox = styled.div`
+  width: 20%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  justify-content: end;
+  color: ${colors.grey2};
+  padding: 0 0.9rem 0 0.9rem;
 `;
 
 export const RouteName = styled.p`
@@ -124,6 +196,8 @@ export const DistanceBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  border-left: 0.1rem solid ${colors.grey1};
+  padding: 0 0 0 0.5rem;
 `;
 
 export const DistanceText = styled.p`
@@ -162,6 +236,7 @@ export const ContentBox = styled.div<{ isSelected: boolean }>`
 export const RouteDetailInfoContainer = styled.div`
   width: 100vw;
   height: 52vh;
+  background-color: #ffffff;
 `;
 
 export const DetailHeader = styled.div`
@@ -186,7 +261,7 @@ export const HeaderOverflow = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
-  width: 100%;
+  width: 95%;
   height: 100%;
 `;
 
@@ -217,6 +292,7 @@ export const DetailMain = styled.div`
   height: 45vh;
   display: flex;
   overflow-y: auto;
+  background-color: #ffffff;
 `;
 
 export const DetailMainOverflow = styled.div`
@@ -225,34 +301,37 @@ export const DetailMainOverflow = styled.div`
   width: 100%;
   height: 45vh;
   overflow-y: auto;
+  align-items: center;
   &::-webkit-scrollbar {
     display: none;
   }
 `;
 
 export const PlaceCardBox = styled.div`
-  width: 100%;
-  height: 10vh;
+  width: 34.3rem;
+  height: 8.8rem;
   display: flex;
   justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 1.2rem;
+  box-shadow: 0px 4px 4px 0 rgba(0, 0, 0, 0.25);
 `;
 
 export const PlaceCard = styled.div`
-  width: 90%;
-  height: 9vh;
+  width: 31.7rem;
+  height: 6.4rem;
   display: flex;
   flex-direction: row;
-  border-bottom: 0.2rem solid #d9d9d9;
   align-items: center;
+  justify-content: space-between;
 `;
 
 export const PlaceTextBox = styled.div`
   width: 70%;
   height: 90%;
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
 `;
 
 export const CircleBox = styled.div`
@@ -309,6 +388,7 @@ export const PlacetAddressBox = styled.div`
   flex-direction: row;
   align-items: center;
   font-size: 1.2rem;
+  color: ${colors.grey2};
 `;
 
 export const PlaceImgBox = styled.div`
@@ -319,9 +399,10 @@ export const PlaceImgBox = styled.div`
 `;
 
 export const PlaceImg = styled.div`
-  width: 7.3rem;
-  height: 7.3rem;
+  width: 6.4rem;
+  height: 6.4rem;
   background-color: #d9d9d9;
+  border-radius: 1.2rem;
 `;
 
 export const UserImgContainer = styled.div`
@@ -329,12 +410,12 @@ export const UserImgContainer = styled.div`
   height: 100%;
   display: flex;
   align-items: start;
-  justify-content: end;
+  justify-content: start;
 `;
 
 export const UserImg = styled.div`
-  width: 3.1rem;
-  height: 3.1rem;
+  width: 4.2rem;
+  height: 4.2rem;
   border-radius: 50%;
   border: 1px solid #1a823b;
   background-color: #bdd8c5;
@@ -400,7 +481,7 @@ export const ReviewDateBox = styled.div`
 `;
 
 export const ReviewDate = styled.p`
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: #a0a0a0;
 `;
 
@@ -410,11 +491,58 @@ export const HeartBox = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  padding: 1rem 0 0 0;
+  padding: 3rem 0 0 0;
 `;
 
 export const HeartText = styled.p`
   font-size: 1rem;
   color: #a0a0a0;
   margin-top: 0.5rem;
+`;
+
+export const MapBox = styled.div`
+  width: 100%;
+  height: 41rem;
+`;
+export const BottomContainer = styled.div`
+  width: 100vw;
+  height: 11.3rem;
+  background-color: #ffffff;
+  border-radius: 0.8rem 0.8rem 0 0;
+  box-shadow: 0 -0.1rem 0.1rem #d9d9d9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const ButtonBox = styled.div`
+  width: 85%;
+  height: 70%;
+  display: flex;
+  align-items: start;
+  justify-content: end;
+`;
+
+export const ReviewCardBox = styled.div`
+  width: 100%;
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+`;
+
+export const ReviewCard = styled.div`
+  width: 90%;
+  height: 9vh;
+  display: flex;
+  flex-direction: row;
+  border-bottom: 0.2rem solid #d9d9d9;
+  align-items: center;
+`;
+
+export const ReviewHeader = styled.div`
+  width: 100%;
+  height: 5.1rem;
+  display: flex;
+  padding: 0 0 0 2.4rem;
+  align-items: center;
 `;

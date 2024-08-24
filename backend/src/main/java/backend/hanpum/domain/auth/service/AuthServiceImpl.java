@@ -1,5 +1,6 @@
 package backend.hanpum.domain.auth.service;
 
+import backend.hanpum.config.s3.S3ImageService;
 import backend.hanpum.config.jwt.JwtProvider;
 import backend.hanpum.config.redis.RedisDao;
 import backend.hanpum.domain.auth.dto.requestDto.*;
@@ -8,6 +9,7 @@ import backend.hanpum.domain.auth.dto.responseDto.LoginResDto;
 import backend.hanpum.domain.auth.dto.responseDto.ReissueAccessTokenResDto;
 import backend.hanpum.domain.auth.dto.responseDto.TokenResDto;
 import backend.hanpum.domain.member.entity.Member;
+import backend.hanpum.domain.member.enums.MemberType;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.auth.*;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +19,13 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
@@ -35,6 +37,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final RedisDao redisDao;
+    private final S3ImageService s3ImageService;
 
     @Override
     @Transactional(readOnly = true)
@@ -100,7 +103,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public void signUp(SignUpReqDto signUpReqDto) {
+    public void signUp(MultipartFile multipartFile, SignUpReqDto signUpReqDto) {
         checkLoginIdAuthenticated(signUpReqDto.getLoginId());
         checkEmailAuthenticated(signUpReqDto.getEmail());
         checkNicknameAuthenticated(signUpReqDto.getNickname());
@@ -109,7 +112,6 @@ public class AuthServiceImpl implements AuthService {
                 .loginId(signUpReqDto.getLoginId())
                 .password((passwordEncoder.encode(signUpReqDto.getPassword())))
                 .email(signUpReqDto.getEmail())
-                .profilePicture(signUpReqDto.getProfilePicture())
                 .name(signUpReqDto.getName())
                 .birthDate(signUpReqDto.getBirthDate())
                 .gender(signUpReqDto.getGender())
@@ -117,11 +119,35 @@ public class AuthServiceImpl implements AuthService {
                 .nickname(signUpReqDto.getNickname())
                 .memberType(signUpReqDto.getMemberType())
                 .build();
+
+        if(!multipartFile.isEmpty()) {
+            member.updateProfilePicture(s3ImageService.uploadImage(multipartFile));
+        }
         memberRepository.save(member);
 
         redisDao.deleteEmail(signUpReqDto.getEmail());
         redisDao.deleteLoginId(signUpReqDto.getLoginId());
         redisDao.deleteNickname(signUpReqDto.getNickname());
+    }
+
+    @Override
+    @Transactional
+    public void kakaoSingUpComplete(Long memberId, MultipartFile multipartFile,
+                                    KakaoSignUpCompleteReqDto kakaoSignUpCompleteReqDto) {
+        Member member = memberRepository.findByMemberIdAndMemberType(memberId, MemberType.KAKAO_INCOMPLETE)
+                .orElseThrow(MemberNotFoundException::new);
+        checkNicknameAuthenticated(kakaoSignUpCompleteReqDto.getNickname());
+        member.kakaoSingUpComplete(
+                kakaoSignUpCompleteReqDto.getNickname(),
+                kakaoSignUpCompleteReqDto.getGender(),
+                kakaoSignUpCompleteReqDto.getBirthDate(),
+                kakaoSignUpCompleteReqDto.getPhoneNumber(),
+                MemberType.KAKAO
+        );
+        if (!multipartFile.isEmpty()) {
+            member.updateProfilePicture(s3ImageService.uploadImage(multipartFile));
+        }
+        redisDao.deleteNickname(kakaoSignUpCompleteReqDto.getNickname());
     }
 
     @Override
@@ -131,8 +157,8 @@ public class AuthServiceImpl implements AuthService {
         if (!passwordEncoder.matches(loginReqDto.getPassword(), member.getPassword())) {
             throw new LoginInfoInvalidException();
         }
-        TokenResDto tokenResDto = jwtProvider.createTokenByLogin(member.getEmail(), member.getMemberType());
-        return new LoginResDto(member.getEmail(), tokenResDto);
+        TokenResDto tokenResDto = jwtProvider.createTokenByLogin(member.getLoginId(), member.getMemberType());
+        return new LoginResDto(member.getMemberId(), member.getMemberType(), tokenResDto);
     }
 
     @Override
@@ -143,9 +169,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional(readOnly = true)
-    public ReissueAccessTokenResDto reissueToken(String accessToken, TokenReissueReqDto tokenReissueReqDto) {
-        Member member = memberRepository.findMemberByEmail(jwtProvider.getEmailFromExpiredToken(accessToken)).orElseThrow(EmailNotFoundException::new);
-        return jwtProvider.reissueAccessToken(member.getEmail(), member.getMemberType(), tokenReissueReqDto.getRefreshToken());
+    public ReissueAccessTokenResDto reissueToken(String accessToken) {
+        Member member = memberRepository.findMemberByLoginId(jwtProvider.getLoginIdFromExpiredToken(accessToken)).orElseThrow(LoginInfoInvalidException::new);
+        return jwtProvider.reissueAccessToken(member.getLoginId(), member.getMemberType());
     }
 
     @Override

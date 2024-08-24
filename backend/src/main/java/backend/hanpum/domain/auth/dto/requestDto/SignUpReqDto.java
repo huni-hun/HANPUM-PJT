@@ -27,8 +27,6 @@ public class SignUpReqDto {
     @NotNull
     private String email;
 
-    private String profilePicture;
-
     @NotNull
     private String name;
 

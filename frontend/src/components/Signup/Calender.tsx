@@ -9,9 +9,6 @@ import '@mobiscroll/react/dist/css/mobiscroll.min.css';
 function Calender({ onChange }: { onChange: (date: string) => void }) {
   const today = new Date();
 
-  // 현재 달력 렌더링이 늦음
-  const [isLoading, setIsLoading] = useState(true); // 스켈레톤 UI
-
   const handleDateChange = (event: any) => {
     const { value } = event;
     const date = new Date(value);
@@ -41,24 +38,6 @@ function Calender({ onChange }: { onChange: (date: string) => void }) {
           </Text>
         </div>
         <div className="calender-body">
-          {/* {isLoading ? (
-            <S.SkeletonContainer>
-              <div className="skeleton-body"></div>
-            </S.SkeletonContainer>
-          ) : (
-            <Suspense fallback={<div>Loading...</div>}>
-              <Datepicker
-                theme="ios"
-                min="1970-01-01"
-                max={`${today.getFullYear()}-12-31`}
-                controls={['date']}
-                display="inline"
-                touchUi={true}
-                locale={localeKo}
-                onChange={handleDateChange}
-              />
-            </Suspense>
-          )} */}
           <Datepicker
             theme="ios"
             min="1970-01-01"

@@ -12,7 +12,9 @@
       "@icon": ["src/assets/icons/index"],
       "@atoms/*": ["src/atoms/*"],
       "@hooks/*": ["src/hooks/*"],
-      "@imgs/*": ["src/assets/img/*"]
+      "@imgs/*": ["src/assets/img/*"],
+      "@utils/*": ["src/utils/*"],
+      "@api/*": ["src/api/*"]
     },
     "forceConsistentCasingInFileNames": true,
     "strict": true

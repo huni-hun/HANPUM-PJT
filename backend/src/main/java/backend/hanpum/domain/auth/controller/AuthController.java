@@ -5,7 +5,6 @@ import backend.hanpum.config.jwt.UserDetailsImpl;
 import backend.hanpum.domain.auth.dto.requestDto.*;
 import backend.hanpum.domain.auth.dto.responseDto.LoginResDto;
 import backend.hanpum.domain.auth.service.AuthService;
-import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.exception.format.code.ApiResponse;
 import backend.hanpum.exception.format.response.ResponseCode;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,8 +14,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Auth 컨트롤러", description = "Auth Controller API")
 @RestController
@@ -58,9 +57,19 @@ public class AuthController {
 
     @Operation(summary = "회원가입", description = "회원가입 API")
     @PostMapping("/sign-up")
-    public ResponseEntity<?> signUp(@RequestBody @Valid SignUpReqDto signUpReqDto) {
-        authService.signUp(signUpReqDto);
+    public ResponseEntity<?> signUp(@RequestPart(required = false) MultipartFile multipartFile,
+                                    @RequestPart @Valid SignUpReqDto signUpReqDto) {
+        authService.signUp(multipartFile, signUpReqDto);
         return response.success(ResponseCode.SING_UP_SUCCESS);
+    }
+
+    @Operation(summary = "카카오 회원 가입 완료", description = "카카오 회원 가입 완료 API")
+    @PostMapping("/complete-signup/kakao")
+    public ResponseEntity<?> kakaoSingUpComplete(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                 @RequestPart(required = false) MultipartFile multipartFile,
+                                                 @RequestPart @Valid KakaoSignUpCompleteReqDto kakaoSignUpCompleteReqDto) {
+        authService.kakaoSingUpComplete(userDetails.getMember().getMemberId(), multipartFile, kakaoSignUpCompleteReqDto);
+        return response.success(ResponseCode.KAKAO_SING_UP_SUCCESS);
     }
 
     @Operation(summary = "로그인", description = "로그인 API")
@@ -79,8 +88,8 @@ public class AuthController {
 
     @Operation(summary = "토큰 재발급", description = "토큰 재발급 API")
     @PostMapping("/reissue-token")
-    public ResponseEntity<?> reissueToken(@RequestBody TokenReissueReqDto tokenReissueReqDto, HttpServletRequest request) {
-        return response.success(ResponseCode.TOKEN_REISSUE_SUCCESS, authService.reissueToken(jwtProvider.getJwtFromRequest(request), tokenReissueReqDto));
+    public ResponseEntity<?> reissueToken(HttpServletRequest request) {
+        return response.success(ResponseCode.TOKEN_REISSUE_SUCCESS, authService.reissueToken(jwtProvider.getJwtFromRequest(request)));
     }
 
     @Operation(summary = "로그인 아이디 찾기", description = "로그인 아이디 찾기 API")

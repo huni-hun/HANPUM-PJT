@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Builder
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ScheduleDay {
 
     @Id
@@ -21,6 +21,10 @@ public class ScheduleDay {
 
     @Column(name = "date")
     private String date;
+
+    @Builder.Default
+    @Column(name = "visit")
+    private boolean visit = false;
 
     @Builder.Default
     @Column(name = "running")

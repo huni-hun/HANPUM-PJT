@@ -7,6 +7,7 @@ export const TermsContainer = styled.div`
   align-items: start;
 
   padding: 0 16px;
+  background-color: ${colors.white};
 
   .title {
     font-size: 2rem;

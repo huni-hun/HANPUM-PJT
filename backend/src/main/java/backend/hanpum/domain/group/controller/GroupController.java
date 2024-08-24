@@ -2,10 +2,7 @@ package backend.hanpum.domain.group.controller;
 
 import backend.hanpum.config.jwt.UserDetailsImpl;
 import backend.hanpum.domain.group.dto.requestDto.GroupPostReqDto;
-import backend.hanpum.domain.group.dto.responseDto.GroupApplyListGetResDto;
-import backend.hanpum.domain.group.dto.responseDto.GroupDetailGetResDto;
-import backend.hanpum.domain.group.dto.responseDto.GroupListGetResDto;
-import backend.hanpum.domain.group.dto.responseDto.GroupPostResDto;
+import backend.hanpum.domain.group.dto.responseDto.*;
 import backend.hanpum.domain.group.service.GroupService;
 import backend.hanpum.exception.format.code.ApiResponse;
 import backend.hanpum.exception.format.response.ResponseCode;
@@ -16,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Group 컨트롤러", description = "Group Controller API")
 @RestController
@@ -29,8 +27,9 @@ public class GroupController {
     @Operation(summary = "모임 생성", description = "모임 생성 API")
     @PostMapping
     public ResponseEntity<?> groupPost(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                       @RequestBody @Valid GroupPostReqDto groupPostReqDto) {
-        GroupPostResDto groupPostResDto = groupService.createGroup(userDetails.getMember().getMemberId(), groupPostReqDto);
+                                       @RequestPart(required = false) MultipartFile multipartFile,
+                                       @RequestPart @Valid GroupPostReqDto groupPostReqDto) {
+        GroupPostResDto groupPostResDto = groupService.createGroup(userDetails.getMember().getMemberId(), multipartFile, groupPostReqDto);
         return response.success(ResponseCode.GROUP_CREATED_SUCCESS, groupPostResDto);
     }
 
@@ -89,6 +88,22 @@ public class GroupController {
         return response.success(ResponseCode.GROUP_APPLY_DECLINE_SUCCESS);
     }
 
+    @Operation(summary = "모임 멤버 리스트 조회", description = "모임 멤버 리스트 조회 API")
+    @GetMapping("/{groupId}/member-list")
+    public ResponseEntity<?> getGroupMemberList(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                               @PathVariable Long groupId) {
+        GroupMemberListGetResDto groupMemberListGetResDto = groupService.getGroupMemberList(userDetails.getMember().getMemberId(), groupId);
+        return response.success(ResponseCode.GROUP_MEMBER_LIST_FETCHED, groupMemberListGetResDto);
+    }
+
+    @Operation(summary = "모임 멤버 추방", description = "모임 멤버 추방 API")
+    @DeleteMapping("/member/{groupMemberId}/exile")
+    public ResponseEntity<?> exileGroupMember(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                               @PathVariable Long groupMemberId) {
+        groupService.exileGroupMember(userDetails.getMember().getMemberId(), groupMemberId);
+        return response.success(ResponseCode.GROUP_MEMBER_EXILE_SUCCESS);
+    }
+
     @Operation(summary = "모임 관심 목록 등록", description = "모임 관심 목록 등록 API")
     @PostMapping("/{groupId}/like")
     public ResponseEntity<?> likeGroup(@AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -96,5 +111,13 @@ public class GroupController {
         boolean isLike = groupService.likeGroup(userDetails.getMember().getMemberId(), groupId);
         if (isLike) return response.success(ResponseCode.GROUP_LIKE_SUCCESS);
         else return response.success(ResponseCode.GROUP_UNLIKE_SUCCESS);
+    }
+
+    @Operation(summary = "모임 탈퇴", description = "모임 탈퇴 API")
+    @DeleteMapping("/{groupId}/quit")
+    public ResponseEntity<?> quitGroup(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                       @PathVariable Long groupId) {
+        groupService.quitJoinGroup(userDetails.getMember().getMemberId(), groupId);
+        return response.success(ResponseCode.GROUP_QUIT_SUCCESS);
     }
 }
