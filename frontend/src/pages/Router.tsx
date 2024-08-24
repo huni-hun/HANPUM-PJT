@@ -22,6 +22,7 @@ import {
   RouteAddDetailPage,
   SearchPlacePage,
   RouteAddCompletePage,
+  RoteListMorePage,
 } from './index'; // index.tsx에서 컴포넌트를 가져옵니다.
 import SignupPage from './Auth/SignupPage';
 import FindPage from './Auth/FindPage';
@@ -47,6 +48,7 @@ export default function Router() {
         <Route path="/route/add" element={<RouteAddPlacePage />} />
         <Route path="route/search" element={<SearchPlacePage />} />
         <Route path="route/add/complete" element={<RouteAddCompletePage />} />
+        <Route path="route/list/more" element={<RoteListMorePage />} />
 
         <Route path="/meet" element={<MeetPage />} />
         <Route path="/meet/:id" element={<MeetDetailPage />} />

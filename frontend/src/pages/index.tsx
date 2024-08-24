@@ -14,6 +14,7 @@ import RouteAddDetailPage from './Route/RouteAddDetailPage';
 import RouteDetailPage from './Route/RouteDetailPage';
 import SearchPlacePage from './Route/SearchPlacePage';
 import RouteAddCompletePage from './Route/RouteAddCompletePage';
+import RoteListMorePage from './Route/RoteListMorePage';
 
 /** 모임 */
 import MeetPage from '../pages/Meet/MeetPage';
@@ -43,4 +44,5 @@ export {
   RouteAddDetailPage,
   SearchPlacePage,
   RouteAddCompletePage,
+  RoteListMorePage,
 };

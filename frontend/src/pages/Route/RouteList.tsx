@@ -61,7 +61,11 @@ function RouteList() {
         <R.RouteCardContainer>
           <R.RouteTypeHeader>
             <R.TypeTitle>지금 가장 인기 있는 코스</R.TypeTitle>
-            <R.MoreButton>
+            <R.MoreButton
+              onClick={() => {
+                navigator('/route/list/more');
+              }}
+            >
               <R.MoreText>더보기</R.MoreText>
               <Icon name="IconLeftBlackArrow" size={10} />
             </R.MoreButton>
@@ -110,7 +114,11 @@ function RouteList() {
           </R.CardContainer>
         </R.RouteCardContainer>
         <R.ButtonContainer>
-          <R.RouteAddBtn>
+          <R.RouteAddBtn
+            onClick={() => {
+              navigator('/route/addMain');
+            }}
+          >
             <R.RouteAddBtnTextBox>
               <R.RouteAddBasicText>
                 찾으시는 경로가 없으신가요?
