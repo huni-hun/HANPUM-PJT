@@ -110,4 +110,12 @@ public class GroupController {
         if (isLike) return response.success(ResponseCode.GROUP_LIKE_SUCCESS);
         else return response.success(ResponseCode.GROUP_UNLIKE_SUCCESS);
     }
+
+    @Operation(summary = "모임 탈퇴", description = "모임 탈퇴 API")
+    @DeleteMapping("/{groupId}/quit")
+    public ResponseEntity<?> quitGroup(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                       @PathVariable Long groupId) {
+        groupService.quitJoinGroup(userDetails.getMember().getMemberId(), groupId);
+        return response.success(ResponseCode.GROUP_QUIT_SUCCESS);
+    }
 }

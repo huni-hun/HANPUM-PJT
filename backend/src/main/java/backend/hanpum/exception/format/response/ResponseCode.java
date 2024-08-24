@@ -54,6 +54,7 @@ public enum ResponseCode {
     GROUP_MEMBER_EXILE_SUCCESS(HttpStatus.OK, "모임 멤버 추방이 성공적으로 완료되었습니다."),
     GROUP_LIKE_SUCCESS(HttpStatus.OK, "모임 관심 목록 등록이 성공적으로 완료되었습니다."),
     GROUP_UNLIKE_SUCCESS(HttpStatus.OK, "모임 관심 목록 삭제가 성공적으로 완료되었습니다."),
+    GROUP_QUIT_SUCCESS(HttpStatus.OK, "모임 탈퇴가 성공적으로 완료되었습니다."),
 
     /* 인증 */
     AUTHENTICATION_MAIL_SEND_SUCCESS(HttpStatus.OK, "인증 메일이 성공적으로 전송되었습니다."),

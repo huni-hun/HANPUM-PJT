@@ -186,6 +186,19 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    @Transactional
+    public void quitJoinGroup(Long memberId, Long groupId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
+        GroupMember groupMember = member.getGroupMember();
+        if(groupMember == null ||  groupMember.getGroup() != group || groupMember.getJoinType() != JoinType.GROUP_MEMBER) {
+            throw new GroupMemberNotFoundException();
+        }
+        member.updateGroupMember(null);
+        groupMemberRepository.delete(groupMember);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public GroupListGetResDto getMemberLikeGroupList(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
