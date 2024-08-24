@@ -10,11 +10,15 @@ export interface FeedProps {
 
 export interface FeedInfoProps {
   router?: string;
-  feedInfoTitle: string;
-  startDate: string;
-  endDate: string;
+  feedInfoTitle?: string;
+  departuresPlace?: string;
+  arrivalsPlace?: string;
+  startDate?: string;
+  endDate?: string;
+  currentDistance?: number;
   totalDistance: number;
   dayData: { dayNum: number }[];
+  percentage?: number;
 }
 
 export interface RouteListProps {
