@@ -25,6 +25,7 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
         return query
                 .select(Projections.constructor(
                         GroupResDto.class,
+                        group.groupId,
                         group.title,
                         group.groupImg,
                         group.likeCount,

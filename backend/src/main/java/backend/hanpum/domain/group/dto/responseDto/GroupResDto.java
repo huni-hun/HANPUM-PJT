@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GroupResDto {
 
+    private Long groupId;
     private String title;
     private String groupImg;
     private int likeCount;
