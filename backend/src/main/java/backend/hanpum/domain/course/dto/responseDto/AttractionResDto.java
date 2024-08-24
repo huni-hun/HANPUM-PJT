@@ -14,7 +14,7 @@ public class AttractionResDto {
     String name;
     String type;
     String address;
-    Float lat;
-    Float lon;
+    Double lat;
+    Double lon;
     String img;
 }
