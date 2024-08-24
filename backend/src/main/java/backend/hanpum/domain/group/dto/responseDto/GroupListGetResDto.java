@@ -14,4 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class GroupListGetResDto {
     List<GroupResDto> groupResDtoList = new ArrayList<>();
+    private int currentPage;
+    private int totalPages;
+    private long totalElements;
 }

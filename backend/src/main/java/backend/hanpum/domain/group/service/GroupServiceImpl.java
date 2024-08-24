@@ -18,6 +18,7 @@ import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.group.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -68,9 +69,8 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional(readOnly = true)
-    public GroupListGetResDto getGroupList(Long memberId) {
-        List<GroupResDto> groupResDtoList = groupRepositoryCustom.findGroupList();
-        return GroupListGetResDto.builder().groupResDtoList(groupResDtoList).build();
+    public GroupListGetResDto getGroupList(Long memberId, Pageable pageable) {
+        return groupRepositoryCustom.findGroupList(pageable);
     }
 
     @Override
