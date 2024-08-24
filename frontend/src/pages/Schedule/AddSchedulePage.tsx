@@ -7,6 +7,8 @@ import Select from '../../components/common/Select/Select';
 import Header from '@/components/common/Header/Header';
 import { useNavigate } from 'react-router-dom';
 
+import Calendar from '@/components/common/Calendar/\bCalendar';
+
 function AddSchedulePage() {
   const navigate = useNavigate();
   const BtnClick = () => {
@@ -43,6 +45,10 @@ function AddSchedulePage() {
     setIsExpanded((prevState) => !prevState);
   };
 
+  const handleStopEvent = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+  };
+
   return (
     <S.Container>
       <Header
@@ -54,10 +60,12 @@ function AddSchedulePage() {
       <S.SchduleContainer>
         <S.DateWrap isExpanded={isExpanded} onClick={handleDatePickClick}>
           {isExpanded ? (
-            <>
+            <div onClick={handleStopEvent}>
               <S.H3>출발일을 선택해주세요.</S.H3>
-              <S.DatePicker>mui 데이트 피커 쓰게 해주세요</S.DatePicker>
-            </>
+              <S.DatePicker>
+                <Calendar />
+              </S.DatePicker>
+            </div>
           ) : (
             <>
               <S.H3>날짜</S.H3>
@@ -81,7 +89,7 @@ function AddSchedulePage() {
             <></>
           ) : (
             <>
-              <S.RouteMapWrap>
+              <S.RouteMapWrap onClick={handleStopEvent}>
                 <S.RouteMapContent>지도</S.RouteMapContent>
               </S.RouteMapWrap>
             </>

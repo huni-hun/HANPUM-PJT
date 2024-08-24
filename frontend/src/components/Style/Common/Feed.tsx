@@ -17,30 +17,6 @@ const FeedContainer = ({ routeData }: FeedProps) => {
           <R.RouteName>{routeData?.routeName || ''}</R.RouteName>
           <R.RouteInfo>{routeData?.routeContent || ''}</R.RouteInfo>
         </R.RouteNameInfoContainer>
-        <R.RouteReviewContainer>
-          <R.IconContainer>
-            <R.IconBox>
-              {routeData && (
-                <>
-                  <Icon name="IconGreyStar" size={10} />
-                  {routeData.routeScore || ''}
-                </>
-              )}
-            </R.IconBox>
-            <R.IconBox>
-              {routeData && (
-                <>
-                  <Icon
-                    name="IconGreyReview"
-                    size={10}
-                    style={{ marginLeft: '0.9rem' }}
-                  />
-                  {routeData.routeComment || ''}
-                </>
-              )}
-            </R.IconBox>
-          </R.IconContainer>
-        </R.RouteReviewContainer>
       </R.RouteNameInfo>
     </>
   );
