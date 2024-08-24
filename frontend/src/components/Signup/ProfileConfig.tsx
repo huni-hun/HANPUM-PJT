@@ -198,6 +198,7 @@ function ProfileConfig({
 
   const { mutate } = useMutation(SignUp, {
     onSuccess: (res) => {
+      console.log('res ::', res);
       if (res.status === STATUS.success) {
         toast.success(res.message);
         clickNext();

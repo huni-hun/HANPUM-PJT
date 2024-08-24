@@ -29,15 +29,27 @@ export function telnumberFormat(telnum: string | undefined) {
 }
 
 // 토큰 인코딩
-export function encodeToken(accessToken: string, refreshToken: string) {
+// export function encodeToken(accessToken: string, refreshToken: string) {
+//   console.log('인코딩에서', accessToken, refreshToken);
+//   if (secretKey) {
+//     // console.log(CryptoJS.AES.encrypt(token, secretKey).toString());
+//     const token = {
+//       accessToken: CryptoJS.AES.encrypt(accessToken, secretKey).toString(),
+//       refreshToken: CryptoJS.AES.encrypt(refreshToken, secretKey).toString(),
+//     };
+//     return token;
+//     // return CryptoJS.AES.encrypt(token, secretKey).toString();
+//   }
+// }
+
+// 토큰 인코딩 refreshToken 제외
+export function encodeToken(accessToken: string) {
+  console.log('인코딩에서', accessToken);
   if (secretKey) {
-    // console.log(CryptoJS.AES.encrypt(token, secretKey).toString());
     const token = {
       accessToken: CryptoJS.AES.encrypt(accessToken, secretKey).toString(),
-      refreshToken: CryptoJS.AES.encrypt(refreshToken, secretKey).toString(),
     };
     return token;
-    // return CryptoJS.AES.encrypt(token, secretKey).toString();
   }
 }
 

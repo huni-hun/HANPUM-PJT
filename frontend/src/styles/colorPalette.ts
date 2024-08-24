@@ -2,6 +2,7 @@ export const colors = {
   white: '#ffffff',
   black: '#000000',
   black2: '#252525',
+  black3: '#191919',
   main: '#1A823B',
   sub: '#B9B9B9',
   line: '#66666E',
