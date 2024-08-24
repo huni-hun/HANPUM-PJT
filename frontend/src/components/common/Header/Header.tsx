@@ -12,6 +12,7 @@ interface HeaderProps {
   depart?: string;
   back?: boolean;
   clickBack: () => void;
+  clickOption?: () => void;
 }
 
 const Header = ({
@@ -21,6 +22,7 @@ const Header = ({
   depart,
   back,
   clickBack,
+  clickOption,
 }: HeaderProps) => {
   const navigate = useNavigate();
   const onClickHandler = (to: string) => {
@@ -87,6 +89,13 @@ const Header = ({
                 {arrive}
               </Text>
             </Flex>
+          </Flex>
+        );
+      case 'route-detail':
+        return (
+          <Flex $align="center" $justify="end">
+            <Icon name="IconBackArrow" className="back-arrow" size={15} />
+            <Icon name="IconOption" size={15} onClick={clickOption} />
           </Flex>
         );
       case 'merge':

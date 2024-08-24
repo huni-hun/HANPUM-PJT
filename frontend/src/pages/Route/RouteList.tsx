@@ -28,6 +28,8 @@ function RouteList() {
           openState: result.data.data.courseListMap.해안길[0].openState,
           memberId: result.data.data.courseListMap.해안길[0].memberId,
           writeDate: result.data.data.courseListMap.해안길[0].writeDate,
+          start: result.data.data.courseListMap.해안길[0].startPoint,
+          end: result.data.data.courseListMap.해안길[0].endPoint,
         };
         for (let i = 0; i < 5; i++) {
           data.push(response);

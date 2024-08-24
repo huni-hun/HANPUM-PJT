@@ -29,9 +29,9 @@ function RouteCard(props: RouteListProps) {
           </C.RouteContentBox>
           <C.TitleBox>{props.routeName}</C.TitleBox>
           <C.RouteBox>
-            <C.RouteText>인천</C.RouteText>
+            <C.RouteText>{props.start}</C.RouteText>
             <Icon name="IconArrowWhite" size={10} path="" />
-            <C.RouteText>당진</C.RouteText>
+            <C.RouteText>{props.end}</C.RouteText>
             <C.RouteDistanceBox>76km</C.RouteDistanceBox>
           </C.RouteBox>
         </C.RouteNTitleBox>
