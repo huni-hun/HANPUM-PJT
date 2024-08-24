@@ -101,7 +101,7 @@ function BottomSheet(props: BottomSheetProps) {
                 handleClose();
               }}
             >
-              X
+              <Icon name="IconClose" size={15} />
             </R.HeaderIconBox>
             {props.bsType}
           </R.BottomSheetHeader>

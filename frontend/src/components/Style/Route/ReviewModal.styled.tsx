@@ -88,6 +88,7 @@ export const ReviewWrite = styled.textarea`
   border-radius: 1.2rem;
   border: 0.2rem solid ${colors.grey3};
   padding: 1.6rem 1.6rem 1.6rem 1.6rem;
+  outline-color: ${colors.main};
 `;
 
 export const BtnBox = styled.div`
