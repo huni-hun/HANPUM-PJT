@@ -521,6 +521,12 @@ export const PlaceImg = styled.div`
   border-radius: 1.2rem;
 `;
 
+export const PlaceImage = styled.img`
+  width: 6.4rem;
+  height: 6.4rem;
+  border-radius: 1.2rem;
+`;
+
 export const UserImgContainer = styled.div`
   width: 15%;
   height: 100%;
@@ -583,6 +589,15 @@ export const ReviewDetailBox = styled.div`
   flex-direction: row;
   align-items: center;
   padding: 0 0 0 0.8rem;
+`;
+
+export const ReviewHeaderText = styled.p`
+  color: ${colors.grey2};
+`;
+
+export const ReviewHeaderTextBox = styled.div`
+  display: flex;
+  flex-direction: row;
 `;
 
 export const ReviewDetail = styled.p`

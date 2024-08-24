@@ -11,6 +11,7 @@ import {
 import Header from '@/components/common/Header/Header';
 import Button from '@/components/common/Button/Button';
 import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
+import BottomSheet from '@/components/Style/Route/BottomSheet';
 
 function RouteDetailPage() {
   const { routeid } = useParams();
@@ -84,7 +85,14 @@ function RouteDetailPage() {
 
   return loading ? (
     <R.Container>
-      <Header purpose="route-detail" back={true} clickBack={() => {}} />
+      <Header
+        purpose="route-detail"
+        back={true}
+        clickBack={() => {}}
+        clickOption={() => {
+          setIsOpen(true);
+        }}
+      />
       <R.Main>
         <R.Overflow>
           <R.RouteInfoContainer>
@@ -181,6 +189,7 @@ function RouteDetailPage() {
               attractions={attractions}
               setLoading={setLoading}
               setSelectedDay={setSelectedDay}
+              setIsOpen={setIsOpen}
             />
           </R.RouteDetailInfoContainer>
         </R.Overflow>
@@ -200,6 +209,7 @@ function RouteDetailPage() {
           />
         </R.ButtonBox>
       </R.BottomContainer>
+      {isOpen && <BottomSheet setIsOpen={setIsOpen} />}
     </R.Container>
   ) : null;
 }
