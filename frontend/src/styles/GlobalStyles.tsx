@@ -69,4 +69,5 @@ export const GlobalStyle = createGlobalStyle`
     --grey5 : ${colors.grey5};
     --yellow : ${colors.yellow};
   }
+
 `;

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import * as S from '../Style/My/Interest.styled';
 import NoHave from './NoHave';
+import CardLong from '../common/CardLong/CardLong';
 
 function Interest() {
   const [tab, setTab] = useState('경로');
@@ -43,7 +44,24 @@ function Interest() {
       commentCnt: 2,
     },
   ];
-  const meet = [];
+  const meet = [
+    // {
+    //   courseId: 1,
+    //   courseName: '서울에서 대전까지',
+    //   backgroundImg: 'testurl',
+    //   content: '서울에서 대전까지 가는 초보자용 코스입니다.',
+    //   writeState: false,
+    //   openState: true,
+    //   writeDate: '2024-08-27',
+    //   startPoint: '서울',
+    //   endPoint: '대전',
+    //   totalDistance: 76,
+    //   memberId: 1,
+    //   courseTypes: null,
+    //   scoreAvg: 3.25,
+    //   commentCnt: 2,
+    // },
+  ];
 
   return (
     <S.InterestContainer>
@@ -63,10 +81,27 @@ function Interest() {
       </div>
 
       {/*  경로 */}
-      {tab === '경로' && root.length === 0 && <NoHave category="root" />}
+      {tab === '경로' &&
+        (root.length === 0 ? (
+          <NoHave category="root" />
+        ) : (
+          <div className="card-container">
+            {root.map((item) => (
+              <CardLong key={item.courseId} item={item} />
+            ))}
+          </div>
+        ))}
 
       {/*  모임 */}
-      {tab === '모임' && meet.length === 0 && <NoHave category="meet" />}
+      {tab === '모임' &&
+        (meet.length === 0 ? (
+          <NoHave category="meet" />
+        ) : // <div className="card-container">
+        //   {meet.map((item, index) => (
+        //     <CardLong key={index} item={item} />
+        //   ))}
+        // </div>
+        null)}
     </S.InterestContainer>
   );
 }
