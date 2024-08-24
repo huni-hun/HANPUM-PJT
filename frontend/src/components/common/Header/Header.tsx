@@ -94,7 +94,12 @@ const Header = ({
       case 'route-detail':
         return (
           <Flex $align="center" $justify="end">
-            <Icon name="IconBackArrow" className="back-arrow" size={15} />
+            <Icon
+              name="IconBackArrow"
+              className="back-arrow"
+              size={15}
+              onClick={clickBack}
+            />
             <Icon name="IconOption" size={15} onClick={clickOption} />
           </Flex>
         );

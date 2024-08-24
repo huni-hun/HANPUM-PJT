@@ -27,6 +27,10 @@ export { ReactComponent as IconUserBasicImg } from './UserBasicImg.svg';
 export { ReactComponent as IconRouteAddComplete } from './RouteAddComplete.svg';
 export { ReactComponent as IconBookMarkInHeader } from './bookmark_in_header.svg';
 export { ReactComponent as IconOption } from './OptionIcon.svg';
+export { ReactComponent as IconGreenChecked } from './GreenChecked.svg';
+export { ReactComponent as IconLock } from './IconLock.svg';
+export { ReactComponent as IconDelete } from './IconDelete.svg';
+export { ReactComponent as IconRetouch } from './IconRetouch.svg';
 
 // header
 export { ReactComponent as IconUser } from './user.svg';

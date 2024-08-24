@@ -1,7 +1,7 @@
 import Icon from '@/components/common/Icon/Icon';
 import * as R from '@/components/Style/Route/RouteDetailPage.styled';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getRouteDetail } from '@/api/route/GET';
 import {
   AttractionsProps,
@@ -15,6 +15,8 @@ import BottomSheet from '@/components/Style/Route/BottomSheet';
 
 function RouteDetailPage() {
   const { routeid } = useParams();
+  const navigate = useNavigate();
+
   const [selected, setSelected] = useState<string>('course');
   const [selectedDay, setSelectedDay] = useState<number>(1);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -27,6 +29,8 @@ function RouteDetailPage() {
   const [longitude, setLongitude] = useState<number>(0);
   const [attractions, setAttractions] = useState<AttractionsProps[]>([]);
   const [linePath, setLinePath] = useState([]);
+  const [bsType, setBsType] = useState<string>('설정');
+  const [reviewType, setReviewType] = useState<string>('최신순');
 
   useEffect(() => {
     if (dayData.length === 0) {
@@ -88,9 +92,12 @@ function RouteDetailPage() {
       <Header
         purpose="route-detail"
         back={true}
-        clickBack={() => {}}
+        clickBack={() => {
+          navigate(-1);
+        }}
         clickOption={() => {
           setIsOpen(true);
+          setBsType('설정');
         }}
       />
       <R.Main>
@@ -190,6 +197,8 @@ function RouteDetailPage() {
               setLoading={setLoading}
               setSelectedDay={setSelectedDay}
               setIsOpen={setIsOpen}
+              setBsType={setBsType}
+              reviewType={reviewType}
             />
           </R.RouteDetailInfoContainer>
         </R.Overflow>
@@ -209,7 +218,14 @@ function RouteDetailPage() {
           />
         </R.ButtonBox>
       </R.BottomContainer>
-      {isOpen && <BottomSheet setIsOpen={setIsOpen} />}
+      {isOpen && (
+        <BottomSheet
+          selected={reviewType}
+          setSelected={setReviewType}
+          bsType={bsType}
+          setIsOpen={setIsOpen}
+        />
+      )}
     </R.Container>
   ) : null;
 }

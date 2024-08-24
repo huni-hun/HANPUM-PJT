@@ -27,6 +27,8 @@ interface RouteDetailInfoProps {
   //   reviews: RouteReviewProps[];
   linePath: any[];
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setBsType: React.Dispatch<React.SetStateAction<string>>;
+  reviewType: string;
 }
 
 function RouteDetailInfo(props: RouteDetailInfoProps) {
@@ -121,9 +123,10 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
                 <R.ReviewHeaderTextBox
                   onClick={() => {
                     props.setIsOpen(true);
+                    props.setBsType('정렬');
                   }}
                 >
-                  <R.ReviewHeaderText>최신순</R.ReviewHeaderText>
+                  <R.ReviewHeaderText>{props.reviewType}</R.ReviewHeaderText>
                   <div
                     style={{
                       transform: 'rotate(270deg)',
