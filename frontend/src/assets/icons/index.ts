@@ -62,3 +62,5 @@ export { ReactComponent as IconMyRoot } from './myRoot.svg';
 export { ReactComponent as IconMyRooteClose } from './myRootClose.svg';
 export { ReactComponent as IconStar } from './star.svg';
 export { ReactComponent as IconHeartWhiteFill } from './heart_white_fill.svg';
+export { ReactComponent as IconLock } from './lock.svg';
+export { ReactComponent as IconDelete } from './delete.svg';

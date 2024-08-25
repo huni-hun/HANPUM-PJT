@@ -5,6 +5,7 @@ import BaseButton from '../common/BaseButton';
 import Text from '../common/Text';
 import Flex from '../common/Flex';
 import Icon from '../common/Icon/Icon';
+import CardLong from '../common/CardLong/CardLong';
 
 function MyRoot() {
   const root = [
@@ -42,7 +43,15 @@ function MyRoot() {
     },
   ];
 
-  return <S.MyRootContainer>sdfd</S.MyRootContainer>;
+  return (
+    <S.MyRootContainer>
+      {root.map((item) => (
+        <div className="card-container">
+          <CardLong item={item} hasLock={true} canDelete={true} />
+        </div>
+      ))}
+    </S.MyRootContainer>
+  );
 }
 
 export default MyRoot;

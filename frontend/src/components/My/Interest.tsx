@@ -87,7 +87,7 @@ function Interest() {
         ) : (
           <div className="card-container">
             {root.map((item) => (
-              <CardLong key={item.courseId} item={item} />
+              <CardLong key={item.courseId} hasHeart={true} item={item} />
             ))}
           </div>
         ))}
