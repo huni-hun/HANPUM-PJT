@@ -13,7 +13,10 @@ import org.springframework.beans.factory.annotation.Value;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -28,32 +31,19 @@ public class WeatherServiceImpl implements WeatherService {
     private String serviceKey;
 
     @Override
-    public WeatherResDto getDayWeather(double lat, double lon) {
-
+    public List<WeatherResDto> getDayWeather(double lat, double lon) {
         LocalDateTime now = LocalDateTime.now();
-
         String baseDate = now.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-
         LocationInfo locationInfo = weatherConverter.convert(lat, lon);
         int nx = locationInfo.getNx();
         int ny = locationInfo.getNy();
+        String baseTime = determineBaseTime(now);
 
-        // 현재 시간의 분 값을 가져옵니다.
-        int minute = now.getMinute();
-        String baseTime;
-
-        if (minute < 45) {
-            // 45분 이전이면, 전 시간의 정각 데이터를 사용
-            baseTime = now.minusHours(1).withMinute(0).format(DateTimeFormatter.ofPattern("HHmm"));
-        } else {
-            // 45분 이후이면, 현재 시간의 정각 데이터를 사용
-            baseTime = now.withMinute(0).format(DateTimeFormatter.ofPattern("HHmm"));
-        }
-
-        String url = new StringBuilder("http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst")
+        // URL 생성
+        String url = new StringBuilder("http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst")
                 .append("?serviceKey=").append(serviceKey)
                 .append("&pageNo=1")
-                .append("&numOfRows=100")
+                .append("&numOfRows=200")
                 .append("&dataType=JSON")
                 .append("&base_date=").append(baseDate)
                 .append("&base_time=").append(baseTime)
@@ -64,70 +54,79 @@ public class WeatherServiceImpl implements WeatherService {
         try {
             URI uri = new URI(url);
             ResponseEntity<String> response = restTemplate.getForEntity(uri, String.class);
-            return parseWeatherResponse(response.getBody());
+            return parseDayWeatherResponse(response.getBody());
         } catch (Exception e) {
             throw new WeatherParsingException(e.getMessage());
         }
     }
 
-    private WeatherResDto parseWeatherResponse(String responseBody) {
+    // 가장 가까운 Base Time을 찾고 필요한 경우 이전 날짜로 조정
+    private String determineBaseTime(LocalDateTime now) {
+        List<String> baseTimes = List.of("0200", "0500", "0800", "1100", "1400", "1700", "2000", "2300");
+        String currentTime = now.format(DateTimeFormatter.ofPattern("HHmm"));
+        String baseTime = baseTimes.stream()
+                .filter(time -> time.compareTo(currentTime) <= 0)
+                .max(String::compareTo)
+                .orElse(baseTimes.get(baseTimes.size() - 1));
+
+        LocalDateTime baseDateTime = now.withHour(Integer.parseInt(baseTime.substring(0, 2)))
+                .withMinute(Integer.parseInt(baseTime.substring(2)))
+                .plusMinutes(10);
+
+        if (now.isBefore(baseDateTime)) {
+            int index = baseTimes.indexOf(baseTime);
+            if (index == 0) {
+                // 가장 첫 번째 base time인 경우, 전날의 마지막 base time으로 설정
+                now = now.minusDays(1);
+                baseTime = baseTimes.get(baseTimes.size() - 1);
+            } else {
+                baseTime = baseTimes.get(index - 1);
+            }
+        }
+
+        return baseTime;
+    }
+
+    private List<WeatherResDto> parseDayWeatherResponse(String responseBody) {
         ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, WeatherResDto> weatherMap = new TreeMap<>(); // TreeMap을 사용하여 자동 정렬
+
         try {
             JsonNode rootNode = objectMapper.readTree(responseBody);
-            JsonNode responseNode = rootNode.path("response");
-            JsonNode bodyNode = responseNode.path("body");
-            JsonNode itemsNode = bodyNode.path("items");
-            JsonNode itemArray = itemsNode.path("item");
+            JsonNode itemsNode = rootNode.path("response").path("body").path("items").path("item");
 
-            String closestTime = null;
-            String temperature = null;
-            String sky = null;
-            String pty = null;
-
-            LocalDateTime closestDateTime = null;
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
-
-            // 1. 가장 가까운 시간대를 찾습니다.
-            for (JsonNode item : itemArray) {
-                String fcstTime = item.path("fcstTime").asText();
+            for (JsonNode item : itemsNode) {
                 String fcstDate = item.path("fcstDate").asText();
-
-                LocalDateTime forecastDateTime = LocalDateTime.parse(fcstDate + fcstTime, formatter);
-
-                if (closestDateTime == null || forecastDateTime.isBefore(closestDateTime)) {
-                    closestDateTime = forecastDateTime;
-                    closestTime = fcstTime;
-                }
-            }
-
-            // 2. 가장 가까운 시간대의 정보들을 추출합니다.
-            for (JsonNode item : itemArray) {
-                String category = item.path("category").asText();
                 String fcstTime = item.path("fcstTime").asText();
+                String category = item.path("category").asText();
+                String fcstValue = item.path("fcstValue").asText();
+                String dateTimeKey = fcstDate + fcstTime;
 
-                // 3. 가장 가까운 시간대에 해당하는 정보만 처리합니다.
-                if (fcstTime.equals(closestTime)) {
-                    switch (category) {
-                        case "T1H":  // 기온
-                            temperature = item.path("fcstValue").asText() + "°C";
-                            break;
-                        case "SKY":  // 하늘 상태
-                            int skyValue = item.path("fcstValue").asInt();
-                            sky = getSkyCondition(skyValue);
-                            break;
-                        case "PTY":  // 강수 형태
-                            int ptyValue = item.path("fcstValue").asInt();
-                            pty = getPtyCondition(ptyValue);
-                            break;
-                    }
+                WeatherResDto weatherResDto = weatherMap.computeIfAbsent(dateTimeKey, k -> new WeatherResDto());
+                weatherResDto.setNowDay(fcstDate);
+                weatherResDto.setNowTime(fcstTime);
+
+                switch (category) {
+                    case "TMP":
+                        weatherResDto.setNowTemperature(fcstValue + "°C");
+                        break;
+                    case "SKY":
+                        weatherResDto.setNowWeather(getSkyCondition(Integer.parseInt(fcstValue)));
+                        break;
+                    case "PTY":
+                        String ptyCondition = getPtyCondition(Integer.parseInt(fcstValue));
+                        if (!ptyCondition.equals("강수 없음")) {
+                            weatherResDto.setNowWeather(ptyCondition);
+                        }
+                        break;
+                    case "RN1":
+                    case "PCP":
+                        weatherResDto.setPrecipitation(fcstValue + "mm");
+                        break;
                 }
             }
 
-            WeatherResDto weatherResDto = new WeatherResDto();
-            weatherResDto.setReferenceTime(closestTime);
-            weatherResDto.setNowTemperature(temperature);
-            weatherResDto.setNowWeather(pty != null && !pty.equals("강수 없음") ? pty : sky);  // 강수가 있다면 강수 형태를 우선
-            return weatherResDto;
+            return new ArrayList<>(weatherMap.values());
         } catch (Exception e) {
             throw new WeatherParsingException(e.getMessage());
         }

@@ -22,8 +22,13 @@ import {
   RouteAddDetailPage,
   SearchPlacePage,
   RouteAddCompletePage,
+
   DetailMineSchedulePage,
   SuccessAddSchedulePage,
+
+  RoteListMorePage,
+  RouteListSearchPage,
+
 } from './index'; // index.tsx에서 컴포넌트를 가져옵니다.
 import SignupPage from './Auth/SignupPage';
 import FindPage from './Auth/FindPage';
@@ -52,7 +57,9 @@ export default function Router() {
             element={<SuccessAddSchedulePage />}
           />
 
+
           {/* 경로 */}
+
           <Route path="/route/list" element={<RouteList />} />
           <Route path="/route/detail/:routeid" element={<RouteDetailPage />} />
           <Route path="/route/addMain" element={<RouteAddMainPage />} />

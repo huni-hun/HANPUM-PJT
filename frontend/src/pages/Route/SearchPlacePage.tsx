@@ -27,22 +27,26 @@ function SearchPlacePage() {
             onKeyDown={(e) => {
               // console.log(e);
               if (e.code === 'Enter') {
-                PostSearchPlace(searchText).then((result) => {
-                  if (result.status === 200) {
-                    let arr: searchPlaceProps[] = [];
-                    // result.data.data.map((ele: any) => {
-                    let data: searchPlaceProps = {
-                      placeName: result.data.data.placeName,
-                      address: result.data.data.address,
-                      latitude: result.data.data.lat,
-                      longitude: result.data.data.lon,
-                    };
-                    arr.push(data);
-                    // });
+                if (searchText !== '') {
+                  PostSearchPlace(searchText).then((result) => {
+                    if (result.status === 200) {
+                      let arr: searchPlaceProps[] = [];
+                      result.data.data.map((ele: any) => {
+                        let data: searchPlaceProps = {
+                          placeName: ele.placeName,
+                          address: ele.address,
+                          latitude: ele.lat,
+                          longitude: ele.lon,
+                        };
+                        arr.push(data);
+                      });
 
-                    setSearchedPlace(arr);
-                  }
-                });
+                      setSearchedPlace(arr);
+                    }
+                  });
+                } else {
+                  setSearchedPlace([]);
+                }
               }
             }}
             placeholder="장소 이름, 주소로 검색해보세요."
@@ -52,7 +56,7 @@ function SearchPlacePage() {
       <R.MainContainer>
         {searchedPlace.map((ele: searchPlaceProps) => (
           <R.PlaceBox
-            key={ele.placeName}
+            key={ele.address}
             onClick={() => {
               navigator('/route/add', {
                 state: {

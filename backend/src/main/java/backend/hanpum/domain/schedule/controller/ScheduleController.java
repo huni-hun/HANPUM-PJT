@@ -5,10 +5,7 @@ import backend.hanpum.domain.schedule.dto.requestDto.MemoPostReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.ScheduleRunReqDto;
 import backend.hanpum.domain.schedule.dto.requestDto.ScheduleStartReqDto;
-import backend.hanpum.domain.schedule.dto.responseDto.NearByAttractionResDto;
-import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
-import backend.hanpum.domain.schedule.dto.responseDto.ScheduleInProgressResDto;
-import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
+import backend.hanpum.domain.schedule.dto.responseDto.*;
 import backend.hanpum.domain.schedule.service.ScheduleService;
 import backend.hanpum.exception.format.code.ApiResponse;
 import backend.hanpum.exception.format.response.ResponseCode;
@@ -60,8 +57,8 @@ public class ScheduleController {
     @GetMapping("/group")
     public ResponseEntity<?> getGroupSchedule(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         Long memberId = userDetails.getMember().getMemberId();
-        List<ScheduleResDto> scheduleResDto = scheduleService.getGroupScheduleList(memberId);
-        return response.success(ResponseCode.GROUP_SCHEDULE_LIST_FETCHED, scheduleResDto);
+        GroupScheduleResDto GroupScheduleResDto = scheduleService.getGroupScheduleList(memberId);
+        return response.success(ResponseCode.GROUP_SCHEDULE_LIST_FETCHED, GroupScheduleResDto);
     }
 
 

@@ -1,13 +1,18 @@
 package backend.hanpum.domain.schedule.dto.responseDto;
 
+import backend.hanpum.domain.group.dto.responseDto.GroupMemberResDto;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ScheduleResDto {
+public class GroupScheduleResDto {
     Long scheduleId;
     String backgroundImg;
     String title;
@@ -17,5 +22,5 @@ public class ScheduleResDto {
     String startDate;
     String endDate;
     boolean state;
-
+    List<GroupMemberResDto> groupMemberResDtoList;
 }

@@ -35,6 +35,8 @@ export interface RouteListProps {
   openState: boolean;
   memberId: number;
   writeDate: string;
+  start: string;
+  end: string;
 }
 
 export interface RouteDetailProps {
@@ -43,6 +45,8 @@ export interface RouteDetailProps {
   writeDate: string;
   routeScore: number;
   routeComment: number;
+  start: string;
+  end: string;
 }
 
 export interface RouteDetailDayProps {

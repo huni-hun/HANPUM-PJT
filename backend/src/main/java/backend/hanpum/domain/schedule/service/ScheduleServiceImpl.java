@@ -4,11 +4,17 @@ import backend.hanpum.domain.course.entity.Course;
 import backend.hanpum.domain.course.entity.CourseDay;
 import backend.hanpum.domain.course.entity.Waypoint;
 import backend.hanpum.domain.course.repository.CourseRepository;
+import backend.hanpum.domain.course.service.CourseService;
+import backend.hanpum.domain.group.dto.responseDto.GroupMemberListGetResDto;
 import backend.hanpum.domain.group.entity.Group;
 import backend.hanpum.domain.group.repository.GroupRepository;
+import backend.hanpum.domain.group.service.GroupService;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
-import backend.hanpum.domain.schedule.dto.requestDto.*;
+import backend.hanpum.domain.schedule.dto.requestDto.MemoPostReqDto;
+import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
+import backend.hanpum.domain.schedule.dto.requestDto.ScheduleRunReqDto;
+import backend.hanpum.domain.schedule.dto.requestDto.ScheduleStartReqDto;
 import backend.hanpum.domain.schedule.dto.responseDto.*;
 import backend.hanpum.domain.schedule.entity.Memo;
 import backend.hanpum.domain.schedule.entity.Schedule;
@@ -18,7 +24,6 @@ import backend.hanpum.domain.schedule.repository.MemoRepository;
 import backend.hanpum.domain.schedule.repository.ScheduleDayRepository;
 import backend.hanpum.domain.schedule.repository.ScheduleRepository;
 import backend.hanpum.domain.schedule.repository.ScheduleWayPointRepository;
-import backend.hanpum.domain.weather.dto.WeatherResDto;
 import backend.hanpum.domain.weather.service.WeatherService;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.auth.MemberInfoInvalidException;
@@ -57,6 +62,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final GroupRepository groupRepository;
     private final WeatherService weatherService;
     private final RestTemplate restTemplate;
+    private final GroupService groupService;
+    private final CourseService courseService;
 
     @Value("${api.serviceKey}")
     private String serviceKey;
@@ -65,20 +72,28 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public Long createSchedule(Long memberId, SchedulePostReqDto schedulePostReqDto) {
 
-        Course course = courseRepository.findById(schedulePostReqDto.getCourseId()).orElseThrow(ScheduleNotFoundException::new);
+        Long courseId = schedulePostReqDto.getCourseId();
+
+        Course course = courseRepository.findById(courseId).orElseThrow(ScheduleNotFoundException::new);
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
 
         String startDate = schedulePostReqDto.getStartDate();
+//        int daySize = course.getDate()
+//        String endDate = calculateDate(startDate, daySize);
 
         Schedule schedule = Schedule.builder()
                 .title(schedulePostReqDto.getTitle())
                 .type("private")
                 .startDate(startDate)
+//                .endDate(endDate)
                 .member(member)
                 .course(course)
                 .build();
         scheduleRepository.save(schedule);
         createScheduleDays(course, schedule, startDate);
+
+        // history 생성
+        courseService.addCourseUsageHistory(courseId, memberId);
         return schedule.getId();
     }
 
@@ -149,20 +164,37 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Transactional(readOnly = true)
     @Override
     public List<ScheduleResDto> getMyScheduleList(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         List<ScheduleResDto> scheduleResDtoList = scheduleRepository.getMyScheduleByMemberId(memberId).orElseThrow(ScheduleNotFoundException::new);
         return scheduleResDtoList;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<ScheduleResDto> getGroupScheduleList(Long memberId) {
+    public GroupScheduleResDto getGroupScheduleList(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         if (member.getGroupMember() == null) {
             throw new GroupMemberNotFoundException();
         }
-        List<ScheduleResDto> scheduleResDtoList = scheduleRepository.getGroupScheduleByMemberId(memberId).orElseThrow(GroupScheduleNotFoundException::new);
+        Long groupId = member.getGroupMember().getGroup().getGroupId();
 
-        return scheduleResDtoList;
+        ScheduleResDto scheduleResDto = scheduleRepository.getGroupScheduleByMemberId(memberId).orElseThrow(GroupScheduleNotFoundException::new);
+        GroupMemberListGetResDto groupMemberListGetResDto = groupService.getGroupMemberList(memberId, groupId);
+
+        GroupScheduleResDto groupScheduleResDto = GroupScheduleResDto.builder()
+                .scheduleId(scheduleResDto.getScheduleId())
+                .backgroundImg(scheduleResDto.getBackgroundImg())
+                .title(scheduleResDto.getTitle())
+                .type(scheduleResDto.getType())
+                .startPoint(scheduleResDto.getStartPoint())
+                .endPoint(scheduleResDto.getEndPoint())
+                .startDate(scheduleResDto.getStartDate())
+                .endDate(scheduleResDto.getEndDate())
+                .state(scheduleResDto.isState())
+                .groupMemberResDtoList(groupMemberListGetResDto.getGroupMemberResList())
+                .build();
+
+        return groupScheduleResDto;
     }
 
     @Transactional(readOnly = true)
@@ -265,9 +297,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         // ScheduleDayResDto
         List<ScheduleDayResDto> scheduleDayResDtoList = scheduleRepository.getScheduleDayResDtoList(memberId, scheduleId).orElseThrow(ScheduleNotFoundException::new);
 
-        // 날씨 정보
-        WeatherResDto weatherResDto = weatherService.getDayWeather(lat, lon);
-
         // 달성률
         int rate = getScheduleGoalRate(scheduleDayResDtoList);
 
@@ -279,7 +308,6 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .endDate(scheduleTempResDto.getEndDate())
                 .totalDistance(scheduleTempResDto.getTotalDistance())
                 .rate(rate)
-                .weatherResDto(weatherResDto)
                 .scheduleDayResDtoList(scheduleDayResDtoList)
                 .build();
         return result;

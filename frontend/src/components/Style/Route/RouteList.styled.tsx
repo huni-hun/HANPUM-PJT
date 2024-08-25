@@ -67,10 +67,39 @@ export const MainContainer = styled.div`
 
 export const ButtonContainer = styled.div`
   width: 100vw;
-  height: 11vh;
+  height: 10rem;
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+export const RouteAddBtn = styled.div`
+  width: 80vw;
+  height: 7.5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffe784;
+  border-radius: 1.2rem;
+  padding: 0 2rem 0 2rem;
+`;
+
+export const RouteAddBtnTextBox = styled.div`
+  widht: 40%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+export const RouteAddBasicText = styled.p`
+  font-size: 1.2rem;
+`;
+
+export const RouteAddBoldText = styled.p`
+  font-size: 2rem;
+  font-weight: bold;
 `;
 
 export const RouteCardContainer = styled.div`

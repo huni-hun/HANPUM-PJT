@@ -4,6 +4,7 @@ import Icon from '@/components/common/Icon/Icon';
 import Map from '@/components/common/Map/Map';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Header from '@/components/common/Header/Header';
 
 function RouteAddDetailPage() {
   const [curLatitude, setCurLatitude] = useState<number>(0);
@@ -36,7 +37,13 @@ function RouteAddDetailPage() {
 
   return (
     <R.Container>
-      <R.Header></R.Header>
+      <Header
+        purpose="root"
+        depart="서울"
+        arrive="대전"
+        clickBack={() => {}}
+        back={true}
+      />
       <R.MainContainer>
         <R.OverFlow>
           <R.DayContainer>
@@ -76,6 +83,11 @@ function RouteAddDetailPage() {
                 <Map latitude={curLatitude} longitude={curLongtitude} />
               ) : null}
             </R.MapBox>
+            <R.PlaceContainer>
+              <R.PlaceBox>
+                <R.PlaceTypeBox>경유지</R.PlaceTypeBox>
+              </R.PlaceBox>
+            </R.PlaceContainer>
           </R.MapCard>
         </R.OverFlow>
       </R.MainContainer>
