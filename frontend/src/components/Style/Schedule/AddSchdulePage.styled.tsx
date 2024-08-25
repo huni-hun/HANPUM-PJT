@@ -71,31 +71,22 @@ export const RoutePointWrap = styled.div`
   width: 28vw;
   height: 8vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  position: relative;
-  margin-bottom: 1rem;
   box-sizing: border-box;
-
-  :nth-child(1) ::after {
-    content: '';
-    border-left: 1px solid #ccc;
-    width: 1vw;
-    height: 75%;
-    position: absolute;
-    right: 5rem;
-    top: 1rem;
-  }
 `;
 
 export const RoutePointSection = styled.div`
+  height: 100%;
   width: 24vw;
   display: flex;
-  flex-direction: column;
   justify-content: space-around;
+  align-items: center;
   height: inherit;
   text-align: center;
 `;
+
 export const RoutePointTitle = styled.div`
   color: #a0a0a0;
   font-weight: bold;

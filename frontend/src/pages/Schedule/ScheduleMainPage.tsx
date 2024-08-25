@@ -17,6 +17,7 @@ import MeetMember from '@/components/Schedule/MeetMember';
 import memberImg from '../../assets/img/memberImg.svg';
 import SchduleCard from '@/components/Schedule/SchduleCard';
 import scheduleBackgroundImg from '../../assets/img/scheduleBackground.png';
+import goyuMY from '../../assets/img/goyuMY.png';
 import { SchduleCardProps } from '@/models/schdule';
 import BottomTab from '@/components/common/BottomTab/BottomTab';
 
@@ -66,6 +67,8 @@ function ScheduleMainPage() {
   /** feed 더미 데이터 */
   /** === useState (routeData) */
   const dummtFeedData = {
+    routeFeedImg: goyuMY,
+    routeUserImg: memberImg,
     routeName: '코스 이름(태종대 전망대)',
     routeContent: '이 코스는 초보자에게 적합합니다.',
   };

@@ -10,19 +10,23 @@ import BaseButton from '@/components/common/BaseButton';
 function SuccessAddSchedulePage() {
   const navigate = useNavigate();
   return (
-    <S.Container>
-      <Header purpose="title" clickBack={() => navigate(-1)} />
+    <A.SuccessContainer>
+      <Header
+        purpose="title"
+        clickBack={() => navigate('/schedule/addSchedule')}
+      />
       <S.SchduleContainer>
         <A.SuccessWrap>
           <img src={successImg} />
-          <p></p>
+          <span>나의 일정이</span>
+          <span>등록되었어요!</span>
         </A.SuccessWrap>
 
         <BaseButton size="large" style={{}}>
           시작하기
         </BaseButton>
       </S.SchduleContainer>
-    </S.Container>
+    </A.SuccessContainer>
   );
 }
 

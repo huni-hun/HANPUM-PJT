@@ -88,6 +88,7 @@ export const PercentBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  align-items: center;
   border-left: 0.1rem solid ${colors.grey1};
   padding: 0 0 0 0.5rem;
 `;

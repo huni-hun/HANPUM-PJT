@@ -33,11 +33,32 @@ function AddSchedulePage() {
     setActiveButton(!activeButton);
   };
 
+  /** 달력 선택 start, endData 쓸 수 있는거 */
+  const [selectedDates, setSelectedDates] = useState<{
+    startDate: Date | null;
+    endDate: Date | null;
+  }>({ startDate: null, endDate: null });
+
+  console.log(selectedDates, '날짜 ?');
+
+  const handleDateChange = (range: {
+    startDate: Date | null;
+    endDate: Date | null;
+  }) => {
+    setSelectedDates(range);
+  };
+
   /** 임시 데이터 */
-  const routeData = [
-    { title: '출발지', content: 'data' },
-    { title: '도착지', content: 'data' },
-  ];
+  const dummyData = {
+    date: [
+      { title: '출발일', content: 'data' },
+      { title: '도착일', content: 'data' },
+    ],
+    point: [
+      { title: '출발지', content: 'data' },
+      { title: '도착지', content: 'data' },
+    ],
+  };
 
   const handleDatePickClick = () => {
     setIsExpanded((prevState) => !prevState);
@@ -65,7 +86,7 @@ function AddSchedulePage() {
             <div onClick={handleStopEvent}>
               <S.H3>출발일을 선택해주세요.</S.H3>
               <S.DatePicker>
-                <Calendar />
+                <Calendar onDateChange={handleDateChange} />
               </S.DatePicker>
 
               <BaseButton
@@ -78,7 +99,15 @@ function AddSchedulePage() {
             </div>
           ) : (
             <>
-              <S.H3>날짜</S.H3>
+              <S.H3>일정</S.H3>
+              <S.RoutePointWrap>
+                {dummyData.date.map((date, index) => (
+                  <S.RoutePointSection key={index}>
+                    <S.RoutePointTitle>{date.title}</S.RoutePointTitle>
+                    <S.RoutePointContent>{date.content}</S.RoutePointContent>
+                  </S.RoutePointSection>
+                ))}
+              </S.RoutePointWrap>
             </>
           )}
         </S.DateWrap>
@@ -87,7 +116,7 @@ function AddSchedulePage() {
           <S.RouteTop>
             <S.H3>경로</S.H3>
             <S.RoutePointWrap>
-              {routeData.map((point, index) => (
+              {dummyData.point.map((point, index) => (
                 <S.RoutePointSection key={index}>
                   <S.RoutePointTitle>{point.title}</S.RoutePointTitle>
                   <S.RoutePointContent>{point.content}</S.RoutePointContent>

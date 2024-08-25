@@ -60,6 +60,10 @@ export const ImgBox = styled.div`
   width: 100%;
   height: 29.3rem;
   background-color: #d9d9d9;
+  img {
+    width: 100%;
+    height: 100%;
+  }
 `;
 
 export const UserContainer = styled.div`
@@ -92,7 +96,7 @@ export const RouteNameInfo = styled.div`
   height: 15vh;
   display: flex;
   flex-direction: column;
-  border-bottom: 0.1rem solid #d9d9d9;
+  /* border-bottom: 0.1rem solid #d9d9d9; */
   padding: 2.4rem 0 1rem;
 `;
 
@@ -160,6 +164,7 @@ export const RouteDateBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  padding-bottom: 2rem;
 `;
 
 export const StartDateBox = styled.div`
@@ -214,6 +219,7 @@ export const DistanceBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  align-items: center;
   border-left: 0.1rem solid ${colors.grey1};
   padding: 0 0 0 0.5rem;
 `;
