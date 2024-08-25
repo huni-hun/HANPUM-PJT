@@ -9,6 +9,7 @@ import backend.hanpum.domain.group.entity.QGroupMember;
 import backend.hanpum.domain.group.entity.QLikeGroup;
 import backend.hanpum.domain.group.enums.JoinType;
 import backend.hanpum.domain.schedule.entity.QSchedule;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
@@ -26,7 +27,8 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
     private final JPAQueryFactory query;
 
     @Override
-    public GroupListGetResDto findGroupList(Long memberId, Pageable pageable) {
+    public GroupListGetResDto findGroupList(Long memberId, String startPoint, String endPoint, Integer maxTotalDays,
+                                            Integer maxRecruitmentCount, Pageable pageable) {
         QGroup group = QGroup.group;
         QGroupMember groupMember = QGroupMember.groupMember;
         QCourse course = QCourse.course;
@@ -51,6 +53,20 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                 default:
                     break;
             }
+        }
+
+        BooleanBuilder whereClause = new BooleanBuilder();
+        if (maxRecruitmentCount != null) {
+            whereClause.and(group.recruitmentCount.loe(maxRecruitmentCount));
+        }
+        if (maxTotalDays != null) {
+            whereClause.and(course.totalDays.loe(maxTotalDays));
+        }
+        if (startPoint != null && !startPoint.isEmpty()) {
+            whereClause.and(course.startPoint.eq(startPoint));
+        }
+        if (endPoint != null && !endPoint.isEmpty()) {
+            whereClause.and(course.endPoint.eq(endPoint));
         }
 
         List<GroupResDto> content = query
@@ -78,17 +94,21 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                 .leftJoin(group.schedule, schedule)
                 .leftJoin(schedule.course, course)
                 .leftJoin(likeGroup).on(likeGroup.group.groupId.eq(group.groupId).and(likeGroup.member.memberId.eq(memberId)))
-                .where(groupMember.joinType.ne(JoinType.APPLY))
+                .where(groupMember.joinType.ne(JoinType.APPLY).and(whereClause))
                 .groupBy(group.groupId, course.startPoint, course.endPoint, course.totalDistance, course.totalDays)
                 .orderBy(orderSpecifier)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        long total = query
+        Long total = query
                 .select(group.count())
                 .from(group)
+                .leftJoin(group.schedule, schedule)
+                .leftJoin(schedule.course, course)
+                .where(whereClause)
                 .fetchOne();
+        long totalElements = (total != null) ? total : 0;
 
         int totalPages = (int) Math.ceil((double) total / pageable.getPageSize());
         int currentPage = pageable.getPageNumber();
@@ -97,7 +117,7 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                 .groupResDtoList(content)
                 .currentPage(currentPage)
                 .totalPages(totalPages)
-                .totalElements(total)
+                .totalElements(totalElements)
                 .build();
     }
 

@@ -37,8 +37,13 @@ public class GroupController {
     @Operation(summary = "모임 리스트 조회", description = "모임 리스트 조회 API")
     @GetMapping
     public ResponseEntity<?> getGroupList(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                          @RequestParam(required = false) String startPoint,
+                                          @RequestParam(required = false) String endPoint,
+                                          @RequestParam(required = false) Integer maxTotalDays,
+                                          @RequestParam(required = false) Integer maxRecruitmentCount,
                                           Pageable pageable) {
-        GroupListGetResDto groupListGetResDto = groupService.getGroupList(userDetails.getMember().getMemberId(), pageable);
+        GroupListGetResDto groupListGetResDto = groupService.getGroupList(userDetails.getMember().getMemberId(),
+                startPoint, endPoint, maxTotalDays, maxRecruitmentCount, pageable);
         return response.success(ResponseCode.GROUP_LIST_FETCHED, groupListGetResDto);
     }
 

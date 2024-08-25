@@ -80,8 +80,9 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional(readOnly = true)
-    public GroupListGetResDto getGroupList(Long memberId, Pageable pageable) {
-        return groupRepositoryCustom.findGroupList(memberId, pageable);
+    public GroupListGetResDto getGroupList(Long memberId, String startPoint, String endPoint, Integer maxTotalDays,
+                                           Integer maxRecruitmentCount, Pageable pageable) {
+        return groupRepositoryCustom.findGroupList(memberId, startPoint, endPoint, maxTotalDays, maxRecruitmentCount, pageable);
     }
 
     @Override
