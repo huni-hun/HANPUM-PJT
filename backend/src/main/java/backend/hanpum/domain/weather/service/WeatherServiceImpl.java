@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -34,15 +33,13 @@ public class WeatherServiceImpl implements WeatherService {
     @Override
     public List<WeatherResDto> getDayWeather(double lat, double lon) {
         LocalDateTime now = LocalDateTime.now();
-
         String baseDate = now.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-
         LocationInfo locationInfo = weatherConverter.convert(lat, lon);
         int nx = locationInfo.getNx();
         int ny = locationInfo.getNy();
+        String baseTime = determineBaseTime(now);
 
-        String baseTime = findClosestBaseTime(now);
-
+        // URL 생성
         String url = new StringBuilder("http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst")
                 .append("?serviceKey=").append(serviceKey)
                 .append("&pageNo=1")
@@ -57,36 +54,38 @@ public class WeatherServiceImpl implements WeatherService {
         try {
             URI uri = new URI(url);
             ResponseEntity<String> response = restTemplate.getForEntity(uri, String.class);
-            System.out.println("Api Response : " + response);
             return parseDayWeatherResponse(response.getBody());
         } catch (Exception e) {
             throw new WeatherParsingException(e.getMessage());
         }
     }
 
-    private String findClosestBaseTime(LocalDateTime now) {
+    // 가장 가까운 Base Time을 찾고 필요한 경우 이전 날짜로 조정
+    private String determineBaseTime(LocalDateTime now) {
         List<String> baseTimes = List.of("0200", "0500", "0800", "1100", "1400", "1700", "2000", "2300");
         String currentTime = now.format(DateTimeFormatter.ofPattern("HHmm"));
-
         String baseTime = baseTimes.stream()
                 .filter(time -> time.compareTo(currentTime) <= 0)
                 .max(String::compareTo)
                 .orElse(baseTimes.get(baseTimes.size() - 1));
 
-        // API 제공 시간(base_time + 10분)과 현재 시간 비교
-        LocalDateTime apiAvailableTime = now.withHour(Integer.parseInt(baseTime.substring(0, 2)))
+        LocalDateTime baseDateTime = now.withHour(Integer.parseInt(baseTime.substring(0, 2)))
                 .withMinute(Integer.parseInt(baseTime.substring(2)))
                 .plusMinutes(10);
 
-        if (now.isBefore(apiAvailableTime)) {
-            // 현재 시간이 API 제공 시간 이전이면 이전 base_time 사용
+        if (now.isBefore(baseDateTime)) {
             int index = baseTimes.indexOf(baseTime);
-            baseTime = index > 0 ? baseTimes.get(index - 1) : baseTimes.get(baseTimes.size() - 1);
+            if (index == 0) {
+                // 가장 첫 번째 base time인 경우, 전날의 마지막 base time으로 설정
+                now = now.minusDays(1);
+                baseTime = baseTimes.get(baseTimes.size() - 1);
+            } else {
+                baseTime = baseTimes.get(index - 1);
+            }
         }
 
         return baseTime;
     }
-
 
     private List<WeatherResDto> parseDayWeatherResponse(String responseBody) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -101,7 +100,6 @@ public class WeatherServiceImpl implements WeatherService {
                 String fcstTime = item.path("fcstTime").asText();
                 String category = item.path("category").asText();
                 String fcstValue = item.path("fcstValue").asText();
-
                 String dateTimeKey = fcstDate + fcstTime;
 
                 WeatherResDto weatherResDto = weatherMap.computeIfAbsent(dateTimeKey, k -> new WeatherResDto());
@@ -113,15 +111,17 @@ public class WeatherServiceImpl implements WeatherService {
                         weatherResDto.setNowTemperature(fcstValue + "°C");
                         break;
                     case "SKY":
-                        int skyValue = Integer.parseInt(fcstValue);
-                        weatherResDto.setNowWeather(getSkyCondition(skyValue));
+                        weatherResDto.setNowWeather(getSkyCondition(Integer.parseInt(fcstValue)));
                         break;
                     case "PTY":
-                        int ptyValue = Integer.parseInt(fcstValue);
-                        String ptyCondition = getPtyCondition(ptyValue);
+                        String ptyCondition = getPtyCondition(Integer.parseInt(fcstValue));
                         if (!ptyCondition.equals("강수 없음")) {
                             weatherResDto.setNowWeather(ptyCondition);
                         }
+                        break;
+                    case "RN1":
+                    case "PCP":
+                        weatherResDto.setPrecipitation(fcstValue + "mm");
                         break;
                 }
             }
@@ -131,7 +131,6 @@ public class WeatherServiceImpl implements WeatherService {
             throw new WeatherParsingException(e.getMessage());
         }
     }
-
 
     private String getSkyCondition(int skyValue) {
         switch (skyValue) {

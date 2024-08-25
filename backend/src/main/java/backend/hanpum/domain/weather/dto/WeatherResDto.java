@@ -11,4 +11,5 @@ public class WeatherResDto {
     String nowTime;
     String nowTemperature;
     String nowWeather;
+    String precipitation;
 }
