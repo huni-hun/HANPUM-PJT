@@ -42,7 +42,7 @@ function ReviewModal(props: ReviewModalProps) {
             <Rating
               name="rating"
               value={rating}
-              onChange={(event, newValue) => {
+              onChange={(event: any, newValue: number | null) => {
                 if (newValue !== null) {
                   setRating(newValue);
                 }
