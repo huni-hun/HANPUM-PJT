@@ -191,7 +191,6 @@ export const RouteDateBox = styled.div`
   justify-content: space-around;
 
   padding-bottom: 2rem;
-
 `;
 
 export const StartDateBox = styled.div`
@@ -222,7 +221,6 @@ export const DateText = styled.p`
   font-size: 1.2rem;
   color: #c9c9c9;
 `;
-
 
 export const RouteDateTilteBox = styled.div`
   width: 100%;
@@ -258,10 +256,6 @@ export const PointText = styled.p`
   font-weight: bold;
   color: ${colors.grey1};
   margin-bottom: 0.8rem;
-`;
-
-export const PlaceText = styled.p`
-  font-size: 1.4rem;
 `;
 
 export const RouteDateTextBox = styled.div`
@@ -312,6 +306,7 @@ export const DistanceNumBox = styled.div`
   border-radius: 10rem;
   font-size: 1.2rem;
   font-weight: 600;
+`;
 
 export const PlaceBox = styled.div`
   width: 50%;
@@ -480,7 +475,7 @@ export const CircleBox = styled.div`
   height: 80%;
   display: flex;
   flex-direction: row;
-  algin-items: start;
+  align-items: start;
   justify-content: center;
 `;
 

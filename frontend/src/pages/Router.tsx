@@ -22,13 +22,10 @@ import {
   RouteAddDetailPage,
   SearchPlacePage,
   RouteAddCompletePage,
-
   DetailMineSchedulePage,
   SuccessAddSchedulePage,
-
   RoteListMorePage,
   RouteListSearchPage,
-
 } from './index'; // index.tsx에서 컴포넌트를 가져옵니다.
 import SignupPage from './Auth/SignupPage';
 import FindPage from './Auth/FindPage';
@@ -56,7 +53,6 @@ export default function Router() {
             path="/schedule/success"
             element={<SuccessAddSchedulePage />}
           />
-
 
           {/* 경로 */}
 
