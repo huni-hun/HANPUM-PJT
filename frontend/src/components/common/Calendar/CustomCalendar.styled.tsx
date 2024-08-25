@@ -1,29 +1,50 @@
+// CustomCalendar.styled.js
 import { colors } from '@/styles/colorPalette';
-import { Datepicker } from '@mobiscroll/react';
 import styled from 'styled-components';
 
-export const CustomCalendar = styled(Datepicker)`
-  /* Datepicker 전체 배경색 변경 */
+// Mobiscroll CSS 클래스 오버라이드
+export const CustomCalendarWrapper = styled.div`
+  /* 전체 배경색 변경 */
   .mbsc-datepicker {
     background-color: #f5f5f5;
   }
 
-  /** 캘린더 헤더 스타일링 */
+  /* 캘린더 헤더 숨기기 */
   .mbsc-range-control-wrapper {
     display: none;
   }
 
+  /* 버튼 색상 변경 */
   .mbsc-ios.mbsc-calendar-button.mbsc-button {
     color: ${colors.grey4};
   }
 
+  /* 선택된 날짜 스타일 */
   .mbsc-ios.mbsc-selected .mbsc-calendar-cell-text {
     color: ${colors.white};
     border-color: ${colors.main};
     background-color: ${colors.main};
   }
 
-  /** 년월 상단 날짜 flex */
+  /* 년월 상단 날짜 flex (필요에 따라 수정) */
   .mbsc-flex-1-1 {
+    /* 스타일 수정 */
+  }
+
+  .mbsc-ios.mbsc-datepicker-inline {
+    border-bottom: 0px;
+    border-top: 0px;
+  }
+
+  .mbsc-ios.mbsc-range-day:after {
+    background-color: #e8f3eb;
+  }
+  .mbsc-ios.mbsc-calendar-today,
+  .mbsc-ios.mbsc-calendar-week-nr {
+    color: ${colors.main};
+  }
+
+  .mbsc-ios.mbsc-calendar-button.mbsc-button {
+    color: #5d5d5d;
   }
 `;

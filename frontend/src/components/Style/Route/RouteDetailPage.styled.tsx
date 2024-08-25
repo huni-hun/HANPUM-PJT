@@ -93,7 +93,7 @@ export const RouteNameInfo = styled.div`
   display: flex;
   flex-direction: column;
   border-bottom: 0.1rem solid #d9d9d9;
-  padding: 2.4rem 0 1rem 0;
+  padding: 2.4rem 0 1rem;
 `;
 
 export const RouteNameInfoContainer = styled.div`

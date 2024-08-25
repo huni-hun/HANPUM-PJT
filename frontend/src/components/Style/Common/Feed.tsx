@@ -4,14 +4,20 @@ import { FeedProps } from '@/models/route';
 import Icon from '@/components/common/Icon/Icon';
 
 // FeedContainer 컴포넌트
-const FeedContainer = ({ routeData }: FeedProps) => {
+const FeedContainer = ({ routeData, isUserContainer }: FeedProps) => {
   return (
     <>
       <R.ImgBox></R.ImgBox>
-      <R.UserContainer>
-        <R.UserImgBox></R.UserImgBox>
-        <R.UserName>작성자</R.UserName>
-      </R.UserContainer>
+      {/** 작성자 있을 경우 boolean으로 받아 쓰세요 ! */}
+      {isUserContainer ? (
+        <R.UserContainer>
+          <R.UserImgBox>{routeData?.routeUserImg}</R.UserImgBox>
+          <R.UserName>작성자</R.UserName>
+        </R.UserContainer>
+      ) : (
+        <></>
+      )}
+
       <R.RouteNameInfo>
         <R.RouteNameInfoContainer>
           <R.RouteName>{routeData?.routeName || ''}</R.RouteName>

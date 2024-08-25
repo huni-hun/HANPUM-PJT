@@ -1,20 +1,25 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  width: 100%;
+  width: 97vw;
   height: 100%;
-
   box-sizing: border-box;
+  margin: auto;
 `;
 
 export const SchduleContainer = styled.div`
   width: 100%;
-  height: 6vh;
-  margin: 0 auto;
-  margin-top: 5rem;
+  height: 60vh;
+  margin-top: 2rem;
+
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
+
 export const DateWrap = styled.div<{ isExpanded: boolean }>`
-  height: ${({ isExpanded }) => (isExpanded ? '75vh' : '11vh')};
+  height: ${({ isExpanded }) => (isExpanded ? '120vw' : '20vw')};
   width: 96%;
   background-color: #fff;
   border-radius: 2rem;
@@ -23,7 +28,7 @@ export const DateWrap = styled.div<{ isExpanded: boolean }>`
   justify-content: space-between;
   padding: ${({ isExpanded }) => (isExpanded ? '4rem 3rem' : '2rem 3rem')};
   box-shadow: 0rem 1rem 1rem #e1e1e1;
-  margin: 10rem 0 3rem 0;
+  margin: 0rem 0 3rem 0;
   transition: height 0.5s ease;
   box-sizing: border-box;
 `;
@@ -36,16 +41,15 @@ export const H3 = styled.p`
 export const DatePicker = styled.div`
   margin-top: 2rem;
   text-align: center;
-  background-color: #ccc;
-  height: 95%;
+  width: 100%;
+  height: 100%;
   font-size: 4rem;
-  display: flex;
   align-items: center;
   justify-content: space-between;
 `;
 
 export const RouteWrap = styled.div<{ isExpanded: boolean }>`
-  height: ${({ isExpanded }) => (isExpanded ? '11vh' : '75vh')};
+  height: ${({ isExpanded }) => (isExpanded ? '30vw' : '100vw')};
   width: 96%;
   background-color: #fff;
   border-radius: 2rem;
@@ -64,7 +68,7 @@ export const RouteTop = styled.div`
 `;
 
 export const RoutePointWrap = styled.div`
-  width: 40vw;
+  width: 28vw;
   height: 8vh;
   display: flex;
   align-items: center;
@@ -72,19 +76,20 @@ export const RoutePointWrap = styled.div`
   position: relative;
   margin-bottom: 1rem;
   box-sizing: border-box;
+
   :nth-child(1) ::after {
     content: '';
     border-left: 1px solid #ccc;
     width: 1vw;
-    height: 85%;
+    height: 75%;
     position: absolute;
-    right: 18vw;
-    top: 0;
+    right: 5rem;
+    top: 1rem;
   }
 `;
 
 export const RoutePointSection = styled.div`
-  width: 20vw;
+  width: 24vw;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -94,28 +99,30 @@ export const RoutePointSection = styled.div`
 export const RoutePointTitle = styled.div`
   color: #a0a0a0;
   font-weight: bold;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
 `;
 
 export const RoutePointContent = styled.div`
   font-weight: bold;
-  font-size: 2rem;
+  font-size: 1.5rem;
 `;
 
-export const RouteMapWrap = styled.div`
+export const RouteMapWrap = styled.div<{ isExpanded: boolean }>`
   padding-top: 2rem;
   border-top: 1px solid #ccc;
+  height: ${({ isExpanded }) => (isExpanded ? '3vw' : '65vw')};
 `;
 
 export const RouteMapContent = styled.div`
   background-color: #ccc;
-  height: 60vh;
+  transition: height 0.5s ease;
   border-radius: 1.5rem;
   text-align: center;
   font-size: 4rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
 `;
 
 export const ScheduleType = styled.p<{ isSelected: boolean }>`
@@ -125,7 +132,7 @@ export const ScheduleType = styled.p<{ isSelected: boolean }>`
 `;
 
 export const ScheduleMainContainer = styled.div`
-  width: 100vw;
+  width: 100%;
   height: 84vh;
   display: flex;
   flex-direction: column;

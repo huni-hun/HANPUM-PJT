@@ -79,7 +79,7 @@ export const SchduleProgressWrap = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  border-top: 0.1rem solid #d9d9d9;
+  padding-top: 2rem;
 `;
 
 export const PercentBox = styled.div`
@@ -179,9 +179,9 @@ export const EmergenyNotice = styled.div`
   align-items: center;
   justify-content: left;
   margin-top: 2rem;
-  img {
-    width: 6vw;
-    height: 6vw;
+  .weather_img {
+    width: 10vw;
+    height: 10vw;
     margin-left: 2rem;
   }
   p {
@@ -204,7 +204,7 @@ export const MemberTitle = styled.p`
 
 export const MembersWrap = styled.div`
   display: flex;
-  gap: 2rem;
+  gap: 1rem;
 `;
 
 export const Members = styled.div`
@@ -219,9 +219,15 @@ export const Members = styled.div`
     font-size: 1.2rem;
     color: ${colors.grey1};
   }
-  img {
-    width: 15vw;
-    height: 15vw;
+  .member_img {
+    width: 20vw;
+    height: 19vw;
     margin-bottom: 1rem;
   }
+`;
+
+export const Hr = styled.div`
+  height: 0.1rem;
+  background-color: #d9d9d9;
+  margin-bottom: 2.5rem;
 `;

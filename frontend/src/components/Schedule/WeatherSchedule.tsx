@@ -11,7 +11,7 @@ const WeatherSchedule = ({ weatherIcon, message }: Weather) => {
           <p>경북 경주시 기준</p>
         </S.WeatherWrap>
         <S.EmergenyNotice>
-          <img src={weatherIcon} />
+          <img src={weatherIcon} className="weather_img" />
           <p>{message}</p>
         </S.EmergenyNotice>
       </S.WeatherContainer>

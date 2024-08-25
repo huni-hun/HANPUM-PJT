@@ -5,15 +5,24 @@ export interface Weather {
 }
 
 /** 모임일정 - 모임멤버 */
+export interface Member {
+  memberImg: string;
+  memberName: string;
+}
+
 export interface MeetMemberProps {
-  memberCount?: number;
-  memberImgs: string[];
-  memberNames: string[];
+  memberCount: number;
+  members: Member[];
 }
 
 export interface SchduleCardProps {
-  backGroundImg?: string;
-  scheduleTitle?: string[];
-  departure?: string;
-  arrival?: string;
+  backGroundImg: string;
+  scheduleTitle: string;
+  departure: string;
+  arrival: string;
+  startDate: string | undefined;
+  endDate: string | undefined;
+  tripDay?: string;
+  dDay?: string;
+  onClick?: () => void;
 }

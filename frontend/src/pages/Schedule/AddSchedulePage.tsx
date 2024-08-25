@@ -1,13 +1,11 @@
 import { useState } from 'react';
 import * as S from '../../components/Style/Schedule/AddSchdulePage.styled';
-import Button from '../../components/common/Button/Button';
-import PlusIcon from '../../assets/PlusIcon.svg';
-import Icon from '../../components/common/Icon/Icon';
-import Select from '../../components/common/Select/Select';
+
 import Header from '@/components/common/Header/Header';
 import { useNavigate } from 'react-router-dom';
 
-import Calendar from '@/components/common/Calendar/\bCalendar';
+import Calendar from '../../components/common/Calendar/RangeCalendar';
+import BaseButton from '@/components/common/BaseButton';
 
 function AddSchedulePage() {
   const navigate = useNavigate();
@@ -49,6 +47,10 @@ function AddSchedulePage() {
     event.stopPropagation();
   };
 
+  const handlerExpanded = () => {
+    setIsExpanded((prevState) => !prevState);
+  };
+
   return (
     <S.Container>
       <Header
@@ -65,6 +67,14 @@ function AddSchedulePage() {
               <S.DatePicker>
                 <Calendar />
               </S.DatePicker>
+
+              <BaseButton
+                size="small"
+                style={{ margin: '1.5rem 0 0 22rem' }}
+                onClick={handlerExpanded}
+              >
+                다음
+              </BaseButton>
             </div>
           ) : (
             <>
@@ -89,7 +99,7 @@ function AddSchedulePage() {
             <></>
           ) : (
             <>
-              <S.RouteMapWrap onClick={handleStopEvent}>
+              <S.RouteMapWrap onClick={handleStopEvent} isExpanded={isExpanded}>
                 <S.RouteMapContent>지도</S.RouteMapContent>
               </S.RouteMapWrap>
             </>
