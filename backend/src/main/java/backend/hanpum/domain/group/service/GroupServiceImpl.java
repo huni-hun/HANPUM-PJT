@@ -81,7 +81,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional(readOnly = true)
     public GroupListGetResDto getGroupList(Long memberId, Pageable pageable) {
-        return groupRepositoryCustom.findGroupList(pageable);
+        return groupRepositoryCustom.findGroupList(memberId, pageable);
     }
 
     @Override

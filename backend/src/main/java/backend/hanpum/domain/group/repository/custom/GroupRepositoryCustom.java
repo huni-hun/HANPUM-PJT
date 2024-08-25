@@ -10,6 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GroupRepositoryCustom {
-    GroupListGetResDto findGroupList(Pageable pageable);
+    GroupListGetResDto findGroupList(Long memberId, Pageable pageable);
     Optional<GroupDetailGetResDto> findGroupById(Long groupId);
 }
