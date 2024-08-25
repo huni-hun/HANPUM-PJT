@@ -73,6 +73,7 @@ export const TypeBox = styled.div`
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
+  margin-top: 2rem;
 `;
 
 export const BottomContainer = styled.div`

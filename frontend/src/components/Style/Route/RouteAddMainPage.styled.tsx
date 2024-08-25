@@ -179,6 +179,15 @@ export const CheckedTypeCard = styled.div<{ isLong: boolean }>`
   }
 `;
 
+export const TypeClosedCard = styled.div`
+  width: 78vw;
+  height: 12vh;
+  display: flex;
+  justify-content: start;
+  flex-wrap: wrap;
+  margin-top: 1.7rem;
+`;
+
 export const TypeTextBox = styled.div`
   width: 70%;
   display: flex;

@@ -131,7 +131,7 @@ function RouteAddMainPage() {
                 value={routeExplane}
                 onChange={(e) => {
                   setRouteExplane(e.target.value);
-                  if (routeTitle != '') {
+                  if (routeTitle !== '') {
                     setExplanationReady(true);
                   }
                 }}
@@ -157,12 +157,22 @@ function RouteAddMainPage() {
           )}
           {!typeBoxClick ? (
             <R.CardClosed
-              height={2}
+              height={typeChecked.length > 0 ? 16 : 2}
               onClick={() => {
                 setTypeBoxClick(true);
               }}
             >
               <R.CardTitle>경로 타입</R.CardTitle>
+              <R.TypeClosedCard>
+                {typeChecked.length > 0 &&
+                  typeChecked.map((ele) => (
+                    <R.CheckedTypeCard isLong={ele.length > 3}>
+                      <R.TypeTextBox>
+                        <R.TypeText>{ele}</R.TypeText>
+                      </R.TypeTextBox>
+                    </R.CheckedTypeCard>
+                  ))}
+              </R.TypeClosedCard>
             </R.CardClosed>
           ) : (
             <R.TypeCardOpen isChecked={typeChecked.length > 0}>
@@ -251,7 +261,6 @@ function RouteAddMainPage() {
         <R.ButtonBox>
           <R.SwitchBtnBox>
             <R.SwitchBtnText>공개 여부</R.SwitchBtnText>
-
             <R.SwitchLabel isOpen={isOpen}>
               <R.SwitchInput
                 type="checkbox"
