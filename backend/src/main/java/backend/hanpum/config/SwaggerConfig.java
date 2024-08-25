@@ -79,4 +79,12 @@ public class SwaggerConfig {
                 .pathsToMatch("/api/member/**")
                 .build();
     }
+
+    @Bean
+    public GroupedOpenApi weatherGroup(){
+        return GroupedOpenApi.builder()
+                .group("날씨")
+                .pathsToMatch("/api/weather/**")
+                .build();
+    }
 }
