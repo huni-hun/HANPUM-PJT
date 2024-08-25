@@ -1,3 +1,4 @@
+import { colors } from '@/styles/colorPalette';
 import styled from 'styled-components';
 
 export const Card = styled.div<{ img: string }>`
@@ -31,14 +32,18 @@ export const ContentContainer = styled.div`
 `;
 
 export const Content = styled.div`
-  width: 3rem;
-  height: 3rem;
+  width: 5.5rem;
+  height: 2.4rem;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  border-radius: 0.8rem;
-  margin-right: 0.8rem;
+  border-radius: 10rem;
+  background-color: ${colors.main};
+  border: 0.15rem solid ${colors.white};
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: ${colors.white};
 `;
 
 export const BContent = styled.div`
@@ -66,7 +71,7 @@ export const BContentText = styled.p`
 
 export const BottomContent = styled.div`
   width: 15rem;
-  height: 4rem;
+  height: 5.5rem;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -81,12 +86,23 @@ export const RouteNTitleBox = styled.div`
 `;
 
 export const RouteBox = styled.div`
-  width: 70%;
-  height: 40%;
+  width: 100%;
+  height: 30%;
   display: flex;
   flex-direction: row;
   align-items: end;
   justify-content: space-between;
+`;
+
+export const RouteDistanceBox = styled.div`
+  width: 20%;
+  height: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  padding: 0 0 0 0.4rem;
+  color: ${colors.white};
+  border-left: 0.15rem solid ${colors.white};
 `;
 
 export const RouteText = styled.div`
@@ -96,7 +112,7 @@ export const RouteText = styled.div`
 
 export const TitleBox = styled.div`
   width: 100%;
-  height: 60%;
+  height: 40%;
   display: flex;
   align-items: center;
   justify-content: start;
@@ -105,6 +121,21 @@ export const TitleBox = styled.div`
   color: #ffffff;
   overflow: hidden;
   white-space: nowrap;
+`;
+
+export const RouteContentBox = styled.div`
+  width: 70%;
+  hegiht: 30%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+export const RouteScoreText = styled.p`
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: ${colors.white};
 `;
 
 export const Datecontainer = styled.div`

@@ -16,30 +16,29 @@ function RouteCard(props: RouteListProps) {
     >
       <C.TopContent>
         <C.ContentContainer>
-          <C.Content>
-            <Icon name="IconWhiteStar" size={13} fill="#ffffff" />
-            <C.ContentText>{props.routeScore}</C.ContentText>
-          </C.Content>
-          <C.Content>
-            <Icon name="IconReview" size={13} />
-            <C.ContentText>{props.routeComment}</C.ContentText>
-          </C.Content>
+          <C.Content>5박 6일</C.Content>
         </C.ContentContainer>
-        <Icon name="IconBookMarkerWhite" size={20} />
+        <Icon name="IconHeartInGrey" size={30} />
       </C.TopContent>
       <C.BottomContent>
         <C.RouteNTitleBox>
-          <C.RouteBox>
-            <C.RouteText>인천</C.RouteText>
-            <Icon name="IconArrowWhite" size={10} path="" />
-            <C.RouteText>당진</C.RouteText>
-          </C.RouteBox>
+          <C.RouteContentBox>
+            <Icon name="IconGrenStar" size={15} />
+            <C.RouteScoreText>{props.routeScore}</C.RouteScoreText>
+            <C.RouteScoreText>{`(${props.routeComment})`}</C.RouteScoreText>
+          </C.RouteContentBox>
           <C.TitleBox>{props.routeName}</C.TitleBox>
+          <C.RouteBox>
+            <C.RouteText>{props.start}</C.RouteText>
+            <Icon name="IconArrowWhite" size={10} path="" />
+            <C.RouteText>{props.end}</C.RouteText>
+            <C.RouteDistanceBox>76km</C.RouteDistanceBox>
+          </C.RouteBox>
         </C.RouteNTitleBox>
-        <C.BContent>
+        {/* <C.BContent>
           <Icon name="IconRoute" size={25} />
           <C.ContentText>70.5km</C.ContentText>
-        </C.BContent>
+        </C.BContent> */}
       </C.BottomContent>
     </C.Card>
   );

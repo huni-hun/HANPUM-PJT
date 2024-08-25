@@ -10,7 +10,6 @@ export async function getRouteList(type: string) {
 
 export async function getRouteDetail(id: string) {
   const response = await api.get(`/api/course/${id}`);
-
   return response;
 }
 

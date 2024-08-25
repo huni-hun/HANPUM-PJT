@@ -13,6 +13,7 @@ import RoutePlaceCard from './RoutePlaceCard';
 import AttractionsCard from './AttractionsCard';
 import ReviewCard from './ReviewCard';
 import { Select } from '@mobiscroll/react';
+import Icon from '@/components/common/Icon/Icon';
 
 interface RouteDetailInfoProps {
   selected: string;
@@ -25,6 +26,9 @@ interface RouteDetailInfoProps {
   setSelectedDay: React.Dispatch<React.SetStateAction<number>>;
   //   reviews: RouteReviewProps[];
   linePath: any[];
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setBsType: React.Dispatch<React.SetStateAction<string>>;
+  reviewType: string;
 }
 
 function RouteDetailInfo(props: RouteDetailInfoProps) {
@@ -116,21 +120,22 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
           <>
             <R.DetailHeader>
               <R.HeaderOverflow>
-                {/* <Select
-                  list={['최근 수정순', '별점순']}
-                  width={20}
-                  height={2}
-                  radius={0}
-                  border=""
-                  fontSize={1.5}
-                  fontColor="a0a0a0"
-                  padding={0}
-                  isOpen={true}
-                  setOpen={() => {
-                    //   setIsOpen(!isOpen);
+                <R.ReviewHeaderTextBox
+                  onClick={() => {
+                    props.setIsOpen(true);
+                    props.setBsType('정렬');
                   }}
-                  onClick={() => {}}
-                /> */}
+                >
+                  <R.ReviewHeaderText>{props.reviewType}</R.ReviewHeaderText>
+                  <div
+                    style={{
+                      transform: 'rotate(270deg)',
+                      marginLeft: '0.3rem',
+                    }}
+                  >
+                    <Icon name="IconBackArrow" size={10} />
+                  </div>
+                </R.ReviewHeaderTextBox>
               </R.HeaderOverflow>
             </R.DetailHeader>
             <R.DetailMain>
@@ -145,9 +150,25 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
       default:
         return (
           <>
+            <R.MapBox>
+              <Map
+                linePath={props.linePath}
+                latitude={props.latitude}
+                longitude={props.longitude}
+              />
+            </R.MapBox>
             <R.DetailHeader>
               <R.HeaderOverflow>
-                <R.DetailHeaderTitle>주요 관광지</R.DetailHeaderTitle>
+                {props.dayData.map((ele) => (
+                  <R.DayContainer>
+                    <R.DayBox
+                      isSelected={ele.dayNum === props.selectedDay}
+                      onClick={() => {
+                        props.setSelectedDay(ele.dayNum);
+                      }}
+                    >{`Day ${ele.dayNum}`}</R.DayBox>
+                  </R.DayContainer>
+                ))}
               </R.HeaderOverflow>
             </R.DetailHeader>
             <R.DetailMain>
