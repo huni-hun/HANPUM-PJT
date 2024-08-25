@@ -45,6 +45,36 @@ export const ContentText = styled.p`
   color: ${colors.main};
 `;
 
+export const TypeContainer = styled.div`
+  width: 85%;
+  height: 21rem;
+`;
+
+export const Type = styled.div<{ isSelect: boolean }>`
+  width: 7.5rem;
+  height: 2.8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: ${(props) => (props.isSelect ? colors.main : colors.grey2)};
+  border: 0.1rem solid
+    ${(props) => (props.isSelect ? colors.main : colors.grey2)};
+  border-radius: 10rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+export const TypeBox = styled.div`
+  width: 100%;
+  height: 19rem;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+`;
+
 export const BottomContainer = styled.div`
   width: 100%;
   height: 12vh;

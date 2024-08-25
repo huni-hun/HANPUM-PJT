@@ -63,7 +63,9 @@ function RouteAddMainPage() {
                   onClick={() => {
                     setImgReady(true);
                   }}
-                />
+                >
+                  <Icon name="IconCameraGrey" size={80} />
+                </R.ImgBox>
               </R.ImgContainer>
               <R.ImgBtnBox>
                 <Button

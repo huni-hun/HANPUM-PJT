@@ -8,6 +8,30 @@ import { useState } from 'react';
 function RouteListSearchPage() {
   const [sliderValue, setSliderValue] = useState<number>(0);
   const [dateValue, setDateValue] = useState<number>(0);
+  const [selectType, setSelectType] = useState<string[]>([]);
+
+  const typeArr = [
+    '해안길',
+    '도시탐방',
+    '역사탐방',
+    '자연탐방',
+    '초보자',
+    '숙련자',
+    '잦은휴식',
+    '짧은코스',
+    '긴코스',
+    '문화탐방',
+    '미식투어',
+    '사진명소',
+    '힐링코스',
+    '문화재길',
+    '제주올레길',
+    'DMZ접경지역',
+    '해파랑길코스',
+    '코리아둘레길코스',
+    '서해랑길코스',
+    '힐링',
+  ];
 
   return (
     <R.Container>
@@ -77,6 +101,23 @@ function RouteListSearchPage() {
             }}
           />
         </R.SliderBox>
+        <R.TypeContainer>
+          <R.SliderTextBox>
+            <R.SliderText>경로 타입</R.SliderText>
+          </R.SliderTextBox>
+          <R.TypeBox>
+            {typeArr.map((ele) => (
+              <R.Type
+                onClick={() => {
+                  setSelectType((pre) => [...pre, ele]);
+                }}
+                isSelect={selectType.includes(ele)}
+              >
+                {ele}
+              </R.Type>
+            ))}
+          </R.TypeBox>
+        </R.TypeContainer>
       </R.MainContainer>
       <R.BottomContainer>
         <R.ButtonBox>
