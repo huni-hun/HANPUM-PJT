@@ -1,5 +1,6 @@
 package backend.hanpum.domain.group.dto.requestDto;
 
+import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,4 +17,5 @@ public class GroupPostReqDto {
     private String description;
     private int recruitmentCount;
     private Date recruitmentPeriod;
+    private SchedulePostReqDto schedulePostReqDto;
 }

@@ -15,9 +15,12 @@ import backend.hanpum.domain.group.repository.custom.GroupMemberRepositoryCustom
 import backend.hanpum.domain.group.repository.custom.GroupRepositoryCustom;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
+import backend.hanpum.domain.schedule.service.ScheduleService;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.group.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +39,12 @@ public class GroupServiceImpl implements GroupService {
     private final GroupMemberRepositoryCustom groupMemberRepositoryCustom;
     private final LikeGroupRepository likeGroupRepository;
     private final S3ImageService s3ImageService;
+    private ScheduleService scheduleService;
+
+    @Autowired
+    public void setScheduleService(@Lazy ScheduleService scheduleService) {
+        this.scheduleService = scheduleService;
+    }
 
     @Override
     @Transactional
@@ -63,6 +72,8 @@ public class GroupServiceImpl implements GroupService {
         if(!multipartFile.isEmpty()) {
             group.updateGroupImg(s3ImageService.uploadImage(multipartFile));
         }
+
+        scheduleService.createGroupSchedule(memberId, groupPostReqDto.getSchedulePostReqDto());
 
         return GroupPostResDto.builder().groupId(group.getGroupId()).build();
     }
