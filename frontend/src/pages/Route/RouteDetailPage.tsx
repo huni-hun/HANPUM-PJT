@@ -33,6 +33,7 @@ function RouteDetailPage() {
   const [bsType, setBsType] = useState<string>('설정');
   const [reviewType, setReviewType] = useState<string>('최신순');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     if (dayData.length === 0) {
@@ -210,7 +211,7 @@ function RouteDetailPage() {
             setIsModalOpen(true);
           }}
         >
-          리뷰쓰기
+          리뷰작성
         </R.WriteTextBox>
         <R.ButtonBox>
           <Button
@@ -234,7 +235,9 @@ function RouteDetailPage() {
           setIsOpen={setIsOpen}
         />
       )}
-      {isModalOpen && <ReviewModal setIsOpen={setIsModalOpen} />}
+      {isModalOpen && (
+        <ReviewModal isVisible={isModalOpen} setIsOpen={setIsModalOpen} />
+      )}
     </R.Container>
   ) : null;
 }

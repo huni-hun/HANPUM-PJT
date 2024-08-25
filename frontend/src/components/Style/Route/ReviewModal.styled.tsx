@@ -1,7 +1,25 @@
 import { colors } from '@/styles/colorPalette';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
-export const Container = styled.div`
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const fadeOut = keyframes`
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+`;
+
+export const Container = styled.div<{ isVisible: boolean }>`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.45);
@@ -10,6 +28,8 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  animation: ${(props) => (props.isVisible ? fadeIn : fadeOut)} 0.5s ease
+    forwards;
 `;
 
 export const ModalCard = styled.div`

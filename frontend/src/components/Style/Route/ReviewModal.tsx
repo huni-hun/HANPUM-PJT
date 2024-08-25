@@ -7,6 +7,7 @@ import { colors } from '@/styles/colorPalette';
 
 interface ReviewModalProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isVisible: boolean;
 }
 
 function ReviewModal(props: ReviewModalProps) {
@@ -15,6 +16,7 @@ function ReviewModal(props: ReviewModalProps) {
 
   return (
     <R.Container
+      isVisible={props.isVisible}
       onClick={() => {
         props.setIsOpen(false);
       }}
