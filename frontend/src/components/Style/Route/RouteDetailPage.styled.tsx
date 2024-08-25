@@ -53,6 +53,7 @@ export const RouteInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 10px;
 `;
 
 export const ImgBox = styled.div`
@@ -216,6 +217,7 @@ export const DateText = styled.p`
   color: #c9c9c9;
 `;
 
+
 export const RouteDateTilteBox = styled.div`
   width: 100%;
   height: 20%;
@@ -304,6 +306,22 @@ export const DistanceNumBox = styled.div`
   border-radius: 10rem;
   font-size: 1.2rem;
   font-weight: 600;
+
+export const PlaceBox = styled.div`
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+`;
+
+export const PlaceText = styled.p`
+  font-size: 1.2rem;
+  color: #c9c9c9;
+  .bold-text {
+    /* font-size: 1.5rem; */
+    color: #787878;
+  }
 `;
 
 export const DistanceBox = styled.div`

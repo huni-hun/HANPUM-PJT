@@ -53,4 +53,8 @@ public class Group {
     public void updateLikeCount(int count){
         this.likeCount = count;
     }
+
+    public void updateGroupImg(String groupImg){
+        this.groupImg = groupImg;
+    }
 }

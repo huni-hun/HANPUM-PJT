@@ -6,6 +6,8 @@ import Icon from '@/components/common/Icon/Icon';
 
 const FeedInfo = ({
   feedInfoTitle,
+  departuresPlace,
+  arrivalsPlace,
   startDate,
   endDate,
   totalDistance,
@@ -15,10 +17,14 @@ const FeedInfo = ({
     <R.RouteDateBox>
       <R.RouteName>{feedInfoTitle}</R.RouteName>
       <R.StartDateBox>
-        <R.DateBox>
-          <R.DateText>출발일 {startDate}</R.DateText>
-          <R.DateText>도착일 {endDate}</R.DateText>
-        </R.DateBox>
+        <R.PlaceBox>
+          <R.PlaceText>
+            출발지 <span className="bold-text">{departuresPlace}</span>
+          </R.PlaceText>
+          <R.PlaceText>
+            도착지 <span className="bold-text">{arrivalsPlace}</span>
+          </R.PlaceText>
+        </R.PlaceBox>
         <R.DistanceBox>
           <R.DistanceText>총 이동거리</R.DistanceText>
           <R.Distance>{totalDistance}km</R.Distance>

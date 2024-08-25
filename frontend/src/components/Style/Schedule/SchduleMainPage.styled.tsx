@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 import { colors } from '@/styles/colorPalette';
 
+interface ProgressProps {
+  percentage: number;
+}
+
 export const Container = styled.div`
   width: 100%;
   height: 100vh;
@@ -23,7 +27,7 @@ export const HeaderContent = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0 2rem 2rem 2rem;
-  border-bottom: 0.2rem solid #f2f2f2;
+  border: 0.2rem solid red;
 `;
 
 export const HeaderTitle = styled.p`
@@ -38,7 +42,8 @@ export const HeaderIcon = styled.img<{ src: string }>`
 export const SchduleTypeContainer = styled.div`
   height: 6vh;
   display: flex;
-  border-bottom: 0.2rem solid #f2f2f2;
+  /* border-bottom: 0.2rem solid #fff; */
+  background-color: #fff;
 `;
 
 export const SchduleTypeBox = styled.div`
@@ -58,9 +63,165 @@ export const ScheduleType = styled.p<{ isSelected: boolean }>`
 `;
 
 export const ScheduleMainContainer = styled.div`
-  height: 69vh;
+  width: 100vw;
+  height: 75vh;
+  background-color: #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* padding: 6rem 0 0 0; */
+  box-sizing: border-box;
+  padding-top: 2rem;
+`;
+
+export const SchduleProgressWrap = styled.div`
+  width: 85vw;
+  height: 19vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  border-top: 0.1rem solid #d9d9d9;
+`;
+
+export const PercentBox = styled.div`
+  width: 20%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  border-left: 0.1rem solid ${colors.grey1};
+  padding: 0 0 0 0.5rem;
+`;
+
+export const PercentText = styled.p`
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: ${colors.main};
+`;
+
+export const CalculateDistance = styled.p`
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #c9c9c9;
+`;
+
+export const ProgressBar = styled.div<ProgressProps>`
+  width: 100%;
+  height: 14px;
+  border-radius: 10px;
+  background-color: #f3f3f3;
+  box-shadow: 0px 4px 4px 0 rgba(0, 0, 0, 0.25);
+  margin: 15px 0 11px;
+  padding: 3px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  .progress {
+    height: 8px;
+    border-radius: 10px;
+    background-color: ${colors.main};
+    transition: width 0.2s ease-in-out;
+    width: ${(props) => `${props.percentage}%`};
+    box-shadow: inset 0px 4px 3px 0px rgba(229, 198, 198, 0.29);
+  }
+`;
+
+export const ProgressBox = styled.p`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const ProgressText = styled.p`
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #c9c9c9;
+  .green_text {
+    color: ${colors.main};
+  }
+  .bold-text {
+    /* font-size: 1.5rem; */
+    color: #787878;
+  }
+`;
+
+/** weather */
+export const WeatherContainer = styled.div`
+  width: 85vw;
+  padding-top: 2rem;
+`;
+
+export const WeatherWrap = styled.div`
+  background-color: #7787ab;
+  border-radius: 1.5rem;
+  width: 100%;
+  height: 22vh;
+  display: flex;
+  flex-direction: column;
+  padding: 1.7rem;
+  box-sizing: border-box;
+
+  p {
+    color: #fff;
+    border-bottom: 0.1rem solid #fff;
+    text-align: right;
+    padding-bottom: 0.5rem;
+    width: 99%;
+    font-size: 1.3rem;
+  }
+`;
+
+export const EmergenyNotice = styled.div`
+  width: 100%;
+  height: 10vh;
+  background-color: #fbdcdc;
+  border-radius: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  margin-top: 2rem;
+  img {
+    width: 6vw;
+    height: 6vw;
+    margin-left: 2rem;
+  }
+  p {
+    font-size: 1.5rem;
+    margin-left: 1.5rem;
+    margin-top: 0.5rem;
+  }
+`;
+
+/** 모임 멤버 */
+export const MemberTitle = styled.p`
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.2rem;
+  .sub_title {
+    font-size: 1.2rem;
+    color: #707070;
+  }
+`;
+
+export const MembersWrap = styled.div`
+  display: flex;
+  gap: 2rem;
+`;
+
+export const Members = styled.div`
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .sub_title {
+    font-size: 1.2rem;
+    color: ${colors.grey1};
+  }
+  img {
+    width: 15vw;
+    height: 15vw;
+    margin-bottom: 1rem;
+  }
 `;

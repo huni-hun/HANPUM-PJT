@@ -13,7 +13,6 @@ import java.util.Date;
 @AllArgsConstructor
 public class GroupPostReqDto {
     private String title;
-    private String groupImg;
     private String description;
     private int recruitmentCount;
     private Date recruitmentPeriod;

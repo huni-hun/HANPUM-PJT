@@ -36,41 +36,34 @@ export default function Router() {
   return (
     <BrowserRouter>
       <Routes>
-        {isAuthEnticated ? (
-          <>
-            <Route path="/" element={<MainPage />} />
-            <Route path="/schedule/main" element={<ScheduleMainPage />} />
-            <Route path="/schedule/addSchedule" element={<AddSchedulePage />} />
+        {/* {isAuthEnticated ? ( */}
+        <>
+          <Route path="/" element={<MainPage />} />
+          <Route path="/schedule/main" element={<ScheduleMainPage />} />
+          <Route path="/schedule/addSchedule" element={<AddSchedulePage />} />
 
-            <Route path="/route/list" element={<RouteList />} />
-            <Route
-              path="/route/detail/:routeid"
-              element={<RouteDetailPage />}
-            />
-            <Route path="/route/addMain" element={<RouteAddMainPage />} />
-            <Route path="/route/addDetail" element={<RouteAddDetailPage />} />
-            <Route path="/route/add" element={<RouteAddPlacePage />} />
-            <Route path="route/search" element={<SearchPlacePage />} />
-            <Route
-              path="route/add/complete"
-              element={<RouteAddCompletePage />}
-            />
-            <Route path="route/list/more" element={<RoteListMorePage />} />
-            <Route path="route/list/search" element={<RouteListSearchPage />} />
 
-            <Route path="/meet" element={<MeetPage />} />
-            <Route path="/meet/:id" element={<MeetDetailPage />} />
+          <Route path="/route/list" element={<RouteList />} />
+          <Route path="/route/detail/:routeid" element={<RouteDetailPage />} />
+          <Route path="/route/addMain" element={<RouteAddMainPage />} />
+          <Route path="/route/addDetail" element={<RouteAddDetailPage />} />
+          <Route path="/route/add" element={<RouteAddPlacePage />} />
+          <Route path="route/search" element={<SearchPlacePage />} />
+          <Route path="route/add/complete" element={<RouteAddCompletePage />} />
 
-            <Route path="*" element={<Navigate to="/" />} />
-          </>
-        ) : (
+          <Route path="/meet" element={<MeetPage />} />
+          <Route path="/meet/:id" element={<MeetDetailPage />} />
+
+          <Route path="*" element={<Navigate to="/" />} />
+        </>
+        {/* ) : (
           <>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/find/:account" element={<FindPage />} />
             <Route path="*" element={<Navigate to="/login" />} />
           </>
-        )}
+        )} */}
       </Routes>
     </BrowserRouter>
   );

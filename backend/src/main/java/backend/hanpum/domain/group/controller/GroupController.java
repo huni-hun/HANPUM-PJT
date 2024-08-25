@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Group 컨트롤러", description = "Group Controller API")
 @RestController
@@ -26,8 +27,9 @@ public class GroupController {
     @Operation(summary = "모임 생성", description = "모임 생성 API")
     @PostMapping
     public ResponseEntity<?> groupPost(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                       @RequestBody @Valid GroupPostReqDto groupPostReqDto) {
-        GroupPostResDto groupPostResDto = groupService.createGroup(userDetails.getMember().getMemberId(), groupPostReqDto);
+                                       @RequestPart(required = false) MultipartFile multipartFile,
+                                       @RequestPart @Valid GroupPostReqDto groupPostReqDto) {
+        GroupPostResDto groupPostResDto = groupService.createGroup(userDetails.getMember().getMemberId(), multipartFile, groupPostReqDto);
         return response.success(ResponseCode.GROUP_CREATED_SUCCESS, groupPostResDto);
     }
 
@@ -109,5 +111,13 @@ public class GroupController {
         boolean isLike = groupService.likeGroup(userDetails.getMember().getMemberId(), groupId);
         if (isLike) return response.success(ResponseCode.GROUP_LIKE_SUCCESS);
         else return response.success(ResponseCode.GROUP_UNLIKE_SUCCESS);
+    }
+
+    @Operation(summary = "모임 탈퇴", description = "모임 탈퇴 API")
+    @DeleteMapping("/{groupId}/quit")
+    public ResponseEntity<?> quitGroup(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                       @PathVariable Long groupId) {
+        groupService.quitJoinGroup(userDetails.getMember().getMemberId(), groupId);
+        return response.success(ResponseCode.GROUP_QUIT_SUCCESS);
     }
 }
