@@ -1,18 +1,12 @@
 import { useState } from 'react';
 import * as S from '../../components/Style/Schedule/SchduleMainPage.styled';
 import * as R from '@/components/Style/Route/RouteDetailPage.styled';
-import Button from '../../components/common/Button/Button';
+
 import Header from '@/components/common/Header/Header';
-import MeetInfo from '@/components/Meet/MeetInfo';
-import MeetSchedule from '@/components/Meet/MeetSchedule';
-import MajorTour from '@/components/Meet/MajorTour';
-import Member from '@/components/Meet/Member';
-import DummyImg from '../../assets/img/mountain.jpg';
-import { colors } from '@/styles/colorPalette';
+
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
-import { RouteDetailDayProps, RouteDetailProps } from '@/models/route';
+
 import Icon from '@/components/common/Icon/Icon';
 import Feed from '@/components/Style/Common/Feed';
 import FeedInfo from '@/components/Style/Common/FeedInfo';
@@ -23,21 +17,58 @@ import MeetMember from '@/components/Schedule/MeetMember';
 import memberImg from '../../assets/img/memberImg.svg';
 import SchduleCard from '@/components/Schedule/SchduleCard';
 import scheduleBackgroundImg from '../../assets/img/scheduleBackground.png';
+import goyuMY from '../../assets/img/goyuMY.png';
+import { SchduleCardProps } from '@/models/schdule';
+import BottomTab from '@/components/common/BottomTab/BottomTab';
 
 // import PlusIcon from '../../PlusIcon.svg';
 
 function ScheduleMainPage() {
   const BtnClick = () => {};
   const navigate = useNavigate();
-
-  const [routeData, setRouteData] = useState<RouteDetailProps>(null!);
   const [isSelected, setIsSelected] = useState<String>('Mine');
-  const [dayData, setDayData] = useState<RouteDetailDayProps[]>([]);
-  const [totalDistance, setTotalDistance] = useState<number>(0);
+  const [cardData, setCardData] = useState<SchduleCardProps>({
+    backGroundImg: '',
+    scheduleTitle: '',
+    departure: '',
+    arrival: '',
+    startDate: '',
+    endDate: '',
+    tripDay: '',
+  });
+
+  /** 내일정 - card 컴포넌트 'n박 nd일' 계산 */
+  const calculateTripDay = (startDate: string, endDate: string): string => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    const diffTime = Math.abs(end.getTime() - start.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    const nights = diffDays - 1;
+    return `${nights}박 ${diffDays}일`;
+  };
+
+  /** 내일정 - card 컴포넌트 'd-day' 계산 */
+  const calculateDDay = (startDate: string): string => {
+    const today = new Date();
+    const start = new Date(startDate);
+
+    const diffTime = start.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    return diffDays > 0
+      ? `D-${diffDays}`
+      : diffDays === 0
+        ? 'D-Day'
+        : `D+${Math.abs(diffDays)}`;
+  };
 
   /** feed 더미 데이터 */
   /** === useState (routeData) */
   const dummtFeedData = {
+    routeFeedImg: goyuMY,
+    routeUserImg: memberImg,
     routeName: '코스 이름(태종대 전망대)',
     routeContent: '이 코스는 초보자에게 적합합니다.',
   };
@@ -63,24 +94,67 @@ function ScheduleMainPage() {
 
   /** 내일정 */
 
-  // const dummyCardData = {
-  //   backgroundImg: [
-  //     scheduleBackgroundImg,
-  //     scheduleBackgroundImg,
-  //     scheduleBackgroundImg,
-  //   ],
-  //   scheduleTitle: ['김영우', '장효령', '심채운'],
+  const startDate = '2024-08-22';
+  const endDate = '2024-08-25';
 
-  // };
-  // const backgroundImageString = dummyCardData.backgroundImg
-  //   .map((img) => `url(${img})`)
-  //   .join(', ');
+  const dummyCardData = [
+    {
+      backgroundImg: scheduleBackgroundImg,
+      scheduleTitle: '여행 일정 1',
+      departure: '서울',
+      arrival: '부산',
+      startDate: '2024.08.22(수)',
+      endDate: '2024.08.25(일)',
+      tripDay: calculateTripDay(startDate, endDate),
+      dDay: calculateDDay(startDate),
+    },
+    {
+      backgroundImg: scheduleBackgroundImg,
+      scheduleTitle: '여행 일정 1',
+      departure: '서울',
+      arrival: '부산',
+      startDate: '2024.08.22(수)',
+      endDate: '2024.08.25(일)',
+      tripDay: calculateTripDay(startDate, endDate),
+      dDay: calculateDDay(startDate),
+    },
+    {
+      backgroundImg: scheduleBackgroundImg,
+      scheduleTitle: '여행 일정 1',
+      departure: '서울',
+      arrival: '부산',
+      startDate: '2024.08.22(수)',
+      endDate: '2024.08.25(일)',
+      tripDay: calculateTripDay(startDate, endDate),
+      dDay: calculateDDay(startDate),
+    },
+  ];
 
   /** 모임일정 */
   const dummyMemberData = {
     memberCount: 3,
+
+    members: [
+      {
+        memberImg: memberImg,
+        memberName: '김영우',
+      },
+      {
+        memberImg: memberImg,
+        memberName: '장효령',
+      },
+      {
+        memberImg: memberImg,
+        memberName: '심채운',
+      },
+    ],
+    /** 배열로 받을 때 (컴포넌트 타입 변경 필요) 
     memberImgs: [memberImg, memberImg, memberImg],
-    memberNames: ['김영우', '장효령', '심채운'],
+    memberNames: ['김영우', '장효령', '심채운'],*/
+  };
+
+  const clickCard = () => {
+    navigate('/schedule/detail/mine');
   };
 
   return (
@@ -152,15 +226,15 @@ function ScheduleMainPage() {
             {/* 지도 및 하위 컴포넌트 container */}
             <R.RouteDetailInfoContainer>
               {/* <RouteDetailInfo
-          selected={selected}
-          selectedDay={selectedDay}
-          latitude={latitude}
-          longitude={longitude}
-          dayData={dayData}
-          attractions={attractions}
-          setLoading={setLoading}
-          setSelectedDay={setSelectedDay}
-        /> */}
+                selected={selected}
+                selectedDay={selectedDay}
+                latitude={latitude}
+                longitude={longitude}
+                dayData={dayData}
+                attractions={attractions}
+                setLoading={setLoading}
+                setSelectedDay={setSelectedDay}
+              /> */}
             </R.RouteDetailInfoContainer>
           </R.Overflow>
         </R.Main>
@@ -170,12 +244,20 @@ function ScheduleMainPage() {
       {isSelected === 'Mine' && (
         <R.Main>
           <R.Overflow>
-            {/* <SchduleCard
-              backGroundImg={backgroundImageString}
-              scheduleTitle="여행 일정"
-              departure="서울"
-              arrival="부산"
-            /> */}
+            {dummyCardData.map((data, index) => (
+              <SchduleCard
+                key={index}
+                backGroundImg={data.backgroundImg}
+                scheduleTitle={data.scheduleTitle}
+                departure={data.departure}
+                arrival={data.arrival}
+                startDate={data.startDate}
+                endDate={data.endDate}
+                tripDay={data.tripDay}
+                dDay={data.dDay}
+                onClick={clickCard}
+              />
+            ))}
           </R.Overflow>
         </R.Main>
       )}
@@ -185,7 +267,7 @@ function ScheduleMainPage() {
         <R.Main>
           <R.Overflow>
             <R.RouteInfoContainer>
-              <Feed routeData={dummtFeedData} />
+              <Feed routeData={dummtFeedData} isUserContainer />
               <FeedInfo
                 feedInfoTitle="일정 코스"
                 departuresPlace={dummyFeedInfoData.departuresPlace}
@@ -213,13 +295,13 @@ function ScheduleMainPage() {
             <S.ScheduleMainContainer>
               <MeetMember
                 memberCount={dummyMemberData.memberCount}
-                memberImgs={dummyMemberData.memberImgs}
-                memberNames={dummyMemberData.memberNames}
+                members={dummyMemberData.members}
               />
             </S.ScheduleMainContainer>
           </R.Overflow>
         </R.Main>
       )}
+      {/* <BottomTab /> */}
     </ScheduleMainPageContainer>
   );
 }

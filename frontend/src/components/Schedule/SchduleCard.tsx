@@ -8,12 +8,33 @@ const SchduleCard = ({
   scheduleTitle,
   departure,
   arrival,
+  startDate,
+  endDate,
+  tripDay,
+  dDay,
+  onClick,
 }: SchduleCardProps) => {
   return (
-    <S.CardContainder>
-      <S.CardWarp backGroundImg={backGroundImg}>{scheduleTitle}</S.CardWarp>
+    <S.CardContainder onClick={onClick}>
+      <S.CardWarp backGroundImg={backGroundImg}>
+        <S.CardDateWrap>
+          <S.CardDDay>{dDay}</S.CardDDay>
+          <S.CardScheduleDate>
+            <p>
+              {startDate} - {endDate}
+            </p>
+          </S.CardScheduleDate>
+        </S.CardDateWrap>
+        <S.CardInfo>
+          <span>{scheduleTitle}</span>
+
+          <p>
+            {departure} - {arrival}
+          </p>
+        </S.CardInfo>
+        <S.CardDdayBadge>{tripDay}</S.CardDdayBadge>
+      </S.CardWarp>
     </S.CardContainder>
   );
 };
-
 export default SchduleCard;

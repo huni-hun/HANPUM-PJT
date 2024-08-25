@@ -5,6 +5,8 @@ import MainPage from '../pages/Main/MainPage';
 /** 일정 */
 import ScheduleMainPage from '../pages/Schedule/ScheduleMainPage';
 import AddSchedulePage from '../pages/Schedule/AddSchedulePage';
+import DetailMineSchedulePage from '../pages/Schedule/DetailMineSchedulePage';
+import SuccessAddSchedulePage from './Schedule/SuccessAddSchedulePage';
 
 /** 경로 */
 import RouteList from '../pages/Route/RouteList';
@@ -25,26 +27,27 @@ import MeetDetailPage from '../pages/Meet/MeetDetailPage';
 
 /** 마이페이지 */
 
-/** 커뮤니티 */
-/** 마이페이지 */
-/** 커뮤니티 */
-/** 마이페이지 */
-/** 커뮤니티 */
-/** 마이페이지 */
 export {
   LoginPage,
   MainPage,
+  /** 일정 */
   ScheduleMainPage,
   AddSchedulePage,
+  DetailMineSchedulePage,
+  SuccessAddSchedulePage,
+  /** 경로 */
   RouteList,
   RouteAddPlacePage,
   RouteAddMainPage,
-  MeetPage,
-  MeetDetailPage,
   RouteDetailPage,
   RouteAddDetailPage,
   SearchPlacePage,
   RouteAddCompletePage,
+
+  /** 모임 */
+  MeetPage,
+  MeetDetailPage,
   RoteListMorePage,
   RouteListSearchPage,
+
 };

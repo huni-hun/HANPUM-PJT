@@ -1,11 +1,14 @@
 /** 첫번째 피드같이 생긴 유형 props추가 */
 export interface FeedProps {
   routeData: {
+    routeFeedImg?: string;
+    routeUserImg?: string;
     routeName?: string;
     routeContent?: string;
     routeScore?: number;
     routeComment?: string;
   } | null;
+  isUserContainer?: boolean;
 }
 
 export interface FeedInfoProps {

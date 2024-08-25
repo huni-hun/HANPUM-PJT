@@ -1,6 +1,7 @@
 /** feed 정보 컴포넌트 */
 import React from 'react';
 import * as R from '@/components/Style/Route/RouteDetailPage.styled';
+import * as S from '@/components/Style/Schedule/SchduleMainPage.styled';
 import { FeedInfoProps } from '@/models/route';
 import Icon from '@/components/common/Icon/Icon';
 
@@ -15,6 +16,7 @@ const FeedInfo = ({
 }: FeedInfoProps) => {
   return (
     <R.RouteDateBox>
+      <S.Hr></S.Hr>
       <R.RouteName>{feedInfoTitle}</R.RouteName>
       <R.StartDateBox>
         <R.PlaceBox>
