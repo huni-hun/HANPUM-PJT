@@ -33,15 +33,23 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
         QLikeGroup likeGroup = QLikeGroup.likeGroup;
         QSchedule schedule = QSchedule.schedule;
 
-        OrderSpecifier<?> orderSpecifier = null;
+        OrderSpecifier<?> orderSpecifier = group.groupId.desc();
         for (Sort.Order order : pageable.getSort()) {
             String property = order.getProperty();
             boolean isAscending = order.isAscending();
 
-            if (property.equalsIgnoreCase("likeCount")) {
-                orderSpecifier = isAscending ? group.likeCount.asc() : group.likeCount.desc();
-            } else if (property.equalsIgnoreCase("latest")) {
-                orderSpecifier = isAscending ? group.groupId.asc() : group.groupId.desc();
+            switch (property) {
+                case "likeCount":
+                    orderSpecifier = isAscending ? group.likeCount.asc() : group.likeCount.desc();
+                    break;
+                case "totalDistance":
+                    orderSpecifier = isAscending ? course.totalDistance.asc() : course.totalDistance.desc();
+                    break;
+                case "latest":
+                    orderSpecifier = isAscending ? group.groupId.asc() : group.groupId.desc();
+                    break;
+                default:
+                    break;
             }
         }
 
