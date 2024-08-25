@@ -47,7 +47,7 @@ function RouteListSearchPage() {
             min={0}
             max={300}
             value={sliderValue}
-            onChange={(event, newValue) => {
+            onChange={(event: Event, newValue: number | number[]) => {
               if (typeof newValue === 'number') {
                 setSliderValue(newValue);
               }
@@ -79,7 +79,7 @@ function RouteListSearchPage() {
             min={0}
             max={15}
             value={dateValue}
-            onChange={(event, newValue) => {
+            onChange={(event: Event, newValue: number | number[]) => {
               if (typeof newValue === 'number') {
                 setDateValue(newValue);
               }
