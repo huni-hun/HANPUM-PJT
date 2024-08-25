@@ -9,6 +9,7 @@ function MyPage() {
   return (
     <MyPageContainer>
       <Header purpose="mypage" title={'내프로필'} clickBack={() => {}} />
+
       <div className="profile">
         <div className="profile-img">
           <img src="" alt="" />
