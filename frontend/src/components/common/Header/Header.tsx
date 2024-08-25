@@ -80,7 +80,6 @@ const Header = ({
                 {depart}
               </Text>
             </Flex>
-
             <Flex direction="column" $gap={4}>
               <Text as="div" $bold={true} $typography="t10" color="grey2">
                 도착지

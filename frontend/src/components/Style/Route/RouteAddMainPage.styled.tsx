@@ -341,3 +341,13 @@ export const ButtonBox = styled.div`
   align-items: start;
   justify-content: space-between;
 `;
+
+export const FileSelect = styled.input`
+  display: none;
+`;
+
+export const Img = styled.img`
+  width: 100%;
+  height: 100%;
+  border-radius: 1.2rem;
+`;

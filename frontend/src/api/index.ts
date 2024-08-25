@@ -2,28 +2,28 @@ import { decodeToken } from '@/utils/util';
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: `http://localhost:8000`,
+  baseURL: `${process.env.REACT_APP_BASEURL}`,
 });
 
-// api.interceptors.request.use((config) => {
-//   try {
-//     const token = localStorage.getItem('token');
+api.interceptors.request.use((config) => {
+  try {
+    const token = localStorage.getItem('token');
 
-//     if (token) {
-//       const tokenObj = decodeToken(JSON.parse(token));
+    if (token) {
+      const tokenObj = decodeToken(JSON.parse(token));
 
-//       // console.log(tokenObj);
+      // console.log(tokenObj);
 
-//       if (tokenObj) {
-//         const { accessToken } = tokenObj;
-//         config.headers.Authorization = `Bearer ${accessToken}`;
-//       }
-//     }
-//   } catch (error) {
-//     console.error('Error parsing token from localStorage:', error);
-//   }
+      if (tokenObj) {
+        const { accessToken } = tokenObj;
+        config.headers.Authorization = `Bearer ${accessToken}`;
+      }
+    }
+  } catch (error) {
+    console.error('Error parsing token from localStorage:', error);
+  }
 
-//   return config;
-// });
+  return config;
+});
 
 export default api;

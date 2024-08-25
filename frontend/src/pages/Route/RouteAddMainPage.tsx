@@ -4,12 +4,17 @@ import Icon from '../../components/common/Icon/Icon';
 import * as R from '../../components/Style/Route/RouteAddMainPage.styled';
 import Input from '../../components/common/Input/Input';
 import Header from '@/components/common/Header/Header';
+import { colors } from '@/styles/colorPalette';
+import { useNavigate } from 'react-router-dom';
 
 function RouteAddMainPage() {
+  const navigator = useNavigate();
+
   const [imgBoxClick, setImgBoxClick] = useState<boolean>(false);
   const [imgReady, setImgReady] = useState<boolean>(false);
   const [explanationBoxClick, setExplanationBoxClick] =
     useState<boolean>(false);
+  const [imgSrc, setImgSrc] = useState<string>('');
   const [explanationReady, setExplanationReady] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [typeBoxClick, setTypeBoxClick] = useState<boolean>(false);
@@ -53,7 +58,11 @@ function RouteAddMainPage() {
               }}
             >
               <R.CardTitle>배경 사진</R.CardTitle>
-              {imgReady && <R.CardCloseImg />}
+              {imgReady && (
+                <R.CardCloseImg>
+                  <R.Img src={imgSrc} />
+                </R.CardCloseImg>
+              )}
             </R.CardClosed>
           ) : (
             <R.ImgCardOpen>
@@ -61,10 +70,34 @@ function RouteAddMainPage() {
               <R.ImgContainer>
                 <R.ImgBox
                   onClick={() => {
-                    setImgReady(true);
+                    document.getElementById('Img')?.click();
                   }}
                 >
-                  <Icon name="IconCameraGrey" size={80} />
+                  {imgSrc === '' ? (
+                    <Icon name="IconCameraGrey" size={80} />
+                  ) : (
+                    <R.Img src={imgSrc} />
+                  )}
+                  <R.FileSelect
+                    id="Img"
+                    onChange={(e) => {
+                      if (e.target.files) {
+                        const file = e.target.files[0];
+                        const reader = new FileReader();
+                        reader.readAsDataURL(file);
+
+                        reader.onload = () => {
+                          if (reader.result !== null) {
+                            setImgSrc(reader.result?.toString());
+                          }
+                        };
+
+                        setImgReady(true);
+                      }
+                    }}
+                    accept="image/*"
+                    type="file"
+                  />
                 </R.ImgBox>
               </R.ImgContainer>
               <R.ImgBtnBox>
@@ -252,9 +285,6 @@ function RouteAddMainPage() {
               </R.TypeBtnBox>
             </R.TypeCardOpen>
           )}
-          {/* <R.CardClosed height={2}>
-            <R.CardTitle>경로 등록</R.CardTitle>
-          </R.CardClosed> */}
         </R.OverFlow>
       </R.MainContainer>
       <R.BottomContainer>
@@ -275,12 +305,20 @@ function RouteAddMainPage() {
             width={25}
             height={6}
             fontColor="ffffff"
-            backgroundColor="#D9D9D9"
+            backgroundColor={
+              typeChecked.length > 0 && imgReady && explanationReady
+                ? colors.main
+                : colors.grey2
+            }
             radius={0.7}
             fontSize={1.6}
             children="다음"
             color="#ffffff"
-            onClick={() => {}}
+            onClick={() => {
+              if (typeChecked.length > 0 && imgReady && explanationReady) {
+                navigator('/route/addDetail');
+              }
+            }}
           />
         </R.ButtonBox>
       </R.BottomContainer>

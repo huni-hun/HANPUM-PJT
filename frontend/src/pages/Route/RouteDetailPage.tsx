@@ -33,7 +33,6 @@ function RouteDetailPage() {
   const [bsType, setBsType] = useState<string>('설정');
   const [reviewType, setReviewType] = useState<string>('최신순');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     if (dayData.length === 0) {
