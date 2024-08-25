@@ -7,7 +7,8 @@ import lombok.Setter;
 @Setter
 public class WeatherResDto {
 
-    String referenceTime;
+    String nowDay;
+    String nowTime;
     String nowTemperature;
     String nowWeather;
 }

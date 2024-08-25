@@ -298,9 +298,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         // ScheduleDayResDto
         List<ScheduleDayResDto> scheduleDayResDtoList = scheduleRepository.getScheduleDayResDtoList(memberId, scheduleId).orElseThrow(ScheduleNotFoundException::new);
 
-        // 날씨 정보
-        WeatherResDto weatherResDto = weatherService.getDayWeather(lat, lon);
-
         // 달성률
         int rate = getScheduleGoalRate(scheduleDayResDtoList);
 
@@ -312,7 +309,6 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .endDate(scheduleTempResDto.getEndDate())
                 .totalDistance(scheduleTempResDto.getTotalDistance())
                 .rate(rate)
-                .weatherResDto(weatherResDto)
                 .scheduleDayResDtoList(scheduleDayResDtoList)
                 .build();
         return result;

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/test")
@@ -24,9 +26,10 @@ public class TestController {
         return ResponseEntity.ok("ok9");
     }
 
-    @GetMapping("/weather")
-    public ResponseEntity<?> weather(@RequestParam double lat, @RequestParam double lon) {
-        WeatherResDto result = weatherService.getDayWeather(lat, lon);
+
+    @GetMapping("/day_weather")
+    public ResponseEntity<?> dayWeather(@RequestParam double lat, @RequestParam double lon) {
+        List<WeatherResDto> result = weatherService.getDayWeather(lat, lon);
         return apiResponse.success(ResponseCode.TEST_SUCCESS, result);
     }
 }
