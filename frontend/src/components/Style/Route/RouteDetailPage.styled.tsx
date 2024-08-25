@@ -259,10 +259,6 @@ export const PointText = styled.p`
   margin-bottom: 0.8rem;
 `;
 
-export const PlaceText2 = styled.p`
-  font-size: 1.4rem;
-`;
-
 export const RouteDateTextBox = styled.div`
   width: 100%;
   height: 25%;
@@ -312,6 +308,7 @@ export const DistanceNumBox = styled.div`
   font-size: 1.2rem;
   font-weight: 600;
 `;
+
 export const PlaceBox = styled.div`
   width: 50%;
   height: 100%;
@@ -479,7 +476,7 @@ export const CircleBox = styled.div`
   height: 80%;
   display: flex;
   flex-direction: row;
-  algin-items: start;
+  align-items: start;
   justify-content: center;
 `;
 
