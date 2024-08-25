@@ -2,6 +2,9 @@ package backend.hanpum.domain.weather.service;
 
 import backend.hanpum.domain.weather.dto.WeatherResDto;
 
+import java.util.List;
+
 public interface WeatherService {
-    WeatherResDto getDayWeather(double nx, double ny);
+
+    List<WeatherResDto> getDayWeather(double lat, double lon);
 }

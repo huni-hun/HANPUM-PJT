@@ -23,6 +23,7 @@ public enum ResponseCode {
     SCHEDULED_DELETED(HttpStatus.OK, "일정이 성공적으로 삭제되었습니다."),
     MEMO_CREATED(HttpStatus.OK, "메모가 성공적으로 생성되었습니다."),
     NEARBY_ATTRACTION_LIST_FETCHED(HttpStatus.OK, "주변 관광지 정보가 조회되었습니다."),
+    WEATHER_LIST_FETCHED(HttpStatus.OK, "날씨정보가 성공적으로 조회되었습니다."),
 
     /* 경로 */
     COURSE_LIST_FETCHED(HttpStatus.OK, "경로 목록이 성공적으로 조회되었습니다."),

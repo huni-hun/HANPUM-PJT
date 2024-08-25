@@ -1,9 +1,11 @@
-package backend.hanpum.domain.test;
+package backend.hanpum.domain.weather;
 
 import backend.hanpum.domain.weather.dto.WeatherResDto;
 import backend.hanpum.domain.weather.service.WeatherService;
 import backend.hanpum.exception.format.code.ApiResponse;
 import backend.hanpum.exception.format.response.ResponseCode;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,23 +15,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
+@Tag(name = "Weather 컨트롤러", description = "Weather Controller API")
 @RequiredArgsConstructor
-@RequestMapping("/api/test")
-public class TestController {
+@RestController
+@RequestMapping("/api/weather")
+public class WeatherController {
 
+    private final ApiResponse response;
     private final WeatherService weatherService;
-    private final ApiResponse apiResponse;
 
+    @Operation(summary = "날씨 조회", description = "현재 시각 이후 날씨 조회")
     @GetMapping
-    ResponseEntity<?> test() {
-        return ResponseEntity.ok("ok9");
-    }
-
-
-    @GetMapping("/day_weather")
-    public ResponseEntity<?> dayWeather(@RequestParam double lat, @RequestParam double lon) {
+    ResponseEntity<?> getDayWeather(@RequestParam double lat,
+                                    @RequestParam double lon) {
         List<WeatherResDto> result = weatherService.getDayWeather(lat, lon);
-        return apiResponse.success(ResponseCode.TEST_SUCCESS, result);
+        return response.success(ResponseCode.WEATHER_LIST_FETCHED, result);
     }
 }
