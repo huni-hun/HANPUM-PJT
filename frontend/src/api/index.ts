@@ -2,7 +2,7 @@ import { decodeToken } from '@/utils/util';
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: `${process.env.REACT_APP_BASEURL}`,
+  baseURL: `http://localhost:8000`,
 });
 
 api.interceptors.request.use((config) => {
