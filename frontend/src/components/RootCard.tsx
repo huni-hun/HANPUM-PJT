@@ -4,8 +4,13 @@ import Text from './common/Text';
 import Flex from './common/Flex';
 import BaseButton from './common/BaseButton';
 import Icon from './common/Icon/Icon';
+import { useNavigate } from 'react-router-dom';
 
 function RootCard() {
+  const navigate = useNavigate();
+  const data = {
+    title: '대한민국 여행',
+  };
   return (
     <S.RootCardContainer>
       <div className="card">
@@ -40,7 +45,12 @@ function RootCard() {
           </div>
         </div>
         <div className="card-bottom">
-          <BaseButton size="large" onClick={() => {}}>
+          <BaseButton
+            size="large"
+            onClick={() => {
+              navigate(`/mypage/review/${1}`);
+            }}
+          >
             리뷰쓰기
           </BaseButton>
         </div>

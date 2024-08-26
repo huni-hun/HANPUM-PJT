@@ -25,8 +25,9 @@ import SignupPage from './Auth/SignupPage';
 import FindPage from './Auth/FindPage';
 import { useEffect, useState } from 'react';
 import useIsAuth from '@/hooks/auth/useIsAuth';
-import MyPage from './Auth/MyPage';
+import MyPage from './My/MyPage';
 import ActivityLayout from '@/components/My/ActivityLayout';
+import ReviewPage from './My/ReviewPage';
 
 export default function Router() {
   const isAuthEnticated = useIsAuth();
@@ -81,6 +82,8 @@ export default function Router() {
 
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/mypage/:active" element={<ActivityLayout />} />
+
+        <Route path="/mypage/review/:course_id" element={<ReviewPage />} />
         {/* <Route path="*" element={<Navigate to="/login" />} /> */}
       </Routes>
     </BrowserRouter>

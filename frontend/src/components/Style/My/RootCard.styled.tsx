@@ -50,10 +50,9 @@ export const RootCardContainer = styled.div`
       }
     }
   }
-  &-bottom {
+  .card-bottom {
     display: flex;
     justify-content: center;
-    /* align-items: center; */
   }
   svg {
     position: absolute;

@@ -60,3 +60,7 @@ export function decodeToken(tokenObj: Token) {
     return byteTokenObj;
   }
 }
+
+export function formatAreaValue(text: string) {
+  return text.replace(/\n/g, '\\n');
+}
