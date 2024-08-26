@@ -80,12 +80,12 @@ const Form = () => {
       onSuccess: (res) => {
         if (res.status === STATUS.success) {
           console.log(res);
-          const { accessToken, refreshToken } = res.data.tokenResDto;
+          const { accessToken } = res.data.tokenResDto;
           toast.success(res.message);
-          const token = encodeToken(
-            accessToken.replace('Bearer', ''),
-            refreshToken.replace('Bearer', ''),
-          );
+
+          const token = encodeToken(accessToken.split('+')[1]);
+
+          console.log('token ::', token);
 
           if (autoLogin) {
             localStorage.setItem('token', JSON.stringify(token));
@@ -147,7 +147,7 @@ const Form = () => {
           hasError={dirty.password && Boolean(validate.password)}
           onBlur={handleBlur}
         />
-        {dirty.password && (
+        {dirty.password && Boolean(validate.password) && (
           <Message
             hasError={dirty.password && Boolean(validate.password)}
             text={dirty.password ? (validate.password as string) : null}
