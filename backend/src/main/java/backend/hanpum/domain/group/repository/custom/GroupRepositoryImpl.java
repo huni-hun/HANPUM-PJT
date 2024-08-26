@@ -9,6 +9,7 @@ import backend.hanpum.domain.group.entity.QGroup;
 import backend.hanpum.domain.group.entity.QGroupMember;
 import backend.hanpum.domain.group.entity.QLikeGroup;
 import backend.hanpum.domain.group.enums.JoinType;
+import backend.hanpum.domain.group.repository.GroupMemberRepository;
 import backend.hanpum.domain.schedule.entity.QSchedule;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
@@ -168,26 +169,42 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
     }
 
     @Override
-    public Optional<GroupDetailGetResDto> findGroupById(Long groupId) {
+    public Optional<GroupDetailGetResDto> findGroupById(Long memberId, Long groupId) {
         QGroup group = QGroup.group;
         QGroupMember groupMember = QGroupMember.groupMember;
+        QCourse course = QCourse.course;
+        QSchedule schedule = QSchedule.schedule;
+        QLikeGroup likeGroup = QLikeGroup.likeGroup;
 
         return Optional.ofNullable(query
                 .select(Projections.constructor(
                         GroupDetailGetResDto.class,
-                        group.title,
-                        group.groupImg,
-                        group.description,
-                        group.likeCount,
-                        groupMember.member.memberId.count().as("recruitedCount"),
-                        group.recruitmentCount,
-                        group.recruitmentPeriod
+                        group.title,                  // 모임 이름
+                        group.groupImg,               // 모임 이미지
+                        group.description,            // 모집글
+                        group.recruitmentStart,       // 모집 시작일
+                        group.recruitmentPeriod,      // 모집 종료일
+                        groupMember.member.memberId.count().as("recruitedCount"), // 현재 모집 인원
+                        group.recruitmentCount,       // 총 모집 인원
+                        group.likeCount,              // 좋아요 수
+                        course.startPoint,            // 출발지
+                        course.endPoint,              // 목적지
+                        course.totalDays,              // 총 일정 기간
+                        JPAExpressions.selectOne()
+                                .from(likeGroup)
+                                .where(likeGroup.member.memberId.eq(memberId)
+                                        .and(likeGroup.group.groupId.eq(group.groupId)))
+                                .exists()
+                                .as("isLike")
                 ))
                 .from(group)
                 .leftJoin(group.groupMemberList, groupMember)
+                .leftJoin(group.schedule, schedule)
+                .leftJoin(schedule.course, course)
                 .where(group.groupId.eq(groupId))
                 .where(groupMember.joinType.ne(JoinType.APPLY))
-                .groupBy(group.groupId)
+                .groupBy(group.groupId, group.title, group.groupImg, group.description, group.recruitmentStart, group.recruitmentPeriod,
+                        course.startPoint, course.endPoint, course.totalDays)
                 .fetchOne());
     }
 }
