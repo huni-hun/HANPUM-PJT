@@ -4,6 +4,7 @@ import backend.hanpum.domain.course.entity.QCourse;
 import backend.hanpum.domain.group.dto.responseDto.GroupDetailGetResDto;
 import backend.hanpum.domain.group.dto.responseDto.GroupListGetResDto;
 import backend.hanpum.domain.group.dto.responseDto.GroupResDto;
+import backend.hanpum.domain.group.dto.responseDto.LikeGroupListGetResDto;
 import backend.hanpum.domain.group.entity.QGroup;
 import backend.hanpum.domain.group.entity.QGroupMember;
 import backend.hanpum.domain.group.entity.QLikeGroup;
@@ -119,6 +120,51 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                 .totalPages(totalPages)
                 .totalElements(totalElements)
                 .build();
+    }
+
+    @Override
+    public LikeGroupListGetResDto findMemberLikeGroupList(Long memberId) {
+        QGroup group = QGroup.group;
+        QGroupMember groupMember = QGroupMember.groupMember;
+        QCourse course = QCourse.course;
+        QLikeGroup likeGroup = QLikeGroup.likeGroup;
+        QSchedule schedule = QSchedule.schedule;
+
+        BooleanBuilder whereClause = new BooleanBuilder();
+        whereClause.and(likeGroup.member.memberId.eq(memberId));
+        whereClause.and(groupMember.joinType.ne(JoinType.APPLY));
+
+        List<GroupResDto> content = query
+                .select(Projections.constructor(
+                        GroupResDto.class,
+                        group.groupId,
+                        group.title,
+                        group.groupImg,
+                        group.likeCount,
+                        groupMember.member.memberId.count().as("recruitedCount"),
+                        group.recruitmentCount,
+                        course.startPoint,
+                        course.endPoint,
+                        course.totalDistance,
+                        course.totalDays,
+                        JPAExpressions.selectOne()
+                                .from(likeGroup)
+                                .where(likeGroup.member.memberId.eq(memberId)
+                                        .and(likeGroup.group.groupId.eq(group.groupId)))
+                                .exists()
+                                .as("isLike")
+                ))
+                .from(group)
+                .join(likeGroup).on(likeGroup.group.groupId.eq(group.groupId))
+                .leftJoin(group.groupMemberList, groupMember)
+                .leftJoin(group.schedule, schedule)
+                .leftJoin(schedule.course, course)
+                .where(whereClause)
+                .groupBy(group.groupId, schedule.course, schedule.course, schedule.course, schedule.course)
+                .orderBy(group.groupId.desc())
+                .fetch();
+
+        return LikeGroupListGetResDto.builder().groupResDtoList(content).build();
     }
 
     @Override

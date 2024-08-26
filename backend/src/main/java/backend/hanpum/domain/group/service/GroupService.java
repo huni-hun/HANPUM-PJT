@@ -23,5 +23,5 @@ public interface GroupService {
     void exileGroupMember(Long memberId, Long groupMemberId);
     boolean likeGroup(Long memberId, Long groupId);
     void quitJoinGroup(Long memberId, Long groupId);
-    GroupListGetResDto getMemberLikeGroupList(Long memberId);
+    LikeGroupListGetResDto getMemberLikeGroupList(Long memberId);
 }
