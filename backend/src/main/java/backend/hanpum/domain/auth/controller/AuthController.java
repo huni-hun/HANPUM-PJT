@@ -94,8 +94,9 @@ public class AuthController {
 
     @Operation(summary = "로그인 아이디 찾기", description = "로그인 아이디 찾기 API")
     @GetMapping("/find-id")
-    public ResponseEntity<?> findLoginId(@RequestBody @Valid FindMemberLoginIdReqDto findMemberLoginIdReqDto) {
-        return response.success(ResponseCode.MEMBER_FETCH_SUCCESS, authService.findMemberLoginId(findMemberLoginIdReqDto));
+    public ResponseEntity<?> findLoginId(@RequestParam String name,
+                                         @RequestParam String email) {
+        return response.success(ResponseCode.MEMBER_FETCH_SUCCESS, authService.findMemberLoginId(name, email));
     }
 
     @Operation(summary = "비밀번호 찾기", description = "비밀번호 찾기 API")

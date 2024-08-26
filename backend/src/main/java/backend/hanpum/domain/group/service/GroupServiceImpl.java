@@ -1,6 +1,7 @@
 package backend.hanpum.domain.group.service;
 
 import backend.hanpum.config.s3.S3ImageService;
+import backend.hanpum.domain.group.dto.requestDto.ApplyPostReqDto;
 import backend.hanpum.domain.group.dto.requestDto.GroupPostReqDto;
 import backend.hanpum.domain.group.dto.responseDto.*;
 import backend.hanpum.domain.group.entity.Group;
@@ -105,7 +106,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional
-    public void applyGroup(Long memberId, Long groupId) {
+    public void applyGroup(Long memberId, Long groupId, ApplyPostReqDto applyPostReqDto) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         if (member.getGroupMember() != null) throw new GroupAlreadyJoinedException();
         Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
@@ -114,6 +115,7 @@ public class GroupServiceImpl implements GroupService {
 
         GroupMember groupMember = GroupMember.builder()
                 .joinType(JoinType.APPLY)
+                .applyPost(applyPostReqDto.getApplyPost())
                 .group(group)
                 .member(member)
                 .build();
@@ -138,7 +140,7 @@ public class GroupServiceImpl implements GroupService {
     public GroupApplyListGetResDto getGroupApplyList(Long memberId, Long groupId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
-        if(member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException(); // 그룹 리더가 아니라는 예외 처리
+        if(member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
         List<GroupApplyResDto> groupApplyList = groupMemberRepositoryCustom.findGroupApplyList(groupId);
         return GroupApplyListGetResDto.builder().groupApplyResList(groupApplyList).build();
     }
@@ -163,9 +165,32 @@ public class GroupServiceImpl implements GroupService {
     public GroupMemberListGetResDto getGroupMemberList(Long memberId, Long groupId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
-        if(member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
+        if(member.getGroupMember().getGroup() != group ||
+                member.getGroupMember().getJoinType() == JoinType.APPLY)  throw new GroupPermissionException();
         List<GroupMemberResDto> groupMemberList = groupMemberRepositoryCustom.findGroupMemberList(groupId);
         return GroupMemberListGetResDto.builder().groupMemberResList(groupMemberList).build();
+    }
+
+    @Override
+    public GroupMemberDetailGetResDto getGroupMemberDetail(Long memberId, Long groupId, Long groupMemberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
+        if (member.getGroupMember().getGroup() != group ||
+                member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
+        GroupMember getGroupMember = groupMemberRepository.findById(groupMemberId).orElseThrow(GroupMemberNotFoundException::new);
+        if (getGroupMember.getGroup() != group) throw new GroupPermissionException();
+        GroupMemberDetailGetResDto groupMemberDetailGetResDto = GroupMemberDetailGetResDto.builder()
+                .memberId(getGroupMember.getMember().getMemberId())
+                .groupMemberId(groupMemberId)
+                .joinType(getGroupMember.getJoinType())
+                .profilePicture(getGroupMember.getMember().getProfilePicture())
+                .nickname(getGroupMember.getMember().getNickname())
+                .name(getGroupMember.getMember().getName())
+                .birthDate(getGroupMember.getMember().getBirthDate())
+                .gender(getGroupMember.getMember().getGender())
+                .applyPost(getGroupMember.getApplyPost())
+                .build();
+        return groupMemberDetailGetResDto;
     }
 
     @Override
@@ -217,19 +242,9 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional(readOnly = true)
-    public GroupListGetResDto getMemberLikeGroupList(Long memberId) {
+    public LikeGroupListGetResDto getMemberLikeGroupList(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
-        List<LikeGroup> likeGroups = member.getLikeGroups();
-        List<GroupResDto> groupResDtoList = likeGroups.stream()
-                .map(likeGroup -> GroupResDto.builder()
-                        .title(likeGroup.getGroup().getTitle())
-                        .groupImg(likeGroup.getGroup().getGroupImg())
-                        .likeCount(likeGroup.getGroup().getLikeCount())
-                        .recruitedCount(groupMemberRepositoryCustom.countGroupMember(likeGroup.getGroup().getGroupId())) // 현재 모집된 인원 수
-                        .recruitmentCount(likeGroup.getGroup().getRecruitmentCount()) // 총 모집 인원 수
-                        .build())
-                .toList();
-        return GroupListGetResDto.builder().groupResDtoList(groupResDtoList).build();
+        return groupRepositoryCustom.findMemberLikeGroupList(memberId);
     }
 
     private GroupJoinStatus getGroupJoinStatus(GroupMember groupMember, Long groupId) {
