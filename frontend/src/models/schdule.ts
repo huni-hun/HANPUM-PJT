@@ -1,6 +1,7 @@
 /** 내일정 - 날씨 컴포넌트 */
 export interface Weather {
   weatherIcon?: string;
+  logcation?: string;
   message?: string;
 }
 
