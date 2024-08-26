@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as S from '../../components/Style/Schedule/AddSchdulePage.styled';
 
 import Header from '@/components/common/Header/Header';
@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import Calendar from '../../components/common/Calendar/RangeCalendar';
 import BaseButton from '@/components/common/BaseButton';
+import RangeCalendar from '../../components/common/Calendar/RangeCalendar';
 
 function AddSchedulePage() {
   const navigate = useNavigate();
@@ -34,14 +35,18 @@ function AddSchedulePage() {
   /** 임시 데이터 */
   const dummyData = {
     date: [
-      { title: '출발일', content: 'data' },
-      { title: '도착일', content: 'data' },
+      { title: '출발일', content: dates.startDate },
+      { title: '도착일', content: dates.endDate },
     ],
     point: [
       { title: '출발지', content: 'data' },
       { title: '도착지', content: 'data' },
     ],
   };
+
+  useEffect(() => {
+    console.log(dates, '날짜들');
+  }, [dates]);
 
   /** 하위 컴포넌트 클릭시 vh 변경되는 이벤트 막기 */
   const handleStopEvent = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -69,9 +74,9 @@ function AddSchedulePage() {
             <div onClick={handleStopEvent}>
               <S.H3>출발일을 선택해주세요.</S.H3>
               <S.DatePicker>
-                <Calendar
-                  startDate={dates.startDate ? new Date(dates.startDate) : null}
-                  endDate={dates.endDate ? new Date(dates.endDate) : null}
+                <RangeCalendar
+                  startDate={dates.startDate}
+                  endDate={dates.endDate}
                   onDateChange={handleDateChange}
                 />
               </S.DatePicker>
