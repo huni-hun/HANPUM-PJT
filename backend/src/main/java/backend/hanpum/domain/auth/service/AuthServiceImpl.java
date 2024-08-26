@@ -176,9 +176,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional(readOnly = true)
-    public FindMemberLoginIdResDto findMemberLoginId(FindMemberLoginIdReqDto findMemberLoginIdReqDto) {
+    public FindMemberLoginIdResDto findMemberLoginId(String name, String email) {
         Member member =
-                memberRepository.findByEmailAndName(findMemberLoginIdReqDto.getEmail(), findMemberLoginIdReqDto.getName())
+                memberRepository.findByEmailAndName(email, name)
                         .orElseThrow(MemberNotFoundException::new);
         return FindMemberLoginIdResDto.builder().loginId(member.getLoginId()).build();
     }
