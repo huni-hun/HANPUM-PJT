@@ -8,10 +8,13 @@ export const CardLongContainer = styled.div`
   border-radius: 20px;
   box-sizing: border-box;
   overflow: hidden;
+  background-color: ${colors.red};
   .card {
-    width: 100%;
+    /* width: 80%; */
     height: 100%;
-    position: re;
+    position: absolute;
+    top: 0;
+    /* transform: translateX(-50px); */
     .info-box {
       position: absolute;
       left: 16px;

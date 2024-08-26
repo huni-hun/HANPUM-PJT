@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import * as S from '../Style/My/MyRoot.styled';
 import BaseButton from '../common/BaseButton';
 
@@ -43,13 +43,31 @@ function MyRoot() {
     },
   ];
 
+  const [swipedCard, setSwipedCard] = useState<number | null>(null);
+
+  const handleSwipe = (id: number) => {
+    setSwipedCard(id);
+  };
+
+  const handleClickOutside = () => {
+    setSwipedCard(null);
+  };
+
   return (
     <S.MyRootContainer>
-      {root.map((item) => (
-        <div className="card-container">
-          <CardLong item={item} hasLock={true} canDelete={true} />
-        </div>
-      ))}
+      <div className="card-container">
+        {root.map((item) => (
+          <CardLong
+            key={item.courseId}
+            item={item}
+            hasLock={true}
+            canDelete={true}
+            isSwiped={swipedCard === item.courseId}
+            onSwipe={handleSwipe}
+            onClickOutside={handleClickOutside}
+          />
+        ))}
+      </div>
     </S.MyRootContainer>
   );
 }

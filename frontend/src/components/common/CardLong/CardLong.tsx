@@ -3,7 +3,7 @@ import image from '../../../assets/img/img1.jpg';
 import Icon from '../Icon/Icon';
 import Text from '../Text';
 import { Root } from '@/models/root';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Flex from '../Flex';
 
 function CardLong({
@@ -11,15 +11,26 @@ function CardLong({
   hasHeart,
   hasLock,
   canDelete,
+  isSwiped,
+  onSwipe,
+  onClickOutside,
 }: {
   item: Root;
   hasHeart?: boolean;
   hasLock?: boolean;
   canDelete?: boolean;
+  isSwiped?: boolean;
+  onSwipe?: (id: number) => void;
+  onClickOutside?: () => void;
 }) {
-  const [translateX, setTranslateX] = useState(0);
+  // const [isSwiped, setIsSwiped] = useState(false);
   const [startX, setStartX] = useState<number | null>(null);
-  const [isSwiped, setIsSwiped] = useState(false);
+  const [canDeleted, setCanDeleted] = useState(false);
+
+  // console.log('isSwiped ::', isSwiped);
+  // console.log('startX ::', startX);
+  // console.log('canDeleted ::', canDeleted);
+  // const [isDeleteConfirmVisible, setIsDeleteConfirmVisible] = useState(false);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setStartX(e.touches[0].clientX);
@@ -27,24 +38,47 @@ function CardLong({
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (startX !== null) {
-      let deltaX = e.touches[0].clientX - startX;
+      const deltaX = e.touches[0].clientX - startX;
       if (deltaX < -58) {
-        deltaX = -58; // deltaX를 -58로 제한
-        setIsSwiped(true);
+        if (onSwipe) {
+          onSwipe(item.courseId);
+        }
+        setCanDeleted(true);
+      } else {
+        setCanDeleted(false);
       }
-      setTranslateX(deltaX);
     }
   };
 
+  // 터치 끝날 때
   const handleTouchEnd = () => {
-    if (translateX < -30) {
-      setIsSwiped(true);
-    } else {
-      setIsSwiped(false);
-    }
-    setTranslateX(0); // 드래그를 놓으면 원래 자리로 돌아감
     setStartX(null);
   };
+
+  // 바깥요소 누르면 다시 늘리기
+  const handleClickOutside = () => {
+    if (onClickOutside) {
+      onClickOutside();
+    }
+  };
+
+  // 삭제 버튼 누르기
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log('삭제 눌림');
+  };
+
+  useEffect(() => {
+    if (isSwiped) {
+      document.addEventListener('click', handleClickOutside);
+    } else {
+      document.removeEventListener('click', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [isSwiped]);
 
   return (
     <S.CardLongContainer>
@@ -53,6 +87,10 @@ function CardLong({
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        style={{
+          width: isSwiped ? 'calc(100% - 58px)' : '100%',
+          transition: 'width 0.3s ease',
+        }}
       >
         <img src={image} alt="" />
         <div className="info-box">
@@ -125,6 +163,7 @@ function CardLong({
           direction="column"
           $align="center"
           $gap="3px"
+          onClick={handleDeleteClick}
           style={{ marginRight: '19px', width: 'auto' }}
         >
           <Icon name="IconDelete" />
