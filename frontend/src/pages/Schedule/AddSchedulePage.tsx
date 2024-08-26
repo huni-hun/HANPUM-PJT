@@ -9,43 +9,26 @@ import BaseButton from '@/components/common/BaseButton';
 
 function AddSchedulePage() {
   const navigate = useNavigate();
-  const BtnClick = () => {
-    /** 일정추가 버튼 -> move addSchedule.tsx */
-  };
+  const BtnClick = () => {};
 
-  const [isSelected, setIsSelected] = useState<String>('Mine');
-
-  /** select box 관련 */
-  const [isOpen, setIsOpen] = useState(false);
-  const selectList = ['Option 1', 'Option 2'];
-  const handleToggle = () => {
-    setIsOpen(!isOpen);
-  };
-  const handleItemClick = (event: React.MouseEvent<HTMLLIElement>) => {
-    console.log(`Item clicked: ${event.currentTarget.textContent}`);
-  };
-  /** 경로 설정 btn 관련 */
-  const [activeButton, setActiveButton] = useState<boolean>(false);
-  /** 날짜 선택 시 vh 늘어나면서 data picker 활성화 */
+  /** 날짜 선택 시 vh 늘어나면서 data picker,map 활성화 */
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const RouteSetBtnClick = () => () => {
-    setActiveButton(!activeButton);
-  };
-
   /** 달력 선택 start, endData 쓸 수 있는거 */
-  const [selectedDates, setSelectedDates] = useState<{
-    startDate: Date | null;
-    endDate: Date | null;
-  }>({ startDate: null, endDate: null });
+  const [dates, setDates] = useState({
+    startDate: '',
+    endDate: '',
+  });
 
-  console.log(selectedDates, '날짜 ?');
-
+  // 날짜가 변경될 때 호출되는 함수
   const handleDateChange = (range: {
-    startDate: Date | null;
-    endDate: Date | null;
+    startDate: string | null;
+    endDate: string | null;
   }) => {
-    setSelectedDates(range);
+    setDates({
+      startDate: range.startDate || '',
+      endDate: range.endDate || '',
+    });
   };
 
   /** 임시 데이터 */
@@ -60,14 +43,12 @@ function AddSchedulePage() {
     ],
   };
 
-  const handleDatePickClick = () => {
-    setIsExpanded((prevState) => !prevState);
-  };
-
+  /** 하위 컴포넌트 클릭시 vh 변경되는 이벤트 막기 */
   const handleStopEvent = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   };
 
+  /** vh 확장시켜주는 핸들러 */
   const handlerExpanded = () => {
     setIsExpanded((prevState) => !prevState);
   };
@@ -81,12 +62,18 @@ function AddSchedulePage() {
       />
 
       <S.SchduleContainer>
-        <S.DateWrap isExpanded={isExpanded} onClick={handleDatePickClick}>
+        {/* 일정 선택 박스 */}
+        <S.DateWrap $isExpanded={isExpanded} onClick={handlerExpanded}>
+          {/* vh 활성화 되었을 때 캘린더 */}
           {isExpanded ? (
             <div onClick={handleStopEvent}>
               <S.H3>출발일을 선택해주세요.</S.H3>
               <S.DatePicker>
-                <Calendar onDateChange={handleDateChange} />
+                <Calendar
+                  startDate={dates.startDate ? new Date(dates.startDate) : null}
+                  endDate={dates.endDate ? new Date(dates.endDate) : null}
+                  onDateChange={handleDateChange}
+                />
               </S.DatePicker>
 
               <BaseButton
@@ -112,7 +99,8 @@ function AddSchedulePage() {
           )}
         </S.DateWrap>
 
-        <S.RouteWrap isExpanded={isExpanded} onClick={handleDatePickClick}>
+        <S.RouteWrap $isExpanded={isExpanded} onClick={handlerExpanded}>
+          {/* 경로선택 박스 */}
           <S.RouteTop>
             <S.H3>경로</S.H3>
             <S.RoutePointWrap>
@@ -128,7 +116,11 @@ function AddSchedulePage() {
             <></>
           ) : (
             <>
-              <S.RouteMapWrap onClick={handleStopEvent} isExpanded={isExpanded}>
+              {/* vh 활성화 되었을 때 지도 */}
+              <S.RouteMapWrap
+                onClick={handleStopEvent}
+                $isExpanded={isExpanded}
+              >
                 <S.RouteMapContent>지도</S.RouteMapContent>
               </S.RouteMapWrap>
             </>

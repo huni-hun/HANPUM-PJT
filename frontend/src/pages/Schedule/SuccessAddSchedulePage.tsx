@@ -1,3 +1,5 @@
+/** 일정 등록 완료 page */
+
 import { useState } from 'react';
 import * as S from '../../components/Style/Schedule/AddSchdulePage.styled';
 import * as A from '../../components/Style/Schedule/SuccessPage.styled';

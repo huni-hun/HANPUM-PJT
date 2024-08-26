@@ -17,16 +17,17 @@ export const SchduleContainer = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-
-export const DateWrap = styled.div<{ isExpanded: boolean }>`
-  height: ${({ isExpanded }) => (isExpanded ? '120vw' : '20vw')};
+export const DateWrap = styled.div<{ $isExpanded?: boolean }>`
+  height: ${({ $isExpanded }) => ($isExpanded ? '120vw' : '20vw')};
   width: 96%;
   background-color: #fff;
   border-radius: 2rem;
-  display: ${({ isExpanded }) => (isExpanded ? 'normal' : 'flex')};
-  align-items: ${({ isExpanded }) => (isExpanded ? 'normal' : 'center')};
+  display: ${({ $isExpanded }) =>
+    $isExpanded ? 'block' : 'flex'}; /* 'normal'은 'block'으로 변경 */
+  align-items: ${({ $isExpanded }) =>
+    $isExpanded ? 'normal' : 'center'}; /* 'normal'은 'flex-start'로 변경 */
   justify-content: space-between;
-  padding: ${({ isExpanded }) => (isExpanded ? '4rem 3rem' : '2rem 3rem')};
+  padding: ${({ $isExpanded }) => ($isExpanded ? '4rem 3rem' : '2rem 3rem')};
   box-shadow: 0rem 1rem 1rem #e1e1e1;
   margin: 0rem 0 3rem 0;
   transition: height 0.5s ease;
@@ -48,8 +49,8 @@ export const DatePicker = styled.div`
   justify-content: space-between;
 `;
 
-export const RouteWrap = styled.div<{ isExpanded: boolean }>`
-  height: ${({ isExpanded }) => (isExpanded ? '30vw' : '100vw')};
+export const RouteWrap = styled.div<{ $isExpanded: boolean }>`
+  height: ${({ $isExpanded }) => ($isExpanded ? '30vw' : '100vw')};
   width: 96%;
   background-color: #fff;
   border-radius: 2rem;
@@ -98,10 +99,10 @@ export const RoutePointContent = styled.div`
   font-size: 1.5rem;
 `;
 
-export const RouteMapWrap = styled.div<{ isExpanded: boolean }>`
+export const RouteMapWrap = styled.div<{ $isExpanded: boolean }>`
   padding-top: 2rem;
   border-top: 1px solid #ccc;
-  height: ${({ isExpanded }) => (isExpanded ? '3vw' : '65vw')};
+  height: ${({ $isExpanded }) => ($isExpanded ? '3vw' : '65vw')};
 `;
 
 export const RouteMapContent = styled.div`

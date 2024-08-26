@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import * as S from '../../components/Style/Schedule/SchduleMainPage.styled';
 import * as R from '@/components/Style/Route/RouteDetailPage.styled';
 
 import Header from '@/components/common/Header/Header';
@@ -7,33 +6,16 @@ import Header from '@/components/common/Header/Header';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-import Icon from '@/components/common/Icon/Icon';
 import Feed from '@/components/Style/Common/Feed';
 import FeedInfo from '@/components/Style/Common/FeedInfo';
-import ProgressSchedule from '@/components/Schedule/ProgressSchedule';
-import WeatherSchedule from '@/components/Schedule/WeatherSchedule';
-import Error from '../../assets/icons/Error.svg';
-import MeetMember from '@/components/Schedule/MeetMember';
 import memberImg from '../../assets/img/memberImg.svg';
-import SchduleCard from '@/components/Schedule/SchduleCard';
+
 import goyuMY from '../../assets/img/goyuMY.png';
 import { SchduleCardProps } from '@/models/schdule';
-
-// import PlusIcon from '../../PlusIcon.svg';
 
 function DetailMineSchedulePage() {
   const BtnClick = () => {};
   const navigate = useNavigate();
-  const [isSelected, setIsSelected] = useState<String>('Mine');
-  const [cardData, setCardData] = useState<SchduleCardProps>({
-    backGroundImg: '',
-    scheduleTitle: '',
-    departure: '',
-    arrival: '',
-    startDate: '',
-    endDate: '',
-    tripDay: '',
-  });
 
   /** feed 더미 데이터 */
   /** === useState (routeData) */
@@ -106,9 +88,4 @@ export default DetailMineSchedulePage;
 const ScheduleMainPageContainer = styled.div`
   width: 100%;
   height: 100%;
-
-  img {
-    width: 100%;
-    height: 29.5rem;
-  }
 `;

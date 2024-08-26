@@ -1,12 +1,16 @@
-/** feed 정보 컴포넌트 */
+/** 내일정 - 진행중 tab 진행상황 + 일정 달성률 */
 import React from 'react';
 import * as R from '@/components/Style/Route/RouteDetailPage.styled';
 import * as S from '@/components/Style/Schedule/SchduleMainPage.styled';
 import { FeedInfoProps } from '@/models/route';
 
 const ProgressSchedule = ({
+  /** n일차 진행상황 */
+  proceessDay,
+  /** 출발, 도착일 */
   departuresPlace,
   arrivalsPlace,
+  /** 현재 거리, 전체 거리 계산 */
   currentDistance,
   totalDistance,
   percentage,
@@ -21,7 +25,7 @@ const ProgressSchedule = ({
   return (
     <>
       <R.RouteDateBox>
-        <R.RouteName>1일차 진행 상황을 확인해보세요.</R.RouteName>
+        <R.RouteName>{proceessDay}일차 진행 상황을 확인해보세요.</R.RouteName>
         <R.StartDateBox>
           <R.PlaceBox>
             <R.PlaceText>
