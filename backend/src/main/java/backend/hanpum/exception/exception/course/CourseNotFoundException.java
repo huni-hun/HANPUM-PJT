@@ -8,6 +8,6 @@ public class CourseNotFoundException extends RuntimeException {
     public final ErrorCode errorCode;
 
     public CourseNotFoundException(){
-        this.errorCode = ErrorCode.COURSE_DETAIL_NOT_FOUND;
+        this.errorCode = ErrorCode.COURSE_NOT_FOUND;
     }
 }
