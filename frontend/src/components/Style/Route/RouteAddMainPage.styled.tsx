@@ -283,11 +283,11 @@ export const BottomContainer = styled.div`
   width: 100vw;
   height: 13vh;
   background-color: #ffffff;
-  border-radius 0.8rem 0.8rem 0 0;  
-  box-shadow: 0 -0.1rem 0.1rem #D9D9D9;
-  display:flex;
+  border-radius: 0.8rem 0.8rem 0 0;
+  box-shadow: 0 -0.1rem 0.1rem #d9d9d9;
+  display: flex;
   justify-content: center;
-  align-items:center;
+  align-items: center;
 `;
 
 export const SwitchBtnBox = styled.div`
