@@ -80,6 +80,21 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    @Transactional
+    public void deleteGroup(Long memberId, Long groupId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
+        if(member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
+        if(group.getGroupMemberList().size() != 1) throw new GroupDeleteFailedException();
+        String groupImg = group.getGroupImg();
+        member.updateGroupMember(null);
+        groupRepository.delete(group);
+        if(groupImg != null) { // 추후 디폴트 이미지 추가 시 변경
+            s3ImageService.deleteImage(groupImg);
+        }
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public GroupListGetResDto getGroupList(Long memberId, String startPoint, String endPoint, Integer maxTotalDays,
                                            Integer maxRecruitmentCount, Pageable pageable) {

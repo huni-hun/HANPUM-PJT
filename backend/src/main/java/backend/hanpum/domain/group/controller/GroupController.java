@@ -35,6 +35,14 @@ public class GroupController {
         return response.success(ResponseCode.GROUP_CREATED_SUCCESS, groupPostResDto);
     }
 
+    @Operation(summary = "모임 삭제", description = "모임 삭제 API")
+    @DeleteMapping("/{groupId}")
+    public ResponseEntity<?> groupPost(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                       @PathVariable Long groupId) {
+        groupService.deleteGroup(userDetails.getMember().getMemberId(), groupId);
+        return response.success(ResponseCode.GROUP_DELETE_SUCCESS);
+    }
+
     @Operation(summary = "모임 리스트 조회", description = "모임 리스트 조회 API")
     @GetMapping
     public ResponseEntity<?> getGroupList(@AuthenticationPrincipal UserDetailsImpl userDetails,
