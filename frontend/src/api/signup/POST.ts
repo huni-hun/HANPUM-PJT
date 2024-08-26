@@ -47,7 +47,7 @@ export async function SignUp(signupReq: SignupRequestValues) {
 
   const updatedRest = { ...rest, password: hashedPassword };
 
-  console.log(updatedRest);
+  // console.log(updatedRest);
 
   const signUpReqDto = new Blob([JSON.stringify(updatedRest)], {
     type: 'application/json',

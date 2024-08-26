@@ -79,6 +79,7 @@ const Form = () => {
     {
       onSuccess: (res) => {
         if (res.status === STATUS.success) {
+          console.log(res);
           const { accessToken, refreshToken } = res.data.tokenResDto;
           toast.success(res.message);
           const token = encodeToken(
