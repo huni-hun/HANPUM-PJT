@@ -24,6 +24,9 @@ public class GroupMember {
     @Enumerated(EnumType.STRING)
     private JoinType joinType;
 
+    @Column(name = "apply_post")
+    private String applyPost;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
     private Group group;

@@ -1,5 +1,6 @@
 package backend.hanpum.domain.group.service;
 
+import backend.hanpum.domain.group.dto.requestDto.ApplyPostReqDto;
 import backend.hanpum.domain.group.dto.requestDto.GroupPostReqDto;
 import backend.hanpum.domain.group.dto.responseDto.*;
 import backend.hanpum.domain.member.entity.Member;
@@ -12,7 +13,7 @@ public interface GroupService {
     GroupListGetResDto getGroupList(Long memberId, String startPoint, String endPoint, Integer maxTotalDays,
                                     Integer maxRecruitmentCount, Pageable pageable);
     GroupDetailGetResDto getGroupDetail(Long memberId, Long groupId);
-    void applyGroup(Long memberId, Long groupId);
+    void applyGroup(Long memberId, Long groupId, ApplyPostReqDto applyPostReqDto);
     void removeApplyGroup(Long memberId, Long groupId);
     GroupApplyListGetResDto getGroupApplyList(Long memberId, Long groupId);
     void acceptGroupApply(Long memberId, Long groupMemberId);

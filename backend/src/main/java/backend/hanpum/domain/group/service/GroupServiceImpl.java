@@ -1,6 +1,7 @@
 package backend.hanpum.domain.group.service;
 
 import backend.hanpum.config.s3.S3ImageService;
+import backend.hanpum.domain.group.dto.requestDto.ApplyPostReqDto;
 import backend.hanpum.domain.group.dto.requestDto.GroupPostReqDto;
 import backend.hanpum.domain.group.dto.responseDto.*;
 import backend.hanpum.domain.group.entity.Group;
@@ -105,7 +106,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional
-    public void applyGroup(Long memberId, Long groupId) {
+    public void applyGroup(Long memberId, Long groupId, ApplyPostReqDto applyPostReqDto) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         if (member.getGroupMember() != null) throw new GroupAlreadyJoinedException();
         Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
@@ -114,6 +115,7 @@ public class GroupServiceImpl implements GroupService {
 
         GroupMember groupMember = GroupMember.builder()
                 .joinType(JoinType.APPLY)
+                .applyPost(applyPostReqDto.getApplyPost())
                 .group(group)
                 .member(member)
                 .build();

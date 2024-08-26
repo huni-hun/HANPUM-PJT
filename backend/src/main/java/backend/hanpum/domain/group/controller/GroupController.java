@@ -1,6 +1,7 @@
 package backend.hanpum.domain.group.controller;
 
 import backend.hanpum.config.jwt.UserDetailsImpl;
+import backend.hanpum.domain.group.dto.requestDto.ApplyPostReqDto;
 import backend.hanpum.domain.group.dto.requestDto.GroupPostReqDto;
 import backend.hanpum.domain.group.dto.responseDto.*;
 import backend.hanpum.domain.group.service.GroupService;
@@ -58,8 +59,9 @@ public class GroupController {
     @Operation(summary = "모임 신청", description = "모임 신청 API")
     @PostMapping("/{groupId}/apply")
     public ResponseEntity<?> applyGroup(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                        @PathVariable Long groupId) {
-        groupService.applyGroup(userDetails.getMember().getMemberId(), groupId);
+                                        @PathVariable Long groupId,
+                                        @RequestBody @Valid ApplyPostReqDto applyPostReqDto) {
+        groupService.applyGroup(userDetails.getMember().getMemberId(), groupId, applyPostReqDto);
         return response.success(ResponseCode.GROUP_APPLY_SUCCESS);
     }
 
