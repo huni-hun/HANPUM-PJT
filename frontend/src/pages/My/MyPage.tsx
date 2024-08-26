@@ -3,12 +3,20 @@ import Text from '@/components/common/Text';
 import Activity from '@/components/My/Activity';
 import Community from '@/components/My/Community';
 import { colors } from '@/styles/colorPalette';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 function MyPage() {
+  const navigate = useNavigate();
   return (
     <MyPageContainer>
-      <Header purpose="mypage" title={'내프로필'} clickBack={() => {}} />
+      <Header
+        purpose="mypage"
+        title={'내프로필'}
+        clickBack={() => {
+          navigate(-1);
+        }}
+      />
 
       <div className="profile">
         <div className="profile-img">

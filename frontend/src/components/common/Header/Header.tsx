@@ -11,9 +11,17 @@ interface HeaderProps {
   arrive?: string;
   depart?: string;
   clickBack: () => void;
+  clickComplete?: (status: boolean) => void;
 }
 
-const Header = ({ purpose, title, arrive, depart, clickBack }: HeaderProps) => {
+const Header = ({
+  purpose,
+  title,
+  arrive,
+  depart,
+  clickBack,
+  clickComplete,
+}: HeaderProps) => {
   const navigate = useNavigate();
   const onClickHandler = (to: string) => {
     navigate(`/${to}`);
@@ -155,7 +163,35 @@ const Header = ({ purpose, title, arrive, depart, clickBack }: HeaderProps) => {
                 // 프로필 편집으로
               }}
             >
-              <Icon name="IconConfig" />
+              <Icon name="IconConfig" onClick={() => navigate('/myprofile')} />
+            </div>
+          </Flex>
+        );
+
+      case 'complete':
+        return (
+          <Flex $align="end" $justify="center">
+            <Icon
+              name="IconBackArrow"
+              className="back-arrow"
+              size={15}
+              onClick={() => {
+                clickBack();
+              }}
+            />
+            <Text as="div" $bold={true} $typography="t20">
+              {title}
+            </Text>
+
+            <div
+              style={{ position: 'absolute', right: 16 }}
+              onClick={() => {
+                // 프로필 편집으로
+              }}
+            >
+              <Text $typography="t16" color="grey2">
+                완료
+              </Text>
             </div>
           </Flex>
         );

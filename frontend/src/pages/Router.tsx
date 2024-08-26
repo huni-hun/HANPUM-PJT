@@ -28,6 +28,7 @@ import useIsAuth from '@/hooks/auth/useIsAuth';
 import MyPage from './My/MyPage';
 import ActivityLayout from '@/components/My/ActivityLayout';
 import ReviewPage from './My/ReviewPage';
+import MyProfilePage from './My/MyProfilePage';
 
 export default function Router() {
   const isAuthEnticated = useIsAuth();
@@ -84,6 +85,7 @@ export default function Router() {
         <Route path="/mypage/:active" element={<ActivityLayout />} />
 
         <Route path="/mypage/review/:course_id" element={<ReviewPage />} />
+        <Route path="/myprofile" element={<MyProfilePage />} />
         {/* <Route path="*" element={<Navigate to="/login" />} /> */}
       </Routes>
     </BrowserRouter>
