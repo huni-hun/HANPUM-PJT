@@ -22,9 +22,12 @@ export async function ChangeNickname(nickname: string) {
 }
 
 // 회원정보 변경
-export async function ChangeUserInfo(signupReq: Partial<SignupRequestValues>) {
+export async function ChangeUserInfo(
+  memberInfoReq: Partial<SignupRequestValues>,
+) {
+  console.log('memberInfoReq::', memberInfoReq);
   const { data } = await api.put('/api/member/info-update', {
-    signupReq,
+    memberInfoReq,
   });
   return data;
 }

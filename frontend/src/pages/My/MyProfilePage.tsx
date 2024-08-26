@@ -1,27 +1,31 @@
 import Header from '@/components/common/Header/Header';
 import Icon from '@/components/common/Icon/Icon';
-import Text from '@/components/common/Text';
 import { colors } from '@/styles/colorPalette';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import img from '../../assets/img/img1.jpg';
 import ProfileItem from '@/components/My/ProfileItem';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { GetUser } from '@/api/mypage/GET';
 import { STATUS } from '@/constants';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
+import { genderKor } from '@/utils/util';
+import { useSetRecoilState } from 'recoil';
+import { userAtom } from '@/atoms/userAtom';
 
 function MyProfilePage() {
   const navigate = useNavigate();
 
-  const { data, error, isLoading } = useQuery(
+  // const setUserInfo = useSetRecoilState(userAtom);
+
+  const { data } = useQuery(
     'getUser', // Query Key
-    () => GetUser(), // API 호출 함수
+    GetUser, // API 호출 함수
     {
       onSuccess: (res) => {
+        console.log('res ::', res.data);
         if (res.status === STATUS.success) {
-          toast.success(res.message);
+          // setUserInfo(res.data);
         } else if (res.status === STATUS.error) {
           toast.error(res.message);
         }
@@ -31,8 +35,6 @@ function MyProfilePage() {
       },
     },
   );
-
-  console.log(data);
 
   return (
     <MyProfilePageContainer>
@@ -44,30 +46,53 @@ function MyProfilePage() {
         }}
       />
 
-      <div className="profile">
-        <div className="profile-prev_img">
-          {/* {previewImage && (
-            <img src={previewImage} alt="프로필 이미지 미리보기" />
-          )} */}
+      {data && (
+        <>
+          <div className="profile">
+            <div className="profile-prev_img">
+              {/* {previewImage && (
+                <img src={previewImage} alt="프로필 이미지 미리보기" />
+              )} */}
 
-          <img src={img} alt="프로필 이미지 미리보기" />
-          <div className="profile-icon_box">
-            {/* <input type="file" accept="image/*" onChange={handleImageChange} /> */}
-            <input type="file" accept="image/*" />
-            <Icon name="IconCamera" size={19} />
+              <img
+                src={data.data.profilePicture}
+                alt="프로필 이미지 미리보기"
+              />
+              <div className="profile-icon_box">
+                {/* <input type="file" accept="image/*" onChange={handleImageChange} /> */}
+                <input type="file" accept="image/*" />
+                <Icon name="IconCamera" size={19} />
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <div className="info-container">
-        <ProfileItem label="닉네임" value="김동산" param="nickname" />
-        <ProfileItem label="이름" value="김한품" param="name" />
-        <ProfileItem label="이메일" value="admin@hanpum.com" param="email" />
-        <ProfileItem label="전화번호" value="010-1234-5678" param="telphone" />
-        <ProfileItem label="생년월일" value="1988년8월18일" param="birth" />
-        <ProfileItem label="성별" value="남성" param="gender" />
-        <ProfileItem label="소셜로그인" value="hanpum@kakao.com" />
-      </div>
+          <div className="info-container">
+            <ProfileItem
+              label="닉네임"
+              value={data.data.nickname}
+              param="nickname"
+            />
+            <ProfileItem label="이름" value={data.data.name} param="name" />
+            <ProfileItem label="이메일" value={data.data.email} param="email" />
+            <ProfileItem
+              label="전화번호"
+              value={data.data.phoneNumber}
+              param="telphone"
+            />
+            <ProfileItem
+              label="생년월일"
+              value={data.data.birthDate}
+              param="birth"
+            />
+            <ProfileItem
+              label="성별"
+              value={genderKor(data.data.gender)}
+              param="gender"
+            />
+            <ProfileItem label="소셜로그인" value="hanpum@kakao.com" />
+          </div>
+        </>
+      )}
     </MyProfilePageContainer>
   );
 }

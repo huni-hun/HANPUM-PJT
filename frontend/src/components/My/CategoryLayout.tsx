@@ -5,8 +5,17 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Flex from '../common/Flex';
 import Text from '../common/Text';
 import { useState } from 'react';
-import TextField from '../common/TextField/TextField';
 import Icon from '../common/Icon/Icon';
+import { SignupRequestValues } from '@/models/signup';
+import { genderEng, telnumberFormat } from '@/utils/util';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { GetUser } from '@/api/mypage/GET';
+import { ChangeUserInfo } from '@/api/mypage/PUT';
+import { STATUS } from '@/constants';
+import { toast } from 'react-toastify';
+import { AxiosError } from 'axios';
+import TextField from '../common/TextField/TextField';
+import BaseButton from '../common/BaseButton';
 
 function CategoryLayout() {
   const param = useParams().category?.split(':')[1];
@@ -34,9 +43,61 @@ function CategoryLayout() {
     }
   };
 
-  const [editValue, setEditValue] = useState('');
+  const { data, isLoading } = useQuery('getUser', GetUser);
 
-  const checkGender = () => {};
+  const [memberInfoReq, setMemberInfoReq] = useState<
+    Partial<SignupRequestValues>
+  >({
+    gender: data?.data.gender,
+    name: data?.data.name,
+    birthDate: data?.data.birthDate,
+    phoneNumber: data?.data.phoneNumber,
+  });
+
+  console.log('memberInfo ::', memberInfoReq.phoneNumber);
+
+  const checkGender = (gender: string) => {
+    setMemberInfoReq((prev) => ({
+      ...prev,
+      gender: genderEng(gender),
+    }));
+  };
+
+  const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setMemberInfoReq((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    if (name === 'phoneNumber') {
+      setMemberInfoReq((prev) => ({
+        ...prev,
+        [name]: telnumberFormat(value), // 입력 값을 포맷팅하여 상태 업데이트
+      }));
+    }
+  };
+
+  const { mutate: changeUserInfo } = useMutation(ChangeUserInfo, {
+    onSuccess: (res) => {
+      console.log('res ::', res);
+      if (res.status === STATUS.success) {
+        toast.success(res.message);
+        navigate('/myprofile');
+      }
+      if (res.status === STATUS.error) {
+        toast.error(res.message);
+      }
+    },
+    onError: (error: AxiosError) => {
+      toast.error(error.message);
+    },
+  });
+
+  if (isLoading) {
+    return <div>로딩중..</div>;
+  }
+
   return (
     <Layout>
       <Header
@@ -45,6 +106,7 @@ function CategoryLayout() {
         clickBack={() => {
           navigate(-1);
         }}
+        complete={() => changeUserInfo(memberInfoReq)}
       />
       {/* {param === 'nickname' && } */}
       <div className="container">
@@ -52,23 +114,61 @@ function CategoryLayout() {
           <>
             <Flex $justify="space-between" $align="center">
               <Text $typography="t16">남성</Text>
-              <div className="check" />
+              <div
+                className={
+                  memberInfoReq.gender === 'MAN' ? 'check checked' : 'check'
+                }
+                onClick={() => checkGender('남성')}
+              />
             </Flex>
             <Flex $justify="space-between" $align="center">
               <Text $typography="t16">여성</Text>
-              <div className="check" />
+              <div
+                className={
+                  memberInfoReq.gender === 'WOMAN' ? 'check checked' : 'check'
+                }
+                onClick={() => checkGender('여성')}
+              />
             </Flex>
             <Flex $justify="space-between" $align="center">
               <Text $typography="t16">기타</Text>
-              <div className="check" />
+              <div
+                className={
+                  memberInfoReq.gender === 'OTHER' ? 'check checked' : 'check'
+                }
+                onClick={() => checkGender('기타')}
+              />
             </Flex>
           </>
         )}
 
         {param === 'name' && (
           <div className="input-box">
-            <input type="text" />
-            <Icon name="IconMyRooteClose" />
+            <input
+              name="name"
+              type="text"
+              value={memberInfoReq.phoneNumber}
+              onChange={onChangeHandler}
+            />
+            <Icon
+              name="IconMyRooteClose"
+              style={{ position: 'absolute', top: '18px', right: '18px' }}
+            />
+          </div>
+        )}
+
+        {param === 'telphone' && (
+          <div className="input-box">
+            <input
+              name="phoneNumber"
+              type="text"
+              value={telnumberFormat(memberInfoReq.phoneNumber)}
+              onChange={onChangeHandler}
+            />
+            <Icon
+              name="IconMyRooteClose"
+              style={{ position: 'absolute', top: '18px', right: '18px' }}
+            />
           </div>
         )}
       </div>
@@ -102,6 +202,24 @@ const Layout = styled.div`
       background-color: ${colors.main};
       margin-right: 16px;
       border: none;
+    }
+
+    .input-box {
+      width: 100%;
+      border: 1px solid ${colors.grey4};
+      height: 4.8rem;
+      border-radius: 7px;
+      position: relative;
+      display: flex;
+      overflow: hidden;
+      input {
+        border: none;
+        outline: none;
+        height: 100%;
+        flex: 1;
+        padding: 0px 40px 0px 12px;
+        box-sizing: border-box;
+      }
     }
   }
 `;

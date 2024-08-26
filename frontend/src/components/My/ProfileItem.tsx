@@ -3,6 +3,8 @@ import * as S from '../Style/My/ProfileItem.styled';
 import kakao from '../../assets/img/kakaoImg.png';
 import Flex from '../common/Flex';
 import { useNavigate } from 'react-router-dom';
+import { Dispatch, SetStateAction } from 'react';
+import { SignupRequestValues } from '@/models/signup';
 
 function ProfileItem({
   label,

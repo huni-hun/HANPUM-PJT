@@ -229,8 +229,6 @@ function ProfileConfig({
     mutate({ ...signupReq });
   };
 
-  // console.log(formValues);
-
   return (
     <S.ProfileConfigContainer>
       {pagenation()}

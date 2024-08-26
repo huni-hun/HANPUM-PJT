@@ -11,7 +11,7 @@ interface HeaderProps {
   arrive?: string;
   depart?: string;
   clickBack: () => void;
-  clickComplete?: (status: boolean) => void;
+  complete?: () => void;
 }
 
 const Header = ({
@@ -20,7 +20,7 @@ const Header = ({
   arrive,
   depart,
   clickBack,
-  clickComplete,
+  complete,
 }: HeaderProps) => {
   const navigate = useNavigate();
   const onClickHandler = (to: string) => {
@@ -183,12 +183,7 @@ const Header = ({
               {title}
             </Text>
 
-            <div
-              style={{ position: 'absolute', right: 16 }}
-              onClick={() => {
-                // 프로필 편집으로
-              }}
-            >
+            <div style={{ position: 'absolute', right: 16 }} onClick={complete}>
               <Text $typography="t16" color="grey2">
                 완료
               </Text>
