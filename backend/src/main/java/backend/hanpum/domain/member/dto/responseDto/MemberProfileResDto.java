@@ -1,6 +1,8 @@
 package backend.hanpum.domain.member.dto.responseDto;
 
+import backend.hanpum.domain.group.enums.JoinType;
 import backend.hanpum.domain.member.enums.Gender;
+import backend.hanpum.domain.member.enums.MemberType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,4 +20,7 @@ public class MemberProfileResDto {
     String phoneNumber;
     Date birthDate;
     Gender gender;
+    String nickname;
+    String profilePicture;
+    MemberType memberType;
 }

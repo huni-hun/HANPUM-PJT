@@ -35,6 +35,9 @@ public class MemberServiceImpl implements MemberService{
                 .phoneNumber(member.getPhoneNumber())
                 .birthDate(member.getBirthDate())
                 .gender(member.getGender())
+                .nickname(member.getNickname())
+                .profilePicture(member.getProfilePicture())
+                .memberType(member.getMemberType())
                 .build();
     }
 
