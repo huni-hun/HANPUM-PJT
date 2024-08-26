@@ -8,18 +8,17 @@ import backend.hanpum.domain.course.enums.CourseTypes;
 import backend.hanpum.domain.course.repository.*;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
+import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.auth.MemberNotFoundException;
 import backend.hanpum.exception.exception.common.JsonBadMappingException;
 import backend.hanpum.exception.exception.common.JsonBadProcessingException;
 import backend.hanpum.exception.exception.common.UriBadSyntaxException;
-import backend.hanpum.exception.exception.course.CourseDayNotFoundException;
-import backend.hanpum.exception.exception.course.CourseListNotFoundException;
-import backend.hanpum.exception.exception.course.CourseNotFoundException;
-import backend.hanpum.exception.exception.course.CourseReviewsNotFoundException;
+import backend.hanpum.exception.exception.course.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.querydsl.core.types.Projections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
@@ -170,8 +169,6 @@ public class CourseServiceImpl implements CourseService {
     }
 
     public static String extractSido(String address) {
-        System.out.println(address);
-
         return SIDO_LIST.stream()
                 .filter(address::contains)
                 .findFirst()
@@ -376,7 +373,7 @@ public class CourseServiceImpl implements CourseService {
         Course course;
         course = courseRepository.findByMember_MemberIdAndCourseId(memberId, courseId).orElseThrow(CourseNotFoundException::new);
         if (course.getBackgroundImg() != null) {
-            // S3 이미지 삭제 로직
+            s3ImageService.deleteImage(course.getBackgroundImg());
         }
         courseRepository.delete(course);
     }
@@ -398,10 +395,10 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Transactional
     public void addInterestCourse(Long courseId, Long memberId) {
-//        Member member = memberRepository.findByMemberId(memberId).orElse(null);
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
         InterestCourse interestCourse = InterestCourse.builder()
-//                .member(member)
+                .member(member)
                 .course(course)
                 .build();
 
@@ -411,7 +408,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Transactional
     public void deleteInterestCourse(Long courseId, Long memberId) {
-        interestCourseRepository.deleteByMember_MemberIdAndCourse_CourseId(courseId, memberId);
+        interestCourseRepository.deleteByMember_MemberIdAndCourse_CourseId(memberId, courseId);
     }
 
     @Override
@@ -442,24 +439,24 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
-    public void writeCourseReview(Long courseId, String content, Double score) {
-//        Review review = reviewRepository.findByCourse_CourseIdAndMember_MemberId(courseId, memberId);
-//        if(review != null) {
-//            // 리뷰 1회 작성 가능?
-//        }
+    public void writeCourseReview(Long courseId, Long memberId, String content, Double score) {
+        Review review = reviewRepository.findByCourse_CourseIdAndMember_MemberId(courseId, memberId);
+        if(review != null) {
+            throw new ReviewAlreadyExistsException();
+        }
 
         Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
-//      Member member = memberRepository.findMemberByLoginId(memberId);
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
 
         Date currentDate = new Date();
-        Review review = Review.builder()
-                .content(content)
-                .score(score)
-                .writeDate(currentDate)
-                .likeCount(0)
-//                .member(member)
-                .course(course)
-                .build();
+        review = Review.builder()
+            .content(content)
+            .score(score)
+            .writeDate(currentDate)
+            .likeCount(0)
+            .member(member)
+            .course(course)
+            .build();
 
         reviewRepository.save(review);
     }
@@ -485,8 +482,8 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
-    public void deleteCourseReview(Long courseId) {
-//        reviewRepository.deleteByCourse_CourseIdAndMember_MemberId(courseId, memberId);
+    public void deleteCourseReview(Long courseId, Long memberId) {
+        reviewRepository.deleteByCourse_CourseIdAndMember_MemberId(courseId, memberId);
     }
 
     @Override
@@ -689,6 +686,41 @@ public class CourseServiceImpl implements CourseService {
         }
 
         return multiWaypointSearchResDtoList;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CourseResDto> getInterestCourseList(Long memberId) {
+        List<InterestCourse> interestCourseList = interestCourseRepository.findByMember_MemberId(memberId);
+        List<CourseResDto> courseResDtoList = new ArrayList<>();
+
+        for(InterestCourse interestCourse : interestCourseList) {
+            Course course = interestCourse.getCourse();
+            if(!course.isOpenState()) continue;
+
+            List<Review> reviews = reviewRepository.findByCourse(course);
+            double scoreAvg = reviews.stream()
+                    .mapToDouble(Review::getScore)
+                    .average()
+                    .orElse(0.0);
+
+            courseResDtoList.add(CourseResDto.builder()
+                    .courseId(course.getCourseId())
+                    .courseName(course.getCourseName())
+                    .backgroundImg(course.getBackgroundImg())
+                    .writeDate(course.getWriteDate())
+                    .startPoint(course.getStartPoint())
+                    .endPoint(course.getEndPoint())
+                    .totalDistance(course.getTotalDistance())
+                    .memberId(course.getMember().getMemberId())
+                            .scoreAvg(scoreAvg)
+                            .totalDays(course.getTotalDays())
+                            .build()
+                    );
+        }
+
+
+        return courseResDtoList;
     }
 
 }
