@@ -8,6 +8,7 @@ import backend.hanpum.domain.group.entity.Group;
 import backend.hanpum.domain.group.entity.GroupMember;
 import backend.hanpum.domain.group.entity.LikeGroup;
 import backend.hanpum.domain.group.enums.GroupJoinStatus;
+import backend.hanpum.domain.group.enums.GroupStatus;
 import backend.hanpum.domain.group.enums.JoinType;
 import backend.hanpum.domain.group.repository.GroupMemberRepository;
 import backend.hanpum.domain.group.repository.GroupRepository;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -57,7 +59,9 @@ public class GroupServiceImpl implements GroupService {
                 .title(groupPostReqDto.getTitle())
                 .description(groupPostReqDto.getDescription())
                 .recruitmentCount(groupPostReqDto.getRecruitmentCount())
+                .recruitmentStart(new Date())
                 .recruitmentPeriod(groupPostReqDto.getRecruitmentPeriod())
+                .groupStatus(GroupStatus.RECRUITING)
                 .build();
 
         GroupMember groupMember = GroupMember.builder()
