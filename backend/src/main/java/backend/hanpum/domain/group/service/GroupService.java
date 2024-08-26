@@ -19,6 +19,7 @@ public interface GroupService {
     void acceptGroupApply(Long memberId, Long groupMemberId);
     void declineGroupApply(Long memberId, Long groupMemberId);
     GroupMemberListGetResDto getGroupMemberList(Long memberId, Long groupId);
+    GroupMemberDetailGetResDto getGroupMemberDetail(Long memberId, Long groupId, Long groupMemberId);
     void exileGroupMember(Long memberId, Long groupMemberId);
     boolean likeGroup(Long memberId, Long groupId);
     void quitJoinGroup(Long memberId, Long groupId);

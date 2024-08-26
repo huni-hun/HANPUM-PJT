@@ -105,6 +105,16 @@ public class GroupController {
         return response.success(ResponseCode.GROUP_MEMBER_LIST_FETCHED, groupMemberListGetResDto);
     }
 
+    @Operation(summary = "모임 멤버 상세 조회", description = "모임 멤버 상세 조회 API")
+    @GetMapping("/{groupId}/member/{groupMemberId}")
+    public ResponseEntity<?> getGroupMemberDetail(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                  @PathVariable Long groupId,
+                                                  @PathVariable Long groupMemberId) {
+        GroupMemberDetailGetResDto groupMemberDetailGetResDto =
+                groupService.getGroupMemberDetail(userDetails.getMember().getMemberId(), groupId, groupMemberId);
+        return response.success(ResponseCode.GROUP_MEMBER_DETAIL_FETCHED, groupMemberDetailGetResDto);
+    }
+
     @Operation(summary = "모임 멤버 추방", description = "모임 멤버 추방 API")
     @DeleteMapping("/member/{groupMemberId}/exile")
     public ResponseEntity<?> exileGroupMember(@AuthenticationPrincipal UserDetailsImpl userDetails,

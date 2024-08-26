@@ -172,6 +172,28 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public GroupMemberDetailGetResDto getGroupMemberDetail(Long memberId, Long groupId, Long groupMemberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
+        if (member.getGroupMember().getGroup() != group ||
+                member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
+        GroupMember getGroupMember = groupMemberRepository.findById(groupMemberId).orElseThrow(GroupMemberNotFoundException::new);
+        if (getGroupMember.getGroup() != group) throw new GroupPermissionException();
+        GroupMemberDetailGetResDto groupMemberDetailGetResDto = GroupMemberDetailGetResDto.builder()
+                .memberId(getGroupMember.getMember().getMemberId())
+                .groupMemberId(groupMemberId)
+                .joinType(getGroupMember.getJoinType())
+                .profilePicture(getGroupMember.getMember().getProfilePicture())
+                .nickname(getGroupMember.getMember().getNickname())
+                .name(getGroupMember.getMember().getName())
+                .birthDate(getGroupMember.getMember().getBirthDate())
+                .gender(getGroupMember.getMember().getGender())
+                .applyPost(getGroupMember.getApplyPost())
+                .build();
+        return groupMemberDetailGetResDto;
+    }
+
+    @Override
     @Transactional
     public void exileGroupMember(Long memberId, Long groupMemberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
