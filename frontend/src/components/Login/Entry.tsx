@@ -8,15 +8,24 @@ import Flex from '../common/Flex';
 
 import * as S from '../Style/Login/Entry.styled';
 import { Dispatch, SetStateAction } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { isInitAtom } from '@/atoms/isAuthEnticatedAtom';
 
 function Entry() {
+  const navigate = useNavigate();
   const setInit = useSetRecoilState(isInitAtom);
+
+  // test btn
+  const testClick = () => {
+    localStorage.setItem('test', 'KAKAO_INCOMPLETE');
+    navigate('/');
+  };
+
   return (
     <S.EntryContainer>
       <img src={logo} alt="logo" className="logo" />
+      <button onClick={testClick}>카카오 테스트</button>
 
       <Flex direction="column" $align="center" $justify="center">
         <Text $bold={true} $typography="t16" style={{ lineHeight: '25px' }}>
@@ -33,8 +42,12 @@ function Entry() {
           <img src={human} alt="" className="human_img" />
           <div className="login_group">
             <div className="kakao_login">
-              <Icon name="IconKakaoLogo" />
-              <span>카카오로 시작하기</span>
+              <Link
+                to={`${process.env.REACT_APP_BASEURL}/oauth2/authorization/kakao`}
+              >
+                <Icon name="IconKakaoLogo" />
+                <Text $typography="t13">카카오로 시작하기</Text>
+              </Link>
             </div>
             <div className="local_login" onClick={() => setInit(false)}>
               일반회원으로 시작하기

@@ -58,6 +58,8 @@ export const GlobalStyle = createGlobalStyle`
   :root {
     --white: ${colors.white};
     --black: ${colors.black};
+    --black2: ${colors.black2};
+    --black3: ${colors.black3};
     --sub: ${colors.sub};
     --main: ${colors.main};
     --line: ${colors.line};
@@ -69,4 +71,5 @@ export const GlobalStyle = createGlobalStyle`
     --grey5 : ${colors.grey5};
     --yellow : ${colors.yellow};
   }
+
 `;

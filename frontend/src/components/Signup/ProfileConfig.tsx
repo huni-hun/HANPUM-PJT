@@ -5,6 +5,7 @@ import TextField from '../common/TextField/TextField';
 import BaseButton from '../common/BaseButton';
 import { useAlert } from '@/hooks/global/useAlert';
 import Calender from './Calender';
+import Cookies from 'js-cookie';
 import {
   Gender,
   SignupRequestValues,
@@ -19,7 +20,7 @@ import {
 } from 'react';
 import { dateFormat, telnumberFormat } from '@/utils/util';
 import { useMutation } from 'react-query';
-import { CheckNickname, SignUp } from '@/api/signup/POST';
+import { CheckNickname, KaKaoLogin, SignUp } from '@/api/signup/POST';
 import { toast } from 'react-toastify';
 import { STATUS } from '@/constants';
 import { AxiosError } from 'axios';
@@ -196,8 +197,9 @@ function ProfileConfig({
 
   const noError = Object.keys(validate).length === 0;
 
-  const { mutate } = useMutation(SignUp, {
+  const { mutate: localLogin } = useMutation(SignUp, {
     onSuccess: (res) => {
+      console.log('res ::', res);
       if (res.status === STATUS.success) {
         toast.success(res.message);
         clickNext();
@@ -211,7 +213,25 @@ function ProfileConfig({
     },
   });
 
-  const submitTemp = () => {
+  const { mutate: kakaoLogin } = useMutation(KaKaoLogin, {
+    onSuccess: (res) => {
+      console.log('res ::', res);
+      if (res.status === STATUS.success) {
+        toast.success(res.message);
+        clickNext();
+      }
+      if (res.status === STATUS.error) {
+        toast.error(res.message);
+      }
+    },
+    onError: (error: AxiosError) => {
+      toast.error(error.message);
+    },
+  });
+
+  console.log(formValues);
+
+  const submitLocal = () => {
     const signupReq: SignupRequestValues = {
       loginId: formValues.loginId || '',
       password: formValues.password || '',
@@ -225,10 +245,21 @@ function ProfileConfig({
       memberType: 'COMMON',
     };
 
-    mutate({ ...signupReq });
+    // console.log(signupReq);
+    localLogin({ ...signupReq });
   };
 
-  // console.log(formValues);
+  // 카카오 로그인
+  const submitKaKao = () => {
+    const signupKaKaoReq: Partial<SignupRequestValues> = {
+      birthDate: formValues.birthDate || '',
+      gender: formValues.gender || '',
+      nickname: formValues.nickname || '',
+      phoneNumber: formValues.phoneNumber || '',
+    };
+
+    kakaoLogin({ ...signupKaKaoReq });
+  };
 
   return (
     <S.ProfileConfigContainer>
@@ -359,7 +390,11 @@ function ProfileConfig({
       <FixedBottomButton
         label="확인"
         onClick={() => {
-          submitTemp();
+          if (Cookies.get('memberType') === 'KAKAO_INCOMPLETE') {
+            submitKaKao();
+          } else {
+            submitLocal();
+          }
         }}
         disabled={!(formValues.sendNickname && noError)}
       />

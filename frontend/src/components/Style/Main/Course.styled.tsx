@@ -2,7 +2,6 @@ import { colors } from '@/styles/colorPalette';
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  background-color: pink;
   margin-top: 16px;
   display: flex;
   border-radius: 17px;

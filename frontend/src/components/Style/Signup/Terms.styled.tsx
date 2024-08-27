@@ -5,7 +5,7 @@ export const TermsContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: start;
-
+  height: 100%;
   padding: 0 16px;
   background-color: ${colors.white};
 
