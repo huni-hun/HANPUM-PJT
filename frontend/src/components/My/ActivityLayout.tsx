@@ -10,7 +10,7 @@ function ActivityLayout() {
   const param = useParams().active?.split(':')[1];
   const navigate = useNavigate();
 
-  console.log(param);
+  // console.log(param);
 
   const returnTitle = (): string => {
     if (param === 'interest') {

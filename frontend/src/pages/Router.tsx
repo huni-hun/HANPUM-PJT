@@ -31,16 +31,16 @@ import {
   MeetRequest,
   RequestManageList,
   MeetAcceptPage,
+  SignupPage,
+  FindPage,
+  MyPage,
+  ActivityLayout,
+  ReviewPage,
+  MyProfilePage,
+  CategoryLayout,
 } from './index'; // index.tsx에서 컴포넌트를 가져옵니다.
-import SignupPage from './Auth/SignupPage';
-import FindPage from './Auth/FindPage';
-import { useEffect, useState } from 'react';
+
 import useIsAuth from '@/hooks/auth/useIsAuth';
-import MyPage from './My/MyPage';
-import ActivityLayout from '@/components/My/ActivityLayout';
-import ReviewPage from './My/ReviewPage';
-import MyProfilePage from './My/MyProfilePage';
-import CategoryLayout from '@/components/My/CategoryLayout';
 
 export default function Router() {
   const isAuthEnticated = useIsAuth();
@@ -48,7 +48,6 @@ export default function Router() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* {isAuthEnticated ? ( */}
         <>
           <Route path="/" element={<MainPage />} />
           {/* 일정 */}
@@ -86,29 +85,18 @@ export default function Router() {
 
           <Route path="*" element={<Navigate to="/" />} />
 
-          <Route path="/meet/:id" element={<MeetDetailPage />} />
-
-          <Route path="*" element={<Navigate to="/" />} />
-
+          {/* 로그인/ 회원가입/ 찾기 */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/find/:account" element={<FindPage />} />
 
+          {/* 마이페이지 */}
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/mypage/:active" element={<ActivityLayout />} />
-
           <Route path="/mypage/review/:course_id" element={<ReviewPage />} />
           <Route path="/myprofile" element={<MyProfilePage />} />
           <Route path="/myprofile/:category" element={<CategoryLayout />} />
         </>
-        {/* ) : (
-     <>
-           <Route path="/login" element={<LoginPage />} />
-         <Route path="/signup" element={<SignupPage />} />
-        <Route path="/find/:account" element={<FindPage />} />
-          <Route path="*" element={<Navigate to="/login" />} />
-       </>
-       )} */}
       </Routes>
     </BrowserRouter>
   );

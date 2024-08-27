@@ -1,13 +1,35 @@
+import { GetUser } from '@/api/mypage/GET';
 import Header from '@/components/common/Header/Header';
 import Text from '@/components/common/Text';
 import Activity from '@/components/My/Activity';
 import Community from '@/components/My/Community';
+import { STATUS } from '@/constants';
 import { colors } from '@/styles/colorPalette';
+import { AxiosError } from 'axios';
+import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
 
 function MyPage() {
   const navigate = useNavigate();
+
+  const { data } = useQuery(
+    'getUser', // Query Key
+    GetUser,
+    {
+      onSuccess: (res) => {
+        console.log('res ::', res.data);
+        if (res.status === STATUS.success) {
+        } else if (res.status === STATUS.error) {
+          toast.error(res.message);
+        }
+      },
+      onError: (error: AxiosError) => {
+        toast.error(error.message);
+      },
+    },
+  );
   return (
     <MyPageContainer>
       <Header
@@ -18,24 +40,34 @@ function MyPage() {
         }}
       />
 
-      <div className="profile">
-        <div className="profile-img">
-          <img src="" alt="" />
-        </div>
-        <div className="profile-info">
-          <Text $typography="t16" $bold={true}>
-            김동산
-          </Text>
-          <Text $typography="t12" color="grey2">
-            프로필 보기
-          </Text>
-        </div>
-      </div>
+      {data && (
+        <>
+          <div className="profile">
+            <div className="profile-img">
+              <img src={data.data.profilePicture} alt="프로필 이미지" />
+            </div>
+            <div className="profile-info">
+              <Text $typography="t16" $bold={true}>
+                {data.data.name}
+              </Text>
+              <Text
+                $typography="t12"
+                color="grey2"
+                onClick={() => {
+                  navigate('/myprofile');
+                }}
+              >
+                프로필 보기
+              </Text>
+            </div>
+          </div>
 
-      <div className="section">
-        <Activity />
-        <Community />
-      </div>
+          <div className="section">
+            <Activity />
+            <Community />
+          </div>
+        </>
+      )}
     </MyPageContainer>
   );
 }

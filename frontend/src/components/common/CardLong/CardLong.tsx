@@ -95,7 +95,7 @@ function CardLong({
         <img src={image} alt="" />
         <div className="info-box">
           <div className="review">
-            <Icon name="IconStar" />
+            {/* <Icon name="IconStar" /> */}
             <Text $typography="t12" color="white">
               3.5
             </Text>

@@ -31,6 +31,13 @@ import MeetAcceptPage from '../pages/Meet/MeetAcceptPage';
 /** 커뮤니티 */
 
 /** 마이페이지 */
+import SignupPage from '@pages/Auth/SignupPage';
+import FindPage from '@pages/Auth/FindPage';
+import MyPage from '@pages/My/MyPage';
+import ActivityLayout from '@components/My/ActivityLayout';
+import ReviewPage from '@pages/My/ReviewPage';
+import MyProfilePage from '@pages/My/MyProfilePage';
+import CategoryLayout from '@components/My/CategoryLayout';
 
 export {
   LoginPage,
@@ -59,4 +66,11 @@ export {
   MemberManageList,
   MeetRequest,
   MeetAcceptPage,
+  SignupPage,
+  FindPage,
+  MyPage,
+  ActivityLayout,
+  ReviewPage,
+  MyProfilePage,
+  CategoryLayout,
 };

@@ -4,37 +4,17 @@ import { colors } from '@/styles/colorPalette';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ProfileItem from '@/components/My/ProfileItem';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 import { GetUser } from '@/api/mypage/GET';
 import { STATUS } from '@/constants';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 import { genderKor } from '@/utils/util';
-import { useSetRecoilState } from 'recoil';
-import { userAtom } from '@/atoms/userAtom';
 
 function MyProfilePage() {
   const navigate = useNavigate();
 
-  // const setUserInfo = useSetRecoilState(userAtom);
-
-  const { data } = useQuery(
-    'getUser', // Query Key
-    GetUser, // API 호출 함수
-    {
-      onSuccess: (res) => {
-        console.log('res ::', res.data);
-        if (res.status === STATUS.success) {
-          // setUserInfo(res.data);
-        } else if (res.status === STATUS.error) {
-          toast.error(res.message);
-        }
-      },
-      onError: (error: AxiosError) => {
-        toast.error(error.message);
-      },
-    },
-  );
+  const { data, isLoading } = useQuery('getUser', GetUser);
 
   return (
     <MyProfilePageContainer>

@@ -5,9 +5,18 @@ import CardLong from '../common/CardLong/CardLong';
 
 function Interest() {
   const [tab, setTab] = useState('경로');
+  const [swipedId, setSwipedId] = useState<number | null>(null);
 
   const setTabvalue = (e: React.MouseEvent<HTMLElement>) => {
     setTab(e.currentTarget.innerText);
+  };
+
+  const handleSwipe = (id: number) => {
+    setSwipedId(id);
+  };
+
+  const handleClickOutside = () => {
+    setSwipedId(null);
   };
 
   const root = [
@@ -87,7 +96,14 @@ function Interest() {
         ) : (
           <div className="card-container">
             {root.map((item) => (
-              <CardLong key={item.courseId} hasHeart={true} item={item} />
+              <CardLong
+                key={item.courseId}
+                hasHeart={true}
+                item={item}
+                isSwiped={swipedId === item.courseId}
+                onSwipe={handleSwipe}
+                onClickOutside={handleClickOutside}
+              />
             ))}
           </div>
         ))}

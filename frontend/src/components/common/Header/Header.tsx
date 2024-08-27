@@ -17,15 +17,23 @@ interface HeaderProps {
   clickOption?: () => void;
 }
 
-const Header = ({ purpose, title, arrive, depart, back,, clickBack, complete,
-  focus,clickOption,}: HeaderProps) => {
+const Header = ({
+  purpose,
+  title,
+  arrive,
+  depart,
+  back,
+  clickBack,
+  complete,
+  focus,
+  clickOption,
+}: HeaderProps) => {
   const navigate = useNavigate();
   const onClickHandler = (to: string) => {
     navigate(`/${to}`);
   };
 
   const path = useLocation().pathname.substring(1);
-  console.log(path);
 
   //  default(알림, user만 있는)
   // title(약관동의, 회원정보 등)
@@ -42,7 +50,14 @@ const Header = ({ purpose, title, arrive, depart, back,, clickBack, complete,
       case 'title':
         return (
           <Flex $align="center" $justify="center">
-            <Icon name="IconBackArrow" className="back-arrow" size={15} />
+            <Icon
+              name="IconBackArrow"
+              className="back-arrow"
+              size={15}
+              onClick={() => {
+                clickBack();
+              }}
+            />
             <Text as="div" $bold={true} $typography="t20">
               {title}
             </Text>
@@ -146,8 +161,56 @@ const Header = ({ purpose, title, arrive, depart, back,, clickBack, complete,
           </Flex>
         );
 
-        case 'back':
-          return <Flex style={{ marginLeft: '2rem' }} $align="start"></Flex>;
+      case 'back':
+        return <Flex style={{ marginLeft: '2rem' }} $align="start"></Flex>;
+
+      case 'mypage':
+        return (
+          <Flex $align="center" $justify="center">
+            <Icon
+              name="IconBackArrow"
+              className="back-arrow"
+              size={15}
+              onClick={() => {
+                console.log('눌림');
+                clickBack();
+              }}
+            />
+            <Text as="div" $bold={true} $typography="t20">
+              {title}
+            </Text>
+
+            <div
+              style={{ position: 'absolute', right: 16 }}
+              onClick={() => navigate('/myprofile')}
+            >
+              <Icon name="IconConfig" />
+            </div>
+          </Flex>
+        );
+
+      case 'complete':
+        return (
+          <Flex $align="end" $justify="center">
+            <Icon
+              name="IconBackArrow"
+              className="back-arrow"
+              size={15}
+              onClick={() => {
+                clickBack();
+              }}
+            />
+            <Text as="div" $bold={true} $typography="t20">
+              {title}
+            </Text>
+
+            <div style={{ position: 'absolute', right: 16 }} onClick={complete}>
+              <Text $typography="t16" color={focus ? 'main' : 'grey2'}>
+                완료
+              </Text>
+            </div>
+          </Flex>
+        );
 
       default:
         return (
