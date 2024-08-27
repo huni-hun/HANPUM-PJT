@@ -12,10 +12,7 @@ import backend.hanpum.domain.group.repository.GroupRepository;
 import backend.hanpum.domain.group.service.GroupService;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
-import backend.hanpum.domain.schedule.dto.requestDto.MemoPostReqDto;
-import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
-import backend.hanpum.domain.schedule.dto.requestDto.ScheduleRunReqDto;
-import backend.hanpum.domain.schedule.dto.requestDto.ScheduleStartReqDto;
+import backend.hanpum.domain.schedule.dto.requestDto.*;
 import backend.hanpum.domain.schedule.dto.responseDto.*;
 import backend.hanpum.domain.schedule.entity.Memo;
 import backend.hanpum.domain.schedule.entity.Schedule;
@@ -344,6 +341,36 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .scheduleDayResDtoList(scheduleDayResDtoList)
                 .build();
         return result;
+    }
+
+    @Override
+    public Long setArriveScheduleWayPoint(ScheduleWayPointReqDto scheduleWayPointReqDto) {
+        Long scheduleWayPointId = scheduleWayPointReqDto.getScheduleWayPointId();
+
+        // 현재 WayPoint 방문처리
+        ScheduleWayPoint scheduleWayPoint = scheduleWayPointRepository.findById(scheduleWayPointId).orElseThrow(ScheduleWayPointNotFoundException::new);
+        scheduleWayPoint.updateVisit(2);
+
+        ScheduleDay scheduleDay = scheduleWayPoint.getScheduleDay();
+        Long scheduleDayId = scheduleDay.getId();
+        List<ScheduleWayPoint> scheduleWayPointList = scheduleDay.getScheduleWayPointList();
+
+        // 0: 진행전, 1: 진행중, 2: 진행완료
+
+        // 다음 경유지를 진행중 상태로 만들기
+        // 다음 WayPoint 찾기 (현재 pointNumber를 기반으로)
+        String currentPoint = scheduleWayPoint.getWaypoint().getPointNumber();
+        int currentPointNumber = Integer.parseInt(currentPoint);
+
+        // 다음 WayPoint 결정
+        for (ScheduleWayPoint wayPoint : scheduleWayPointList) {
+            int pointIndex = Integer.parseInt(wayPoint.getWaypoint().getPointNumber());
+            if (pointIndex == currentPointNumber + 1) { // 다음 WayPoint 찾기
+                wayPoint.updateVisit(1); // 다음 WayPoint 상태를 '진행 중'으로 업데이트
+                break;
+            }
+        }
+        return scheduleDayId;
     }
 
 
