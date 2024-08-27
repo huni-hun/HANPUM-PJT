@@ -114,7 +114,7 @@ public class ScheduleController {
                                                 @RequestParam double lat,
                                                 @RequestParam double lon) {
         Long memberId = userDetails.getMember().getMemberId();
-        ScheduleInProgressResDto result = scheduleService.getRunningSchedule(memberId, lat, lon);
+        ScheduleInProgressResDto result = scheduleService.getRunningSchedule(memberId);
         return response.success(ResponseCode.RUNNING_SCHEDULE_FETCHED, result);
     }
 

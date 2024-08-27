@@ -209,6 +209,9 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule schedule = scheduleRepository.findById(ScheduleId).orElseThrow(ScheduleNotFoundException::new);
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
 
+        Long courseId = schedule.getCourse().getCourseId();
+
+
         /* 접근 권한 확인용 */
         if (!schedule.getMember().equals(member)) {
             throw new MemberInfoInvalidException();
@@ -216,6 +219,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         /**/
 
         scheduleRepository.deleteById(ScheduleId);
+
+        courseService.updateCourseUsageHistory(courseId, memberId, );
     }
 
     @Transactional
@@ -287,7 +292,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Transactional(readOnly = true)
     @Override
-    public ScheduleInProgressResDto getRunningSchedule(Long memberId, double lat, double lon) {
+    public ScheduleInProgressResDto getRunningSchedule(Long memberId) {
 
         // 진행중인 일정 정보 가져오기
         ScheduleTempResDto scheduleTempResDto = scheduleRepository.getScheduleTempResDto(memberId).orElseThrow(ValidScheduleNotFoundException::new);

@@ -38,7 +38,7 @@ public interface ScheduleService {
     void activateSchedules();
 
     // 진행중인 일정 표시
-    ScheduleInProgressResDto getRunningSchedule(Long memberId, double lat, double lon);
+    ScheduleInProgressResDto getRunningSchedule(Long memberId);
 
     // 주변 관광지 정보 가져오기
     List<NearByAttractionResDto> getNearByAttractionList(String OS, int distance, double lat, double lon);
