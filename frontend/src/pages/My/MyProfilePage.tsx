@@ -74,15 +74,16 @@ function MyProfilePage() {
             />
             <ProfileItem label="이름" value={data.data.name} param="name" />
             <ProfileItem label="이메일" value={data.data.email} param="email" />
+            {/* <ProfileItem label="이메일" value={data.data.email} /> */}
             <ProfileItem
               label="전화번호"
               value={data.data.phoneNumber}
-              param="telphone"
+              param="phoneNumber"
             />
             <ProfileItem
               label="생년월일"
               value={data.data.birthDate}
-              param="birth"
+              param="birthDate"
             />
             <ProfileItem
               label="성별"

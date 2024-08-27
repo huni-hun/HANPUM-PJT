@@ -17,6 +17,7 @@ export function dateFormat(date: string | undefined) {
 export function telnumberFormat(telnum: string | undefined) {
   if (telnum) {
     telnum = telnum.replace(/\D/g, '');
+    // console.log(telnum);
 
     if (telnum.length <= 3) {
       return telnum;
