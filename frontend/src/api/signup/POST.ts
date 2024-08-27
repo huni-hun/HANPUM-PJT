@@ -61,6 +61,31 @@ export async function SignUp(signupReq: SignupRequestValues) {
   return data;
 }
 
+// 소셜 로그인
+export async function KaKaoLogin(signupKaKaoReq: Partial<SignupRequestValues>) {
+  const formData = new FormData();
+
+  if (signupKaKaoReq.multipartFile) {
+    const { multipartFile, ...rest } = signupKaKaoReq;
+
+    const updatedRest = { ...rest };
+
+    const signupKaKaoReqDto = new Blob([JSON.stringify(updatedRest)], {
+      type: 'application/json',
+    });
+
+    formData.append('kakaoSignUpCompleteReqDto', signupKaKaoReqDto);
+    formData.append('multipartFile', multipartFile);
+  }
+
+  const { data } = await api.post('/api/auth/complete-signup/kakao', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return data;
+}
+
 // 로그인
 export async function Login(loginId: string, password: string) {
   const { data } = await api.post('/api/auth/login', {
