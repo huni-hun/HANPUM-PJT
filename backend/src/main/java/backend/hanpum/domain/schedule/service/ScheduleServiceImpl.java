@@ -82,7 +82,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 //        String endDate = calculateDate(startDate, daySize);
 
         Schedule schedule = Schedule.builder()
-                .title(schedulePostReqDto.getTitle())
                 .type("private")
                 .startDate(startDate)
 //                .endDate(endDate)
@@ -110,7 +109,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         String startDate = schedulePostReqDto.getStartDate();
 
         Schedule schedule = Schedule.builder()
-                .title(schedulePostReqDto.getTitle())
                 .type("group")
                 .startDate(startDate)
                 .group(group)
