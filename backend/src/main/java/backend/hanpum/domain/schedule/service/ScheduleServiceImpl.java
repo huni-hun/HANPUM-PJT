@@ -207,13 +207,10 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public void deleteSchedule(Long memberId, Long ScheduleId) {
-        Schedule schedule = scheduleRepository.findById(ScheduleId).orElseThrow(ScheduleNotFoundException::new);
+    public void deleteSchedule(Long memberId, Long scheduleId) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(ScheduleNotFoundException::new);
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
-
         Long courseId = schedule.getCourse().getCourseId();
-
-
 
         /* 접근 권한 확인용 */
         if (schedule.getType().equals("private") && !schedule.getMember().equals(member)) {
@@ -226,9 +223,16 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
         /**/
 
-        scheduleRepository.deleteById(ScheduleId);
+        // ScheduleDayResDto
+        List<ScheduleDayResDto> scheduleDayResDtoList = scheduleRepository.getScheduleDayResDtoList(memberId, scheduleId).orElseThrow(ScheduleNotFoundException::new);
 
-        courseService.updateCourseUsageHistory(courseId, memberId, );
+        // 달성률
+        int rate = getScheduleGoalRate(scheduleDayResDtoList);
+
+        courseService.updateCourseUsageHistory(courseId, memberId, (double) rate);
+
+        scheduleRepository.deleteById(scheduleId);
+
     }
 
     @Transactional
@@ -255,12 +259,16 @@ public class ScheduleServiceImpl implements ScheduleService {
     public Long runAndStop(Long memberId, ScheduleRunReqDto scheduleRunReqDto) {
         ScheduleDay scheduleDay = scheduleDayRepository.findById(scheduleRunReqDto.getScheduleDayId()).orElseThrow(ScheduleDayNotFoundException::new);
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        Schedule schedule = scheduleDay.getSchedule();
 
-        /* 접근 권한 확인용 */
-        if (!scheduleDay.getSchedule().getMember().equals(member)) {
+        if (schedule.getType().equals("private") && !schedule.getMember().equals(member)) {
             throw new MemberInfoInvalidException();
+        } else if (schedule.getType().equals("group")) {
+            Long groupId = member.getGroupMember().getGroup().getGroupId();
+            if (!schedule.getGroup().getGroupId().equals(groupId) || member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) {
+                throw new GroupPermissionException();
+            }
         }
-        /* */
 
         scheduleDay.runAndStop();
 
@@ -273,11 +281,23 @@ public class ScheduleServiceImpl implements ScheduleService {
         ScheduleWayPoint scheduleWayPoint = scheduleWayPointRepository.findById(memoPostReqDto.scheduleWayPointId).orElseThrow();
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
 
-        /* 접근 권한 확인용 */
-        if (!scheduleWayPoint.getScheduleDay().getSchedule().getMember().equals(member)) {
-            throw new MemberInfoInvalidException();
-        }
-        /* */
+//        /* 접근 권한 확인용 */
+//        if (!scheduleWayPoint.getScheduleDay().getSchedule().getMember().equals(member)) {
+//            throw new MemberInfoInvalidException();
+//        }
+//        /* */
+
+        /* 모임일정에 메모를 남기는 로직이 되게 애매함
+           모임일정에서 모임에 포함된 모두가 ScheduleWayPoint에 메모를 남길 수 있다고 할때
+           모든 모임의 모든사람들이 그 메모를 공유하게됨
+           그룹장만 메모를 남길 수 있다고 칠때 메모의 의미가 퇴색되는 것 같음
+           (모두가 공유하고 해야하는 내용이면 공지 때려버리지 뭣하러 메모?)
+
+           그렇다고 메모를 위해 모임 Schedule을 모임에 속한 개인만큼 생성하는건 비 효율적
+
+           만약 구현한다면 ScheduleWayPoint, MemberId, MemoId로 구성된 중간 entity를 생성 후
+           자기가 작성한 메모만 볼 수 있게 해야할것같은데 귀찮아서 그렇게 까지 해야하나 싶음
+        */
 
         Memo memo = Memo.builder()
                 .content(memoPostReqDto.getContent())
@@ -435,4 +455,5 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new JsonBadMappingException();
         }
     }
+
 }
