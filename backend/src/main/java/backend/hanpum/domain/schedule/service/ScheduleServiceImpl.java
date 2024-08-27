@@ -386,7 +386,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             int wayPointSize = scheduleWayPointResDtoList.size();
             int wayPointCount = 0;
             for (ScheduleWayPointResDto scheduleWayPointResDto : scheduleWayPointResDtoList) {
-                if (scheduleWayPointResDto.isVisit()) {
+                if (scheduleWayPointResDto.getState() == 0) {
                     wayPointCount++;
                 }
             }
@@ -403,7 +403,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 int wayPointSize = scheduleWayPointResDtoList.size();
                 int wayPointCount = 0;
                 for (ScheduleWayPointResDto scheduleWayPointResDto : scheduleWayPointResDtoList) {
-                    if (scheduleWayPointResDto.isVisit()) {
+                    if (scheduleWayPointResDto.getState() == 0) {
                         wayPointCount++;
                     }
                 }
