@@ -23,7 +23,7 @@ function MainPage() {
   const setSignupStep = useSetRecoilState(signupStepAtom);
 
   useEffect(() => {
-    const testDebug = localStorage.getItem('test');
+    // const testDebug = localStorage.getItem('test');
     const memberType = Cookies.get('memberType');
     const accessToken = Cookies.get('accessToken');
     console.log('memberType ::', memberType);
@@ -34,7 +34,7 @@ function MainPage() {
       localStorage.setItem('token', JSON.stringify(token));
     }
 
-    if (testDebug === 'KAKAO_INCOMPLETE') {
+    if (memberType === 'KAKAO_INCOMPLETE') {
       setSignupStep((prev) => ({
         ...prev,
         currStep: 2,
