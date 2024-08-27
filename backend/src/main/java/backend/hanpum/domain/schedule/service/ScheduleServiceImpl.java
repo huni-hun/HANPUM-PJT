@@ -78,13 +78,12 @@ public class ScheduleServiceImpl implements ScheduleService {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
 
         String startDate = schedulePostReqDto.getStartDate();
-//        int daySize = course.getDate()
-//        String endDate = calculateDate(startDate, daySize);
-
+        int daySize = course.getTotalDays();
+        String endDate = calculateDate(startDate, daySize - 1);     // ex) 10일부터 4박5일이면 14일
         Schedule schedule = Schedule.builder()
                 .type("private")
                 .startDate(startDate)
-//                .endDate(endDate)
+                .endDate(endDate)
                 .member(member)
                 .course(course)
                 .build();
