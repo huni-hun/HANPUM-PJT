@@ -106,10 +106,13 @@ public class ScheduleServiceImpl implements ScheduleService {
         Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
 
         String startDate = schedulePostReqDto.getStartDate();
+        int daySize = course.getTotalDays();
+        String endDate = calculateDate(startDate, daySize - 1);
 
         Schedule schedule = Schedule.builder()
                 .type("group")
                 .startDate(startDate)
+                .endDate(endDate)
                 .group(group)
                 .course(course)
                 .build();
