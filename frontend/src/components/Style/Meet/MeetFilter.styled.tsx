@@ -105,7 +105,7 @@ export const DateBoldText = styled.p`
 
 export const RouteIconBox = styled.div`
   width: 6rem;
-  height: 4rem;
+  height: 2.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -124,4 +124,23 @@ export const FilterBox = styled.div`
   /* padding-bottom: 2rem; */
   margin: auto;
   box-sizing: border-box;
+`;
+
+export const ToggleSliderBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 94vw;
+  margin: auto;
+  padding: 3rem 0 0 0;
+`;
+export const ArrowBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background-color: ${colors.white};
 `;

@@ -70,7 +70,7 @@ export const RouteTop = styled.div`
 
 export const RoutePointWrap = styled.div`
   width: 28vw;
-  height: 8vh;
+  height: 6vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -80,7 +80,7 @@ export const RoutePointWrap = styled.div`
 
 export const RoutePointSection = styled.div`
   height: 100%;
-  width: 24vw;
+  width: 30vw;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -96,10 +96,12 @@ export const RoutePointTitle = styled.div`
 
 export const RoutePointContent = styled.div`
   font-weight: bold;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
+  color: #515151;
 `;
 
 export const RouteMapWrap = styled.div<{ $isExpanded: boolean }>`
+  margin-top: 1rem;
   padding-top: 2rem;
   border-top: 1px solid #ccc;
   height: ${({ $isExpanded }) => ($isExpanded ? '3vw' : '65vw')};

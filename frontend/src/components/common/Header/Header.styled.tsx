@@ -1,7 +1,11 @@
 import styled from 'styled-components';
 import { colors } from '@styles/colorPalette';
 
-export const HeaderWrapper = styled.div`
+interface HeaderWrapperProps {
+  isShadow?: boolean;
+}
+
+export const HeaderWrapper = styled.div<HeaderWrapperProps>`
   height: 6.8rem;
   display: flex;
   align-items: center;
@@ -11,6 +15,8 @@ export const HeaderWrapper = styled.div`
   position: sticky;
   top: 0;
   z-index: 10;
+  box-shadow: ${({ isShadow }) =>
+    isShadow ? '0px 4px 6px rgba(0, 0, 0, 0.1)' : 'none'};
 
   .back-arrow {
     position: absolute;
