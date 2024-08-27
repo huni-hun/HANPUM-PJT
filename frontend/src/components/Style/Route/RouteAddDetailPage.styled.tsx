@@ -89,13 +89,14 @@ export const DatAddCard = styled.div`
 
 export const MapCard = styled.div`
   width: 84vw;
-  height: 65vh;
+  height: 68vh;
   border-radius: 1.2rem;
   background-color: ${colors.white};
   display: flex;
   flex-direction: column;
   padding: 1.6rem 1.6rem 1.6rem 1.6rem;
   box-shadow: 0 0.2rem 0.7rem ${colors.grey1};
+  overflow-y: auto;
 `;
 
 export const MapCardTitle = styled.p`
@@ -127,6 +128,31 @@ export const MapBox = styled.div`
   margin-top: 1.2rem;
 `;
 
+export const PlaceContainer = styled.div`
+  width: 83vw;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const PlaceBox = styled.div`
+  width: 100%;
+  height: 20vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+`;
+
+export const PlaceTypeBox = styled.div`
+  width: 100%;
+  height: 4vh;
+  display: flex;
+  align-items: center;
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 1.6rem;
+`;
+
 export const BottomContainer = styled.div`
   width: 100vw;
   height: 13vh;
@@ -136,6 +162,7 @@ export const BottomContainer = styled.div`
   display:flex;
   justify-content: center;
   align-items:center;
+  z-index:55;
 `;
 
 export const ButtonBox = styled.div`

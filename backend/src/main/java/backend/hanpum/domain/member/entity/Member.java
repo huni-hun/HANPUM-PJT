@@ -90,10 +90,19 @@ public class Member {
         this.nickname = nickname;
     }
 
-    public void updateMemberInfo(String name, Date birthDate, Gender gender, String phoneNumber){
+    public void updateName(String name){
         this.name = name;
+    }
+
+    public void updateBirthDate(Date birthDate){
         this.birthDate = birthDate;
+    }
+
+    public void updateGender(Gender gender){
         this.gender = gender;
+    }
+
+    public void updatePhoneNumber(String phoneNumber){
         this.phoneNumber = phoneNumber;
     }
 

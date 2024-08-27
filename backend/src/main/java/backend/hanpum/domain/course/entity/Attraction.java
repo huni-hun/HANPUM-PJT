@@ -35,15 +35,15 @@ public class Attraction {
     private String address;
 
     @Column(name = "lat")
-    private Float lat;
+    private Double lat;
 
     @Column(name = "lon")
-    private Float lon;
+    private Double lon;
 
     @Column(name = "img")
     private String img;
 
-    public void updateAttraction(String name, String type, String address, float lat, float lon) {
+    public void updateAttraction(String name, String type, String address, Double lat, Double lon) {
         this.name = name;
         this.type = type;
         this.address = address;

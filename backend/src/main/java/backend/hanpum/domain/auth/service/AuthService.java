@@ -18,6 +18,6 @@ public interface AuthService {
     LoginResDto login(LoginReqDto loginReqDto);
     void logout(String accessToken);
     ReissueAccessTokenResDto reissueToken(String accessToken);
-    FindMemberLoginIdResDto findMemberLoginId(FindMemberLoginIdReqDto findMemberPasswordReqDto);
+    FindMemberLoginIdResDto findMemberLoginId(String name, String email);
     void findMemberPassword(FindMemberPasswordReqDto findMemberPasswordReqDto);
 }

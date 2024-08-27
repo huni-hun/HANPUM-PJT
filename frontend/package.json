@@ -3,7 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
     "@mobiscroll/react": "npm:@mobiscroll/react-next-trial@^5.31.2",
+    "@mui/material": "^5.16.7",
+    "@mui/styled-engine-sc": "^6.0.0-alpha.18",
     "@tanstack/react-query": "^5.51.21",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -17,8 +21,8 @@
     "axios": "^1.7.3",
     "babel-plugin-styled-components": "^2.1.4",
     "crypto-js": "^4.2.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.24.1",
     "react-scripts": "5.0.1",
@@ -26,7 +30,7 @@
     "react-toastify": "^10.0.5",
     "recoil": "^0.7.7",
     "save-dev": "^0.0.1-security",
-    "styled-components": "^6.1.11",
+    "styled-components": "^6.1.12",
     "styled-reset": "^4.5.2",
     "swiper": "^9.4.1",
     "typescript": "^4.9.5",
@@ -76,6 +80,7 @@
     "@testing-library/jest-dom": "^6.4.5",
     "@types/react-query": "^1.2.8",
     "@types/styled-components": "^5.1.34",
+    "@types/testing-library__jest-dom": "^6.0.0",
     "craco-alias": "^3.0.1",
     "eslint": "^8.47.0",
     "eslint-config-prettier": "^9.1.0",
@@ -83,5 +88,9 @@
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.33.2",
     "prettier": "^3.3.3"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
   }
 }

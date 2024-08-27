@@ -167,7 +167,7 @@ public class CourseController {
     @Operation(summary = "경로생성 경유지 조회", description = "경로생성 경유지 조회 API")
     @PostMapping("/search/waypoint")
     public ResponseEntity<?> searchWaypoint(@RequestBody SearchWaypointReqDto searchWaypointReqDto) {
-        SearchWaypointResDto searchWaypointResDto = courseService.searchWaypointByKeyword(searchWaypointReqDto.getKeyword());
+        List<SearchWaypointResDto> searchWaypointResDto = courseService.searchWaypointByKeyword(searchWaypointReqDto.getKeyword());
 
         return response.success(ResponseCode.SEARCH_WAYPOINT_RESTAPI_SUCCESS, searchWaypointResDto);
     }

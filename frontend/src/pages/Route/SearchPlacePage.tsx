@@ -1,9 +1,17 @@
+import { PostSearchPlace } from '@/api/route/POST';
 import Icon from '@/components/common/Icon/Icon';
 import * as R from '@/components/Style/Route/SearchPlacePage.styled';
-import { useState } from 'react';
+import { searchPlaceProps } from '@/models/route';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function SearchPlacePage() {
   const [searchText, setSearchText] = useState<string>('');
+  const [searchedPlace, setSearchedPlace] = useState<searchPlaceProps[]>([]);
+  const navigator = useNavigate();
+  useEffect(() => {
+    // console.log(searchedPlace);
+  }, [searchedPlace]);
 
   return (
     <R.Container>
@@ -16,11 +24,54 @@ function SearchPlacePage() {
             onChange={(e) => {
               setSearchText(e.target.value);
             }}
+            onKeyDown={(e) => {
+              // console.log(e);
+              if (e.code === 'Enter') {
+                if (searchText !== '') {
+                  PostSearchPlace(searchText).then((result) => {
+                    if (result.status === 200) {
+                      let arr: searchPlaceProps[] = [];
+                      result.data.data.map((ele: any) => {
+                        let data: searchPlaceProps = {
+                          placeName: ele.placeName,
+                          address: ele.address,
+                          latitude: ele.lat,
+                          longitude: ele.lon,
+                        };
+                        arr.push(data);
+                      });
+
+                      setSearchedPlace(arr);
+                    }
+                  });
+                } else {
+                  setSearchedPlace([]);
+                }
+              }
+            }}
             placeholder="장소 이름, 주소로 검색해보세요."
           />
         </R.InputContainer>
       </R.Header>
-      <R.MainContainer></R.MainContainer>
+      <R.MainContainer>
+        {searchedPlace.map((ele: searchPlaceProps) => (
+          <R.PlaceBox
+            key={ele.address}
+            onClick={() => {
+              navigator('/route/add', {
+                state: {
+                  placeName: ele.placeName,
+                  address: ele.address,
+                  latitude: ele.latitude,
+                  longitude: ele.longitude,
+                },
+              });
+            }}
+          >
+            <R.PlaceText>{ele.placeName}</R.PlaceText>
+          </R.PlaceBox>
+        ))}
+      </R.MainContainer>
     </R.Container>
   );
 }

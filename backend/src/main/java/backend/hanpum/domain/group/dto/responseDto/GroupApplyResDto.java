@@ -14,4 +14,6 @@ public class GroupApplyResDto {
     private Long memberId;
     private Long groupMemberId;
     private JoinType joinType;
+    private String profilePicture;
+    private String nickname;
 }

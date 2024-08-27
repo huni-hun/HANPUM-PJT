@@ -15,13 +15,32 @@ export { ReactComponent as IconArrowWhite } from './ArrowWhite.svg';
 export { ReactComponent as IconBookMarker } from './BookMarker.svg';
 export { ReactComponent as IconMy } from './My.svg';
 export { ReactComponent as IconLeftBlackArrow } from './Arrow.svg';
+export { ReactComponent as IconRouteGreen } from './RouteGreen.svg';
+export { ReactComponent as IconRouteGrey } from './RouteGrey.svg';
+
+export { ReactComponent as IconWhiteStar } from './WhiteStar.svg';
+export { ReactComponent as IconGreyStar } from './GreyStar.svg';
+export { ReactComponent as IconGrenStar } from './GrenStar.svg';
+export { ReactComponent as IconReview } from './Review.svg';
+export { ReactComponent as IconGreyReview } from './GreyReview.svg';
+export { ReactComponent as IconUserBasicImg } from './UserBasicImg.svg';
+export { ReactComponent as IconRouteAddComplete } from './RouteAddComplete.svg';
+export { ReactComponent as IconBookMarkInHeader } from './bookmark_in_header.svg';
+export { ReactComponent as IconOption } from './OptionIcon.svg';
+export { ReactComponent as IconGreenChecked } from './GreenChecked.svg';
+export { ReactComponent as IconLock } from './IconLock.svg';
+export { ReactComponent as IconDelete } from './IconDelete.svg';
+export { ReactComponent as IconRetouch } from './IconRetouch.svg';
+export { ReactComponent as IconClose } from './IconClose.svg';
+export { ReactComponent as IconCameraGrey } from './IconCamera.svg';
 
 // header
 export { ReactComponent as IconUser } from './user.svg';
 export { ReactComponent as IconNotification } from './Notification.svg';
 export { ReactComponent as IconBackArrow } from './BackArrow.svg';
 export { ReactComponent as IconSearch } from './search.svg';
-export { ReactComponent as IconBookMarkInHeader } from './bookmark_in_header.svg';
+export { ReactComponent as IconRouteAdd } from './RouteAddIcon.svg';
+export { ReactComponent as IconArrowBlack } from './ArrowBlack.svg';
 
 // 진행중인 일정
 export { ReactComponent as IconSun } from './sun.svg';
@@ -29,7 +48,6 @@ export { ReactComponent as IconInprogress } from './inprogress.svg';
 
 // 추천 코스
 export { ReactComponent as IconLeftWhiteArrow } from './leftWhiteArrow.svg';
-
 // 모임 추천
 export { ReactComponent as IconMember } from './member.svg';
 export { ReactComponent as IconHeart } from './heart.svg';

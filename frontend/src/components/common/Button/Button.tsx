@@ -9,6 +9,7 @@ interface ButtonProps {
   fontSize?: number;
   children: string;
   color?: string;
+  fontWeight?: string;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
 }
 

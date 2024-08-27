@@ -14,8 +14,8 @@ public class WayPointResDto {
     private String type;
     private String name;
     private String address;
-    private Float lat;
-    private Float lon;
+    private Double lat;
+    private Double lon;
     private String pointNumber;
     private String distance;
     private String duration;

@@ -35,7 +35,9 @@ public class GroupMemberRepositoryImpl implements GroupMemberRepositoryCustom {
                         GroupApplyResDto.class,
                         groupMember.member.memberId,
                         groupMember.groupMemberId,
-                        groupMember.joinType
+                        groupMember.joinType,
+                        groupMember.member.profilePicture,
+                        groupMember.member.nickname
                 ))
                 .from(groupMember)
                 .where(groupMember.group.groupId.eq(groupId)
@@ -51,7 +53,9 @@ public class GroupMemberRepositoryImpl implements GroupMemberRepositoryCustom {
                         GroupMemberResDto.class,
                         groupMember.member.memberId,
                         groupMember.groupMemberId,
-                        groupMember.joinType
+                        groupMember.joinType,
+                        groupMember.member.profilePicture,
+                        groupMember.member.nickname
                 ))
                 .from(groupMember)
                 .where(groupMember.group.groupId.eq(groupId)

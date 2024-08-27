@@ -35,6 +35,9 @@ public class MemberServiceImpl implements MemberService{
                 .phoneNumber(member.getPhoneNumber())
                 .birthDate(member.getBirthDate())
                 .gender(member.getGender())
+                .nickname(member.getNickname())
+                .profilePicture(member.getProfilePicture())
+                .memberType(member.getMemberType())
                 .build();
     }
 
@@ -64,11 +67,18 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     public void updateMemberInfo(Long memberId, UpdateMemberInfoReqDto updateMemberInfoReqDto) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
-        member.updateMemberInfo(
-                updateMemberInfoReqDto.getName(),
-                updateMemberInfoReqDto.getBirthDate(),
-                updateMemberInfoReqDto.getGender(),
-                updateMemberInfoReqDto.getPhoneNumber());
+        if (updateMemberInfoReqDto.getName() != null) {
+            member.updateName(updateMemberInfoReqDto.getName());
+        }
+        if (updateMemberInfoReqDto.getBirthDate() != null) {
+            member.updateBirthDate(updateMemberInfoReqDto.getBirthDate());
+        }
+        if (updateMemberInfoReqDto.getGender() != null) {
+            member.updateGender(updateMemberInfoReqDto.getGender());
+        }
+        if (updateMemberInfoReqDto.getPhoneNumber() != null) {
+            member.updatePhoneNumber(updateMemberInfoReqDto.getPhoneNumber());
+        }
     }
 
     @Override

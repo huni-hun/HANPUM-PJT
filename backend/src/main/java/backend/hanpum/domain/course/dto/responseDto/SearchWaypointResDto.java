@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class SearchWaypointResDto {
     private String placeName;
     private String address;
-    private Float lat;
-    private Float lon;
+    private Double lat;
+    private Double lon;
     private String phone;
 }

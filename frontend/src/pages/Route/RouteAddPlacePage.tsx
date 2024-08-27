@@ -3,44 +3,69 @@ import * as Ra from '../../components/Style/Route/RouteAddPagePlace.styled';
 
 import Button from '../../components/common/Button/Button';
 import Map from '../../components/common/Map/Map';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Header from '@/components/common/Header/Header';
 
 function RouteAddPlacePage() {
+  const location = useLocation();
+  const navigator = useNavigate();
+  const placeInfo = { ...location.state };
+  console.log(placeInfo);
   return (
     <Ra.Container>
-      <Ra.Header>
-        <Ra.HeaderButton>
-          <Icon name="IconBackArrow" size={20} />
-        </Ra.HeaderButton>
-        <Ra.HeaderTitle>대천 해수욕장</Ra.HeaderTitle>
-      </Ra.Header>
+      <Header
+        purpose="result"
+        title={placeInfo.placeName}
+        clickBack={() => {
+          navigator(-1);
+        }}
+      />
       <Ra.MapContainer>
-        <Map latitude={36.3055967} longitude={126.5160485} />
+        <Map latitude={placeInfo.longitude} longitude={placeInfo.latitude} />
       </Ra.MapContainer>
       <Ra.PlaceBottomContainer>
         <Ra.PlaceContainer>
           <Ra.PlaceContent>
-            <Ra.PlaceImg src="" />
+            <Ra.CircleContainer>
+              <Ra.CircleBox>
+                <Ra.CircleBorder>
+                  <Ra.Circle />
+                </Ra.CircleBorder>
+              </Ra.CircleBox>
+            </Ra.CircleContainer>
             <Ra.PlaceTextBox>
               <Ra.PlaceNameBox>
-                <Ra.PlaceName>대천 해수욕장</Ra.PlaceName>
-                <Ra.PlaceType>관광지</Ra.PlaceType>
+                <Ra.PlaceName>{placeInfo.placeName}</Ra.PlaceName>
               </Ra.PlaceNameBox>
               <Ra.PlaceAddressBox>
-                <Ra.PlaceAddress>충남 보령시 신흑동</Ra.PlaceAddress>
+                <Ra.PlaceAddress>{placeInfo.address}</Ra.PlaceAddress>
               </Ra.PlaceAddressBox>
             </Ra.PlaceTextBox>
           </Ra.PlaceContent>
           <Ra.AddBtnContainer>
             <Button
-              width={25}
+              width={35}
+              height={6}
+              fontColor="1A823B"
+              backgroundColor="#ffffff"
+              radius={0.7}
+              fontSize={1.6}
+              children="관광지 추가"
+              color="#1A823B"
+              onClick={() => {}}
+              fontWeight="bold"
+            />
+            <Button
+              width={35}
               height={6}
               fontColor="ffffff"
               backgroundColor="#1A823B"
               radius={0.7}
               fontSize={1.6}
-              children="추가"
+              children="경유지 추가"
               color="#ffffff"
               onClick={() => {}}
+              fontWeight="bold"
             />
           </Ra.AddBtnContainer>
         </Ra.PlaceContainer>

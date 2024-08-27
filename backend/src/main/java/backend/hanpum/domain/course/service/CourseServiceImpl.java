@@ -1,5 +1,6 @@
 package backend.hanpum.domain.course.service;
 
+import backend.hanpum.config.s3.S3ImageService;
 import backend.hanpum.domain.course.dto.requestDto.*;
 import backend.hanpum.domain.course.dto.responseDto.*;
 import backend.hanpum.domain.course.entity.*;
@@ -46,6 +47,13 @@ public class CourseServiceImpl implements CourseService {
     private final AttractionRepository attractionRepository;
     private final WaypointRepository waypointRepository;
     private final CourseUsageHistoryRepository courseUsageHistoryRepository;
+    private final S3ImageService s3ImageService;
+    
+    private static final List<String> SIDO_LIST = Arrays.asList(
+            "서울", "부산", "대구", "인천", "광주",
+            "대전", "울산", "세종특별자치시", "경기", "강원특별자치도",
+            "충북", "충남", "전북특별자치도", "전남", "경북", "경남", "제주특별자치도"
+    );
 
     @Value("${api.serviceKey}")
     private String serviceKey;
@@ -71,17 +79,17 @@ public class CourseServiceImpl implements CourseService {
             }
         }
 
-        String startPoint = makeCourseReqDto.getCourseDayReqDtoList().stream()
+        String startPoint = extractSido(makeCourseReqDto.getCourseDayReqDtoList().stream()
                 .findFirst()
                 .flatMap(courseDayReqDto -> courseDayReqDto.getWayPointReqDtoList().stream().findFirst())
-                .map(WayPointReqDto::getName)
-                .orElse("Unknown");
+                .map(WayPointReqDto::getAddress)
+                .orElse("Unknown"));
 
-        String endPoint = makeCourseReqDto.getCourseDayReqDtoList().stream()
+        String endPoint = extractSido(makeCourseReqDto.getCourseDayReqDtoList().stream()
                 .reduce((first, second) -> second)
                 .flatMap(courseDayReqDto -> courseDayReqDto.getWayPointReqDtoList().stream().reduce((first, second) -> second))
-                .map(WayPointReqDto::getName)
-                .orElse("Unknown");
+                .map(WayPointReqDto::getAddress)
+                .orElse("Unknown"));
         
         Date currentDate = new Date();
         Course course = Course.builder()
@@ -93,9 +101,13 @@ public class CourseServiceImpl implements CourseService {
                 .startPoint(startPoint)
                 .endPoint(endPoint)
                 .totalDistance(allDayDistance)
+                .totalDays(makeCourseReqDto.getCourseDayReqDtoList().size())
                 .member(memberRepository.findById(makeCourseReqDto.getMemberId()).orElseThrow())  // 토큰으로 멤버정보 찾도록. 추후 변경
-                .backgroundImg("TEMP") // S3 미생성. 이미지 업로드 미구현. 추후 변경
                 .build();
+
+        if(!makeCourseReqDto.getBgImage().isEmpty()) {
+            course.updateBackgroundImg(s3ImageService.uploadImage(makeCourseReqDto.getBgImage()));
+        }
         courseRepository.save(course);
 
         for (String courseTypeName : makeCourseReqDto.getCourseTypeList()) {
@@ -157,20 +169,47 @@ public class CourseServiceImpl implements CourseService {
         }
     }
 
+    public static String extractSido(String address) {
+        System.out.println(address);
+
+        return SIDO_LIST.stream()
+                .filter(address::contains)
+                .findFirst()
+                .orElse("필터링 실패");
+    }
+
     @Override
     @Transactional
     public void editCourse(EditCourseReqDto editCourseReqDto) {
         Course course = courseRepository.findById(editCourseReqDto.getCourseId()).orElseThrow(CourseNotFoundException::new);
 
+        String startPoint = extractSido(editCourseReqDto.getCourseDayReqDtoList().stream()
+                .findFirst()
+                .flatMap(courseDayReqDto -> courseDayReqDto.getWayPointReqDtoList().stream().findFirst())
+                .map(WayPointReqDto::getAddress)
+                .orElse("Unknown"));
+
+        String endPoint = extractSido(editCourseReqDto.getCourseDayReqDtoList().stream()
+                .reduce((first, second) -> second)
+                .flatMap(courseDayReqDto -> courseDayReqDto.getWayPointReqDtoList().stream().reduce((first, second) -> second))
+                .map(WayPointReqDto::getAddress)
+                .orElse("Unknown"));
+
         course.updateCourse(
                 editCourseReqDto.getCourseName(),
                 editCourseReqDto.getContent(),
                 editCourseReqDto.isOpenState(),
-                editCourseReqDto.isWriteState()
+                editCourseReqDto.isWriteState(),
+                startPoint,
+                endPoint,
+                editCourseReqDto.getCourseDayReqDtoList().size()
         );
 
         if(editCourseReqDto.getBgImage() != null) {
-            // S3 image update 로직
+            String currentImage = course.getBackgroundImg();
+            String updateImage = s3ImageService.uploadImage(editCourseReqDto.getBgImage());
+            course.updateBackgroundImg(updateImage);
+            s3ImageService.deleteImage(currentImage);
         }
 
         List<CourseType> courseTypeList = courseTypeRepository.findByCourse_courseId(editCourseReqDto.getCourseId());
@@ -525,8 +564,8 @@ public class CourseServiceImpl implements CourseService {
                         .name(item.path("title").asText())
                         .type(item.path("contenttypeid").asText())
                         .address(item.path("addr1").asText())
-                        .lat(Float.parseFloat(item.path("mapx").asText()))
-                        .lon(Float.parseFloat(item.path("mapy").asText()))
+                        .lat(Double.parseDouble(item.path("mapx").asText()))
+                        .lon(Double.parseDouble(item.path("mapy").asText()))
                         .img(item.path("firstimage").asText())
                         .build();
                 attractions.add(attraction);
@@ -537,7 +576,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public SearchWaypointResDto searchWaypointByKeyword(String keyword) {
+    public List<SearchWaypointResDto> searchWaypointByKeyword(String keyword) {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -570,14 +609,19 @@ public class CourseServiceImpl implements CourseService {
             throw new JsonBadProcessingException();
         }
 
-        JsonNode document = root.path("documents").get(0);
-        return SearchWaypointResDto.builder()
-                .placeName(document.path("place_name").asText())
-                .address(document.path("address_name").asText())
-                .lat(Float.parseFloat(document.path("x").asText()))
-                .lon(Float.parseFloat(document.path("y").asText()))
-                .phone("phone")
-                .build();
+        List<SearchWaypointResDto> result = new ArrayList<>();
+        JsonNode documents = root.path("documents");
+        for(JsonNode document : documents) {
+            result.add(SearchWaypointResDto.builder()
+                    .placeName(document.path("place_name").asText())
+                    .address(document.path("address_name").asText())
+                    .lat(Double.parseDouble(document.path("x").asText()))
+                    .lon(Double.parseDouble(document.path("y").asText()))
+                    .phone(document.path("address_name").asText())
+                    .build());
+        }
+
+        return result;
     }
 
     @Override

@@ -1,5 +1,6 @@
 import { styled } from 'styled-components';
 import { useEffect } from 'react';
+import { colors } from '@/styles/colorPalette';
 
 declare global {
   interface Window {
@@ -10,6 +11,7 @@ declare global {
 interface MapProps {
   latitude: number;
   longitude: number;
+  linePath?: any[];
 }
 
 function Map(props: MapProps) {
@@ -24,7 +26,15 @@ function Map(props: MapProps) {
         const options = {
           center: new window.kakao.maps.LatLng(props.latitude, props.longitude),
         };
+        let polyLine = new window.kakao.maps.Polyline({
+          path: props.linePath,
+          strokeWeight: 7,
+          strokeColor: colors.main,
+          strokeOpacity: 0.7,
+          strokeStyle: 'solid',
+        });
         const map = new window.kakao.maps.Map(container, options);
+        polyLine.setMap(map);
       });
     };
     mapScript.addEventListener('load', onLoadKakaoMap);

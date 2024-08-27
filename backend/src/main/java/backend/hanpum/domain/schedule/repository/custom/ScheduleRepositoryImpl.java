@@ -34,29 +34,37 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         return Optional.ofNullable(query.select(
                         Projections.constructor(ScheduleResDto.class,
                                 schedule.id,
+                                schedule.course.backgroundImg,
                                 schedule.title,
                                 schedule.type,
+                                schedule.course.startPoint,
+                                schedule.course.endPoint,
                                 schedule.startDate,
+                                schedule.endDate,
                                 schedule.state
                         )).from(schedule)
-                .where(schedule.member.memberId.eq(memberId))
+                .where(schedule.type.eq("private").and(schedule.member.memberId.eq(memberId)))
                 .fetch());
     }
 
     @Override
-    public Optional<List<ScheduleResDto>> getGroupScheduleByMemberId(Long memberId) {
+    public Optional<ScheduleResDto> getGroupScheduleByMemberId(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         Long groupId = member.getGroupMember().getGroup().getGroupId();
         return Optional.ofNullable(query.select(
                         Projections.constructor(ScheduleResDto.class,
                                 schedule.id,
+                                schedule.course.backgroundImg,
                                 schedule.title,
                                 schedule.type,
+                                schedule.course.startPoint,
+                                schedule.course.endPoint,
                                 schedule.startDate,
+                                schedule.endDate,
                                 schedule.state
                         )).from(schedule)
-                .where(schedule.group.groupId.eq(groupId))
-                .fetch());
+                .where(schedule.type.eq("group").and(schedule.group.groupId.eq(groupId)))
+                .fetchOne());
 
     }
 

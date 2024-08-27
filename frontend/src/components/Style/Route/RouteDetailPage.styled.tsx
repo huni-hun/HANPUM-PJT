@@ -1,4 +1,10 @@
+import { FeedProps } from '@/models/route';
+import { colors } from '@/styles/colorPalette';
 import styled from 'styled-components';
+
+interface StyledProps {
+  backgroundImg?: string;
+}
 
 export const Container = styled.div`
   width: 100vw;
@@ -47,27 +53,134 @@ export const Overflow = styled.div`
 
 export const RouteInfoContainer = styled.div`
   width: 100vw;
-  height: 75vh;
+  height: 80vh;
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 10px;
 `;
 
-export const ImgBox = styled.div`
-  width: 85vw;
-  height: 30vh;
+export const ImgBox = styled.div<StyledProps>`
+  width: 100%;
+  height: 29.3rem;
   background-color: #d9d9d9;
-  border-radius: 1.2rem;
+  background-image: url(${(props) => props.backgroundImg || ''});
+  background-size: cover;
+  background-position: center;
+  position: relative;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+`;
+
+export const UserContainer = styled.div`
+  width: 100%;
+  height: 7.8rem;
+  display: flex;
+  flex-direction: row;
+  border-bottom: 0.1rem solid ${colors.grey2};
+  align-items: center;
+  padding: 1.5rem;
+`;
+
+export const UserImgBox = styled.div`
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  margin-left: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const UserName = styled.p`
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-left: 1.8rem;
 `;
 
 export const RouteNameInfo = styled.div`
   width: 85vw;
-  height: 15vh;
+  height: 20vh;
   display: flex;
   flex-direction: column;
-  border-bottom: 0.1rem solid #d9d9d9;
-  padding: 2.4rem 0 1rem 0;
+  /* border-bottom: 0.1rem solid #d9d9d9; */
+  padding: 2.4rem 0 1rem;
+`;
+
+export const RouteNameInfoContainer = styled.div`
+  width: 100%;
+  height: 70%;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const RouteTypeContainer = styled.div`
+  width: 100%;
+  height: 20%;
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  overflow: auto;
+`;
+
+export const RouteType = styled.div<{ isLong: boolean }>`
+  width: ${(props) => (props ? '7.5rem' : '6.4rem')};
+  height: 2.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10rem;
+  border: 0.1rem solid ${colors.main};
+  color: ${colors.main};
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-right: 0.8rem;
+  flex-shrink: 1;
+`;
+
+export const RouteReviewContainer = styled.div`
+  width: 100%;
+  height: 10%;
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  justify-content: space-between;
+  padding: 0 0.9rem 0 0.9rem;
+`;
+
+export const IconContainer = styled.div`
+  width: 30%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  justify-content: start;
+  color: ${colors.grey2};
+`;
+
+export const IconBox = styled.div`
+  width: 30%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  justify-content: space-around;
+  color: ${colors.grey2};
+`;
+
+export const WriteDateBox = styled.div`
+  width: 20%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  justify-content: center;
+  color: ${colors.grey2};
+  padding: 0 0.9rem 0 0.9rem;
 `;
 
 export const RouteName = styled.p`
@@ -87,6 +200,8 @@ export const RouteDateBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  position: relative;
+  padding-bottom: 2rem;
 `;
 
 export const StartDateBox = styled.div`
@@ -118,12 +233,119 @@ export const DateText = styled.p`
   color: #c9c9c9;
 `;
 
+export const RouteDateTilteBox = styled.div`
+  width: 100%;
+  height: 20%;
+  font-size: 2rem;
+  font-weight: bold;
+  display: flex;
+  align-items: end;
+`;
+
+export const RouteDateInfoBox = styled.div`
+  width: 100%;
+  height: 55%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+`;
+
+export const RoutePlaceInfoBox = styled.div`
+  width: 42%;
+  height: 6.4rem;
+  background-color: ${colors.grey5};
+  display: flex;
+  padding: 0 0 0 2rem;
+  border-radius: 1.2rem;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+`;
+
+export const PointText = styled.p`
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: ${colors.grey1};
+  margin-bottom: 0.8rem;
+`;
+
+export const RouteDateTextBox = styled.div`
+  width: 100%;
+  height: 25%;
+  display: flex;
+  justify-content: end;
+  align-items: start;
+  fons-size: 1.2rem;
+  color: ${colors.grey2};
+`;
+
+export const DateBoldText = styled.p`
+  font-weight: bold;
+  margin-left: 0.5rem;
+`;
+
+export const RouteIconBox = styled.div`
+  width: 6rem;
+  height: 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+export const ArrowBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background-color: ${colors.white};
+`;
+
+export const DistanceNumBox = styled.div`
+  width: 6rem;
+  height: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${colors.main};
+  background-color: ${colors.white};
+  border-radius: 10rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+`;
+
+export const PlaceBox = styled.div`
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+`;
+
+export const PlaceText = styled.p`
+  font-size: 1.2rem;
+  color: #c9c9c9;
+  .bold-text {
+    /* font-size: 1.5rem; */
+    color: #787878;
+  }
+`;
+
 export const DistanceBox = styled.div`
   width: 20%;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  align-items: center;
+  border-left: 0.1rem solid ${colors.grey1};
+  padding: 0 0 0 0.5rem;
 `;
 
 export const DistanceText = styled.p`
@@ -162,6 +384,7 @@ export const ContentBox = styled.div<{ isSelected: boolean }>`
 export const RouteDetailInfoContainer = styled.div`
   width: 100vw;
   height: 52vh;
+  background-color: #ffffff;
 `;
 
 export const DetailHeader = styled.div`
@@ -186,7 +409,7 @@ export const HeaderOverflow = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
-  width: 100%;
+  width: 95%;
   height: 100%;
 `;
 
@@ -217,6 +440,7 @@ export const DetailMain = styled.div`
   height: 45vh;
   display: flex;
   overflow-y: auto;
+  background-color: #ffffff;
 `;
 
 export const DetailMainOverflow = styled.div`
@@ -225,34 +449,37 @@ export const DetailMainOverflow = styled.div`
   width: 100%;
   height: 45vh;
   overflow-y: auto;
+  align-items: center;
   &::-webkit-scrollbar {
     display: none;
   }
 `;
 
 export const PlaceCardBox = styled.div`
-  width: 100%;
-  height: 10vh;
+  width: 34.3rem;
+  height: 8.8rem;
   display: flex;
   justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 1.2rem;
+  box-shadow: 0px 4px 4px 0 rgba(0, 0, 0, 0.25);
 `;
 
 export const PlaceCard = styled.div`
-  width: 90%;
-  height: 9vh;
+  width: 31.7rem;
+  height: 6.4rem;
   display: flex;
   flex-direction: row;
-  border-bottom: 0.2rem solid #d9d9d9;
   align-items: center;
+  justify-content: space-between;
 `;
 
 export const PlaceTextBox = styled.div`
   width: 70%;
   height: 90%;
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
 `;
 
 export const CircleBox = styled.div`
@@ -260,7 +487,7 @@ export const CircleBox = styled.div`
   height: 80%;
   display: flex;
   flex-direction: row;
-  algin-items: start;
+  align-items: start;
   justify-content: center;
 `;
 
@@ -309,6 +536,7 @@ export const PlacetAddressBox = styled.div`
   flex-direction: row;
   align-items: center;
   font-size: 1.2rem;
+  color: ${colors.grey2};
 `;
 
 export const PlaceImgBox = styled.div`
@@ -319,9 +547,16 @@ export const PlaceImgBox = styled.div`
 `;
 
 export const PlaceImg = styled.div`
-  width: 7.3rem;
-  height: 7.3rem;
+  width: 6.4rem;
+  height: 6.4rem;
   background-color: #d9d9d9;
+  border-radius: 1.2rem;
+`;
+
+export const PlaceImage = styled.img`
+  width: 6.4rem;
+  height: 6.4rem;
+  border-radius: 1.2rem;
 `;
 
 export const UserImgContainer = styled.div`
@@ -329,12 +564,12 @@ export const UserImgContainer = styled.div`
   height: 100%;
   display: flex;
   align-items: start;
-  justify-content: end;
+  justify-content: start;
 `;
 
 export const UserImg = styled.div`
-  width: 3.1rem;
-  height: 3.1rem;
+  width: 4.2rem;
+  height: 4.2rem;
   border-radius: 50%;
   border: 1px solid #1a823b;
   background-color: #bdd8c5;
@@ -388,6 +623,15 @@ export const ReviewDetailBox = styled.div`
   padding: 0 0 0 0.8rem;
 `;
 
+export const ReviewHeaderText = styled.p`
+  color: ${colors.grey2};
+`;
+
+export const ReviewHeaderTextBox = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
 export const ReviewDetail = styled.p`
   font-size: 1.2rem;
 `;
@@ -400,7 +644,7 @@ export const ReviewDateBox = styled.div`
 `;
 
 export const ReviewDate = styled.p`
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: #a0a0a0;
 `;
 
@@ -410,11 +654,67 @@ export const HeartBox = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  padding: 1rem 0 0 0;
+  padding: 3rem 0 0 0;
 `;
 
 export const HeartText = styled.p`
   font-size: 1rem;
   color: #a0a0a0;
   margin-top: 0.5rem;
+`;
+
+export const MapBox = styled.div`
+  width: 100%;
+  height: 41rem;
+`;
+export const BottomContainer = styled.div`
+  width: 100vw;
+  height: 11.3rem;
+  background-color: #ffffff;
+  border-radius: 0.8rem 0.8rem 0 0;
+  box-shadow: 0 -0.1rem 0.1rem #d9d9d9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const ButtonBox = styled.div`
+  width: 75%;
+  height: 70%;
+  display: flex;
+  align-items: start;
+  justify-content: end;
+`;
+
+export const ReviewCardBox = styled.div`
+  width: 100%;
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+`;
+
+export const ReviewCard = styled.div`
+  width: 90%;
+  height: 9vh;
+  display: flex;
+  flex-direction: row;
+  border-bottom: 0.2rem solid #d9d9d9;
+  align-items: center;
+`;
+
+export const ReviewHeader = styled.div`
+  width: 100%;
+  height: 5.1rem;
+  display: flex;
+  padding: 0 0 0 2.4rem;
+  align-items: center;
+`;
+
+export const WriteTextBox = styled.div`
+  width: 15%;
+  height: 70%;
+  display: flex;
+  justify-content: end;
+  padding: 4rem 0 0 0;
+  font-size: 1.4rem;
 `;

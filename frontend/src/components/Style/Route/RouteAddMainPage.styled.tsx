@@ -94,6 +94,9 @@ export const ImgBox = styled.div`
   height: 26vh;
   border-radius: 1.2rem;
   background-color: #d9d9d9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const ImgBtnBox = styled.div`
@@ -176,9 +179,27 @@ export const CheckedTypeCard = styled.div<{ isLong: boolean }>`
   }
 `;
 
+export const TypeClosedCard = styled.div`
+  width: 78vw;
+  height: 12vh;
+  display: flex;
+  justify-content: start;
+  flex-wrap: wrap;
+  margin-top: 1.7rem;
+`;
+
+export const TypeTextBox = styled.div`
+  width: 70%;
+  display: flex;
+  align-items: center;
+`;
+
 export const TypeText = styled.p`
   font-size: 1.4rem;
   color: #1a823b;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 `;
 
 export const TypeContainer = styled.div`
@@ -319,4 +340,14 @@ export const ButtonBox = styled.div`
   display: flex;
   align-items: start;
   justify-content: space-between;
+`;
+
+export const FileSelect = styled.input`
+  display: none;
+`;
+
+export const Img = styled.img`
+  width: 100%;
+  height: 100%;
+  border-radius: 1.2rem;
 `;
