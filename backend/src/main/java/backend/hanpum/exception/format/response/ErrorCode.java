@@ -24,6 +24,7 @@ public enum ErrorCode {
     SCHEDULE_WAY_POINT_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 경유지 정보가 없습니다."),
     VALID_SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "유효한 일정이 없습니다."),
     NEARBY_ATTRACTION_NOT_FOUND(HttpStatus.NOT_FOUND, "거리 조건에 맞는 관광지 정보가 없습니다."),
+    BAD_SCHEDULE_STATE_UPDATE_REQUEST(HttpStatus.BAD_REQUEST, "올바르지 않은 일정 상태 전환 요청입니다."),
 
     /* 날씨 */
     WEATHER_PARSING_EXCEPTION(HttpStatus.BAD_REQUEST, "날씨 정보를 불러오는 중 에러가 발생했습니다."),

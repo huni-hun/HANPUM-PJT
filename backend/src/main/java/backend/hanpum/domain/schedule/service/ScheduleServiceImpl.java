@@ -82,7 +82,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 //        String endDate = calculateDate(startDate, daySize);
 
         Schedule schedule = Schedule.builder()
-                .title(schedulePostReqDto.getTitle())
                 .type("private")
                 .startDate(startDate)
 //                .endDate(endDate)
@@ -110,7 +109,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         String startDate = schedulePostReqDto.getStartDate();
 
         Schedule schedule = Schedule.builder()
-                .title(schedulePostReqDto.getTitle())
                 .type("group")
                 .startDate(startDate)
                 .group(group)
@@ -220,7 +218,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Transactional
     @Override
-    public Long startAndStopSchedule(Long memberId, ScheduleStartReqDto scheduleRunReqDto) {
+    public Long startSchedule(Long memberId, ScheduleStartReqDto scheduleRunReqDto) {
         Schedule schedule = scheduleRepository.findById(scheduleRunReqDto.getScheduleId()).orElseThrow(ScheduleNotFoundException::new);
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
 
@@ -230,7 +228,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
         /* */
 
-        schedule.startAndStop();
+        schedule.updateState(1);
 
         scheduleRepository.save(schedule);
 

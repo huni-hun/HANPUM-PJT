@@ -77,7 +77,7 @@ public class ScheduleController {
     public ResponseEntity<?> startAndStopSchedule(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                   @RequestBody ScheduleStartReqDto scheduleRunReqDto) {
         Long memberId = userDetails.getMember().getMemberId();
-        Long scheduleId = scheduleService.startAndStopSchedule(memberId, scheduleRunReqDto);
+        Long scheduleId = scheduleService.startSchedule(memberId, scheduleRunReqDto);
         return response.success(ResponseCode.SCHEDULE_STATE_CHANGED, scheduleId);
     }
 
