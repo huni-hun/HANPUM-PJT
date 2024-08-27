@@ -22,7 +22,7 @@ function MyProfilePage() {
         purpose="title"
         title="내 프로필"
         clickBack={() => {
-          navigate(-1);
+          navigate('/mypage');
         }}
       />
 

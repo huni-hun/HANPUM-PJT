@@ -19,7 +19,7 @@ function SuccessAddSchedulePage() {
       />
       <S.SchduleContainer>
         <A.SuccessWrap>
-          <img src={successImg} />
+          <img src={successImg} alt="" />
           <span>나의 일정이</span>
           <span>등록되었어요!</span>
         </A.SuccessWrap>

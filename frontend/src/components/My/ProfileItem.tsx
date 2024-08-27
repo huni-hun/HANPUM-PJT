@@ -33,7 +33,14 @@ function ProfileItem({
           </div>
         </div>
       ) : (
-        <div className="info" onClick={() => navigate(`/myprofile/:${param}`)}>
+        <div
+          className="info"
+          onClick={() => {
+            if (param !== 'email') {
+              navigate(`/myprofile/:${param}`);
+            }
+          }}
+        >
           {value}
         </div>
       )}

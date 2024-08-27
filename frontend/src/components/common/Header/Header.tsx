@@ -197,7 +197,7 @@ const Header = ({
               className="back-arrow"
               size={15}
               onClick={() => {
-                clickBack();
+                navigate('/myprofile');
               }}
             />
             <Text as="div" $bold={true} $typography="t20">

@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import * as S from '../Style/My/Interest.styled';
 import NoHave from './NoHave';
 import CardLong from '../common/CardLong/CardLong';
+import { useQuery } from 'react-query';
+import { GetInterestMeetList } from '@/api/mypage/GET';
+import { STATUS } from '@/constants';
+import { toast } from 'react-toastify';
+import { AxiosError } from 'axios';
 
 function Interest() {
   const [tab, setTab] = useState('경로');
@@ -53,24 +58,23 @@ function Interest() {
       commentCnt: 2,
     },
   ];
-  const meet = [
-    // {
-    //   courseId: 1,
-    //   courseName: '서울에서 대전까지',
-    //   backgroundImg: 'testurl',
-    //   content: '서울에서 대전까지 가는 초보자용 코스입니다.',
-    //   writeState: false,
-    //   openState: true,
-    //   writeDate: '2024-08-27',
-    //   startPoint: '서울',
-    //   endPoint: '대전',
-    //   totalDistance: 76,
-    //   memberId: 1,
-    //   courseTypes: null,
-    //   scoreAvg: 3.25,
-    //   commentCnt: 2,
-    // },
-  ];
+
+  const { data: meet } = useQuery(
+    'getInterestMeet', // Query Key
+    GetInterestMeetList,
+    {
+      onSuccess: (res) => {
+        console.log('res ::', res.data);
+        if (res.status === STATUS.success) {
+        } else if (res.status === STATUS.error) {
+          toast.error(res.message);
+        }
+      },
+      onError: (error: AxiosError) => {
+        toast.error(error.message);
+      },
+    },
+  );
 
   return (
     <S.InterestContainer>

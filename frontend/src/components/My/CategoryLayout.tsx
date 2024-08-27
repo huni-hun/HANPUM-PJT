@@ -8,7 +8,12 @@ import { useEffect, useState } from 'react';
 import Icon from '../common/Icon/Icon';
 import { SignupRequestValues } from '@/models/signup';
 import { dateFormat, genderEng, telnumberFormat } from '@/utils/util';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 import { GetUser } from '@/api/mypage/GET';
 import { ChangeUserInfo } from '@/api/mypage/PUT';
 import { STATUS } from '@/constants';
@@ -64,7 +69,7 @@ function CategoryLayout() {
 
   const [focus, setFocus] = useState(false);
 
-  console.log('memberInfo ::', memberInfoReq);
+  // console.log('memberInfo ::', memberInfoReq);
 
   const checkGender = (gender: string) => {
     setMemberInfoReq((prev) => ({
@@ -88,11 +93,14 @@ function CategoryLayout() {
     // }
   };
 
+  const queryClient = useQueryClient();
+
   const { mutate: changeUserInfo } = useMutation(ChangeUserInfo, {
     onSuccess: (res) => {
       console.log('res ::', res);
       if (res.status === STATUS.success) {
         toast.success(res.message);
+        queryClient.invalidateQueries({ queryKey: ['getUser'] });
         navigate('/myprofile');
       }
       if (res.status === STATUS.error) {
@@ -143,7 +151,7 @@ function CategoryLayout() {
       onButtonClick: (cancel?: boolean) => {
         // console.log(cancel);
         if (cancel) {
-          console.log('취소');
+          // console.log('취소');
           setMemberInfoReq((prev) => ({
             ...prev,
             birthDate: '',
