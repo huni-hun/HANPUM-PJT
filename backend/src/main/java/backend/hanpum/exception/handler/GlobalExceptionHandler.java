@@ -183,6 +183,13 @@ public class GlobalExceptionHandler {
         return response.error(e.getErrorCode());
     }
 
+    @ExceptionHandler(GroupDeleteFailedException.class)
+    protected ResponseEntity<?> handle(GroupDeleteFailedException e) {
+        log.error("GroupDeleteFailedException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
     /* 이미지 업로드 */
     @ExceptionHandler(FileFormatUnsupportedException.class)
     protected ResponseEntity<?> handle(FileFormatUnsupportedException e) {

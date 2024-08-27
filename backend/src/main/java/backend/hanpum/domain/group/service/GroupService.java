@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface GroupService {
 
     GroupPostResDto createGroup(Long memberId, MultipartFile multipartFile, GroupPostReqDto groupPostReqDto);
+    void deleteGroup(Long memberId, Long groupId);
     GroupListGetResDto getGroupList(Long memberId, String startPoint, String endPoint, Integer maxTotalDays,
                                     Integer maxRecruitmentCount, Pageable pageable);
     GroupDetailGetResDto getGroupDetail(Long memberId, Long groupId);
