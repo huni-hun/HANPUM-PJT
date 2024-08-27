@@ -7,6 +7,7 @@ import backend.hanpum.domain.course.repository.CourseRepository;
 import backend.hanpum.domain.course.service.CourseService;
 import backend.hanpum.domain.group.dto.responseDto.GroupMemberListGetResDto;
 import backend.hanpum.domain.group.entity.Group;
+import backend.hanpum.domain.group.enums.JoinType;
 import backend.hanpum.domain.group.repository.GroupRepository;
 import backend.hanpum.domain.group.service.GroupService;
 import backend.hanpum.domain.member.entity.Member;
@@ -31,6 +32,7 @@ import backend.hanpum.exception.exception.common.JsonBadMappingException;
 import backend.hanpum.exception.exception.common.UriBadSyntaxException;
 import backend.hanpum.exception.exception.group.GroupMemberNotFoundException;
 import backend.hanpum.exception.exception.group.GroupNotFoundException;
+import backend.hanpum.exception.exception.group.GroupPermissionException;
 import backend.hanpum.exception.exception.schedule.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -212,9 +214,15 @@ public class ScheduleServiceImpl implements ScheduleService {
         Long courseId = schedule.getCourse().getCourseId();
 
 
+
         /* 접근 권한 확인용 */
-        if (!schedule.getMember().equals(member)) {
+        if (schedule.getType().equals("private") && !schedule.getMember().equals(member)) {
             throw new MemberInfoInvalidException();
+        } else if (schedule.getType().equals("group")) {
+            Long groupId = member.getGroupMember().getGroup().getGroupId();
+            if (!schedule.getGroup().getGroupId().equals(groupId) || member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) {
+                throw new GroupPermissionException();
+            }
         }
         /**/
 
