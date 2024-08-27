@@ -11,6 +11,7 @@ interface HeaderProps {
   arrive?: string;
   depart?: string;
   back?: boolean;
+  isShadow?: boolean;
   clickBack: () => void;
   clickOption?: () => void;
 }
@@ -23,6 +24,7 @@ const Header = ({
   back,
   clickBack,
   clickOption,
+  isShadow = false,
 }: HeaderProps) => {
   const navigate = useNavigate();
   const onClickHandler = (to: string) => {
@@ -171,7 +173,7 @@ const Header = ({
 
   return (
     <>
-      <S.HeaderWrapper>
+      <S.HeaderWrapper isShadow={isShadow}>
         {back && <Icon name="IconBackArrow" className="back-arrow" size={15} />}
         {renderHeader()}
       </S.HeaderWrapper>
