@@ -119,22 +119,29 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ScheduleWayPointNotFoundException.class)
-    protected ResponseEntity<?> handle(ScheduleWayPointNotFoundException e){
+    protected ResponseEntity<?> handle(ScheduleWayPointNotFoundException e) {
         log.error("ScheduleWayPointNotFoundException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }
 
     @ExceptionHandler(ValidScheduleNotFoundException.class)
-    protected ResponseEntity<?> handle(ValidScheduleNotFoundException e){
+    protected ResponseEntity<?> handle(ValidScheduleNotFoundException e) {
         log.error("ValidScheduleNotFoundException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }
 
     @ExceptionHandler(NearByAttractionNotFoundException.class)
-    protected ResponseEntity<?> handle(NearByAttractionNotFoundException e){
+    protected ResponseEntity<?> handle(NearByAttractionNotFoundException e) {
         log.error("NearByAttractionNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(BadScheduleStateUpdateRequestException.class)
+    protected ResponseEntity<?> handle(BadScheduleStateUpdateRequestException e) {
+        log.error("BadScheduleStateUpdateRequestException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }

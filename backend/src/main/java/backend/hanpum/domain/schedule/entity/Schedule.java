@@ -3,6 +3,7 @@ package backend.hanpum.domain.schedule.entity;
 import backend.hanpum.domain.course.entity.Course;
 import backend.hanpum.domain.group.entity.Group;
 import backend.hanpum.domain.member.entity.Member;
+import backend.hanpum.exception.exception.schedule.BadScheduleStateUpdateRequestException;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,13 +33,13 @@ public class Schedule {
 
     @Builder.Default
     @Column(name = "state")
-    private boolean state = false;
+    private int state = 0;      // 진행전 : 0, 진행중 : 1, 진행 후 : 2
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-  // 경로 하나에 일정이 여러개 있어야 할듯 -> member 컬럼이 있으니
+    // 경로 하나에 일정이 여러개 있어야 할듯 -> member 컬럼이 있으니
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;
@@ -50,7 +51,10 @@ public class Schedule {
     @JoinColumn(name = "group_id")
     private Group group;
 
-    public void startAndStop(){
-        this.state = !this.state;
+    public void updateState(int state) {
+        if (state < 0 || state > 2) {
+            throw new BadScheduleStateUpdateRequestException();
+        }
+        this.state = state;
     }
 }
