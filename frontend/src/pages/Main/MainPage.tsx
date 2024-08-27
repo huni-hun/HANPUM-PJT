@@ -7,8 +7,8 @@ import Course from '@components/Main/Course';
 import Meet from '@components/Main/Meet';
 import Header from '@/components/common/Header/Header';
 import { useNavigate } from 'react-router-dom';
-import { decodeToken } from '@/utils/util';
-import { Token } from '@/models/user';
+import { useEffect } from 'react';
+import Cookies from 'js-cookie';
 
 function MainPage() {
   // const decodeTokenObj = JSON.parse(localStorage.getItem('token') || '');
@@ -16,6 +16,15 @@ function MainPage() {
   // console.log(temp?.accessToken);
   // console.log(temp?.refreshToken);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const memberType = Cookies.get('memberType');
+    const accessToken = Cookies.get('accessToken');
+    console.log(memberType);
+    if (memberType === 'KAKAO_INCOMPLETE') {
+      navigate('/signup');
+    }
+  }, []);
   return (
     <MainPageContainer>
       <Header purpose="search" clickBack={() => navigate(-1)} />

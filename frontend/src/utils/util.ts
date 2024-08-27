@@ -1,3 +1,4 @@
+import { SignupRequestValues } from '@/models/signup';
 import { Token } from '@/models/user';
 import CryptoJS from 'crypto-js';
 
@@ -60,10 +61,12 @@ export function decodeToken(tokenObj: Token) {
   }
 }
 
+// text Area \n 붙이기
 export function formatAreaValue(text: string) {
   return text.replace(/\n/g, '\\n');
 }
 
+// 성별 한글 포맷터
 export function genderKor(gender: string) {
   if (gender === 'MAN') {
     return '남자';
@@ -74,6 +77,7 @@ export function genderKor(gender: string) {
   }
 }
 
+// 성별 영어 포맷터
 export function genderEng(gender: string) {
   if (gender === '남성') {
     return 'MAN';
@@ -81,5 +85,27 @@ export function genderEng(gender: string) {
     return 'WOMAN';
   } else {
     return 'OTHER';
+  }
+}
+
+// param에 따른 title 반환
+export function returnTitle(param: keyof SignupRequestValues) {
+  if (param === 'nickname') {
+    return '닉네임';
+  }
+  if (param === 'name') {
+    return '이름';
+  }
+  if (param === 'email') {
+    return '이메일';
+  }
+  if (param === 'phoneNumber') {
+    return '전화번호';
+  }
+  if (param === 'birthDate') {
+    return '생년월일';
+  }
+  if (param === 'gender') {
+    return '성별';
   }
 }

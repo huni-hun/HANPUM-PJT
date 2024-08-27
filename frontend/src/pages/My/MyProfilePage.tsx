@@ -4,17 +4,42 @@ import { colors } from '@/styles/colorPalette';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ProfileItem from '@/components/My/ProfileItem';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { GetUser } from '@/api/mypage/GET';
 import { STATUS } from '@/constants';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 import { genderKor } from '@/utils/util';
+import { ChangeProfileImg } from '@/api/mypage/PUT';
+import { ChangeEvent } from 'react';
 
 function MyProfilePage() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery('getUser', GetUser);
+
+  const { mutate: changeProfileImg } = useMutation(ChangeProfileImg, {
+    onSuccess: (res) => {
+      if (res.status === STATUS.success) {
+        toast.success(res.message);
+        queryClient.invalidateQueries({ queryKey: ['getUser'] });
+      }
+      if (res.status === STATUS.error) {
+        toast.error(res.message);
+      }
+    },
+    onError: (error: AxiosError) => {
+      toast.error(error.message);
+    },
+  });
+
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      changeProfileImg(file);
+    }
+  };
 
   return (
     <MyProfilePageContainer>
@@ -39,8 +64,12 @@ function MyProfilePage() {
                 alt="프로필 이미지 미리보기"
               />
               <div className="profile-icon_box">
-                {/* <input type="file" accept="image/*" onChange={handleImageChange} /> */}
-                <input type="file" accept="image/*" />
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+                {/* <input type="file" accept="image/*" /> */}
                 <Icon name="IconCamera" size={19} />
               </div>
             </div>
