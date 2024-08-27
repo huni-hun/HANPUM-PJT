@@ -30,9 +30,10 @@ public enum ErrorCode {
 
     /* 경로 */
     COURSE_LIST_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 경로 목록이 없습니다."),
-    COURSE_DETAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 경로 상세정보가 없습니다."),
+    COURSE_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 경로 정보가 없습니다."),
     COURSE_DAY_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 경로 일차정보가 없습니다."),
     COURSE_REVIEWS_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 경로 리뷰가 없습니다."),
+    REVIEW_ALREADY_EXIST(HttpStatus.NOT_FOUND, "이미 리뷰를 작성한 회원입니다."),
 
     /* 모임 */
     GROUP_ALREADY_JOINED(HttpStatus.BAD_REQUEST, "이미 가입된 모임이 있습니다."),

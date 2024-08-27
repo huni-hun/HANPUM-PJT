@@ -1,5 +1,6 @@
 package backend.hanpum.domain.course.controller;
 
+import backend.hanpum.config.jwt.UserDetailsImpl;
 import backend.hanpum.domain.course.dto.requestDto.*;
 import backend.hanpum.domain.course.dto.responseDto.*;
 import backend.hanpum.domain.course.enums.CourseTypes;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -53,14 +55,8 @@ public class CourseController {
 
     @Operation(summary = "경로 삭제", description = "경로 삭제 API")
     @DeleteMapping("/{course_id}")
-    public ResponseEntity<?> deleteCourse(@PathVariable("course_id") Long courseId) {
-         /*
-        토큰을 이용해 유저정보 추출하는 부분
-        Member member =
-        Long memberId = member.getMemberId();
-         */
-
-//        courseService.deleteCourse(memberId, courseId);
+    public ResponseEntity<?> deleteCourse(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable("course_id") Long courseId) {
+        courseService.deleteCourse(userDetails.getMember().getMemberId(), courseId);
 
         return response.success(ResponseCode.COURSE_DELETE_SUCCESS);
     }
@@ -83,28 +79,16 @@ public class CourseController {
 
     @Operation(summary = "관심 경로 등록", description = "관심 경로 등록 API")
     @GetMapping("{course_id}/like")
-    public ResponseEntity<?> addInterestCourse(@PathVariable("course_id") Long courseId) {
-        /*
-        토큰을 이용해 유저정보 추출하는 부분
-        Member member =
-        Long memberId = member.getMemberId();
-         */
-
-//        courseService.addInterestCourse(courseId, memberId);
+    public ResponseEntity<?> addInterestCourse(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable("course_id") Long courseId) {
+        courseService.addInterestCourse(courseId, userDetails.getMember().getMemberId());
 
         return response.success(ResponseCode.ADD_INTEREST_COURSE_SUCCESS);
     }
 
     @Operation(summary = "관심 경로 삭제", description = "관심 경로 삭제 API")
     @DeleteMapping("{course_id}/like")
-    public ResponseEntity<?> deleteInterestCourse(@PathVariable("course_id") Long courseId) {
-        /*
-        토큰을 이용해 유저정보 추출하는 부분
-        Member member =
-        Long memberId = member.getMemberId();
-         */
-
-//        courseService.deleteInterestCourse(courseId, memberId);
+    public ResponseEntity<?> deleteInterestCourse(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable("course_id") Long courseId) {
+        courseService.deleteInterestCourse(courseId, userDetails.getMember().getMemberId());
 
         return response.success(ResponseCode.DELETE_INTEREST_COURSE_SUCCESS);
     }
@@ -119,15 +103,10 @@ public class CourseController {
 
     @Operation(summary = "경로 리뷰 등록", description = "경로 리뷰 등록 API")
     @PostMapping("{course_id}/reviews")
-    public ResponseEntity<?> writeCourseReviews(@PathVariable("course_id") Long courseId, @RequestBody CourseReviewReqDto courseReviewReqDto) {
-        /*
-        토큰을 이용해 유저정보 추출하는 부분
-        Member member =
-        Long memberId = member.getMemberId();
-         */
+    public ResponseEntity<?> writeCourseReviews(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable("course_id") Long courseId, @RequestBody CourseReviewReqDto courseReviewReqDto) {
         String content = courseReviewReqDto.getContent();
         Double score = courseReviewReqDto.getScore();
-        courseService.writeCourseReview(courseId, content, score);
+        courseService.writeCourseReview(courseId, userDetails.getMember().getMemberId(), content, score);
 
         return response.success(ResponseCode.COURSE_REVIEWS_WRITE_SUCCESS);
     }
@@ -145,13 +124,8 @@ public class CourseController {
 
     @Operation(summary = "경로 리뷰 삭제", description = "경로 리뷰 삭제 API")
     @DeleteMapping("{course_id}/reviews")
-    public ResponseEntity<?> deleteCourseReviews(@PathVariable("course_id") Long courseId) {
-        /*
-        토큰을 이용해 유저정보 추출하는 부분
-        Member member =
-        Long memberId = member.getMemberId();
-         */
-        courseService.deleteCourseReview(courseId);
+    public ResponseEntity<?> deleteCourseReviews(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable("course_id") Long courseId) {
+        courseService.deleteCourseReview(courseId, userDetails.getMember().getMemberId());
 
         return response.success(ResponseCode.COURSE_REVIEWS_DELETE_SUCCESS);
     }

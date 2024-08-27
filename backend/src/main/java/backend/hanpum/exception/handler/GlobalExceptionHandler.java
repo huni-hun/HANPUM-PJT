@@ -1,5 +1,6 @@
 package backend.hanpum.exception.handler;
 
+import backend.hanpum.exception.exception.course.*;
 import backend.hanpum.exception.exception.s3.FileDeleteFailedException;
 import backend.hanpum.exception.exception.s3.FileFormatUnsupportedException;
 import backend.hanpum.exception.exception.s3.FilePutFailedException;
@@ -7,10 +8,6 @@ import backend.hanpum.exception.exception.auth.*;
 import backend.hanpum.exception.exception.common.JsonBadMappingException;
 import backend.hanpum.exception.exception.common.JsonBadProcessingException;
 import backend.hanpum.exception.exception.common.UriBadSyntaxException;
-import backend.hanpum.exception.exception.course.CourseDayNotFoundException;
-import backend.hanpum.exception.exception.course.CourseListNotFoundException;
-import backend.hanpum.exception.exception.course.CourseNotFoundException;
-import backend.hanpum.exception.exception.course.CourseReviewsNotFoundException;
 import backend.hanpum.exception.exception.group.*;
 import backend.hanpum.exception.exception.schedule.*;
 import backend.hanpum.exception.exception.test.TestNotFoundException;
@@ -84,6 +81,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CourseReviewsNotFoundException.class)
     protected ResponseEntity<?> handle(CourseReviewsNotFoundException e) {
         log.error("CourseReviewsNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(ReviewAlreadyExistsException.class)
+    protected ResponseEntity<?> handle(ReviewAlreadyExistsException e) {
+        log.error("ReviewAlreadyExistsException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }

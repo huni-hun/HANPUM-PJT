@@ -1,5 +1,6 @@
 package backend.hanpum.domain.course.repository;
 
+import backend.hanpum.domain.course.entity.Course;
 import backend.hanpum.domain.course.entity.Review;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,7 @@ import java.util.List;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findByCourse_CourseId(Long courseId, Pageable pageable);
-//    Review findByCourse_CourseIdAndMember_MemberId(Long courseId, Long memberId);
-//    Review deleteByCourse_CourseIdAndMember_MemberId(Long courseId, Long memberId);
+    List<Review> findByCourse(Course course);
+    Review findByCourse_CourseIdAndMember_MemberId(Long courseId, Long memberId);
+    void deleteByCourse_CourseIdAndMember_MemberId(Long courseId, Long memberId);
 }
