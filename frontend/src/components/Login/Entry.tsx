@@ -16,9 +16,16 @@ function Entry() {
   const navigate = useNavigate();
   const setInit = useSetRecoilState(isInitAtom);
 
+  // test btn
+  const testClick = () => {
+    localStorage.setItem('test', 'KAKAO_INCOMPLETE');
+    navigate('/');
+  };
+
   return (
     <S.EntryContainer>
       <img src={logo} alt="logo" className="logo" />
+      <button onClick={testClick}>카카오 테스트</button>
 
       <Flex direction="column" $align="center" $justify="center">
         <Text $bold={true} $typography="t16" style={{ lineHeight: '25px' }}>

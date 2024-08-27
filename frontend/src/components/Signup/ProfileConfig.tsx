@@ -212,7 +212,10 @@ function ProfileConfig({
     },
   });
 
+  console.log(formValues);
+
   const submitTemp = () => {
+    // 일반 회원
     const signupReq: SignupRequestValues = {
       loginId: formValues.loginId || '',
       password: formValues.password || '',
@@ -227,6 +230,9 @@ function ProfileConfig({
     };
 
     mutate({ ...signupReq });
+
+    // 카카오 회원
+    // const kakao;
   };
 
   return (

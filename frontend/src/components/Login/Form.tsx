@@ -111,11 +111,12 @@ const Form = () => {
   return (
     <S.FormContainer>
       <Header
-        purpose="back"
+        purpose="result"
         clickBack={() => {
           setInit(true);
         }}
       />
+
       <div className="form_container">
         <Text $typography="t20" $bold={true} style={{ margin: '16px 0px' }}>
           일반 회원으로 로그인
