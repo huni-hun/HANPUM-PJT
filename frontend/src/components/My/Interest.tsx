@@ -114,7 +114,8 @@ function Interest() {
 
       {/*  모임 */}
       {tab === '모임' &&
-        (meet.length === 0 ? (
+        meet &&
+        (meet.data.groupResDtoList.length === 0 ? (
           <NoHave category="meet" />
         ) : // <div className="card-container">
         //   {meet.map((item, index) => (

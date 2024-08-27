@@ -44,10 +44,7 @@ export async function SignUp(signupReq: SignupRequestValues) {
 
   // 비밀번호 hash화
   const hashedPassword = CryptoJS.SHA256(password).toString();
-
   const updatedRest = { ...rest, password: hashedPassword };
-
-  // console.log(updatedRest);
 
   const signUpReqDto = new Blob([JSON.stringify(updatedRest)], {
     type: 'application/json',
