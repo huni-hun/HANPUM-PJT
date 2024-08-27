@@ -723,4 +723,34 @@ public class CourseServiceImpl implements CourseService {
         return courseResDtoList;
     }
 
+    @Override
+    public List<CourseResDto> getSelfMadeCourseList(Long memberId) {
+        List<Course> courseList = courseRepository.findByMember_MemberId(memberId);
+        List<CourseResDto> courseResDtoList = new ArrayList<>();
+
+        for(Course course : courseList) {
+            List<Review> reviews = reviewRepository.findByCourse(course);
+            double scoreAvg = reviews.stream()
+                    .mapToDouble(Review::getScore)
+                    .average()
+                    .orElse(0.0);
+
+            courseResDtoList.add(CourseResDto.builder()
+                    .courseId(course.getCourseId())
+                    .courseName(course.getCourseName())
+                    .backgroundImg(course.getBackgroundImg())
+                    .writeDate(course.getWriteDate())
+                    .startPoint(course.getStartPoint())
+                    .endPoint(course.getEndPoint())
+                    .totalDistance(course.getTotalDistance())
+                    .memberId(course.getMember().getMemberId())
+                    .scoreAvg(scoreAvg)
+                    .totalDays(course.getTotalDays())
+                    .build()
+            );
+        }
+
+        return courseResDtoList;
+    }
+
 }
