@@ -27,6 +27,7 @@ import RequestManageList from '../pages/Meet/RequestManageList';
 import MemberManageList from '../pages/Meet/MemberManageList';
 import MeetRequest from '../pages/Meet/MeetRequest';
 import MeetAcceptPage from '../pages/Meet/MeetAcceptPage';
+import MeetAddMainPage from '../pages/Meet/MeetAddMainPage';
 
 /** 커뮤니티 */
 
@@ -66,6 +67,8 @@ export {
   MemberManageList,
   MeetRequest,
   MeetAcceptPage,
+  MeetAddMainPage,
+  
   SignupPage,
   FindPage,
   MyPage,

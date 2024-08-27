@@ -28,6 +28,21 @@ public class CourseResDto {
     List<CourseTypes> courseTypes;
     Double scoreAvg;
     Integer commentCnt;
+    Integer totalDays;
+
+    public CourseResDto(Long courseId, String courseName, String backgroundImg,
+                        Date writeDate, String startPoint, String endPoint, Double totalDistance, Long memberId, Double scoreAvg, Integer totalDays) {
+        this.courseId = courseId;
+        this.courseName = courseName;
+        this.backgroundImg = backgroundImg;
+        this.writeDate = writeDate;
+        this.startPoint = startPoint;
+        this.endPoint = endPoint;
+        this.totalDistance = totalDistance;
+        this.memberId = memberId;
+        this.scoreAvg = scoreAvg;
+        this.totalDays = totalDays;
+    }
 
     public CourseResDto(Long courseId, String courseName, String backgroundImg, String content, boolean writeState,
                         boolean openState, Date writeDate, String startPoint, String endPoint, Double totalDistance, Long memberId) {
@@ -45,7 +60,7 @@ public class CourseResDto {
     }
 
     public CourseResDto(Long courseId, String courseName, String backgroundImg, String content, boolean writeState,
-                        boolean openState, Date writeDate, String startPoint, String endPoint, Double totalDistance, Long memberId, Double scoreAvg, Integer commentCnt) {
+                        boolean openState, Date writeDate, String startPoint, String endPoint, Double totalDistance, Long memberId, Double scoreAvg, Integer commentCnt, Integer totalDays) {
         this.courseId = courseId;
         this.courseName = courseName;
         this.backgroundImg = backgroundImg;
@@ -59,6 +74,7 @@ public class CourseResDto {
         this.memberId = memberId;
         this.scoreAvg = scoreAvg;
         this.commentCnt = commentCnt;
+        this.totalDays = totalDays;
     }
 
     public void setCourseTypes(List<CourseTypes> courseTypes) {

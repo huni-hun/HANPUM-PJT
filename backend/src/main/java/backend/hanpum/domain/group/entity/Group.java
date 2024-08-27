@@ -1,5 +1,6 @@
 package backend.hanpum.domain.group.entity;
 
+import backend.hanpum.domain.group.enums.GroupStatus;
 import backend.hanpum.domain.schedule.entity.Schedule;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -39,9 +40,17 @@ public class Group {
     @Column(name = "recruitment_count")
     private int recruitmentCount;
 
+    @Column(name = "recruitment_start")
+    @Temporal(TemporalType.DATE)
+    private Date recruitmentStart;
+
     @Column(name = "recruitment_period")
     @Temporal(TemporalType.DATE)
     private Date recruitmentPeriod;
+
+    @Column(name = "group_status")
+    @Enumerated(EnumType.STRING)
+    private GroupStatus groupStatus;
 
     @Builder.Default
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
