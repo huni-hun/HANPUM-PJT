@@ -3,8 +3,15 @@ import * as R from '../../components/Style/Route/RouteAddDetailPage.styled';
 import Icon from '@/components/common/Icon/Icon';
 import Map from '@/components/common/Map/Map';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Header from '@/components/common/Header/Header';
+import SearchPlacePage from './SearchPlacePage';
+import {
+  AddRouteProps,
+  DateRouteDetailProps,
+  WayPointListProps,
+} from '@/models/route';
+import RoutePlaceCard from '@/components/Style/Route/RoutePlaceCard';
 
 function RouteAddDetailPage() {
   const [curLatitude, setCurLatitude] = useState<number>(0);
@@ -13,7 +20,12 @@ function RouteAddDetailPage() {
   const [day, setDay] = useState<number>(1);
   const [selectedDay, setSelectedDay] = useState<number>(1);
   const [route, setRoute] = useState<number[]>([1]);
-  const navigate = useNavigate();
+  const [searchOpen, setSearchOpen] = useState<boolean>(false);
+  const [addRoute, setAddRoute] = useState<AddRouteProps>(null!);
+  const [dateDetail, setDateDetail] = useState<DateRouteDetailProps[]>([]);
+  const [wayPoints, setWayPoints] = useState<WayPointListProps[]>([]);
+  const location = useLocation();
+  const data = { ...location.state };
 
   const getSuccess = (pos: GeolocationPosition) => {
     setCurLatitude(pos.coords.latitude);
@@ -33,9 +45,61 @@ function RouteAddDetailPage() {
         timeout: 27000,
       },
     );
+
+    let route: AddRouteProps = {
+      memberId: 1,
+      routeName: data.routeTitle,
+      routeContent: data.routeExplane,
+      openState: data.isOpen,
+      writeState: false,
+      routeType: data.typeChecked,
+      dateOfRoute: [],
+    };
+
+    setAddRoute(route);
   }, []);
 
-  return (
+  useEffect(() => {
+    console.log(dateDetail);
+  }, [dateDetail]);
+
+  useEffect(() => {
+    if (dateDetail.length < route.length) {
+      let newDate: DateRouteDetailProps = {
+        date: route[route.length - 1],
+        wayPointList: [],
+        attractionsList: [],
+      };
+      setDateDetail((pre) => [...pre, newDate]);
+    }
+  }, [route]);
+
+  useEffect(() => {
+    // if (route.includes(selectedDay)) {
+    //   dateDetail.map((ele: DateRouteDetailProps) => {
+    //     if (ele.date === selectedDay) {
+    //       setWayPoints(ele.wayPointList);
+    //     }
+    //   });
+    // }
+    dateDetail.map((ele: DateRouteDetailProps) => {
+      if (ele.date === selectedDay) {
+        setWayPoints(ele.wayPointList);
+      }
+    });
+    console.log(dateDetail);
+  }, [selectedDay]);
+
+  return searchOpen ? (
+    <SearchPlacePage
+      day={selectedDay}
+      dateDetail={dateDetail}
+      setDateDetail={setDateDetail}
+      setSearchOpen={setSearchOpen}
+      setWayPoints={setWayPoints}
+      wayPoints={wayPoints}
+    />
+  ) : (
     <R.Container>
       <Header
         purpose="root"
@@ -72,7 +136,7 @@ function RouteAddDetailPage() {
             </R.MapCardTitle>
             <R.MapSearchBox
               onClick={() => {
-                navigate('/route/search');
+                setSearchOpen(true);
               }}
             >
               <Icon name="IconSearch" size={20} />
@@ -86,7 +150,31 @@ function RouteAddDetailPage() {
             <R.PlaceContainer>
               <R.PlaceBox>
                 <R.PlaceTypeBox>경유지</R.PlaceTypeBox>
+                <R.DetailWayOverflow>
+                  {wayPoints.map((ele: WayPointListProps, idx: number) => (
+                    <RoutePlaceCard
+                      routeAddress={ele.address}
+                      routeId={1}
+                      routeName={ele.name}
+                      routeType={ele.type}
+                      latitude={ele.latitude}
+                      longitude={ele.longitude}
+                      routePoint={`${ele.point}`}
+                    />
+                  ))}
+                </R.DetailWayOverflow>
               </R.PlaceBox>
+              <R.AttractionsBox>
+                <R.AttrantiosTypeBox>관광지</R.AttrantiosTypeBox>
+                <R.AttractionsOverflow>
+                  <R.AttractionCard></R.AttractionCard>
+                  <R.AttractionCard></R.AttractionCard>
+                  <R.AttractionCard></R.AttractionCard>
+                  <R.AttractionCard></R.AttractionCard>
+                  <R.AttractionCard></R.AttractionCard>
+                  <R.AttractionCard></R.AttractionCard>
+                </R.AttractionsOverflow>
+              </R.AttractionsBox>
             </R.PlaceContainer>
           </R.MapCard>
         </R.OverFlow>

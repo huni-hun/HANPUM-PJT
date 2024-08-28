@@ -72,7 +72,8 @@ const Header = ({
       case 'root':
         return (
           <Flex $align="center" $justify="center">
-            <Flex direction="column" $gap={4}>
+            <Flex></Flex>
+            <Flex direction="column" $gap={4} $align="end">
               <Text as="div" $bold={true} $typography="t10" color="grey2">
                 출발지
               </Text>
@@ -80,7 +81,10 @@ const Header = ({
                 {depart}
               </Text>
             </Flex>
-            <Flex direction="column" $gap={4}>
+            <Flex $justify="center" $align="center">
+              <Icon name="IconGreyLeftArrow" size={15} />
+            </Flex>
+            <Flex direction="column" $gap={4} $align="start">
               <Text as="div" $bold={true} $typography="t10" color="grey2">
                 도착지
               </Text>
@@ -88,6 +92,7 @@ const Header = ({
                 {arrive}
               </Text>
             </Flex>
+            <Flex></Flex>
           </Flex>
         );
       case 'route-detail':

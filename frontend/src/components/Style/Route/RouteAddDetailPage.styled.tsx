@@ -16,7 +16,7 @@ export const Header = styled.div`
 
 export const MainContainer = styled.div`
   width: 100vw;
-  height: 80vh;
+  height: auto;
   display: flex;
   flex-direction: row;
   overflow-y: auto;
@@ -26,13 +26,14 @@ export const OverFlow = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 80vh;
-  width: 100vw;
+  height: auto;
+  width: 100%;
   overflow-y: auto;
   &::-webkit-scrollbar {
     display: none;
   }
   padding: 0 1.6rem 0 1.6rem;
+  padding-bottom: 15vh;
 `;
 
 export const DayContainer = styled.div`
@@ -89,13 +90,13 @@ export const DatAddCard = styled.div`
 
 export const MapCard = styled.div`
   width: 84vw;
-  height: 68vh;
+  min-height: 70vh;
   border-radius: 1.2rem;
   background-color: ${colors.white};
   display: flex;
   flex-direction: column;
   padding: 1.6rem 1.6rem 1.6rem 1.6rem;
-  box-shadow: 0 0.2rem 0.7rem ${colors.grey1};
+  box-shadow: 0.2rem 0.2rem 0.3rem ${colors.grey1};
   overflow-y: auto;
 `;
 
@@ -126,6 +127,7 @@ export const MapBox = styled.div`
   width: 83vw;
   height: 38vh;
   margin-top: 1.2rem;
+  flex-shrink: 0;
 `;
 
 export const PlaceContainer = styled.div`
@@ -137,7 +139,8 @@ export const PlaceContainer = styled.div`
 
 export const PlaceBox = styled.div`
   width: 100%;
-  height: 20vh;
+  max-height: 35vh;
+  min-height: 10vh;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -163,6 +166,8 @@ export const BottomContainer = styled.div`
   justify-content: center;
   align-items:center;
   z-index:55;
+  position: fixed;
+  bottom: 0;
 `;
 
 export const ButtonBox = styled.div`
@@ -171,4 +176,71 @@ export const ButtonBox = styled.div`
   display: flex;
   align-items: start;
   justify-content: end;
+`;
+
+export const DetailWayOverflow = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  align-items: center;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+export const AttractionsBox = styled.div`
+  width: 100%;
+  min-height: 10vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+`;
+
+export const AttrantiosTypeBox = styled.div`
+  width: 100%;
+  height: 4vh;
+  display: flex;
+  align-items: center;
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 1.6rem;
+`;
+
+export const AttractionsOverflow = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  overflow-x: auto;
+  align-items: center;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+export const AttractionCard = styled.div`
+  width: 8.4rem;
+  height: 9rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.5rem 0.8rem 0.5rem 0.8rem;
+  background-color: ${colors.grey1};
+  flex-shrink: 0;
+  margin-right: 0.4rem;
+  border-radius: 1.2rem;
+`;
+
+export const AttractionCardTitle = styled.p`
+  font-size: 1rem;
+  color: ${colors.white};
+`;
+
+export const AttractionCardDetail = styled.div`
+  width: 7.2rem;
+  height: 2.2rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 `;

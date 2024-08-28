@@ -89,3 +89,39 @@ export interface searchPlaceProps {
   latitude: number;
   longitude: number;
 }
+
+export interface WayPointListProps {
+  type: string;
+  name: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  point: number;
+  distance: number;
+  duration: number;
+  calorie: number;
+}
+
+export interface AttractionsProps {
+  type: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  name: string;
+}
+
+export interface DateRouteDetailProps {
+  date: number;
+  wayPointList: WayPointListProps[];
+  attractionsList: AttractionsProps[];
+}
+
+export interface AddRouteProps {
+  memberId: number;
+  routeName: string;
+  routeContent: string;
+  openState: boolean;
+  writeState: boolean;
+  routeType: string[];
+  dateOfRoute: DateRouteDetailProps[];
+}

@@ -220,7 +220,7 @@ function RouteAddMainPage() {
                         let arr = [...typeChecked];
                         let newArr: string[] = [];
                         arr.map((e) => {
-                          if (e != ele) {
+                          if (e !== ele) {
                             newArr.push(e);
                           }
                         });
@@ -316,7 +316,15 @@ function RouteAddMainPage() {
             color="#ffffff"
             onClick={() => {
               if (typeChecked.length > 0 && imgReady && explanationReady) {
-                navigator('/route/addDetail');
+                navigator('/route/addDetail', {
+                  state: {
+                    imgSrc: imgSrc,
+                    typeChecked: typeChecked,
+                    routeTitle: routeTitle,
+                    routeExplane: routeExplane,
+                    isOpen: isOpen,
+                  },
+                });
               }
             }}
           />
