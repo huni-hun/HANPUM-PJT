@@ -90,4 +90,12 @@ public class MemberController {
                 courseService.getInterestCourseList(userDetails.getMember().getMemberId());
         return response.success(ResponseCode.MEMBER_LIKE_COURSE_LIST_FETCHED, likeCourseListGetResDto);
     }
+
+    @Operation(summary = "내가 만든 경로 리스트 조회", description = "내가 만든 경로 리스트 조회 API")
+    @GetMapping("/make-course")
+    public ResponseEntity<?> getMemberMadeCourseList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<CourseResDto> madeCourseListGetResDto =
+                courseService.getSelfMadeCourseList(userDetails.getMember().getMemberId());
+        return response.success(ResponseCode.MEMBER_MADE_COURSE_LIST_FETCHED, madeCourseListGetResDto);
+    }
 }
