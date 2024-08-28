@@ -1,6 +1,7 @@
 package backend.hanpum.domain.schedule.entity;
 
 import backend.hanpum.domain.course.entity.Waypoint;
+import backend.hanpum.exception.exception.schedule.BadScheduleStateUpdateRequestException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,8 +24,8 @@ public class ScheduleWayPoint {
     private Long id;
 
     @Builder.Default
-    @Column(name = "visit")
-    private boolean visit= false;
+    @Column(name = "state")
+    private int state = 0;      // 방문 전 0, 진행중 1, 방문완료 2
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Waypoint waypoint;
@@ -34,5 +35,13 @@ public class ScheduleWayPoint {
 
     @OneToMany(mappedBy = "scheduleWayPoint")
     private List<Memo> memoList = new ArrayList<>();
+
+    public void updateVisit(int nowState) {
+        if (nowState < 0 || nowState > 2) {
+            throw new BadScheduleStateUpdateRequestException();
+        }
+        this.state = nowState;
+    }
+
 
 }
