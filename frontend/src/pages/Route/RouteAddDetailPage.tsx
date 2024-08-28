@@ -8,10 +8,13 @@ import Header from '@/components/common/Header/Header';
 import SearchPlacePage from './SearchPlacePage';
 import {
   AddRouteProps,
+  AttractionsAddProps,
+  AttractionsProps,
   DateRouteDetailProps,
   WayPointListProps,
 } from '@/models/route';
 import RoutePlaceCard from '@/components/Style/Route/RoutePlaceCard';
+import { colors } from '@/styles/colorPalette';
 
 function RouteAddDetailPage() {
   const [curLatitude, setCurLatitude] = useState<number>(0);
@@ -24,6 +27,9 @@ function RouteAddDetailPage() {
   const [addRoute, setAddRoute] = useState<AddRouteProps>(null!);
   const [dateDetail, setDateDetail] = useState<DateRouteDetailProps[]>([]);
   const [wayPoints, setWayPoints] = useState<WayPointListProps[]>([]);
+  const [attractions, setAttractions] = useState<AttractionsAddProps[]>([]);
+  const [pointType, setPointType] = useState<string>('wp');
+
   const location = useLocation();
   const data = { ...location.state };
 
@@ -85,6 +91,7 @@ function RouteAddDetailPage() {
     dateDetail.map((ele: DateRouteDetailProps) => {
       if (ele.date === selectedDay) {
         setWayPoints(ele.wayPointList);
+        setAttractions(ele.attractionsList);
       }
     });
     console.log(dateDetail);
@@ -92,6 +99,9 @@ function RouteAddDetailPage() {
 
   return searchOpen ? (
     <SearchPlacePage
+      pointType={pointType}
+      attractions={attractions}
+      setAttractions={setAttractions}
       day={selectedDay}
       dateDetail={dateDetail}
       setDateDetail={setDateDetail}
@@ -136,6 +146,7 @@ function RouteAddDetailPage() {
             </R.MapCardTitle>
             <R.MapSearchBox
               onClick={() => {
+                setPointType('wp');
                 setSearchOpen(true);
               }}
             >
@@ -167,12 +178,24 @@ function RouteAddDetailPage() {
               <R.AttractionsBox>
                 <R.AttrantiosTypeBox>관광지</R.AttrantiosTypeBox>
                 <R.AttractionsOverflow>
-                  <R.AttractionCard></R.AttractionCard>
-                  <R.AttractionCard></R.AttractionCard>
-                  <R.AttractionCard></R.AttractionCard>
-                  <R.AttractionCard></R.AttractionCard>
-                  <R.AttractionCard></R.AttractionCard>
-                  <R.AttractionCard></R.AttractionCard>
+                  {attractions.length > 0 &&
+                    attractions.map((ele: AttractionsAddProps) => (
+                      <R.AttractionCard img={ele.img}>
+                        <R.AttractionCardTitle>TEST</R.AttractionCardTitle>
+                        <R.AttractionCardDetail>
+                          <Icon name="IconFlag" size={20} />
+                          {ele.name}
+                        </R.AttractionCardDetail>
+                      </R.AttractionCard>
+                    ))}
+                  <R.AttractionAddCard
+                    onClick={() => {
+                      setPointType('att');
+                      setSearchOpen(true);
+                    }}
+                  >
+                    +
+                  </R.AttractionAddCard>
                 </R.AttractionsOverflow>
               </R.AttractionsBox>
             </R.PlaceContainer>
@@ -185,7 +208,7 @@ function RouteAddDetailPage() {
             width={30}
             height={6}
             fontColor="ffffff"
-            backgroundColor="#D9D9D9"
+            backgroundColor={colors.main}
             radius={0.7}
             fontSize={1.6}
             children="경로완성"

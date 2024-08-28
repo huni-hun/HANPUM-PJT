@@ -88,6 +88,7 @@ export interface searchPlaceProps {
   address: string;
   latitude: number;
   longitude: number;
+  img?: string;
 }
 
 export interface WayPointListProps {
@@ -102,18 +103,18 @@ export interface WayPointListProps {
   calorie: number;
 }
 
-export interface AttractionsProps {
-  type: string;
+export interface AttractionsAddProps {
   address: string;
   latitude: number;
   longitude: number;
   name: string;
+  img: string;
 }
 
 export interface DateRouteDetailProps {
   date: number;
   wayPointList: WayPointListProps[];
-  attractionsList: AttractionsProps[];
+  attractionsList: AttractionsAddProps[];
 }
 
 export interface AddRouteProps {

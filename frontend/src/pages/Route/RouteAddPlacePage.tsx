@@ -6,6 +6,7 @@ import Map from '../../components/common/Map/Map';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '@/components/common/Header/Header';
 import {
+  AttractionsAddProps,
   DateRouteDetailProps,
   searchPlaceProps,
   WayPointListProps,
@@ -20,10 +21,65 @@ interface RouteAddPagePlaceProps {
   setDateDetail: React.Dispatch<React.SetStateAction<DateRouteDetailProps[]>>;
   dateDetail: DateRouteDetailProps[];
   day: number;
+  setAttractions: React.Dispatch<React.SetStateAction<AttractionsAddProps[]>>;
+  attractions: AttractionsAddProps[];
+  pointType: string;
 }
 
 function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
   const navigator = useNavigate();
+
+  const setWayPoint = () => {
+    let way: WayPointListProps = {
+      type: '경유지',
+      name: props.selectedPlace.placeName,
+      address: props.selectedPlace.address,
+      latitude: props.selectedPlace.latitude,
+      longitude: props.selectedPlace.longitude,
+      point: props.wayPoints.length + 1,
+      distance: 123,
+      duration: 432,
+      calorie: 123,
+    };
+
+    props.setWayPoints((pre) => {
+      const updatedWayPoints = [...pre, way];
+
+      let newDateDetail: DateRouteDetailProps[] = [...props.dateDetail];
+      newDateDetail.map((ele: DateRouteDetailProps) => {
+        if (ele.date === props.day) {
+          ele.wayPointList = updatedWayPoints;
+        }
+      });
+      props.setDateDetail(newDateDetail);
+
+      return updatedWayPoints;
+    });
+  };
+
+  const setAttraction = () => {
+    let attraction: AttractionsAddProps = {
+      name: props.selectedPlace.placeName,
+      address: props.selectedPlace.address,
+      latitude: props.selectedPlace.latitude,
+      longitude: props.selectedPlace.longitude,
+      img: props.selectedPlace.img as string,
+    };
+
+    props.setAttractions((pre) => {
+      const updatedWayPoints = [...pre, attraction];
+
+      let newDateDetail: DateRouteDetailProps[] = [...props.dateDetail];
+      newDateDetail.map((ele: DateRouteDetailProps) => {
+        if (ele.date === props.day) {
+          ele.attractionsList = updatedWayPoints;
+        }
+      });
+      props.setDateDetail(newDateDetail);
+
+      return updatedWayPoints;
+    });
+  };
 
   // console.log(placeInfo);
   return (
@@ -70,7 +126,9 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
               fontSize={1.6}
               children="관광지 추가"
               color="#1A823B"
-              onClick={() => {}}
+              onClick={() => {
+                setAttraction();
+              }}
               fontWeight="bold"
             />
             <Button
@@ -83,33 +141,7 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
               children="경유지 추가"
               color="#ffffff"
               onClick={() => {
-                let way: WayPointListProps = {
-                  type: '경유지',
-                  name: props.selectedPlace.placeName,
-                  address: props.selectedPlace.address,
-                  latitude: props.selectedPlace.latitude,
-                  longitude: props.selectedPlace.longitude,
-                  point: props.wayPoints.length + 1,
-                  distance: 123,
-                  duration: 432,
-                  calorie: 123,
-                };
-
-                props.setWayPoints((pre) => {
-                  const updatedWayPoints = [...pre, way];
-
-                  let newDateDetail: DateRouteDetailProps[] = [
-                    ...props.dateDetail,
-                  ];
-                  newDateDetail.map((ele: DateRouteDetailProps) => {
-                    if (ele.date === props.day) {
-                      ele.wayPointList = updatedWayPoints;
-                    }
-                  });
-                  props.setDateDetail(newDateDetail);
-
-                  return updatedWayPoints;
-                });
+                setWayPoint();
               }}
               fontWeight="bold"
             />

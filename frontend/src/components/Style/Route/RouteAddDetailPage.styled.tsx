@@ -218,7 +218,7 @@ export const AttractionsOverflow = styled.div`
   }
 `;
 
-export const AttractionCard = styled.div`
+export const AttractionCard = styled.div<{ img: string }>`
   width: 8.4rem;
   height: 9rem;
   display: flex;
@@ -229,6 +229,23 @@ export const AttractionCard = styled.div`
   flex-shrink: 0;
   margin-right: 0.4rem;
   border-radius: 1.2rem;
+  background-image: url(${(props) => props.img});
+`;
+
+export const AttractionAddCard = styled.div`
+  width: 8.4rem;
+  height: 9rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 0.8rem 0.5rem 0.8rem;
+  background-color: ${colors.grey1};
+  flex-shrink: 0;
+  margin-right: 0.4rem;
+  border-radius: 1.2rem;
+  font-size: 3rem;
+  font-weight: bold;
 `;
 
 export const AttractionCardTitle = styled.p`
@@ -237,10 +254,13 @@ export const AttractionCardTitle = styled.p`
 `;
 
 export const AttractionCardDetail = styled.div`
-  width: 7.2rem;
+  width: 8.2rem;
   height: 2.2rem;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: ${colors.white};
 `;
