@@ -10,4 +10,5 @@ import java.util.List;
 public interface InterestCourseRepository extends JpaRepository<InterestCourse, Long> {
     void deleteByMember_MemberIdAndCourse_CourseId(Long memberId, Long courseId);
     List<InterestCourse> findByMember_MemberId(Long memberId);
+    void deleteAllByMember_MemberId(Long memberId);
 }
