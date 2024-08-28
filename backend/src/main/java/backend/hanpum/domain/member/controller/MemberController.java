@@ -6,6 +6,7 @@ import backend.hanpum.domain.course.service.CourseService;
 import backend.hanpum.domain.group.dto.responseDto.GroupListGetResDto;
 import backend.hanpum.domain.group.dto.responseDto.LikeGroupListGetResDto;
 import backend.hanpum.domain.group.service.GroupService;
+import backend.hanpum.domain.member.dto.requestDto.DeleteMemberReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdateMemberInfoReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdateNicknameReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdatePasswordReqDto;
@@ -97,5 +98,13 @@ public class MemberController {
         List<CourseResDto> madeCourseListGetResDto =
                 courseService.getSelfMadeCourseList(userDetails.getMember().getMemberId());
         return response.success(ResponseCode.MEMBER_MADE_COURSE_LIST_FETCHED, madeCourseListGetResDto);
+    }
+
+    @Operation(summary = "회원 탈퇴", description = "회원 탈퇴 API")
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteUser(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                        @RequestBody @Valid DeleteMemberReqDto deleteMemberReqDto) {
+        memberService.deleteMember(userDetails.getMember().getMemberId(), deleteMemberReqDto);
+        return response.success(ResponseCode.MEMBER_DELETE_SUCCESS);
     }
 }

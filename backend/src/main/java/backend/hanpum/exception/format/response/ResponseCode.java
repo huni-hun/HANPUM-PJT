@@ -82,6 +82,7 @@ public enum ResponseCode {
     MEMBER_LIKE_GROUP_LIST_FETCHED(HttpStatus.OK, "관심 모임 리스트가 성공적으로 조회되었습니다."),
     MEMBER_LIKE_COURSE_LIST_FETCHED(HttpStatus.OK, "관심 경로 리스트가 성공적으로 조회되었습니다."),
     MEMBER_MADE_COURSE_LIST_FETCHED(HttpStatus.OK, "내가 만든 경로 리스트가 성공적으로 조회되었습니다."),
+    MEMBER_DELETE_SUCCESS(HttpStatus.OK, "회원탈퇴가 성공적으로 완료되었습니다."),
     ;
 
     private final HttpStatus status;

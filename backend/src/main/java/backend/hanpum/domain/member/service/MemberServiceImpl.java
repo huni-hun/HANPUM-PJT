@@ -2,14 +2,21 @@ package backend.hanpum.domain.member.service;
 
 import backend.hanpum.config.redis.RedisDao;
 import backend.hanpum.config.s3.S3ImageService;
+import backend.hanpum.domain.course.repository.CourseUsageHistoryRepository;
+import backend.hanpum.domain.course.repository.InterestCourseRepository;
+import backend.hanpum.domain.group.repository.LikeGroupRepository;
+import backend.hanpum.domain.member.dto.requestDto.DeleteMemberReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdateMemberInfoReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdateNicknameReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdatePasswordReqDto;
 import backend.hanpum.domain.member.dto.responseDto.MemberProfileResDto;
 import backend.hanpum.domain.member.entity.Member;
+import backend.hanpum.domain.member.enums.MemberType;
 import backend.hanpum.domain.member.repository.MemberRepository;
+import backend.hanpum.domain.schedule.repository.ScheduleRepository;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.auth.NicknameExpiredException;
+import backend.hanpum.exception.exception.group.GroupAlreadyJoinedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +28,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class MemberServiceImpl implements MemberService{
 
     private final MemberRepository memberRepository;
+    private final LikeGroupRepository likeGroupRepository;
+    private final InterestCourseRepository interestCourseRepository;
+    private final CourseUsageHistoryRepository courseUsageHistoryRepository;
+    private final ScheduleRepository scheduleRepository;
     private final PasswordEncoder passwordEncoder;
     private final S3ImageService s3ImageService;
     private final RedisDao redisDao;
@@ -91,5 +102,26 @@ public class MemberServiceImpl implements MemberService{
             member.updateProfilePicture(updateImage);
             s3ImageService.deleteImage(currentImage);
         }
+    }
+
+    @Override
+    @Transactional
+    public void deleteMember(Long memberId, DeleteMemberReqDto deleteMemberReqDto) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        if (!passwordEncoder.matches(deleteMemberReqDto.getPassword(), member.getPassword())) {
+            throw new LoginInfoInvalidException();
+        }
+        if (member.getGroupMember() != null) {
+            throw new GroupAlreadyJoinedException();
+        }
+        String profilePicture = member.getProfilePicture();
+        member.deleteMember(null, null, null, null, null,
+                null, null, null, "탈퇴회원", MemberType.DELETE
+        );
+        likeGroupRepository.deleteAllByMember_MemberId(memberId); // 관심모임 삭제
+        interestCourseRepository.deleteAllByMember_MemberId(memberId); // 관심 경로 삭제
+        courseUsageHistoryRepository.deleteAllByMember_MemberId(memberId); // 사용한 경로 삭제
+        scheduleRepository.deleteAllByMember_MemberId(memberId); // 일정 삭제
+        // 사진 삭제 로직 추가 예정
     }
 }
