@@ -2,6 +2,8 @@ import * as S from '../Style/Signup/Terms.styled';
 import { APPLY } from '@/constants';
 import { MouseEvent, useState } from 'react';
 import FixedBottomButton from '../common/FixedBottomButton';
+import { useSetRecoilState } from 'recoil';
+import { signupStepAtom } from '@/atoms/signupStepAtom';
 
 function Terms({
   clickNext,
@@ -21,6 +23,8 @@ function Terms({
       {},
     );
   });
+
+  const setSignupStep = useSetRecoilState(signupStepAtom);
 
   // 모두 체크되었는지 확인하고 true, false로 반환
   const isAllCheck = Object.values(termsAgreements).every((allTrue) => allTrue);
@@ -52,6 +56,19 @@ function Terms({
       ...prevTerms,
       [id]: checked,
     }));
+  };
+
+  const tryKakao = sessionStorage.getItem('send');
+
+  const clickNextBtn = () => {
+    if (tryKakao === 'true') {
+      return setSignupStep((prev) => ({
+        ...prev,
+        currStep: 2,
+      }));
+    } else {
+      return clickNext();
+    }
   };
 
   return (
@@ -94,7 +111,7 @@ function Terms({
         label="동의하고 시작하기"
         disabled={!isEssentialCheck}
         $bottom="5"
-        onClick={() => (isEssentialCheck ? clickNext() : '')}
+        onClick={() => isEssentialCheck && clickNextBtn}
       />
     </S.TermsContainer>
   );
