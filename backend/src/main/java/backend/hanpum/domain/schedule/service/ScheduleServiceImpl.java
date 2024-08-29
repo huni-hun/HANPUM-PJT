@@ -373,8 +373,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleDayId;
     }
 
-
-    private int getScheduleGoalRate(List<ScheduleDayResDto> scheduleDayResDtoList) {
+    @Override
+    public int getScheduleGoalRate(List<ScheduleDayResDto> scheduleDayResDtoList) {
 
         int rate = 0;
         int size = scheduleDayResDtoList.size();

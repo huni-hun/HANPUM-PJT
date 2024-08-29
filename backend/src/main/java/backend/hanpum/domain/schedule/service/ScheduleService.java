@@ -46,4 +46,6 @@ public interface ScheduleService {
     // 주변 관광지 정보 가져오기
     List<NearByAttractionResDto> getNearByAttractionList(String OS, int distance, double lat, double lon);
 
+    // 진행률 계산
+    int getScheduleGoalRate(List<ScheduleDayResDto> scheduleDayResDtoList);
 }
