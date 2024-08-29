@@ -72,6 +72,9 @@ export async function KaKaoLogin(signupKaKaoReq: Partial<SignupRequestValues>) {
     const updatedRest = { ...rest };
     console.log('rest ::', updatedRest);
 
+    console.log(formData.get('kakaoSignUpCompleteReqDto'));
+    console.log(formData.get('multipartFile'));
+
     const signupKaKaoReqDto = new Blob([JSON.stringify(updatedRest)], {
       type: 'application/json',
     });
