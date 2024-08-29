@@ -1,7 +1,10 @@
+import { ChangePassword } from '@/api/mypage/PUT';
 import { FindId } from '@/api/signup/GET';
+import { CertificationFindPw } from '@/api/signup/POST';
 import { FindPw } from '@/api/signup/PUT';
 import FindIdComponent from '@/components/Auth/FindId';
 import FindPwComponent from '@/components/Auth/FindPw';
+import NewPw from '@/components/Auth/NewPw';
 import SuccessFindLayout from '@/components/Auth/SuccessFindLayout';
 import SuccessFindPage from '@/components/Auth/SuccessFindLayout';
 import FixedBottomButton from '@/components/common/FixedBottomButton';
@@ -26,7 +29,7 @@ function FindPage() {
 
   const [loginId, setLoginId] = useState('');
 
-  // console.log(param, step);
+  const [sendMail, setSendMail] = useState(false);
 
   const navigate = useNavigate();
 
@@ -49,17 +52,19 @@ function FindPage() {
     },
   );
 
-  const { mutate: findPw, isLoading } = useMutation(
+  const { mutate: certificationFindPw, isLoading } = useMutation(
     ({ loginId, email }: { loginId: string; email: string }) =>
-      FindPw(loginId, email),
+      CertificationFindPw(loginId, email),
     {
       onSuccess: (res) => {
         if (res.status === STATUS.success) {
           toast.success(res.message);
-          setStep(1);
+          setSendMail(true);
+          // setStep(1);
         }
         if (res.status === STATUS.error) {
           toast.error(res.message);
+          setSendMail(false);
         }
       },
       onError: (error: AxiosError) => {
@@ -67,10 +72,6 @@ function FindPage() {
       },
     },
   );
-
-  if (isLoading) {
-    <div>이메일로 임시비밀번호를 보내고 있어요.</div>;
-  }
 
   return (
     <FindPageContainer>
@@ -89,10 +90,18 @@ function FindPage() {
       )}
 
       {param === 'pw' && step === 0 && (
-        <FindPwComponent param={param} findPw={findPw} />
+        <FindPwComponent
+          param={param}
+          certificationFindPw={certificationFindPw}
+          sendMail={sendMail}
+          isLoading={isLoading}
+          setStep={setStep}
+        />
       )}
 
-      {param === 'pw' && step === 1 && (
+      {param === 'pw' && step === 1 && <NewPw />}
+
+      {param === 'pw' && step === 2 && (
         <SuccessFindLayout loginId={loginId} setStep={setStep} />
       )}
     </FindPageContainer>

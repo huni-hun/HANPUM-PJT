@@ -11,18 +11,44 @@ import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { UserSignupFormValues } from '@/models/signup';
+import Flex from '../common/Flex';
+import BaseButton from '../common/BaseButton';
+import { CertificationEmail } from '@/api/signup/POST';
+import Icon from '../common/Icon/Icon';
 
 function FindPwComponent({
   param,
-  findPw,
+  certificationFindPw,
+  sendMail,
+  isLoading,
+  setStep,
 }: {
   param: string;
-  findPw: (data: { loginId: string; email: string }) => void;
+  certificationFindPw: ({
+    loginId,
+    email,
+  }: {
+    loginId: string;
+    email: string;
+  }) => void;
+  sendMail: boolean;
+  isLoading: boolean;
+  setStep: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const [findPwReq, setFindPwReq] = useState({
     loginId: '',
     email: '',
   });
+
+  const [checkInputCodeMessage, setCheckInputcodeMessage] = useState<
+    string | null
+  >(null);
+
+  const [sendAuthCode, setSendAuthCode] = useState(false);
+
+  const [inputAuthCode, setInputAuthCode] = useState('');
+
+  const [time, setTime] = useState(300);
 
   const handlePwReq = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -31,6 +57,10 @@ function FindPwComponent({
       ...prevValue,
       [name]: value,
     }));
+  };
+
+  const handleInputAuthCode = (e: ChangeEvent<HTMLInputElement>) => {
+    setInputAuthCode(e.target.value);
   };
 
   const [dirty, setDirty] = useState<
@@ -44,6 +74,29 @@ function FindPwComponent({
       [name]: 'true',
     }));
   };
+
+  // 인증코드 인증
+  const { mutate: certificationEmail } = useMutation(
+    ({ email, inputAuthCode }: { email: string; inputAuthCode: string }) =>
+      CertificationEmail(email, inputAuthCode),
+    {
+      onSuccess: (res) => {
+        if (res.status === STATUS.success) {
+          toast.success(res.message);
+          setCheckInputcodeMessage(null);
+          setSendAuthCode(true);
+        }
+        if (res.status === STATUS.error) {
+          toast.error(res.message);
+          setCheckInputcodeMessage(res.message);
+          setSendAuthCode(false);
+        }
+      },
+      onError: (error: AxiosError) => {
+        toast.error(error.message);
+      },
+    },
+  );
 
   const validate = useMemo(() => {
     let errors: Partial<UserSignupFormValues> = {};
@@ -61,10 +114,41 @@ function FindPwComponent({
       errors.loginId = '※영문과 숫자를 조합하여 6~13자로 입력해 주세요.';
     }
 
+    if ((inputAuthCode?.trim() || '')?.length === 0) {
+      errors.inputAuthCode = '인증번호를 입력해주세요.';
+    } else if (checkInputCodeMessage) {
+      errors.inputAuthCode = checkInputCodeMessage;
+    }
+
     return errors;
-  }, [findPwReq, param]);
+  }, [findPwReq, inputAuthCode, checkInputCodeMessage]);
 
   const noError = Object.keys(validate).length === 0;
+
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${String(minutes).padStart(2, '0')}:${String(
+      remainingSeconds,
+    ).padStart(2, '0')}`;
+  };
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (sendMail && time > 0) {
+      timer = setInterval(() => {
+        setTime((prevTime) => prevTime - 1);
+      }, 1000);
+    }
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [time, sendMail]);
+
+  if (isLoading) {
+    return <div>메일 전송중...</div>;
+  }
 
   return (
     <S.FindContainer>
@@ -104,24 +188,106 @@ function FindPwComponent({
         <TextField
           label="이메일"
           name="email"
-          placeholder="123456@naver.com"
           onChange={handlePwReq}
           value={findPwReq.email}
+          hasError={
+            dirty.email && Boolean(validate.email || validate.checkEmail)
+          }
           onBlur={handleBlur}
-          hasError={dirty.email && Boolean(validate.email)}
+          bottomElement={
+            <Flex
+              $justify={
+                Boolean(validate.email || validate.checkEmail)
+                  ? 'space-between'
+                  : 'end'
+              }
+              $align="center"
+            >
+              {dirty.email &&
+                Boolean(validate.email || validate.checkEmail) && (
+                  <Message
+                    hasError={
+                      dirty.email &&
+                      Boolean(validate.email || validate.checkEmail)
+                    }
+                    text={validate.email || validate.checkEmail || ''}
+                  />
+                )}
+
+              {!validate.email && !validate.checkEmail && (
+                <BaseButton
+                  fontSize={1.2}
+                  size="longRadius"
+                  $weak={!sendMail}
+                  style={{ marginTop: 8 }}
+                  onClick={() => {
+                    if ((findPwReq.email || '').length !== 0) {
+                      certificationFindPw({
+                        loginId: findPwReq.loginId,
+                        email: findPwReq.email,
+                      });
+                    }
+                  }}
+                >
+                  {sendMail ? '인증번호 재발송' : '인증번호 발송'}
+                </BaseButton>
+              )}
+            </Flex>
+          }
         />
-        <Message
-          hasError={dirty.email && Boolean(validate.email)}
-          text={dirty.email ? validate.email || '' : ''}
-        />
+
+        {sendMail && (
+          <>
+            <TextField
+              label="인증번호"
+              name="inputAuthCode"
+              value={inputAuthCode}
+              onChange={handleInputAuthCode}
+              placeholder="123456"
+              onBlur={handleBlur}
+              hasError={dirty.inputAuthCode && Boolean(validate.inputAuthCode)}
+              helpMessage={validate.inputAuthCode || validate.checkAuthCode}
+              hasFloat={sendMail ? formatTime(time) : ''}
+              rightElement={
+                <BaseButton
+                  size="radius"
+                  fontSize={1.2}
+                  $weak={!sendAuthCode}
+                  style={{
+                    marginLeft: '8px',
+                  }}
+                  onClick={() =>
+                    certificationEmail({
+                      email: findPwReq.email,
+                      inputAuthCode: inputAuthCode,
+                    })
+                  }
+                >
+                  <Flex $align="center" $justify="center" $gap={4}>
+                    {sendAuthCode && time !== 0 && (
+                      <Icon name="IconCheck" size={9} />
+                    )}
+                    <span>인증</span>
+                  </Flex>
+                </BaseButton>
+              }
+            />
+            {dirty.inputAuthCode && Boolean(validate.inputAuthCode) && (
+              <Message
+                hasError={
+                  dirty.inputAuthCode &&
+                  Boolean(validate.inputAuthCode || validate.inputAuthCode)
+                }
+                text={validate.inputAuthCode || ''}
+              />
+            )}
+          </>
+        )}
       </div>
       <FixedBottomButton
         label={'다음'}
         onClick={() => {
-          findPw({
-            loginId: findPwReq.loginId,
-            email: findPwReq.email,
-          });
+          setStep(1);
         }}
         disabled={!noError}
       />
