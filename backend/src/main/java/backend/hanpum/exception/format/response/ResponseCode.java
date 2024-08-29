@@ -47,6 +47,7 @@ public enum ResponseCode {
     GROUP_CREATED_SUCCESS(HttpStatus.OK, "모임이 성공적으로 생성되었습니다."),
     GROUP_DELETE_SUCCESS(HttpStatus.OK, "모임이 성공적으로 삭제되었습니다."),
     GROUP_LIST_FETCHED(HttpStatus.OK, "모임 리스트가 성공적으로 조회되었습니다."),
+    GROUP_MEMBER_JOIN_FETCHED(HttpStatus.OK, "회원 참여 모임이 성공적으로 조회되었습니다."),
     GROUP_DETAIL_FETCHED(HttpStatus.OK, "모임 상세 정보가 성공적으로 조회되었습니다."),
     GROUP_APPLY_SUCCESS(HttpStatus.OK, "모임 신청이 성공적으로 완료되었습니다."),
     GROUP_APPLY_REMOVE_SUCCESS(HttpStatus.OK, "모임 신청 취소가 성공적으로 완료되었습니다."),

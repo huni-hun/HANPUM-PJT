@@ -1,6 +1,5 @@
 package backend.hanpum.domain.group.dto.responseDto;
 
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

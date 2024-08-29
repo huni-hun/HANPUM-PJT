@@ -1,16 +1,10 @@
 package backend.hanpum.domain.group.repository.custom;
 
-import backend.hanpum.domain.course.entity.QCourse;
 import backend.hanpum.domain.group.dto.responseDto.GroupDetailGetResDto;
 import backend.hanpum.domain.group.dto.responseDto.GroupListGetResDto;
 import backend.hanpum.domain.group.dto.responseDto.GroupResDto;
 import backend.hanpum.domain.group.dto.responseDto.LikeGroupListGetResDto;
-import backend.hanpum.domain.group.entity.QGroup;
-import backend.hanpum.domain.group.entity.QGroupMember;
-import backend.hanpum.domain.group.entity.QLikeGroup;
 import backend.hanpum.domain.group.enums.JoinType;
-import backend.hanpum.domain.group.repository.GroupMemberRepository;
-import backend.hanpum.domain.schedule.entity.QSchedule;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -23,6 +17,13 @@ import org.springframework.data.domain.Sort;
 import java.util.List;
 import java.util.Optional;
 
+import static backend.hanpum.domain.group.entity.QGroup.group;
+import static backend.hanpum.domain.group.entity.QGroupMember.groupMember;
+import static backend.hanpum.domain.schedule.entity.QSchedule.schedule;
+import static backend.hanpum.domain.course.entity.QCourse.course;
+import static backend.hanpum.domain.group.entity.QLikeGroup.likeGroup;
+
+
 @RequiredArgsConstructor
 public class GroupRepositoryImpl implements GroupRepositoryCustom {
 
@@ -31,12 +32,6 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
     @Override
     public GroupListGetResDto findGroupList(Long memberId, String startPoint, String endPoint, Integer maxTotalDays,
                                             Integer maxRecruitmentCount, Pageable pageable) {
-        QGroup group = QGroup.group;
-        QGroupMember groupMember = QGroupMember.groupMember;
-        QCourse course = QCourse.course;
-        QLikeGroup likeGroup = QLikeGroup.likeGroup;
-        QSchedule schedule = QSchedule.schedule;
-
         OrderSpecifier<?> orderSpecifier = group.groupId.desc();
         for (Sort.Order order : pageable.getSort()) {
             String property = order.getProperty();
@@ -125,11 +120,6 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
 
     @Override
     public LikeGroupListGetResDto findMemberLikeGroupList(Long memberId) {
-        QGroup group = QGroup.group;
-        QGroupMember groupMember = QGroupMember.groupMember;
-        QCourse course = QCourse.course;
-        QLikeGroup likeGroup = QLikeGroup.likeGroup;
-        QSchedule schedule = QSchedule.schedule;
 
         BooleanBuilder whereClause = new BooleanBuilder();
         whereClause.and(likeGroup.member.memberId.eq(memberId));
@@ -170,12 +160,6 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
 
     @Override
     public Optional<GroupDetailGetResDto> findGroupById(Long memberId, Long groupId) {
-        QGroup group = QGroup.group;
-        QGroupMember groupMember = QGroupMember.groupMember;
-        QCourse course = QCourse.course;
-        QSchedule schedule = QSchedule.schedule;
-        QLikeGroup likeGroup = QLikeGroup.likeGroup;
-
         return Optional.ofNullable(query
                 .select(Projections.constructor(
                         GroupDetailGetResDto.class,
@@ -206,5 +190,38 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                 .groupBy(group.groupId, group.title, group.groupImg, group.description, group.recruitmentStart, group.recruitmentPeriod,
                         course.startPoint, course.endPoint, course.totalDays)
                 .fetchOne());
+    }
+
+    @Override
+    public GroupResDto findGroupByMemberId(Long memberId) {
+        return query
+                .select(Projections.constructor(
+                        GroupResDto.class,
+                        group.groupId,
+                        group.title,
+                        group.groupImg,
+                        group.likeCount,
+                        groupMember.member.memberId.count().as("recruitedCount"),
+                        group.recruitmentCount,
+                        course.startPoint,
+                        course.endPoint,
+                        course.totalDistance,
+                        course.totalDays,
+                        JPAExpressions.selectOne()
+                                .from(likeGroup)
+                                .where(likeGroup.member.memberId.eq(memberId)
+                                        .and(likeGroup.group.groupId.eq(group.groupId)))
+                                .exists()
+                                .as("isLike")
+                ))
+                .from(group)
+                .leftJoin(group.groupMemberList, groupMember)
+                .leftJoin(group.schedule, schedule)
+                .leftJoin(schedule.course, course)
+                .leftJoin(likeGroup).on(likeGroup.group.groupId.eq(group.groupId).and(likeGroup.member.memberId.eq(memberId)))
+                .where(groupMember.member.memberId.eq(memberId)
+                        .and(groupMember.joinType.ne(JoinType.APPLY)))
+                .groupBy(group.groupId, course.startPoint, course.endPoint, course.totalDistance, course.totalDays)
+                .fetchOne();
     }
 }
