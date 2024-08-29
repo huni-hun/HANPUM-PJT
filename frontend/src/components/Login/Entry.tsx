@@ -7,12 +7,15 @@ import logo from '@imgs/logo.png';
 import Flex from '../common/Flex';
 
 import * as S from '../Style/Login/Entry.styled';
-import { Dispatch, SetStateAction } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { isInitAtom } from '@/atoms/isAuthEnticatedAtom';
 
-function Entry() {
+function Entry({
+  setTryKakao,
+}: {
+  setTryKakao: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const navigate = useNavigate();
   const setInit = useSetRecoilState(isInitAtom);
 
@@ -21,6 +24,8 @@ function Entry() {
     localStorage.setItem('test', 'KAKAO_INCOMPLETE');
     navigate('/');
   };
+
+  // const clickKakao = () => {};
 
   return (
     <S.EntryContainer>
@@ -41,7 +46,7 @@ function Entry() {
           <img src={flag} alt="" className="flag_img" />
           <img src={human} alt="" className="human_img" />
           <div className="login_group">
-            <div className="kakao_login">
+            <div className="kakao_login" onClick={() => setTryKakao(false)}>
               <Link
                 target="_blank"
                 rel="noopener noreferrer"
