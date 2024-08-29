@@ -72,9 +72,6 @@ export async function KaKaoLogin(signupKaKaoReq: Partial<SignupRequestValues>) {
     const updatedRest = { ...rest };
     console.log('rest ::', updatedRest);
 
-    console.log(formData.get('kakaoSignUpCompleteReqDto'));
-    console.log(formData.get('multipartFile'));
-
     const signupKaKaoReqDto = new Blob([JSON.stringify(updatedRest)], {
       type: 'application/json',
     });
@@ -82,6 +79,9 @@ export async function KaKaoLogin(signupKaKaoReq: Partial<SignupRequestValues>) {
     formData.append('kakaoSignUpCompleteReqDto', signupKaKaoReqDto);
     formData.append('multipartFile', multipartFile);
   }
+
+  console.log(formData.get('kakaoSignUpCompleteReqDto'));
+  console.log(formData.get('multipartFile'));
 
   const { data } = await api.post('/api/auth/complete-signup/kakao', formData, {
     headers: {
