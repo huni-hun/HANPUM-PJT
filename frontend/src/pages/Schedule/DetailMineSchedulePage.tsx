@@ -24,7 +24,7 @@ import { SchduleCardProps } from '@/models/schdule';
 function DetailMineSchedulePage() {
   const BtnClick = () => {};
   const navigate = useNavigate();
-  const [isSelected, setIsSelected] = useState<String>('Mine');
+  const [selected, setselected] = useState<String>('Mine');
   const [cardData, setCardData] = useState<SchduleCardProps>({
     backGroundImg: '',
     scheduleTitle: '',

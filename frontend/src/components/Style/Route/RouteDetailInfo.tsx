@@ -97,7 +97,7 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
                 {props.dayData.map((ele) => (
                   <R.DayContainer>
                     <R.DayBox
-                      isSelected={ele.dayNum === props.selectedDay}
+                      selected={ele.dayNum === props.selectedDay}
                       onClick={() => {
                         props.setSelectedDay(ele.dayNum);
                       }}
@@ -162,7 +162,7 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
                 {props.dayData.map((ele) => (
                   <R.DayContainer>
                     <R.DayBox
-                      isSelected={ele.dayNum === props.selectedDay}
+                      selected={ele.dayNum === props.selectedDay}
                       onClick={() => {
                         props.setSelectedDay(ele.dayNum);
                       }}

@@ -120,8 +120,8 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
             <Button
               width={35}
               height={6}
-              fontColor="1A823B"
-              backgroundColor="#ffffff"
+              fc="1A823B"
+              bc="#ffffff"
               radius={0.7}
               fontSize={1.6}
               children="관광지 추가"
@@ -134,8 +134,8 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
             <Button
               width={35}
               height={6}
-              fontColor="ffffff"
-              backgroundColor="#1A823B"
+              fc="ffffff"
+              bc="#1A823B"
               radius={0.7}
               fontSize={1.6}
               children="경유지 추가"

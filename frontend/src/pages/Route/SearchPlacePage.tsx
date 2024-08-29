@@ -113,7 +113,7 @@ function SearchPlacePage(props: SearchPlacePageProps) {
             }}
             onKeyDown={(e) => {
               // console.log(e);
-              if (e.code === 'Enter') {
+              if (e.code === 'Enter' || e.key === 'Enter') {
                 setSearchedPlace([]);
                 if (props.pointType === 'wp') {
                   getWaypoint();
@@ -127,9 +127,9 @@ function SearchPlacePage(props: SearchPlacePageProps) {
         </R.InputContainer>
       </R.Header>
       <R.MainContainer>
-        {searchedPlace.map((ele: searchPlaceProps) => (
+        {searchedPlace.map((ele: searchPlaceProps, idx: number) => (
           <R.PlaceBox
-            key={ele.address}
+            key={idx}
             onClick={() => {
               setSelectedPlace(ele);
               setPageOpen(true);

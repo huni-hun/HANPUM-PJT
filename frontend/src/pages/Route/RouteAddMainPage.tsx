@@ -104,8 +104,8 @@ function RouteAddMainPage() {
                 <Button
                   width={25}
                   height={6}
-                  fontColor="ffffff"
-                  backgroundColor={imgReady ? '#1A823B' : '#D9D9D9'}
+                  fc="ffffff"
+                  bc={imgReady ? '#1A823B' : '#D9D9D9'}
                   radius={0.7}
                   fontSize={1.6}
                   children="등록"
@@ -173,8 +173,8 @@ function RouteAddMainPage() {
                 <Button
                   width={25}
                   height={6}
-                  fontColor="ffffff"
-                  backgroundColor={explanationReady ? '#1A823B' : '#D9D9D9'}
+                  fc="ffffff"
+                  bc={explanationReady ? '#1A823B' : '#D9D9D9'}
                   radius={0.7}
                   fontSize={1.6}
                   children="등록"
@@ -268,10 +268,8 @@ function RouteAddMainPage() {
                 <Button
                   width={25}
                   height={6}
-                  fontColor="ffffff"
-                  backgroundColor={
-                    typeChecked.length > 0 ? '#1A823B' : '#D9D9D9'
-                  }
+                  fc="ffffff"
+                  bc={typeChecked.length > 0 ? '#1A823B' : '#D9D9D9'}
                   radius={0.7}
                   fontSize={1.6}
                   children="등록"
@@ -304,8 +302,8 @@ function RouteAddMainPage() {
           <Button
             width={25}
             height={6}
-            fontColor="ffffff"
-            backgroundColor={
+            fc="ffffff"
+            bc={
               typeChecked.length > 0 && imgReady && explanationReady
                 ? colors.main
                 : colors.grey2

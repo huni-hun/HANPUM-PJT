@@ -74,7 +74,7 @@ function RouteList() {
             <R.BlankBox />
             <R.OverFlow>
               {arr.map((ele) => (
-                <RouteCard {...ele} />
+                <RouteCard {...ele} key={ele.routeId} />
               ))}
             </R.OverFlow>
           </R.CardContainer>

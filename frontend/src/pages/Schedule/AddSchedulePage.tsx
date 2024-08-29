@@ -13,7 +13,7 @@ function AddSchedulePage() {
     /** 일정추가 버튼 -> move addSchedule.tsx */
   };
 
-  const [isSelected, setIsSelected] = useState<String>('Mine');
+  const [selected, setselected] = useState<String>('Mine');
 
   /** select box 관련 */
   const [isOpen, setIsOpen] = useState(false);

@@ -69,7 +69,7 @@ function BottomSheet(props: BottomSheetProps) {
                   props.setSelected(ele);
                 }}
               >
-                <R.SortingTyep isSelected={props.selected === ele}>
+                <R.SortingTyep selected={props.selected === ele}>
                   {ele}
                 </R.SortingTyep>
                 {props.selected === ele && (

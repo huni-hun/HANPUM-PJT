@@ -26,7 +26,7 @@ import BottomTab from '@/components/common/BottomTab/BottomTab';
 function ScheduleMainPage() {
   const BtnClick = () => {};
   const navigate = useNavigate();
-  const [isSelected, setIsSelected] = useState<String>('Mine');
+  const [selected, setselected] = useState<String>('Mine');
   const [cardData, setCardData] = useState<SchduleCardProps>({
     backGroundImg: '',
     scheduleTitle: '',
@@ -164,25 +164,25 @@ function ScheduleMainPage() {
       <S.SchduleTypeContainer>
         <S.SchduleTypeBox>
           <S.ScheduleType
-            isSelected={isSelected === 'Proceeding'}
+            selected={selected === 'Proceeding'}
             onClick={() => {
-              setIsSelected('Proceeding');
+              setselected('Proceeding');
             }}
           >
             진행중
           </S.ScheduleType>
           <S.ScheduleType
-            isSelected={isSelected === 'Mine'}
+            selected={selected === 'Mine'}
             onClick={() => {
-              setIsSelected('Mine');
+              setselected('Mine');
             }}
           >
             내 일정
           </S.ScheduleType>
           <S.ScheduleType
-            isSelected={isSelected === 'Class'}
+            selected={selected === 'Class'}
             onClick={() => {
-              setIsSelected('Class');
+              setselected('Class');
             }}
           >
             모임일정
@@ -190,7 +190,7 @@ function ScheduleMainPage() {
         </S.SchduleTypeBox>
       </S.SchduleTypeContainer>
       {/* 진행중 */}
-      {isSelected === 'Proceeding' && (
+      {selected === 'Proceeding' && (
         <R.Main>
           <R.Overflow>
             <R.RouteInfoContainer>
@@ -241,7 +241,7 @@ function ScheduleMainPage() {
       )}
 
       {/* 내 일정 */}
-      {isSelected === 'Mine' && (
+      {selected === 'Mine' && (
         <R.Main>
           <R.Overflow>
             {dummyCardData.map((data, index) => (
@@ -263,7 +263,7 @@ function ScheduleMainPage() {
       )}
 
       {/* 모임 일정 */}
-      {isSelected === 'Class' && (
+      {selected === 'Class' && (
         <R.Main>
           <R.Overflow>
             <R.RouteInfoContainer>

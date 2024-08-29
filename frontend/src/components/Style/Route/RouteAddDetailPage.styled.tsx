@@ -56,7 +56,7 @@ export const DayOverFlow = styled.div`
   align-items: center;
 `;
 
-export const DayCard = styled.div<{ isSelected: boolean }>`
+export const DayCard = styled.div<{ selected: boolean }>`
   width: 7.4rem;
   height: 3.3rem;
   display: flex;
@@ -65,11 +65,11 @@ export const DayCard = styled.div<{ isSelected: boolean }>`
   margin-right: 0.8rem;
   align-items: center;
   border: 0.15rem solid
-    ${(prop) => (prop.isSelected ? colors.main : colors.grey2)};
+    ${(prop) => (prop.selected ? colors.main : colors.grey2)};
   border-radius: 10rem;
   font-size: 1.6rem;
   font-weight: bold;
-  color: ${(prop) => (prop.isSelected ? colors.main : colors.grey2)};
+  color: ${(prop) => (prop.selected ? colors.main : colors.grey2)};
   flex-shrink: 0;
 `;
 

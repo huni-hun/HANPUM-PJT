@@ -109,7 +109,17 @@ function RouteListSearchPage() {
             {typeArr.map((ele) => (
               <R.Type
                 onClick={() => {
-                  setSelectType((pre) => [...pre, ele]);
+                  if (selectType.includes(ele)) {
+                    let arr: string[] = [];
+                    selectType.map((el: string) => {
+                      if (ele !== el) {
+                        arr.push(el);
+                      }
+                    });
+                    setSelectType(arr);
+                  } else {
+                    setSelectType((pre) => [...pre, ele]);
+                  }
                 }}
                 isSelect={selectType.includes(ele)}
               >
@@ -124,8 +134,8 @@ function RouteListSearchPage() {
           <Button
             width={35}
             height={6}
-            fontColor="ffffff"
-            backgroundColor="#1A823B"
+            fc="ffffff"
+            bc="#1A823B"
             radius={0.7}
             fontSize={1.6}
             children="경로 검색"

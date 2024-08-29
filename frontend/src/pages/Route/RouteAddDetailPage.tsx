@@ -124,7 +124,7 @@ function RouteAddDetailPage() {
             <R.DayOverFlow>
               {route.map((ele) => (
                 <R.DayCard
-                  isSelected={selectedDay === ele}
+                  selected={selectedDay === ele}
                   onClick={() => {
                     setSelectedDay(ele);
                   }}
@@ -207,8 +207,8 @@ function RouteAddDetailPage() {
           <Button
             width={30}
             height={6}
-            fontColor="ffffff"
-            backgroundColor={colors.main}
+            fc="ffffff"
+            bc={colors.main}
             radius={0.7}
             fontSize={1.6}
             children="경로완성"
