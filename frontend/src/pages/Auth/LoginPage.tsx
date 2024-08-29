@@ -21,12 +21,13 @@ function LoginPage() {
 
   const setSignupStep = useSetRecoilState(signupStepAtom);
 
-  const [tryKakao, setTryKakao] = useState(false);
+  // const [tryKakao, setTryKakao] = useState(localStorage.getItem('send'));
+  const tryKakao = sessionStorage.getItem('send');
   console.log('tryKakao ::', tryKakao);
 
   useEffect(() => {
     // const testDebug = localStorage.getItem('test');
-    if (tryKakao) {
+    if (tryKakao === 'true') {
       const memberType = Cookies.get('memberType');
       const accessToken = Cookies.get('accessToken');
       console.log('memberType ::', memberType);
@@ -43,13 +44,15 @@ function LoginPage() {
           currStep: 2,
         }));
         navigate('/signup');
+      } else {
+        navigate('/');
       }
     }
   }, [tryKakao]);
 
   return (
     <LoginPageContainer>
-      {init && <Entry setTryKakao={setTryKakao} />} {!init && <Form />}
+      {init && <Entry />} {!init && <Form />}
     </LoginPageContainer>
   );
 }
