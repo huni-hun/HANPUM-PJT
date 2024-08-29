@@ -22,6 +22,7 @@ function LoginPage() {
   const setSignupStep = useSetRecoilState(signupStepAtom);
 
   const [tryKakao, setTryKakao] = useState(false);
+  console.log('tryKakao ::', tryKakao);
 
   useEffect(() => {
     // const testDebug = localStorage.getItem('test');
