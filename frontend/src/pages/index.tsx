@@ -68,6 +68,8 @@ export {
   MeetRequest,
   MeetAcceptPage,
   MeetAddMainPage,
+
+  /** 마이페이지, 회원관련 */
   SignupPage,
   FindPage,
   MyPage,
