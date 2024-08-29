@@ -25,22 +25,24 @@ function LoginPage() {
 
   useEffect(() => {
     // const testDebug = localStorage.getItem('test');
-    const memberType = Cookies.get('memberType');
-    const accessToken = Cookies.get('accessToken');
-    console.log('memberType ::', memberType);
-    console.log('accessToken ::', accessToken);
+    if (tryKakao) {
+      const memberType = Cookies.get('memberType');
+      const accessToken = Cookies.get('accessToken');
+      console.log('memberType ::', memberType);
+      console.log('accessToken ::', accessToken);
 
-    if (accessToken) {
-      const token = encodeToken(accessToken.split('+')[1]);
-      localStorage.setItem('token', JSON.stringify(token));
-    }
+      if (accessToken) {
+        const token = encodeToken(accessToken.split('+')[1]);
+        localStorage.setItem('token', JSON.stringify(token));
+      }
 
-    if (memberType === 'KAKAO_INCOMPLETE') {
-      setSignupStep((prev) => ({
-        ...prev,
-        currStep: 2,
-      }));
-      navigate('/signup');
+      if (memberType === 'KAKAO_INCOMPLETE') {
+        setSignupStep((prev) => ({
+          ...prev,
+          currStep: 2,
+        }));
+        navigate('/signup');
+      }
     }
   }, [tryKakao]);
 
