@@ -19,14 +19,10 @@ function LoginPage() {
   //   setInit(true);
   // }, []);
 
-  const setSignupStep = useSetRecoilState(signupStepAtom);
-
-  // const [tryKakao, setTryKakao] = useState(localStorage.getItem('send'));
   const tryKakao = sessionStorage.getItem('send');
   console.log('tryKakao ::', tryKakao);
 
   useEffect(() => {
-    // const testDebug = localStorage.getItem('test');
     if (tryKakao === 'true') {
       const memberType = Cookies.get('memberType');
       const accessToken = Cookies.get('accessToken');
@@ -39,10 +35,6 @@ function LoginPage() {
       }
 
       if (memberType === 'KAKAO_INCOMPLETE') {
-        setSignupStep((prev) => ({
-          ...prev,
-          currStep: 2,
-        }));
         navigate('/signup');
       } else {
         navigate('/');
