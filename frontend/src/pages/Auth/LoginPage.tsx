@@ -20,7 +20,6 @@ function LoginPage() {
   // }, []);
 
   const tryKakao = sessionStorage.getItem('send');
-  console.log('tryKakao ::', tryKakao);
 
   useEffect(() => {
     if (tryKakao === 'true') {
