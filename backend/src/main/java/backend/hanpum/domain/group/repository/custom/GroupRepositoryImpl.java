@@ -79,6 +79,8 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                         course.endPoint,
                         course.totalDistance,
                         course.totalDays,
+                        schedule.startDate,
+                        schedule.endDate,
                         JPAExpressions.selectOne()
                                 .from(likeGroup)
                                 .where(likeGroup.member.memberId.eq(memberId)
@@ -92,7 +94,8 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                 .leftJoin(schedule.course, course)
                 .leftJoin(likeGroup).on(likeGroup.group.groupId.eq(group.groupId).and(likeGroup.member.memberId.eq(memberId)))
                 .where(groupMember.joinType.ne(JoinType.APPLY).and(whereClause))
-                .groupBy(group.groupId, course.startPoint, course.endPoint, course.totalDistance, course.totalDays)
+                .groupBy(group.groupId, course.startPoint, course.endPoint, course.totalDistance, course.totalDays,
+                        schedule.startDate, schedule.endDate)
                 .orderBy(orderSpecifier)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -138,6 +141,8 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                         course.endPoint,
                         course.totalDistance,
                         course.totalDays,
+                        schedule.startDate,
+                        schedule.endDate,
                         JPAExpressions.selectOne()
                                 .from(likeGroup)
                                 .where(likeGroup.member.memberId.eq(memberId)
@@ -151,7 +156,8 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                 .leftJoin(group.schedule, schedule)
                 .leftJoin(schedule.course, course)
                 .where(whereClause)
-                .groupBy(group.groupId, schedule.course, schedule.course, schedule.course, schedule.course)
+                .groupBy(group.groupId, schedule.course, schedule.course, schedule.course, schedule.course,
+                        schedule.startDate, schedule.endDate)
                 .orderBy(group.groupId.desc())
                 .fetch();
 
@@ -174,6 +180,8 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                         course.startPoint,            // 출발지
                         course.endPoint,              // 목적지
                         course.totalDays,              // 총 일정 기간
+                        schedule.startDate,           // 일정 시작일
+                        schedule.endDate,           // 일정 종료일
                         JPAExpressions.selectOne()
                                 .from(likeGroup)
                                 .where(likeGroup.member.memberId.eq(memberId)
@@ -188,7 +196,7 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                 .where(group.groupId.eq(groupId))
                 .where(groupMember.joinType.ne(JoinType.APPLY))
                 .groupBy(group.groupId, group.title, group.groupImg, group.description, group.recruitmentStart, group.recruitmentPeriod,
-                        course.startPoint, course.endPoint, course.totalDays)
+                        course.startPoint, course.endPoint, course.totalDays, schedule.startDate, schedule.endDate)
                 .fetchOne());
     }
 
@@ -207,6 +215,8 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                         course.endPoint,
                         course.totalDistance,
                         course.totalDays,
+                        schedule.startDate,
+                        schedule.endDate,
                         JPAExpressions.selectOne()
                                 .from(likeGroup)
                                 .where(likeGroup.member.memberId.eq(memberId)
@@ -221,7 +231,8 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                 .leftJoin(likeGroup).on(likeGroup.group.groupId.eq(group.groupId).and(likeGroup.member.memberId.eq(memberId)))
                 .where(groupMember.member.memberId.eq(memberId)
                         .and(groupMember.joinType.ne(JoinType.APPLY)))
-                .groupBy(group.groupId, course.startPoint, course.endPoint, course.totalDistance, course.totalDays)
+                .groupBy(group.groupId, course.startPoint, course.endPoint, course.totalDistance, course.totalDays,
+                        schedule.startDate, schedule.endDate)
                 .fetchOne();
     }
 }

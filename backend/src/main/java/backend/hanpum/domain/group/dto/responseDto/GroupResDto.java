@@ -21,5 +21,7 @@ public class GroupResDto {
     private String endPoint;
     private Double totalDistance;
     private Integer totalDays;
+    private String startDate;
+    private String endDate;
     private boolean isLike;
 }
