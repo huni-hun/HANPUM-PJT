@@ -11,11 +11,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { isInitAtom } from '@/atoms/isAuthEnticatedAtom';
 
-function Entry({
-  setTryKakao,
-}: {
-  setTryKakao: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+function Entry() {
   const navigate = useNavigate();
   const setInit = useSetRecoilState(isInitAtom);
 
@@ -26,8 +22,8 @@ function Entry({
   };
 
   const handleKakaoLogin = () => {
-    setTryKakao(true);
-    window.location.href = `${process.env.REACT_APP_BASEURL}/oauth2/authorization/kakao?kakaoLogin=true`;
+    sessionStorage.setItem('send', 'true');
+    window.location.href = `${process.env.REACT_APP_BASEURL}/oauth2/authorization/kakao`;
   };
 
   return (
