@@ -6,9 +6,7 @@ function RouteListMorePage() {
   return (
     <R.Container>
       <Header purpose="title" clickBack={() => {}} />
-      <R.MainContainer>
-        <RouteListMoreCard />
-      </R.MainContainer>
+      <R.MainContainer>{/* <RouteListMoreCard /> */}</R.MainContainer>
     </R.Container>
   );
 }

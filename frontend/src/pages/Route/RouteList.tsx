@@ -41,7 +41,14 @@ function RouteList() {
   }, []);
   return (
     <R.RouteListContainer>
-      <Header purpose="merge" back={false} clickBack={() => {}} />
+      <Header
+        purpose="merge"
+        back={false}
+        clickBack={() => {}}
+        clickOption={() => {
+          navigator('/route/list/search');
+        }}
+      />
       <R.MainContainer>
         <R.RouteCardContainer>
           <R.RouteTypeHeader>

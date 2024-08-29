@@ -3,12 +3,68 @@ import * as R from '@/components/Style/Route/RouteListSearchPage.styled';
 import { colors } from '@/styles/colorPalette';
 import Button from '@/components/common/Button/Button';
 import { Slider } from '@mui/material';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
+import {
+  getRouteSearchList,
+  getRouteSearchListWithProps,
+} from '@/api/route/GET';
+import RouteListSearchResult from './RouteListSearchResult';
+import { RouteListProps } from '@/models/route';
 
 function RouteListSearchPage() {
   const [sliderValue, setSliderValue] = useState<number>(0);
   const [dateValue, setDateValue] = useState<number>(0);
   const [selectType, setSelectType] = useState<string[]>([]);
+  const [keyword, setKeyword] = useState<string>('');
+  const [searchSucess, setSearchSucess] = useState<boolean>(false);
+  const [searchResult, setSearchResult] = useState<RouteListProps[]>([]);
+
+  const searchHandler = () => {
+    if (dateValue > 0 || sliderValue > 0 || selectType.length > 0) {
+      let distance = `&maxDistance=${sliderValue}`;
+      let days = `&maxDays=${dateValue}`;
+      let types = `&selectedTypes=${selectType.join(',')}`;
+
+      const response = getRouteSearchListWithProps(
+        keyword,
+        distance,
+        days,
+        types,
+      );
+
+      response.then((res) => {
+        if (res.status === 200) {
+          setSearchSucess(true);
+        }
+        console.log(res);
+      });
+    } else {
+      const response = getRouteSearchList(keyword);
+      response.then((res) => {
+        if (res.status === 200) {
+          res.data.data.courseListMap.searchResult.map((ele: any) => {
+            let data: RouteListProps = {
+              routeName: ele.courseName,
+              routeContent: ele.content,
+              routeScore: ele.scoreAvg,
+              routeComment: ele.commentCnt,
+              routeId: ele.courseId,
+              img: ele.backgroundImg,
+              writeState: ele.writeState,
+              openState: ele.openState,
+              memberId: ele.memberId,
+              writeDate: ele.writeDate,
+              start: ele.startPoint,
+              end: ele.endPoint,
+            };
+            setSearchResult((pre) => [...pre, data]);
+          });
+          setSearchSucess(true);
+        }
+        console.log(res);
+      });
+    }
+  };
 
   const typeArr = [
     '해안길',
@@ -33,9 +89,27 @@ function RouteListSearchPage() {
     '힐링',
   ];
 
-  return (
+  return searchSucess ? (
+    <RouteListSearchResult
+      keyword={keyword}
+      setSearchSucess={setSearchSucess}
+      searchResult={searchResult}
+    />
+  ) : (
     <R.Container>
-      <Header purpose="search" clickBack={() => {}} back={true} />
+      <Header
+        purpose="search"
+        clickBack={() => {}}
+        back={true}
+        changeEven={(e: React.ChangeEvent<HTMLInputElement>) => {
+          setKeyword(e.target.value);
+        }}
+        keyDownEven={(e: React.KeyboardEvent<HTMLInputElement>) => {
+          if (e.code === 'Enter' || e.key === 'Enter') {
+            searchHandler();
+          }
+        }}
+      />
       <R.MainContainer>
         <R.SliderBox>
           <R.SliderTextBox>
@@ -140,7 +214,9 @@ function RouteListSearchPage() {
             fontSize={1.6}
             children="경로 검색"
             color="#ffffff"
-            onClick={() => {}}
+            onClick={() => {
+              searchHandler();
+            }}
           />
         </R.ButtonBox>
       </R.BottomContainer>
