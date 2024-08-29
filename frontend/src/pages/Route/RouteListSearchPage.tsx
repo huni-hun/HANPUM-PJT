@@ -36,7 +36,6 @@ function RouteListSearchPage() {
         if (res.status === 200) {
           setSearchSucess(true);
         }
-        console.log(res);
       });
     } else {
       const response = getRouteSearchList(keyword);
@@ -61,7 +60,6 @@ function RouteListSearchPage() {
           });
           setSearchSucess(true);
         }
-        console.log(res);
       });
     }
   };
