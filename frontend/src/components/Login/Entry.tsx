@@ -25,7 +25,10 @@ function Entry({
     navigate('/');
   };
 
-  // const clickKakao = () => {};
+  const handleKakaoLogin = () => {
+    setTryKakao(true);
+    window.location.href = `${process.env.REACT_APP_BASEURL}/oauth2/authorization/kakao?kakaoLogin=true`;
+  };
 
   return (
     <S.EntryContainer>
@@ -46,14 +49,9 @@ function Entry({
           <img src={flag} alt="" className="flag_img" />
           <img src={human} alt="" className="human_img" />
           <div className="login_group">
-            <div className="kakao_login" onClick={() => setTryKakao(true)}>
-              <Link
-                rel="noopener noreferrer"
-                to={`${process.env.REACT_APP_BASEURL}/oauth2/authorization/kakao`}
-              >
-                <Icon name="IconKakaoLogo" />
-                <Text $typography="t13">카카오로 시작하기</Text>
-              </Link>
+            <div className="kakao_login" onClick={handleKakaoLogin}>
+              <Icon name="IconKakaoLogo" />
+              <Text $typography="t13">카카오로 시작하기</Text>
             </div>
             <div className="local_login" onClick={() => setInit(false)}>
               일반회원으로 시작하기
