@@ -99,10 +99,17 @@ public class AuthController {
         return response.success(ResponseCode.MEMBER_FETCH_SUCCESS, authService.findMemberLoginId(name, email));
     }
 
-    @Operation(summary = "비밀번호 찾기", description = "비밀번호 찾기 API")
-    @PutMapping("/find-password")
-    public ResponseEntity<?> findPassword(@RequestBody @Valid FindMemberPasswordReqDto findMemberPasswordReqDto) {
-        authService.findMemberPassword(findMemberPasswordReqDto);
-        return response.success(ResponseCode.TEMPORARY_PASSWORD_MAIL_SEND_SUCCESS);
+    @Operation(summary = "비밀번호 찾기 인증 메일 전송", description = "비밀번호 찾기 인증 메일 전송 API")
+    @PostMapping("/find-password")
+    public ResponseEntity<?> sendFindPasswordAuthCode(@RequestBody @Valid SendFindPasswordAuthCodeReqDto sendFindPasswordAuthCodeReqDto) {
+        authService.sendFindPasswordAuthCode(sendFindPasswordAuthCodeReqDto);
+        return response.success(ResponseCode.AUTHENTICATION_MAIL_SEND_SUCCESS);
+    }
+
+    @Operation(summary = "비밀번호 재설정", description = "비밀번호 재설정 API")
+    @PutMapping("/reset-password")
+    public ResponseEntity<?> passwordReset(@RequestBody @Valid FindMemberPasswordReqDto findMemberPasswordReqDto) {
+        authService.passwordReset(findMemberPasswordReqDto);
+        return response.success(ResponseCode.MEMBER_PASSWORD_RESET_SUCCESS);
     }
 }

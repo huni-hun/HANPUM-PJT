@@ -71,7 +71,7 @@ public enum ResponseCode {
     LOGOUT_SUCCESS(HttpStatus.OK, "로그아웃이 성공적으로 완료되었습니다."),
     TOKEN_REISSUE_SUCCESS(HttpStatus.OK, "토큰이 성공적으로 재발급되었습니다."),
     MEMBER_FETCH_SUCCESS(HttpStatus.OK, "회원정보가 성공적으로 조회되었습니다."),
-    TEMPORARY_PASSWORD_MAIL_SEND_SUCCESS(HttpStatus.OK, "임시 비밀번호 메일이 성공적으로 전송되었습니다."),
+    MEMBER_PASSWORD_RESET_SUCCESS(HttpStatus.OK, "비밀번호 재설정이 성공적으로 완료되었습니다."),
 
     /* 멤버 */
     MEMBER_PROFILE_FETCHED(HttpStatus.OK, "회원 프로필이 성공적으로 조회되었습니다."),
