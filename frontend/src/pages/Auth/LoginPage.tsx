@@ -21,6 +21,8 @@ function LoginPage() {
 
   const setSignupStep = useSetRecoilState(signupStepAtom);
 
+  const [tryKakao, setTryKakao] = useState(false);
+
   useEffect(() => {
     // const testDebug = localStorage.getItem('test');
     const memberType = Cookies.get('memberType');
@@ -40,10 +42,11 @@ function LoginPage() {
       }));
       navigate('/signup');
     }
-  }, []);
+  }, [tryKakao]);
+
   return (
     <LoginPageContainer>
-      {init && <Entry />} {!init && <Form />}
+      {init && <Entry setTryKakao={setTryKakao} />} {!init && <Form />}
     </LoginPageContainer>
   );
 }
