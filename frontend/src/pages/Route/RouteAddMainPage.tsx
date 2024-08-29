@@ -104,8 +104,8 @@ function RouteAddMainPage() {
                 <Button
                   width={25}
                   height={6}
-                  fontColor="ffffff"
-                  backgroundColor={imgReady ? '#1A823B' : '#D9D9D9'}
+                  fc="ffffff"
+                  bc={imgReady ? '#1A823B' : '#D9D9D9'}
                   radius={0.7}
                   fontSize={1.6}
                   children="등록"
@@ -173,8 +173,8 @@ function RouteAddMainPage() {
                 <Button
                   width={25}
                   height={6}
-                  fontColor="ffffff"
-                  backgroundColor={explanationReady ? '#1A823B' : '#D9D9D9'}
+                  fc="ffffff"
+                  bc={explanationReady ? '#1A823B' : '#D9D9D9'}
                   radius={0.7}
                   fontSize={1.6}
                   children="등록"
@@ -220,7 +220,7 @@ function RouteAddMainPage() {
                         let arr = [...typeChecked];
                         let newArr: string[] = [];
                         arr.map((e) => {
-                          if (e != ele) {
+                          if (e !== ele) {
                             newArr.push(e);
                           }
                         });
@@ -268,10 +268,8 @@ function RouteAddMainPage() {
                 <Button
                   width={25}
                   height={6}
-                  fontColor="ffffff"
-                  backgroundColor={
-                    typeChecked.length > 0 ? '#1A823B' : '#D9D9D9'
-                  }
+                  fc="ffffff"
+                  bc={typeChecked.length > 0 ? '#1A823B' : '#D9D9D9'}
                   radius={0.7}
                   fontSize={1.6}
                   children="등록"
@@ -304,8 +302,8 @@ function RouteAddMainPage() {
           <Button
             width={25}
             height={6}
-            fontColor="ffffff"
-            backgroundColor={
+            fc="ffffff"
+            bc={
               typeChecked.length > 0 && imgReady && explanationReady
                 ? colors.main
                 : colors.grey2
@@ -316,7 +314,15 @@ function RouteAddMainPage() {
             color="#ffffff"
             onClick={() => {
               if (typeChecked.length > 0 && imgReady && explanationReady) {
-                navigator('/route/addDetail');
+                navigator('/route/addDetail', {
+                  state: {
+                    imgSrc: imgSrc,
+                    typeChecked: typeChecked,
+                    routeTitle: routeTitle,
+                    routeExplane: routeExplane,
+                    isOpen: isOpen,
+                  },
+                });
               }
             }}
           />

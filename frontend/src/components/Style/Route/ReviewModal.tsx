@@ -67,10 +67,8 @@ function ReviewModal(props: ReviewModalProps) {
           <Button
             width={65}
             height={6}
-            fontColor="ffffff"
-            backgroundColor={
-              rating > 0 && review.length > 0 ? '#1A823B' : colors.grey4
-            }
+            fc="ffffff"
+            bc={rating > 0 && review.length > 0 ? '#1A823B' : colors.grey4}
             radius={0.7}
             fontSize={1.6}
             children="작성완료"

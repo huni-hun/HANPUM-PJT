@@ -25,7 +25,7 @@ export const BottomTabItem = styled.div`
   flex-direction: column;
 `;
 
-export const TabText = styled.p<{ isSelected: boolean }>`
+export const TabText = styled.p<{ selected: boolean }>`
   font-size: 0.8rem;
-  color: ${(props) => (props.isSelected ? colors.main : colors.grey1)};
+  color: ${(props) => (props.selected ? colors.main : colors.grey1)};
 `;

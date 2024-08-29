@@ -369,16 +369,16 @@ export const ContentSelecContainer = styled.div`
   justify-content: space-around;
 `;
 
-export const ContentBox = styled.div<{ isSelected: boolean }>`
+export const ContentBox = styled.div<{ selected: boolean }>`
   width: 20%;
   height: 90%;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-bottom: ${(props) => (props.isSelected ? '0.6rem solid #1a823b' : '')};
+  border-bottom: ${(props) => (props.selected ? '0.6rem solid #1a823b' : '')};
   font-size: 1.4rem;
   font-weight: bold;
-  color: #${(props) => (props.isSelected ? '1a823b' : 'd9d9d9')};
+  color: #${(props) => (props.selected ? '1a823b' : 'd9d9d9')};
 `;
 
 export const RouteDetailInfoContainer = styled.div`
@@ -422,17 +422,17 @@ export const DayContainer = styled.div`
   margin-right: 0.8rem;
 `;
 
-export const DayBox = styled.div<{ isSelected: boolean }>`
+export const DayBox = styled.div<{ selected: boolean }>`
   width: 7.4rem;
   height: 3.3rem;
   font-size: 1.6rem;
   font-weight: bold;
-  border: 0.2rem solid ${(props) => (props.isSelected ? '#1a823b' : '#d9d9d9')};
+  border: 0.2rem solid ${(props) => (props.selected ? '#1a823b' : '#d9d9d9')};
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 10rem;
-  color: ${(props) => (props.isSelected ? '#1a823b' : '#d9d9d9')};
+  color: ${(props) => (props.selected ? '#1a823b' : '#d9d9d9')};
 `;
 
 export const DetailMain = styled.div`

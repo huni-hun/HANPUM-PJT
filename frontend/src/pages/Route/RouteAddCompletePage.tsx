@@ -18,8 +18,8 @@ function RouteAddCompletePage() {
         <Button
           width={70}
           height={6}
-          fontColor="ffffff"
-          backgroundColor="#1A823B"
+          fc="ffffff"
+          bc="#1A823B"
           radius={0.7}
           fontSize={1.6}
           children="시작하기"

@@ -67,8 +67,6 @@ export default function Router() {
           <Route path="/route/detail/:routeid" element={<RouteDetailPage />} />
           <Route path="/route/addMain" element={<RouteAddMainPage />} />
           <Route path="/route/addDetail" element={<RouteAddDetailPage />} />
-          <Route path="/route/add" element={<RouteAddPlacePage />} />
-          <Route path="route/search" element={<SearchPlacePage />} />
           <Route path="route/add/complete" element={<RouteAddCompletePage />} />
           <Route path="route/list/more" element={<RoteListMorePage />} />
           <Route path="route/list/search" element={<RouteListSearchPage />} />

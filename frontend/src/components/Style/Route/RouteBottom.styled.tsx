@@ -88,9 +88,9 @@ export const SortingTyepBox = styled.div`
   justify-content: space-between;
 `;
 
-export const SortingTyep = styled.p<{ isSelected: boolean }>`
+export const SortingTyep = styled.p<{ selected: boolean }>`
   font-size: 1.4rem;
-  color: ${(props) => (props.isSelected ? colors.main : colors.black)};
+  color: ${(props) => (props.selected ? colors.main : colors.black)};
 `;
 
 export const SettingBox = styled.div`

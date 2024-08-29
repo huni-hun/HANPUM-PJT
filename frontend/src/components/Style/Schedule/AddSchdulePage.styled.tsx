@@ -119,9 +119,9 @@ export const RouteMapContent = styled.div`
   box-sizing: border-box;
 `;
 
-export const ScheduleType = styled.p<{ isSelected: boolean }>`
+export const ScheduleType = styled.p<{ selected: boolean }>`
   font-size: 1.5rem;
-  color: ${(props) => (props.isSelected ? '#000000' : '#d9d9d9')};
+  color: ${(props) => (props.selected ? '#000000' : '#d9d9d9')};
   font-weight: bold;
 `;
 

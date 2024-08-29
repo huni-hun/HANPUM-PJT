@@ -3,8 +3,8 @@ import styled from 'styled-components';
 export const ButtonBox = styled.button<{
   width: number;
   height: number;
-  backgroundColor?: string;
-  fontColor?: string;
+  bc?: string;
+  fc?: string;
   fontSize?: number;
   radius?: number;
   color?: string;
@@ -12,8 +12,8 @@ export const ButtonBox = styled.button<{
 }>`
   width: ${(props) => props.width || 12}vw;
   height: ${(props) => props.height || 4}vh;
-  background-color: ${(props) => props.backgroundColor};
-  color: #${(props) => props.fontColor};
+  background-color: ${(props) => props.bc};
+  color: #${(props) => props.fc};
   border-radius: ${(props) => props.radius || 1}rem;
   font-size: ${(props) => props.fontSize || 1}rem;
   border: 2px solid ${(props) => props.color};
