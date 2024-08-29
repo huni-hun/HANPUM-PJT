@@ -62,23 +62,26 @@ export async function SignUp(signupReq: SignupRequestValues) {
 }
 
 // 소셜 로그인
-export async function KaKaoLogin(signupKaKaoReq: Partial<SignupRequestValues>) {
+export async function KaKaoLogin(
+  signupKaKaoReq: Pick<
+    SignupRequestValues,
+    'multipartFile' | 'nickname' | 'gender' | 'phoneNumber' | 'birthDate'
+  >,
+) {
   console.log('signupKaKaoReq ::', signupKaKaoReq);
   const formData = new FormData();
 
-  if (signupKaKaoReq.multipartFile) {
-    const { multipartFile, ...rest } = signupKaKaoReq;
+  const { multipartFile, ...rest } = signupKaKaoReq;
 
-    const updatedRest = { ...rest };
-    console.log('rest ::', updatedRest);
+  const updatedRest = { ...rest };
+  console.log('rest ::', updatedRest);
 
-    const signupKaKaoReqDto = new Blob([JSON.stringify(updatedRest)], {
-      type: 'application/json',
-    });
+  const signupKaKaoReqDto = new Blob([JSON.stringify(updatedRest)], {
+    type: 'application/json',
+  });
 
-    formData.append('kakaoSignUpCompleteReqDto', signupKaKaoReqDto);
-    formData.append('multipartFile', multipartFile);
-  }
+  formData.append('kakaoSignUpCompleteReqDto', signupKaKaoReqDto);
+  formData.append('multipartFile', multipartFile);
 
   console.log(formData.get('kakaoSignUpCompleteReqDto'));
   console.log(formData.get('multipartFile'));
