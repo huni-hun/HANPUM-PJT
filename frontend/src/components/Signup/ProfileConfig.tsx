@@ -218,6 +218,7 @@ function ProfileConfig({
       console.log('res ::', res);
       if (res.status === STATUS.success) {
         toast.success(res.message);
+        sessionStorage.removeItem('send');
         clickNext();
       }
       if (res.status === STATUS.error) {
