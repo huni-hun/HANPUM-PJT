@@ -44,10 +44,7 @@ export async function SignUp(signupReq: SignupRequestValues) {
 
   // 비밀번호 hash화
   const hashedPassword = CryptoJS.SHA256(password).toString();
-
   const updatedRest = { ...rest, password: hashedPassword };
-
-  console.log(updatedRest);
 
   const signUpReqDto = new Blob([JSON.stringify(updatedRest)], {
     type: 'application/json',
@@ -57,6 +54,35 @@ export async function SignUp(signupReq: SignupRequestValues) {
   formData.append('multipartFile', multipartFile);
 
   const { data } = await api.post('/api/auth/sign-up', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return data;
+}
+
+// 소셜 로그인
+export async function KaKaoLogin(
+  signupKaKaoReq: Pick<
+    SignupRequestValues,
+    'multipartFile' | 'nickname' | 'gender' | 'phoneNumber' | 'birthDate'
+  >,
+) {
+  console.log('signupKaKaoReq ::', signupKaKaoReq);
+  const formData = new FormData();
+
+  const { multipartFile, ...rest } = signupKaKaoReq;
+
+  const updatedRest = { ...rest };
+
+  const signupKaKaoReqDto = new Blob([JSON.stringify(updatedRest)], {
+    type: 'application/json',
+  });
+
+  formData.append('kakaoSignUpCompleteReqDto', signupKaKaoReqDto);
+  formData.append('multipartFile', multipartFile);
+
+  const { data } = await api.post('/api/auth/complete-signup/kakao', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },

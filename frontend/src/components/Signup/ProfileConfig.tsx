@@ -5,6 +5,7 @@ import TextField from '../common/TextField/TextField';
 import BaseButton from '../common/BaseButton';
 import { useAlert } from '@/hooks/global/useAlert';
 import Calender from './Calender';
+import Cookies from 'js-cookie';
 import {
   Gender,
   SignupRequestValues,
@@ -19,7 +20,7 @@ import {
 } from 'react';
 import { dateFormat, telnumberFormat } from '@/utils/util';
 import { useMutation } from 'react-query';
-import { CheckNickname, SignUp } from '@/api/signup/POST';
+import { CheckNickname, KaKaoLogin, SignUp } from '@/api/signup/POST';
 import { toast } from 'react-toastify';
 import { STATUS } from '@/constants';
 import { AxiosError } from 'axios';
@@ -196,8 +197,9 @@ function ProfileConfig({
 
   const noError = Object.keys(validate).length === 0;
 
-  const { mutate } = useMutation(SignUp, {
+  const { mutate: localLogin } = useMutation(SignUp, {
     onSuccess: (res) => {
+      console.log('res ::', res);
       if (res.status === STATUS.success) {
         toast.success(res.message);
         clickNext();
@@ -211,7 +213,27 @@ function ProfileConfig({
     },
   });
 
-  const submitTemp = () => {
+  const { mutate: kakaoLogin } = useMutation(KaKaoLogin, {
+    onSuccess: (res) => {
+      console.log('res ::', res);
+      if (res.status === STATUS.success) {
+        toast.success(res.message);
+        sessionStorage.removeItem('send');
+        clickNext();
+      }
+      if (res.status === STATUS.error) {
+        toast.error(res.message);
+      }
+    },
+    onError: (error: AxiosError) => {
+      toast.error(error.message);
+    },
+  });
+
+  console.log(formValues);
+
+  const submitLocal = () => {
+    console.log('local');
     const signupReq: SignupRequestValues = {
       loginId: formValues.loginId || '',
       password: formValues.password || '',
@@ -225,10 +247,27 @@ function ProfileConfig({
       memberType: 'COMMON',
     };
 
-    mutate({ ...signupReq });
+    // console.log(signupReq);
+    localLogin({ ...signupReq });
   };
 
-  // console.log(formValues);
+  // 카카오 로그인
+  const submitKaKao = () => {
+    console.log('kakao');
+
+    const signupKaKaoReq: Pick<
+      SignupRequestValues,
+      'multipartFile' | 'nickname' | 'gender' | 'phoneNumber' | 'birthDate'
+    > = {
+      birthDate: formValues.birthDate || '',
+      gender: formValues.gender || '',
+      nickname: formValues.nickname || '',
+      phoneNumber: formValues.phoneNumber || '',
+      multipartFile: formValues.multipartFile || '',
+    };
+
+    kakaoLogin({ ...signupKaKaoReq });
+  };
 
   return (
     <S.ProfileConfigContainer>
@@ -359,7 +398,12 @@ function ProfileConfig({
       <FixedBottomButton
         label="확인"
         onClick={() => {
-          submitTemp();
+          // 기존은 쿠키의 memberType으로만 분기 처리하면 카카오로 로그인 한 후에 취소하고 로컬로 하게되면 오류가 생길수 밖에 없음. 쿠키에 이미 있기 때문
+          if (Cookies.get('memberType') === 'KAKAO_INCOMPLETE') {
+            submitKaKao();
+          } else {
+            submitLocal();
+          }
         }}
         disabled={!(formValues.sendNickname && noError)}
       />

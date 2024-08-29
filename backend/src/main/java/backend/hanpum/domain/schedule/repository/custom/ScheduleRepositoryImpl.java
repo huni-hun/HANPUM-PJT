@@ -35,7 +35,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         Projections.constructor(ScheduleResDto.class,
                                 schedule.id,
                                 schedule.course.backgroundImg,
-                                schedule.title,
+                                schedule.course.courseName,
                                 schedule.type,
                                 schedule.course.startPoint,
                                 schedule.course.endPoint,
@@ -55,7 +55,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         Projections.constructor(ScheduleResDto.class,
                                 schedule.id,
                                 schedule.course.backgroundImg,
-                                schedule.title,
+                                schedule.course.courseName,
                                 schedule.type,
                                 schedule.course.startPoint,
                                 schedule.course.endPoint,
@@ -145,7 +145,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         waypoint.address,
                         waypoint.lat,
                         waypoint.lon,
-                        scheduleWayPoint.visit))
+                        scheduleWayPoint.state))
                 .from(scheduleWayPoint)
                 .leftJoin(scheduleWayPoint.waypoint, waypoint)
                 .where(scheduleWayPoint.scheduleDay.id.eq(scheduleDayId))
@@ -261,8 +261,8 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     @Override
     public int activateScheduleForToday(String startDate) {
         long updatedCount = query.update(schedule)
-                .set(schedule.state, true)
-                .where(schedule.state.isFalse()
+                .set(schedule.state, 1)
+                .where(schedule.state.eq(0)
                         .and(schedule.startDate.eq(startDate)))
                 .execute();
         return (int) updatedCount;
@@ -279,7 +279,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         schedule.endDate,
                         schedule.course.totalDistance
                 )).from(schedule)
-                .where(schedule.state.eq(true).and(memberCondition(memberId))
+                .where(schedule.state.eq(1).and(memberCondition(memberId))
                 )
                 .fetchOne());
     }

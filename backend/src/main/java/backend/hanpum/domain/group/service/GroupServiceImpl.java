@@ -1,6 +1,8 @@
 package backend.hanpum.domain.group.service;
 
 import backend.hanpum.config.s3.S3ImageService;
+import backend.hanpum.domain.course.entity.CourseType;
+import backend.hanpum.domain.course.repository.CourseTypeRepository;
 import backend.hanpum.domain.group.dto.requestDto.ApplyPostReqDto;
 import backend.hanpum.domain.group.dto.requestDto.GroupPostReqDto;
 import backend.hanpum.domain.group.dto.responseDto.*;
@@ -8,6 +10,7 @@ import backend.hanpum.domain.group.entity.Group;
 import backend.hanpum.domain.group.entity.GroupMember;
 import backend.hanpum.domain.group.entity.LikeGroup;
 import backend.hanpum.domain.group.enums.GroupJoinStatus;
+import backend.hanpum.domain.group.enums.GroupStatus;
 import backend.hanpum.domain.group.enums.JoinType;
 import backend.hanpum.domain.group.repository.GroupMemberRepository;
 import backend.hanpum.domain.group.repository.GroupRepository;
@@ -27,7 +30,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +45,7 @@ public class GroupServiceImpl implements GroupService {
     private final GroupMemberRepository groupMemberRepository;
     private final GroupMemberRepositoryCustom groupMemberRepositoryCustom;
     private final LikeGroupRepository likeGroupRepository;
+    private final CourseTypeRepository courseTypeRepository;
     private final S3ImageService s3ImageService;
     private ScheduleService scheduleService;
 
@@ -57,7 +64,9 @@ public class GroupServiceImpl implements GroupService {
                 .title(groupPostReqDto.getTitle())
                 .description(groupPostReqDto.getDescription())
                 .recruitmentCount(groupPostReqDto.getRecruitmentCount())
+                .recruitmentStart(new Date())
                 .recruitmentPeriod(groupPostReqDto.getRecruitmentPeriod())
+                .groupStatus(GroupStatus.RECRUITING)
                 .build();
 
         GroupMember groupMember = GroupMember.builder()
@@ -80,6 +89,21 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    @Transactional
+    public void deleteGroup(Long memberId, Long groupId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
+        if(member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
+        if(group.getGroupMemberList().size() != 1) throw new GroupDeleteFailedException();
+        String groupImg = group.getGroupImg();
+        member.updateGroupMember(null);
+        groupRepository.delete(group);
+        if(groupImg != null) { // 추후 디폴트 이미지 추가 시 변경
+            s3ImageService.deleteImage(groupImg);
+        }
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public GroupListGetResDto getGroupList(Long memberId, String startPoint, String endPoint, Integer maxTotalDays,
                                            Integer maxRecruitmentCount, Pageable pageable) {
@@ -90,18 +114,20 @@ public class GroupServiceImpl implements GroupService {
     @Transactional(readOnly = true)
     public GroupDetailGetResDto getGroupDetail(Long memberId, Long groupId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
-        GroupDetailGetResDto groupDetailGetResDto = groupRepositoryCustom.findGroupById(groupId).orElseThrow(GroupNotFoundException::new);
-
-        return GroupDetailGetResDto.builder()
-                .title(groupDetailGetResDto.getTitle())
-                .groupImg(groupDetailGetResDto.getGroupImg())
-                .description(groupDetailGetResDto.getDescription())
-                .likeCount(groupDetailGetResDto.getLikeCount())
-                .recruitmentCount(groupDetailGetResDto.getRecruitmentCount())
-                .recruitmentPeriod(groupDetailGetResDto.getRecruitmentPeriod())
-                .recruitedCount(groupDetailGetResDto.getRecruitedCount())
-                .groupJoinStatus(getGroupJoinStatus(member.getGroupMember(), groupId))
-                .build();
+        GroupDetailGetResDto groupDetailGetResDto = groupRepositoryCustom.findGroupById(memberId, groupId).orElseThrow(GroupNotFoundException::new);
+        GroupMember leader = groupMemberRepository.findByGroup_GroupIdAndJoinType(groupId, JoinType.GROUP_LEADER);
+        List<CourseType> courseTypeList = courseTypeRepository.findByCourse_courseId(leader.getGroup().getSchedule().getCourse().getCourseId());
+        List<String> courseTypeNameList = courseTypeList.stream()
+                .map(courseType -> courseType.getTypeName().name())
+                .collect(Collectors.toList());
+        long differenceInMillis = leader.getGroup().getRecruitmentPeriod().getTime() - new Date().getTime();
+        long differenceInDays = TimeUnit.MILLISECONDS.toDays(differenceInMillis);
+        groupDetailGetResDto.setReaderProfileImg(leader.getMember().getProfilePicture());
+        groupDetailGetResDto.setReaderName((leader.getMember().getName()));
+        groupDetailGetResDto.setCourseTypes(courseTypeNameList);
+        groupDetailGetResDto.setDDay(differenceInDays);
+        groupDetailGetResDto.setGroupJoinStatus(getGroupJoinStatus(member.getGroupMember(), groupId));
+        return groupDetailGetResDto;
     }
 
     @Override

@@ -55,7 +55,7 @@ public class Member {
     @Column(name = "phone_number", length = 15)
     private String phoneNumber;
 
-    @Column(name = "nickname", unique = true, length = 8)
+    @Column(name = "nickname", length = 8)
     private String nickname;
 
     @Column(name = "member_type", nullable = false)
@@ -122,4 +122,20 @@ public class Member {
         this.phoneNumber = phoneNumber;
         this.memberType = memberType;
     }
+
+
+    public void deleteMember(String loginId, String password, String email, String profilePicture, String name,
+                             Date birthDate, Gender gender, String phoneNumber, String nickname, MemberType memberType) {
+        this.loginId = loginId;
+        this.password = password;
+        this.email = email;
+        this.profilePicture = profilePicture;
+        this.name = name;
+        this.birthDate = birthDate;
+        this.gender = gender;
+        this.phoneNumber = phoneNumber;
+        this.nickname = nickname;
+        this.memberType = memberType;
+    }
+
 }

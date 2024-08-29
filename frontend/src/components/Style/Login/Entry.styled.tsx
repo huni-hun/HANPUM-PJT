@@ -20,7 +20,7 @@ export const EntryContainer = styled.div`
       position: relative;
       overflow: hidden;
       width: 100%;
-      padding-bottom: 5rem;
+      padding-bottom: 8rem;
 
       .circle {
         width: 560px;
@@ -64,6 +64,8 @@ export const EntryContainer = styled.div`
           align-items: center;
           padding: 0 13px;
           box-sizing: border-box;
+          text-decoration: none;
+
           span {
             flex: 1;
             text-align: center;

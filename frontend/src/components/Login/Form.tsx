@@ -79,12 +79,13 @@ const Form = () => {
     {
       onSuccess: (res) => {
         if (res.status === STATUS.success) {
-          const { accessToken, refreshToken } = res.data.tokenResDto;
+          console.log(res);
+          const { accessToken } = res.data.tokenResDto;
           toast.success(res.message);
-          const token = encodeToken(
-            accessToken.replace('Bearer', ''),
-            refreshToken.replace('Bearer', ''),
-          );
+
+          const token = encodeToken(accessToken.split('+')[1]);
+
+          console.log('token ::', token);
 
           if (autoLogin) {
             localStorage.setItem('token', JSON.stringify(token));
@@ -110,11 +111,12 @@ const Form = () => {
   return (
     <S.FormContainer>
       <Header
-        purpose="back"
+        purpose="result"
         clickBack={() => {
           setInit(true);
         }}
       />
+
       <div className="form_container">
         <Text $typography="t20" $bold={true} style={{ margin: '16px 0px' }}>
           일반 회원으로 로그인
@@ -146,7 +148,7 @@ const Form = () => {
           hasError={dirty.password && Boolean(validate.password)}
           onBlur={handleBlur}
         />
-        {dirty.password && (
+        {dirty.password && Boolean(validate.password) && (
           <Message
             hasError={dirty.password && Boolean(validate.password)}
             text={dirty.password ? (validate.password as string) : null}

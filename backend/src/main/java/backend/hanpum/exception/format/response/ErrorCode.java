@@ -24,15 +24,17 @@ public enum ErrorCode {
     SCHEDULE_WAY_POINT_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 경유지 정보가 없습니다."),
     VALID_SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "유효한 일정이 없습니다."),
     NEARBY_ATTRACTION_NOT_FOUND(HttpStatus.NOT_FOUND, "거리 조건에 맞는 관광지 정보가 없습니다."),
+    BAD_SCHEDULE_STATE_UPDATE_REQUEST(HttpStatus.BAD_REQUEST, "올바르지 않은 일정 상태 전환 요청입니다."),
 
     /* 날씨 */
     WEATHER_PARSING_EXCEPTION(HttpStatus.BAD_REQUEST, "날씨 정보를 불러오는 중 에러가 발생했습니다."),
 
     /* 경로 */
     COURSE_LIST_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 경로 목록이 없습니다."),
-    COURSE_DETAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 경로 상세정보가 없습니다."),
+    COURSE_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 경로 정보가 없습니다."),
     COURSE_DAY_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 경로 일차정보가 없습니다."),
     COURSE_REVIEWS_NOT_FOUND(HttpStatus.NOT_FOUND, "조회된 경로 리뷰가 없습니다."),
+    REVIEW_ALREADY_EXIST(HttpStatus.NOT_FOUND, "이미 리뷰를 작성한 회원입니다."),
 
     /* 모임 */
     GROUP_ALREADY_JOINED(HttpStatus.BAD_REQUEST, "이미 가입된 모임이 있습니다."),
@@ -40,6 +42,7 @@ public enum ErrorCode {
     GROUP_MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "가입하거나 신청한 모임이 존재하지 않습니다."),
     GROUP_MEMBER_FULL(HttpStatus.BAD_REQUEST, "해당 모임에 인원수가 초과하였습니다."),
     GROUP_PERMISSION(HttpStatus.BAD_REQUEST, "해당 모임에 허가되지 않은 접근입니다."),
+    GROUP_DELETE_FAILED(HttpStatus.BAD_REQUEST, "신청 중인 회원 또는 가입 중인 멤버가 있습니다."),
 
     /* 이미지 업로드 */
     FILE_FORMAT_UNSUPPORTED(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "지원하지 않는 파일 형식입니다."),

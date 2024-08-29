@@ -1,5 +1,6 @@
 package backend.hanpum.exception.handler;
 
+import backend.hanpum.exception.exception.course.*;
 import backend.hanpum.exception.exception.s3.FileDeleteFailedException;
 import backend.hanpum.exception.exception.s3.FileFormatUnsupportedException;
 import backend.hanpum.exception.exception.s3.FilePutFailedException;
@@ -7,10 +8,6 @@ import backend.hanpum.exception.exception.auth.*;
 import backend.hanpum.exception.exception.common.JsonBadMappingException;
 import backend.hanpum.exception.exception.common.JsonBadProcessingException;
 import backend.hanpum.exception.exception.common.UriBadSyntaxException;
-import backend.hanpum.exception.exception.course.CourseDayNotFoundException;
-import backend.hanpum.exception.exception.course.CourseListNotFoundException;
-import backend.hanpum.exception.exception.course.CourseNotFoundException;
-import backend.hanpum.exception.exception.course.CourseReviewsNotFoundException;
 import backend.hanpum.exception.exception.group.*;
 import backend.hanpum.exception.exception.schedule.*;
 import backend.hanpum.exception.exception.test.TestNotFoundException;
@@ -88,6 +85,13 @@ public class GlobalExceptionHandler {
         return response.error(e.getErrorCode());
     }
 
+    @ExceptionHandler(ReviewAlreadyExistsException.class)
+    protected ResponseEntity<?> handle(ReviewAlreadyExistsException e) {
+        log.error("ReviewAlreadyExistsException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
     /* 일정 */
     @ExceptionHandler(ScheduleNotFoundException.class)
     protected ResponseEntity<?> handle(ScheduleNotFoundException e) {
@@ -119,22 +123,29 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ScheduleWayPointNotFoundException.class)
-    protected ResponseEntity<?> handle(ScheduleWayPointNotFoundException e){
+    protected ResponseEntity<?> handle(ScheduleWayPointNotFoundException e) {
         log.error("ScheduleWayPointNotFoundException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }
 
     @ExceptionHandler(ValidScheduleNotFoundException.class)
-    protected ResponseEntity<?> handle(ValidScheduleNotFoundException e){
+    protected ResponseEntity<?> handle(ValidScheduleNotFoundException e) {
         log.error("ValidScheduleNotFoundException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }
 
     @ExceptionHandler(NearByAttractionNotFoundException.class)
-    protected ResponseEntity<?> handle(NearByAttractionNotFoundException e){
+    protected ResponseEntity<?> handle(NearByAttractionNotFoundException e) {
         log.error("NearByAttractionNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(BadScheduleStateUpdateRequestException.class)
+    protected ResponseEntity<?> handle(BadScheduleStateUpdateRequestException e) {
+        log.error("BadScheduleStateUpdateRequestException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }
@@ -179,6 +190,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(GroupPermissionException.class)
     protected ResponseEntity<?> handle(GroupPermissionException e) {
         log.error("GroupPermissionException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(GroupDeleteFailedException.class)
+    protected ResponseEntity<?> handle(GroupDeleteFailedException e) {
+        log.error("GroupDeleteFailedException = {}", e.getErrorCode().getMessage());
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }

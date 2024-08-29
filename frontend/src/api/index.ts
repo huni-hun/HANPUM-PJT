@@ -7,10 +7,23 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   try {
-    const token = localStorage.getItem('token');
+    const localToken = localStorage.getItem('token');
+    const settionToken = sessionStorage.getItem('token');
 
-    if (token) {
-      const tokenObj = decodeToken(JSON.parse(token));
+    // console.log('localToken ::', localToken);
+    // console.log('settionToken ::', settionToken);
+
+    if (localToken != null) {
+      const tokenObj = decodeToken(JSON.parse(localToken));
+
+      // console.log(tokenObj);
+
+      if (tokenObj) {
+        const { accessToken } = tokenObj;
+        config.headers.Authorization = `Bearer ${accessToken}`;
+      }
+    } else if (settionToken != null) {
+      const tokenObj = decodeToken(JSON.parse(settionToken));
 
       // console.log(tokenObj);
 
@@ -22,7 +35,7 @@ api.interceptors.request.use((config) => {
   } catch (error) {
     console.error('Error parsing token from localStorage:', error);
   }
-
+  console.log('Request headers:', config.headers);
   return config;
 });
 

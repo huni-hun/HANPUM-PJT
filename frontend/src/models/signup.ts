@@ -37,16 +37,7 @@ export interface UserSignupFormValues extends SignupRequestValues {
   checkNickname: string; // 닉네임 인증코드 에러
 }
 
-// export interface CertificationValidate {
-//   checkId: string | boolean;
-//   checkEmail: string | boolean;
-//   checkNickname: string | boolean;
-//   checkComplete: string | boolean;
-// }
-
 export interface Gender {
   label: string;
   value: string;
 }
-
-export interface ValidateMessgae {}

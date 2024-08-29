@@ -7,13 +7,19 @@ import logo from '@imgs/logo.png';
 import Flex from '../common/Flex';
 
 import * as S from '../Style/Login/Entry.styled';
-import { Dispatch, SetStateAction } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { isInitAtom } from '@/atoms/isAuthEnticatedAtom';
 
 function Entry() {
+  const navigate = useNavigate();
   const setInit = useSetRecoilState(isInitAtom);
+
+  const handleKakaoLogin = () => {
+    sessionStorage.setItem('send', 'true');
+    window.location.href = `${process.env.REACT_APP_BASEURL}/oauth2/authorization/kakao`;
+  };
+
   return (
     <S.EntryContainer>
       <img src={logo} alt="logo" className="logo" />
@@ -32,9 +38,9 @@ function Entry() {
           <img src={flag} alt="" className="flag_img" />
           <img src={human} alt="" className="human_img" />
           <div className="login_group">
-            <div className="kakao_login">
+            <div className="kakao_login" onClick={handleKakaoLogin}>
               <Icon name="IconKakaoLogo" />
-              <span>카카오로 시작하기</span>
+              <Text $typography="t13">카카오로 시작하기</Text>
             </div>
             <div className="local_login" onClick={() => setInit(false)}>
               일반회원으로 시작하기

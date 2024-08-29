@@ -7,12 +7,31 @@ export interface FeedProps {
     routeContent?: string;
     routeScore?: number;
     routeComment?: string;
+    /** badge */
+    startDate?: string;
+    endDate?: string;
+    /** 모임 props */
+    memberCount?: number;
+    totalMember?: number;
+    likeCount?: number;
   } | null;
+  /** feed에 userImg + userName이 있을 때 */
   isUserContainer?: boolean;
+
+  /** 모임 */
+  meetRouter?: boolean;
+  meetDday?: number;
+  memberCount?: number;
+  totalMember?: number;
+  likeCount?: number;
+  startDate?: string;
+  endDate?: string;
 }
 
 export interface FeedInfoProps {
   router?: string;
+  /** n일차 진행상황 */
+  proceessDay?: number;
   feedInfoTitle?: string;
   departuresPlace?: string;
   arrivalsPlace?: string;

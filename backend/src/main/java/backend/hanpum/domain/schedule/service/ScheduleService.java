@@ -26,7 +26,7 @@ public interface ScheduleService {
     void deleteSchedule(Long memberId, Long ScheduleId);
 
     // 전체 일정 시작, 종료
-    Long startAndStopSchedule(Long memberId, ScheduleStartReqDto scheduleRunReqDto);
+    Long startSchedule(Long memberId, ScheduleStartReqDto scheduleRunReqDto);
 
     // 걷기, 정지 상태 전환
     Long runAndStop(Long memberId, ScheduleRunReqDto scheduleRunReqDto);
@@ -38,7 +38,10 @@ public interface ScheduleService {
     void activateSchedules();
 
     // 진행중인 일정 표시
-    ScheduleInProgressResDto getRunningSchedule(Long memberId, double lat, double lon);
+    ScheduleInProgressResDto getRunningSchedule(Long memberId);
+
+    // 경유지 도착
+    Long setArriveScheduleWayPoint(ScheduleWayPointReqDto scheduleWayPointReqDto);
 
     // 주변 관광지 정보 가져오기
     List<NearByAttractionResDto> getNearByAttractionList(String OS, int distance, double lat, double lon);

@@ -1,3 +1,5 @@
+/** 일정 등록 완료 page */
+
 import { useState } from 'react';
 import * as S from '../../components/Style/Schedule/AddSchdulePage.styled';
 import * as A from '../../components/Style/Schedule/SuccessPage.styled';
@@ -17,7 +19,7 @@ function SuccessAddSchedulePage() {
       />
       <S.SchduleContainer>
         <A.SuccessWrap>
-          <img src={successImg} />
+          <img src={successImg} alt="" />
           <span>나의 일정이</span>
           <span>등록되었어요!</span>
         </A.SuccessWrap>

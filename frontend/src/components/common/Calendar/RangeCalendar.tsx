@@ -3,7 +3,6 @@ import { Datepicker, setOptions } from '@mobiscroll/react';
 import '@mobiscroll/react/dist/css/mobiscroll.min.css';
 import { CustomCalendarWrapper } from './CustomCalendar.styled';
 
-// Mobiscroll 설정
 setOptions({
   locale: 'ko',
   lang: 'ko',
@@ -12,45 +11,71 @@ setOptions({
 });
 
 interface Range {
-  startDate: Date | null;
-  endDate: Date | null;
+  startDate: string | null;
+  endDate: string | null;
 }
 
 interface RangeCalendarProps {
+  startDate: string | null;
+  endDate: string | null;
   onDateChange: (range: Range) => void;
 }
 
-const RangeCalendar = ({ onDateChange }: RangeCalendarProps) => {
-  const [range, setRange] = useState<Range>({ startDate: null, endDate: null });
+const formatDate = (date: Date | null): string | null => {
+  if (!date) return null;
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
 
-  const handleSet = (event: any) => {
-    const { start, end } = event.value;
+const RangeCalendar = ({
+  startDate,
+  endDate,
+  onDateChange,
+}: RangeCalendarProps) => {
+  const [internalRange, setInternalRange] = useState<Range>({
+    startDate,
+    endDate,
+  });
 
-    // start와 end가 Date 객체인지 확인
-    console.log('Start Date:', start);
-    console.log('End Date:', end);
+  const handleChange = (event: any) => {
+    const { value } = event;
+    const start = value && value[0] ? new Date(value[0]) : null;
+    const end = value && value[1] ? new Date(value[1]) : null;
 
-    // start와 end가 Date 객체가 아닐 경우 처리
-    const startDate = start ? new Date(start) : null;
-    const endDate = end ? new Date(end) : null;
+    const formattedStart = formatDate(start);
+    const formattedEnd = formatDate(end);
 
-    const newRange = {
-      startDate,
-      endDate,
-    };
+    //무한렌더링 방지
+    if (
+      formattedStart !== internalRange.startDate ||
+      formattedEnd !== internalRange.endDate
+    ) {
+      setInternalRange({
+        startDate: formattedStart,
+        endDate: formattedEnd,
+      });
 
-    setRange(newRange);
-    onDateChange(newRange); // 날짜 범위 변경 시 부모 컴포넌트로 전달
+      onDateChange({
+        startDate: formattedStart,
+        endDate: formattedEnd,
+      });
+    }
   };
 
   return (
     <CustomCalendarWrapper>
       <Datepicker
         display="inline"
-        select="range" // 날짜 범위 선택을 활성화
-        touchUi={true} // 터치 UI 사용
-        controls={['calendar']} // 캘린더 컨트롤만 표시
-        onSet={handleSet} // 날짜 선택 시 호출
+        select="range"
+        touchUi={true}
+        controls={['calendar']}
+        onChange={handleChange}
+        value={[
+          startDate ? new Date(startDate) : undefined,
+          endDate ? new Date(endDate) : undefined,
+        ]}
       />
     </CustomCalendarWrapper>
   );

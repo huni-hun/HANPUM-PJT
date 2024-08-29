@@ -55,9 +55,9 @@ export const SchduleTypeBox = styled.div`
   align-items: center;
 `;
 
-export const ScheduleType = styled.p<{ selected: boolean }>`
+export const ScheduleType = styled.p<{ isSelected: boolean }>`
   font-size: 1.5rem;
-  color: ${(props) => (props.selected ? colors.main : colors.grey1)};
+  color: ${(props) => (props.isSelected ? colors.main : colors.grey1)};
   font-weight: bold;
   cursor: pointer;
 `;

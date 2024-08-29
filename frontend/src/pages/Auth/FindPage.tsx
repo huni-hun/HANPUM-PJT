@@ -102,6 +102,7 @@ function FindPage() {
       onSuccess: (res) => {
         if (res.status === STATUS.success) {
           toast.success(res.message);
+          console.log(res);
         }
         if (res.status === STATUS.error) {
           toast.error(res.message);
@@ -134,7 +135,7 @@ function FindPage() {
   return (
     <FindPageContainer>
       <Header
-        purpose="back"
+        purpose="result"
         clickBack={() => {
           navigate(-1);
         }}

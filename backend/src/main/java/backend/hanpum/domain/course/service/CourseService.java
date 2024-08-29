@@ -20,12 +20,14 @@ public interface CourseService {
     void addInterestCourse(Long courseId, Long memberId);
     void deleteInterestCourse(Long courseId, Long memberId);
     List<CourseReviewResDto> getCourseReviews(Long courseId, Pageable pageable);
-    void writeCourseReview(Long courseId, String content, Double score);
+    void writeCourseReview(Long courseId, Long memberId, String content, Double score);
     void editCourseReview(Long reviewId, String content, Double score);
-    void deleteCourseReview(Long courseId);
+    void deleteCourseReview(Long courseId, Long memberId);
     void addCourseUsageHistory(Long courseId, Long memberId);
     void updateCourseUsageHistory(Long courseId, Long memberId, Double progressRate);
     List<AttractionResDto> searchAttractionsByKeyword(String keyword, Integer contentType);
     List<SearchWaypointResDto> searchWaypointByKeyword(String keyword);
     List<MultiWaypointSearchResDto> searchMultiWaypointCourse(List<MultiWaypointSearchReqDto> multiWaypointSearchReqDtoList);
+    List<CourseResDto> getInterestCourseList(Long memberId);
+    List<CourseResDto> getSelfMadeCourseList(Long memberId);
 }

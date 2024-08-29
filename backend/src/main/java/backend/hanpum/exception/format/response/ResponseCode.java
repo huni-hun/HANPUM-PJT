@@ -22,6 +22,7 @@ public enum ResponseCode {
     SCHEDULE_RUN_STATE_CHANGED(HttpStatus.OK, "진행 상태가 성공적으로 변경되었습니다."),
     SCHEDULED_DELETED(HttpStatus.OK, "일정이 성공적으로 삭제되었습니다."),
     MEMO_CREATED(HttpStatus.OK, "메모가 성공적으로 생성되었습니다."),
+    SCHEDULE_WAY_POINT_STATE_CHANGED(HttpStatus.OK, "경유지 방문상태가 성공적으로 변경되었습니다."),
     NEARBY_ATTRACTION_LIST_FETCHED(HttpStatus.OK, "주변 관광지 정보가 조회되었습니다."),
     WEATHER_LIST_FETCHED(HttpStatus.OK, "날씨정보가 성공적으로 조회되었습니다."),
 
@@ -44,6 +45,7 @@ public enum ResponseCode {
 
     /* 모임 */
     GROUP_CREATED_SUCCESS(HttpStatus.OK, "모임이 성공적으로 생성되었습니다."),
+    GROUP_DELETE_SUCCESS(HttpStatus.OK, "모임이 성공적으로 삭제되었습니다."),
     GROUP_LIST_FETCHED(HttpStatus.OK, "모임 리스트가 성공적으로 조회되었습니다."),
     GROUP_DETAIL_FETCHED(HttpStatus.OK, "모임 상세 정보가 성공적으로 조회되었습니다."),
     GROUP_APPLY_SUCCESS(HttpStatus.OK, "모임 신청이 성공적으로 완료되었습니다."),
@@ -77,7 +79,10 @@ public enum ResponseCode {
     NICKNAME_UPDATE_SUCCESS(HttpStatus.OK, "닉네임이 성공적으로 변경되었습니다."),
     PASSWORD_UPDATE_SUCCESS(HttpStatus.OK, "비밀번호가 성공적으로 변경되었습니다."),
     MEMBER_INFO_UPDATE_SUCCESS(HttpStatus.OK, "회원정보가 성공적으로 변경되었습니다."),
-    MEMBER_LIKE_GROUP_LIST_FETCHED(HttpStatus.OK, "관심 모임 리스트 조회가 성공적으로 조회되었습니다."),
+    MEMBER_LIKE_GROUP_LIST_FETCHED(HttpStatus.OK, "관심 모임 리스트가 성공적으로 조회되었습니다."),
+    MEMBER_LIKE_COURSE_LIST_FETCHED(HttpStatus.OK, "관심 경로 리스트가 성공적으로 조회되었습니다."),
+    MEMBER_MADE_COURSE_LIST_FETCHED(HttpStatus.OK, "내가 만든 경로 리스트가 성공적으로 조회되었습니다."),
+    MEMBER_DELETE_SUCCESS(HttpStatus.OK, "회원탈퇴가 성공적으로 완료되었습니다."),
     ;
 
     private final HttpStatus status;

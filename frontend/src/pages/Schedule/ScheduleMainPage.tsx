@@ -21,12 +21,10 @@ import goyuMY from '../../assets/img/goyuMY.png';
 import { SchduleCardProps } from '@/models/schdule';
 import BottomTab from '@/components/common/BottomTab/BottomTab';
 
-// import PlusIcon from '../../PlusIcon.svg';
-
 function ScheduleMainPage() {
   const BtnClick = () => {};
   const navigate = useNavigate();
-  const [selected, setselected] = useState<String>('Mine');
+  const [isSelected, setIsSelected] = useState<String>('Mine');
   const [cardData, setCardData] = useState<SchduleCardProps>({
     backGroundImg: '',
     scheduleTitle: '',
@@ -78,6 +76,7 @@ function ScheduleMainPage() {
   const dummyFeedInfoData = {
     router: '일정',
     feedInfoTitle: '일정 정보',
+    proceessDay: 1,
     /** 출발지 , 도착지 */
     departuresPlace: '태종대 전망대',
     arrivalsPlace: '태종대 전망대',
@@ -92,8 +91,7 @@ function ScheduleMainPage() {
     percent: 30,
   };
 
-  /** 내일정 */
-
+  /** 임시 출발일, 도착일 (내일정) */
   const startDate = '2024-08-22';
   const endDate = '2024-08-25';
 
@@ -164,33 +162,33 @@ function ScheduleMainPage() {
       <S.SchduleTypeContainer>
         <S.SchduleTypeBox>
           <S.ScheduleType
-            selected={selected === 'Proceeding'}
+            isSelected={isSelected === 'Proceeding'}
             onClick={() => {
-              setselected('Proceeding');
+              setIsSelected('Proceeding');
             }}
           >
             진행중
           </S.ScheduleType>
           <S.ScheduleType
-            selected={selected === 'Mine'}
+            isSelected={isSelected === 'Mine'}
             onClick={() => {
-              setselected('Mine');
+              setIsSelected('Mine');
             }}
           >
             내 일정
           </S.ScheduleType>
           <S.ScheduleType
-            selected={selected === 'Class'}
+            isSelected={isSelected === 'Class'}
             onClick={() => {
-              setselected('Class');
+              setIsSelected('Class');
             }}
           >
             모임일정
           </S.ScheduleType>
         </S.SchduleTypeBox>
       </S.SchduleTypeContainer>
-      {/* 진행중 */}
-      {selected === 'Proceeding' && (
+      {/* 진행중 tab */}
+      {isSelected === 'Proceeding' && (
         <R.Main>
           <R.Overflow>
             <R.RouteInfoContainer>
@@ -240,8 +238,8 @@ function ScheduleMainPage() {
         </R.Main>
       )}
 
-      {/* 내 일정 */}
-      {selected === 'Mine' && (
+      {/* 내 일정 tab */}
+      {isSelected === 'Mine' && (
         <R.Main>
           <R.Overflow>
             {dummyCardData.map((data, index) => (
@@ -262,14 +260,14 @@ function ScheduleMainPage() {
         </R.Main>
       )}
 
-      {/* 모임 일정 */}
-      {selected === 'Class' && (
+      {/* 모임 일정 tab */}
+      {isSelected === 'Class' && (
         <R.Main>
           <R.Overflow>
             <R.RouteInfoContainer>
               <Feed routeData={dummtFeedData} isUserContainer />
               <FeedInfo
-                feedInfoTitle="일정 코스"
+                feedInfoTitle="모임 일정 정보"
                 departuresPlace={dummyFeedInfoData.departuresPlace}
                 arrivalsPlace={dummyFeedInfoData.arrivalsPlace}
                 startDate={dummyFeedInfoData.startDate}
@@ -311,9 +309,4 @@ export default ScheduleMainPage;
 const ScheduleMainPageContainer = styled.div`
   width: 100%;
   height: 100%;
-
-  img {
-    width: 100%;
-    height: 29.5rem;
-  }
 `;

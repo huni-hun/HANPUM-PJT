@@ -8,6 +8,7 @@ interface IconProps extends SVGProps<SVGSVGElement> {
   size?: number;
   width?: number | string;
   height?: number | string;
+  style?: React.CSSProperties;
 }
 
 const DEFAULT_SIZE = 24;
@@ -17,6 +18,7 @@ export default function Icon({
   size,
   width,
   height,
+  style,
   ...rest
 }: IconProps) {
   const SVGIcon = icon[name];
@@ -25,8 +27,9 @@ export default function Icon({
     <SVGIcon
       {...rest}
       style={{
-        width: `${width ? `${width}` : `${size}px`}`,
-        height: `${height ? `${height}` : `${size}px`}`,
+        ...style,
+        width: width ?? `${size}px`,
+        height: height ?? `${size}px`,
       }}
     />
   );

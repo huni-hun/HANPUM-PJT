@@ -28,8 +28,6 @@ export { ReactComponent as IconRouteAddComplete } from './RouteAddComplete.svg';
 export { ReactComponent as IconBookMarkInHeader } from './bookmark_in_header.svg';
 export { ReactComponent as IconOption } from './OptionIcon.svg';
 export { ReactComponent as IconGreenChecked } from './GreenChecked.svg';
-export { ReactComponent as IconLock } from './IconLock.svg';
-export { ReactComponent as IconDelete } from './IconDelete.svg';
 export { ReactComponent as IconRetouch } from './IconRetouch.svg';
 export { ReactComponent as IconClose } from './IconClose.svg';
 export { ReactComponent as IconCameraGrey } from './IconCamera.svg';
@@ -71,3 +69,13 @@ export { ReactComponent as IconSignupCalender } from './signupCalender.svg';
 // 로그인 페이지
 export { ReactComponent as IconKakaoLogo } from './kakao.svg';
 export { ReactComponent as IconCheckInSignIn } from './check_signin.svg';
+
+// 마이페이지
+export { ReactComponent as IconConfig } from './config.svg';
+export { ReactComponent as IconfinishedRoot } from './finishedRoot.svg';
+export { ReactComponent as IconInterestList } from './interestList.svg';
+export { ReactComponent as IconMyRoot } from './myRoot.svg';
+export { ReactComponent as IconMyRooteClose } from './myRootClose.svg';
+export { ReactComponent as IconHeartWhiteFill } from './heart_white_fill.svg';
+export { ReactComponent as IconLock } from './lock.svg';
+export { ReactComponent as IconDelete } from './delete.svg';

@@ -1,5 +1,10 @@
+import { FeedProps } from '@/models/route';
 import { colors } from '@/styles/colorPalette';
 import styled from 'styled-components';
+
+interface StyledProps {
+  backgroundImg?: string;
+}
 
 export const Container = styled.div`
   width: 100vw;
@@ -48,7 +53,7 @@ export const Overflow = styled.div`
 
 export const RouteInfoContainer = styled.div`
   width: 100vw;
-  height: 75vh;
+  height: 80vh;
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
@@ -56,10 +61,15 @@ export const RouteInfoContainer = styled.div`
   margin-bottom: 10px;
 `;
 
-export const ImgBox = styled.div`
+export const ImgBox = styled.div<StyledProps>`
   width: 100%;
   height: 29.3rem;
   background-color: #d9d9d9;
+  background-image: url(${(props) => props.backgroundImg || ''});
+  background-size: cover;
+  background-position: center;
+  position: relative;
+
   img {
     width: 100%;
     height: 100%;
@@ -73,6 +83,7 @@ export const UserContainer = styled.div`
   flex-direction: row;
   border-bottom: 0.1rem solid ${colors.grey2};
   align-items: center;
+  padding: 1.5rem;
 `;
 
 export const UserImgBox = styled.div`
