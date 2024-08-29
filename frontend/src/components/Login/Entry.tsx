@@ -46,7 +46,7 @@ function Entry({
           <img src={flag} alt="" className="flag_img" />
           <img src={human} alt="" className="human_img" />
           <div className="login_group">
-            <div className="kakao_login" onClick={() => setTryKakao(false)}>
+            <div className="kakao_login" onClick={() => setTryKakao(true)}>
               <Link
                 rel="noopener noreferrer"
                 to={`${process.env.REACT_APP_BASEURL}/oauth2/authorization/kakao`}
