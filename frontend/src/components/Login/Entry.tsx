@@ -15,12 +15,6 @@ function Entry() {
   const navigate = useNavigate();
   const setInit = useSetRecoilState(isInitAtom);
 
-  // test btn
-  const testClick = () => {
-    localStorage.setItem('test', 'KAKAO_INCOMPLETE');
-    navigate('/');
-  };
-
   const handleKakaoLogin = () => {
     sessionStorage.setItem('send', 'true');
     window.location.href = `${process.env.REACT_APP_BASEURL}/oauth2/authorization/kakao`;
@@ -29,7 +23,6 @@ function Entry() {
   return (
     <S.EntryContainer>
       <img src={logo} alt="logo" className="logo" />
-      <button onClick={testClick}>카카오 테스트</button>
 
       <Flex direction="column" $align="center" $justify="center">
         <Text $bold={true} $typography="t16" style={{ lineHeight: '25px' }}>

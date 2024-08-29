@@ -60,22 +60,15 @@ export const EntryContainer = styled.div`
           font-size: 1.3rem;
           color: #191919;
           border-radius: 12px;
-
+          display: flex;
+          align-items: center;
           padding: 0 13px;
           box-sizing: border-box;
+          text-decoration: none;
 
-          a {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            color: ${colors.black3};
-
-            span {
-              flex: 1;
-              text-align: center;
-            }
+          span {
+            flex: 1;
+            text-align: center;
           }
         }
         .local_login {

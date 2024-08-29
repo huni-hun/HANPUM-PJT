@@ -111,7 +111,11 @@ function Terms({
         label="동의하고 시작하기"
         disabled={!isEssentialCheck}
         $bottom="5"
-        onClick={() => isEssentialCheck && clickNextBtn}
+        onClick={() => {
+          if (isEssentialCheck) {
+            clickNextBtn();
+          }
+        }}
       />
     </S.TermsContainer>
   );

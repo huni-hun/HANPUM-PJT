@@ -74,7 +74,6 @@ export async function KaKaoLogin(
   const { multipartFile, ...rest } = signupKaKaoReq;
 
   const updatedRest = { ...rest };
-  console.log('rest ::', updatedRest);
 
   const signupKaKaoReqDto = new Blob([JSON.stringify(updatedRest)], {
     type: 'application/json',
@@ -82,9 +81,6 @@ export async function KaKaoLogin(
 
   formData.append('kakaoSignUpCompleteReqDto', signupKaKaoReqDto);
   formData.append('multipartFile', multipartFile);
-
-  console.log(formData.get('kakaoSignUpCompleteReqDto'));
-  console.log(formData.get('multipartFile'));
 
   const { data } = await api.post('/api/auth/complete-signup/kakao', formData, {
     headers: {
