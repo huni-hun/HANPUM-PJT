@@ -11,9 +11,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FindMemberPasswordReqDto {
+public class SendFindPasswordAuthCodeReqDto {
+    @NotNull
+    String loginId;
     @NotNull
     @Email
     String email;
-    String password;
 }
