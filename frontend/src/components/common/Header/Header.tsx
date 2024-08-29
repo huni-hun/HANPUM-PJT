@@ -12,10 +12,13 @@ interface HeaderProps {
   depart?: string;
   back?: boolean;
   isShadow?: boolean;
+  searchValue?: string;
   clickBack: () => void;
   complete?: () => void;
   focus?: boolean;
   clickOption?: () => void;
+  changeEven?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  keyDownEven?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 const Header = ({
@@ -29,6 +32,9 @@ const Header = ({
   focus,
   clickOption,
   isShadow = false,
+  changeEven,
+  keyDownEven,
+  searchValue,
 }: HeaderProps) => {
   const navigate = useNavigate();
   const onClickHandler = (to: string) => {
@@ -123,7 +129,7 @@ const Header = ({
       case 'merge':
         return (
           <Flex $align="center" $justify="space-between">
-            <div className="search-bar">
+            <div className="search-bar" onClick={clickOption}>
               <Icon name="IconSearch" size={14} />
               <input type="text" />
             </div>
@@ -163,7 +169,12 @@ const Header = ({
           <Flex style={{ marginLeft: '2rem' }} $align="start">
             <div className="search-bar">
               <Icon name="IconSearch" size={14} />
-              <input type="text" />
+              <input
+                type="text"
+                onChange={changeEven}
+                onKeyDown={keyDownEven}
+                value={searchValue}
+              />
             </div>
           </Flex>
         );
@@ -242,7 +253,14 @@ const Header = ({
   return (
     <>
       <S.HeaderWrapper isShadow={isShadow}>
-        {back && <Icon name="IconBackArrow" className="back-arrow" size={15} />}
+        {back && (
+          <Icon
+            name="IconBackArrow"
+            className="back-arrow"
+            size={15}
+            onClick={clickBack}
+          />
+        )}
         {renderHeader()}
       </S.HeaderWrapper>
       {/* <Outlet /> */}

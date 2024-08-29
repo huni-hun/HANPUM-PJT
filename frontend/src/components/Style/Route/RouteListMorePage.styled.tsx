@@ -62,6 +62,7 @@ export const RouteTextBox = styled.div`
   display: flex;
   flex-direction: row;
   font-size: 1rem;
+  justify-content: space-around;
   color: ${colors.grey2};
 `;
 
@@ -104,4 +105,33 @@ export const Date = styled.div`
   font-size: 1.2rem;
   font-weight: bold;
   border-radius: 10rem;
+`;
+
+export const RouteTypeContainer = styled.div`
+  width: 100%;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  box-shadow: 0px 4px 4px 0 rgba(0, 0, 0, 0.25);
+`;
+
+export const ReviewHeaderText = styled.p`
+  color: ${colors.grey2};
+  margin-left: 2.4rem;
+`;
+
+export const RouteDistanceBox = styled.div`
+  width: 20%;
+  height: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  padding: 0 0 0 0.4rem;
+  color: ${colors.grey2};
+  border-left: 0.1rem solid ${colors.grey2};
+`;
+
+export const ReviewHeaderTextBox = styled.div`
+  display: flex;
+  flex-direction: row;
 `;
