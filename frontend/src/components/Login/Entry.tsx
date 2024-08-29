@@ -43,6 +43,8 @@ function Entry() {
           <div className="login_group">
             <div className="kakao_login">
               <Link
+                target="_blank"
+                rel="noopener noreferrer"
                 to={`${process.env.REACT_APP_BASEURL}/oauth2/authorization/kakao`}
               >
                 <Icon name="IconKakaoLogo" />

@@ -85,7 +85,7 @@ export default function Router() {
           <Route path="/meet/accept" element={<MeetAcceptPage />} />
           <Route path="/meet/addMain" element={<MeetAddMainPage />} />
 
-          <Route path="*" element={<Navigate to="/" />} />
+          {/* <Route path="*" element={<Navigate to="/" />} /> */}
 
           {/* 로그인/ 회원가입/ 찾기 */}
           <Route path="/login" element={<LoginPage />} />

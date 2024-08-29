@@ -20,7 +20,7 @@ export const EntryContainer = styled.div`
       position: relative;
       overflow: hidden;
       width: 100%;
-      padding-bottom: 5rem;
+      padding-bottom: 8rem;
 
       .circle {
         width: 560px;

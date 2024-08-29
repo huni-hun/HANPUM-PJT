@@ -232,6 +232,7 @@ function ProfileConfig({
   console.log(formValues);
 
   const submitLocal = () => {
+    console.log('local');
     const signupReq: SignupRequestValues = {
       loginId: formValues.loginId || '',
       password: formValues.password || '',
@@ -251,6 +252,8 @@ function ProfileConfig({
 
   // 카카오 로그인
   const submitKaKao = () => {
+    console.log('kakao');
+
     const signupKaKaoReq: Partial<SignupRequestValues> = {
       birthDate: formValues.birthDate || '',
       gender: formValues.gender || '',
@@ -390,6 +393,7 @@ function ProfileConfig({
       <FixedBottomButton
         label="확인"
         onClick={() => {
+          // 기존은 쿠키의 memberType으로만 분기 처리하면 카카오로 로그인 한 후에 취소하고 로컬로 하게되면 오류가 생길수 밖에 없음. 쿠키에 이미 있기 때문
           if (Cookies.get('memberType') === 'KAKAO_INCOMPLETE') {
             submitKaKao();
           } else {
