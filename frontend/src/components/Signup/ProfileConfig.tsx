@@ -254,11 +254,15 @@ function ProfileConfig({
   const submitKaKao = () => {
     console.log('kakao');
 
-    const signupKaKaoReq: Partial<SignupRequestValues> = {
+    const signupKaKaoReq: Pick<
+      SignupRequestValues,
+      'multipartFile' | 'nickname' | 'gender' | 'phoneNumber' | 'birthDate'
+    > = {
       birthDate: formValues.birthDate || '',
       gender: formValues.gender || '',
       nickname: formValues.nickname || '',
       phoneNumber: formValues.phoneNumber || '',
+      multipartFile: formValues.multipartFile || '',
     };
 
     kakaoLogin({ ...signupKaKaoReq });
