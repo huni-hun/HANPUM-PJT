@@ -80,6 +80,9 @@ export async function KaKaoLogin(signupKaKaoReq: Partial<SignupRequestValues>) {
     formData.append('multipartFile', multipartFile);
   }
 
+  console.log(formData.get('kakaoSignUpCompleteReqDto'));
+  console.log(formData.get('multipartFile'));
+
   const { data } = await api.post('/api/auth/complete-signup/kakao', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',

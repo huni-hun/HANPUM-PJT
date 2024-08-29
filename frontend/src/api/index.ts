@@ -35,7 +35,7 @@ api.interceptors.request.use((config) => {
   } catch (error) {
     console.error('Error parsing token from localStorage:', error);
   }
-
+  console.log('Request headers:', config.headers);
   return config;
 });
 
