@@ -1,9 +1,12 @@
 package backend.hanpum.domain.member.controller;
 
 import backend.hanpum.config.jwt.UserDetailsImpl;
+import backend.hanpum.domain.course.dto.responseDto.CourseResDto;
+import backend.hanpum.domain.course.service.CourseService;
 import backend.hanpum.domain.group.dto.responseDto.GroupListGetResDto;
 import backend.hanpum.domain.group.dto.responseDto.LikeGroupListGetResDto;
 import backend.hanpum.domain.group.service.GroupService;
+import backend.hanpum.domain.member.dto.requestDto.DeleteMemberReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdateMemberInfoReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdateNicknameReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdatePasswordReqDto;
@@ -20,6 +23,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Tag(name = "Member 컨트롤러", description = "Member Controller API")
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +34,7 @@ public class MemberController {
     private final ApiResponse response;
     private final MemberService memberService;
     private final GroupService groupService;
+    private final CourseService courseService;
 
     @Operation(summary = "프로필 조회", description = "프로필 조회 API")
     @GetMapping("/profile")
@@ -76,5 +82,29 @@ public class MemberController {
         LikeGroupListGetResDto likeGroupListGetResDto =
                 groupService.getMemberLikeGroupList(userDetails.getMember().getMemberId());
         return response.success(ResponseCode.MEMBER_LIKE_GROUP_LIST_FETCHED, likeGroupListGetResDto);
+    }
+
+    @Operation(summary = "관심 경로 리스트 조회", description = "관심 경로 리스트 조회 API")
+    @GetMapping("/like-course")
+    public ResponseEntity<?> getMemberLikeCourseList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<CourseResDto> likeCourseListGetResDto =
+                courseService.getInterestCourseList(userDetails.getMember().getMemberId());
+        return response.success(ResponseCode.MEMBER_LIKE_COURSE_LIST_FETCHED, likeCourseListGetResDto);
+    }
+
+    @Operation(summary = "내가 만든 경로 리스트 조회", description = "내가 만든 경로 리스트 조회 API")
+    @GetMapping("/make-course")
+    public ResponseEntity<?> getMemberMadeCourseList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<CourseResDto> madeCourseListGetResDto =
+                courseService.getSelfMadeCourseList(userDetails.getMember().getMemberId());
+        return response.success(ResponseCode.MEMBER_MADE_COURSE_LIST_FETCHED, madeCourseListGetResDto);
+    }
+
+    @Operation(summary = "회원 탈퇴", description = "회원 탈퇴 API")
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteUser(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                        @RequestBody @Valid DeleteMemberReqDto deleteMemberReqDto) {
+        memberService.deleteMember(userDetails.getMember().getMemberId(), deleteMemberReqDto);
+        return response.success(ResponseCode.MEMBER_DELETE_SUCCESS);
     }
 }

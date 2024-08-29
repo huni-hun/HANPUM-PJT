@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CourseUsageHistoryRepository extends JpaRepository<CourseUsageHistory, Long> {
     CourseUsageHistory findByCourse_courseIdAndMember_memberId(Long courseId, Long memberId);
+    void deleteAllByMember_MemberId(Long memberId);
 }
