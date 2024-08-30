@@ -33,6 +33,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -79,13 +80,15 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
-    public void makeCourse(MakeCourseReqDto makeCourseReqDto) {
+    public void makeCourse(Long memberId, MultipartFile multipartFile, MakeCourseReqDto makeCourseReqDto) {
         Double allDayDistance = 0.0;
         for (CourseDayReqDto courseDayReqDto : makeCourseReqDto.getCourseDayReqDtoList()) {
             for (WayPointReqDto waypointReqDto : courseDayReqDto.getWayPointReqDtoList()) {
                 allDayDistance += Double.parseDouble(waypointReqDto.getDistance());
             }
         }
+
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
 
         String startPoint = extractSido(makeCourseReqDto.getCourseDayReqDtoList().stream()
                 .findFirst()
@@ -110,11 +113,11 @@ public class CourseServiceImpl implements CourseService {
                 .endPoint(endPoint)
                 .totalDistance(allDayDistance)
                 .totalDays(makeCourseReqDto.getCourseDayReqDtoList().size())
-                .member(memberRepository.findById(makeCourseReqDto.getMemberId()).orElseThrow())  // 토큰으로 멤버정보 찾도록. 추후 변경
+                .member(member)
                 .build();
 
-        if(!makeCourseReqDto.getBgImage().isEmpty()) {
-            course.updateBackgroundImg(s3ImageService.uploadImage(makeCourseReqDto.getBgImage()));
+        if(multipartFile != null) {
+            course.updateBackgroundImg(s3ImageService.uploadImage(multipartFile));
         }
         courseRepository.save(course);
 
@@ -154,7 +157,7 @@ public class CourseServiceImpl implements CourseService {
                         .address(attractionReqDto.getAddress())
                         .lat(attractionReqDto.getLat())
                         .lon(attractionReqDto.getLon())
-                        .img("TEMP") // S3 미생성. 이미지 업로드 미구현. 추후 변경
+                        .img(attractionReqDto.getImage())
                         .build();
                 attractionRepository.save(attraction);
             }
@@ -186,7 +189,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
-    public void editCourse(EditCourseReqDto editCourseReqDto) {
+    public void editCourse(Long memberId, MultipartFile multipartFile, EditCourseReqDto editCourseReqDto) {
         Course course = courseRepository.findById(editCourseReqDto.getCourseId()).orElseThrow(CourseNotFoundException::new);
 
         String startPoint = extractSido(editCourseReqDto.getCourseDayReqDtoList().stream()
@@ -211,9 +214,9 @@ public class CourseServiceImpl implements CourseService {
                 editCourseReqDto.getCourseDayReqDtoList().size()
         );
 
-        if(editCourseReqDto.getBgImage() != null) {
+        if(multipartFile != null) {
             String currentImage = course.getBackgroundImg();
-            String updateImage = s3ImageService.uploadImage(editCourseReqDto.getBgImage());
+            String updateImage = s3ImageService.uploadImage(multipartFile);
             course.updateBackgroundImg(updateImage);
             s3ImageService.deleteImage(currentImage);
         }
@@ -314,7 +317,7 @@ public class CourseServiceImpl implements CourseService {
                         .address(newAttraction.getAddress())
                         .lat(newAttraction.getLat())
                         .lon(newAttraction.getLon())
-                        .img("TEMP") // S3 미생성. 이미지 업로드 미구현. 추후 변경
+                        .img(newAttraction.getImage())
                         .build();
 
                 existDay.getAttractions().add(attraction);
