@@ -60,6 +60,23 @@ public class CourseResDto {
     }
 
     public CourseResDto(Long courseId, String courseName, String backgroundImg, String content, boolean writeState,
+                        boolean openState, Date writeDate, String startPoint, String endPoint, Double totalDistance, Long memberId,  Double scoreAvg, Integer commentCnt) {
+        this.courseId = courseId;
+        this.courseName = courseName;
+        this.backgroundImg = backgroundImg;
+        this.content = content;
+        this.writeState = writeState;
+        this.openState = openState;
+        this.writeDate = writeDate;
+        this.startPoint = startPoint;
+        this.endPoint = endPoint;
+        this.totalDistance = totalDistance;
+        this.memberId = memberId;
+        this.scoreAvg = scoreAvg;
+        this.commentCnt = commentCnt;
+    }
+
+    public CourseResDto(Long courseId, String courseName, String backgroundImg, String content, boolean writeState,
                         boolean openState, Date writeDate, String startPoint, String endPoint, Double totalDistance, Long memberId, Double scoreAvg, Integer commentCnt, Integer totalDays) {
         this.courseId = courseId;
         this.courseName = courseName;
