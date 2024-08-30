@@ -1,6 +1,5 @@
 package backend.hanpum.domain.group.dto.responseDto;
 
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,5 +21,7 @@ public class GroupResDto {
     private String endPoint;
     private Double totalDistance;
     private Integer totalDays;
+    private String startDate;
+    private String endDate;
     private boolean isLike;
 }
