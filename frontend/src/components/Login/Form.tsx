@@ -79,13 +79,13 @@ const Form = () => {
     {
       onSuccess: (res) => {
         if (res.status === STATUS.success) {
-          console.log(res);
+          // console.log(res);
           const { accessToken } = res.data.tokenResDto;
           toast.success(res.message);
 
           const token = encodeToken(accessToken.split('+')[1]);
 
-          console.log('token ::', token);
+          // console.log('token ::', token);
 
           if (autoLogin) {
             localStorage.setItem('token', JSON.stringify(token));

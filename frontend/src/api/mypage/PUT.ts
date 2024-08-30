@@ -1,17 +1,18 @@
 import { SignupRequestValues } from '@/models/signup';
 import api from '../index';
+import CryptoJS from 'crypto-js';
 
 // 비밀번호 변경 TODO
-export async function ChangePw(
-  currentPassword: string,
-  updatePassword: string,
-) {
-  const { data } = await api.put('/api/member/password-update', {
-    currentPassword,
-    updatePassword,
-  });
-  return data;
-}
+// export async function ChangePw(
+//   currentPassword: string,
+//   updatePassword: string,
+// ) {
+//   const { data } = await api.put('/api/member/password-update', {
+//     currentPassword,
+//     updatePassword,
+//   });
+//   return data;
+// }
 
 // 닉네임 변경
 export async function ChangeNickname(nickname: string) {
@@ -41,6 +42,16 @@ export async function ChangeProfileImg(img: Blob) {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
+  });
+  return data;
+}
+
+// 비밀번호 재설정 TODO
+export async function ChangePassword(email: string, password: string) {
+  const hashedPassword = CryptoJS.SHA256(password).toString();
+  const { data } = await api.put('/api/auth/reset-password', {
+    email,
+    password: hashedPassword,
   });
   return data;
 }

@@ -12,7 +12,6 @@ import { useSetRecoilState } from 'recoil';
 import { isInitAtom } from '@/atoms/isAuthEnticatedAtom';
 
 function Entry() {
-  const navigate = useNavigate();
   const setInit = useSetRecoilState(isInitAtom);
 
   const handleKakaoLogin = () => {

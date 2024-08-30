@@ -34,7 +34,7 @@ export function telnumberFormat(telnum: string | undefined) {
 
 // 토큰 인코딩 refreshToken 제외
 export function encodeToken(accessToken: string) {
-  console.log('인코딩에서', accessToken);
+  // console.log('인코딩에서', accessToken);
   if (secretKey) {
     const token = {
       accessToken: CryptoJS.AES.encrypt(accessToken, secretKey).toString(),

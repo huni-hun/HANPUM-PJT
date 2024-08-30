@@ -2,12 +2,15 @@ import { colors } from '@/styles/colorPalette';
 
 import BaseButton from './BaseButton';
 import styled from 'styled-components';
+import { ButtonSize } from '@/styles/buttons';
 
 interface FixedBottomButtonProps {
   label: string;
   onClick: () => void;
   disabled?: boolean;
   $bottom?: string;
+  size?: ButtonSize;
+  full?: boolean;
 }
 
 /**
@@ -21,12 +24,14 @@ function FixedBottomButton({
   onClick,
   disabled,
   $bottom,
+  size = 'medium',
+  full = true,
 }: FixedBottomButtonProps) {
   return (
     <Container $bottom={$bottom}>
       <BaseButton
-        size="medium"
-        $full={true}
+        size={size}
+        $full={full}
         onClick={onClick}
         disabled={disabled}
       >
@@ -43,6 +48,8 @@ const Container = styled.div<Pick<FixedBottomButtonProps, '$bottom'>>`
   bottom: ${(props) => (props.$bottom ? `${props.$bottom}rem` : '0px')};
   background-color: ${colors.white};
   padding: 20px 10px 8px;
+  display: flex;
+  justify-content: center;
 `;
 
 export default FixedBottomButton;

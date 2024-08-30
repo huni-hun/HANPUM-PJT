@@ -1,10 +1,10 @@
-import Text from '../common/Text';
-import * as S from '../Style/My/ProfileItem.styled';
-import kakao from '../../assets/img/kakaoImg.png';
-import Flex from '../common/Flex';
+import * as S from '../../Style/My/edit/ProfileItem.styled';
+import kakao from '../../../assets/img/kakaoImg.png';
 import { useNavigate } from 'react-router-dom';
 import { Dispatch, SetStateAction } from 'react';
 import { SignupRequestValues } from '@/models/signup';
+import Text from '@/components/common/Text';
+import Flex from '@/components/common/Flex';
 
 function ProfileItem({
   label,

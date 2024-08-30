@@ -1,6 +1,6 @@
 import React from 'react';
-import * as S from '../Style/My/FinishedRoot.styled';
-import RootCard from '../RootCard';
+import * as S from '../../Style/My/category/FinishedRoot.styled';
+import RootCard from '../../RootCard';
 
 function FinishedRoot() {
   return (

@@ -200,7 +200,7 @@ const Header = ({
 
             <div
               style={{ position: 'absolute', right: 16 }}
-              onClick={() => navigate('/myprofile')}
+              onClick={() => navigate('/config')}
             >
               <Icon name="IconConfig" />
             </div>

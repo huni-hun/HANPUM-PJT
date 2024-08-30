@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import Header from '../common/Header/Header';
 import { useNavigate, useParams } from 'react-router-dom';
-import Interest from './Interest';
-import MyRoot from './MyRoot';
-import FinishedRoot from './FinishedRoot';
+import MyRoot from './category/MyRoot';
+import FinishedRoot from './category/FinishedRoot';
 import { colors } from '@/styles/colorPalette';
+import Interest from './category/Interest';
 
 function ActivityLayout() {
   const param = useParams().active?.split(':')[1];
