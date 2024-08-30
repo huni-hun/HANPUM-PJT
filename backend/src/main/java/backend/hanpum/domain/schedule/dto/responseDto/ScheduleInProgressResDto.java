@@ -20,7 +20,7 @@ public class ScheduleInProgressResDto {
     String endPoint;        // 도착지
     String startDate;       // 시작일
     String endDate;         // 종료일
-    String totalDistance;   // 총 거리
+    Double totalDistance;   // 총 거리
     int rate;            // 달성률
     List<ScheduleDayResDto> scheduleDayResDtoList;
 }

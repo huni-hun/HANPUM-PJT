@@ -28,7 +28,7 @@ public class ScheduleController {
     @Operation(summary = "개인 일정 생성", description = "개인 일정 생성")
     @PostMapping
     public ResponseEntity<?> createSchedule(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                            SchedulePostReqDto schedulePostReqDto) {
+                                            @RequestBody SchedulePostReqDto schedulePostReqDto) {
         Long memberId = userDetails.getMember().getMemberId();
         Long scheduleId = scheduleService.createSchedule(memberId, schedulePostReqDto);
         return response.success(ResponseCode.SCHEDULE_CREATED, scheduleId);
@@ -37,7 +37,7 @@ public class ScheduleController {
     @Operation(summary = "모임 일정 생성", description = "모임 일정 생성")
     @PostMapping("/group")
     public ResponseEntity<?> updateSchedule(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                            SchedulePostReqDto schedulePostReqDto) {
+                                            @RequestBody SchedulePostReqDto schedulePostReqDto) {
         Long memberId = userDetails.getMember().getMemberId();
         Long scheduleId = scheduleService.createGroupSchedule(memberId, schedulePostReqDto);
         return response.success(ResponseCode.GROUP_SCHEDULE_CREATED, scheduleId);
@@ -100,7 +100,7 @@ public class ScheduleController {
     @Operation(summary = "메모 작성", description = "경유지 메모작성")
     @PostMapping("/memo")
     public ResponseEntity<?> createMemo(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                        MemoPostReqDto memoPostReqDto) {
+                                        @RequestBody MemoPostReqDto memoPostReqDto) {
         Long memberId = userDetails.getMember().getMemberId();
         scheduleService.createMemo(memberId, memoPostReqDto);
         return response.success(ResponseCode.MEMO_CREATED);

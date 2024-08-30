@@ -27,6 +27,7 @@ import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.auth.MemberInfoInvalidException;
 import backend.hanpum.exception.exception.common.JsonBadMappingException;
 import backend.hanpum.exception.exception.common.UriBadSyntaxException;
+import backend.hanpum.exception.exception.course.CourseNotFoundException;
 import backend.hanpum.exception.exception.group.GroupMemberNotFoundException;
 import backend.hanpum.exception.exception.group.GroupNotFoundException;
 import backend.hanpum.exception.exception.group.GroupPermissionException;
@@ -73,8 +74,14 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         Long courseId = schedulePostReqDto.getCourseId();
 
-        Course course = courseRepository.findById(courseId).orElseThrow(ScheduleNotFoundException::new);
+        Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+
+        // 개인 일정 3개 이상 못만들게
+        Long myScheduleCnt = scheduleRepository.checkMyScheduleCnt(memberId).orElseThrow(ScheduleNotFoundException::new);
+        if (myScheduleCnt >= 3) {
+            throw new CreateCountExceededException();
+        }
 
         String startDate = schedulePostReqDto.getStartDate();
         int daySize = course.getTotalDays();
@@ -164,7 +171,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public List<ScheduleResDto> getMyScheduleList(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
-        List<ScheduleResDto> scheduleResDtoList = scheduleRepository.getMyScheduleByMemberId(memberId).orElseThrow(ScheduleNotFoundException::new);
+        List<ScheduleResDto> scheduleResDtoList = scheduleRepository.getMyScheduleByMemberId(memberId)
+                .filter(list -> !list.isEmpty())
+                .orElseThrow(ScheduleNotFoundException::new);
         return scheduleResDtoList;
     }
 
@@ -189,7 +198,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .endPoint(scheduleResDto.getEndPoint())
                 .startDate(scheduleResDto.getStartDate())
                 .endDate(scheduleResDto.getEndDate())
-                .state(scheduleResDto.isState())
+                .state(scheduleResDto.getState())
                 .groupMemberResDtoList(groupMemberListGetResDto.getGroupMemberResList())
                 .build();
 
@@ -224,7 +233,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         List<ScheduleDayResDto> scheduleDayResDtoList = scheduleRepository.getScheduleDayResDtoList(memberId, scheduleId).orElseThrow(ScheduleNotFoundException::new);
 
         // 달성률
-        int rate = getScheduleGoalRate(scheduleDayResDtoList);
+        int rate = courseService.getScheduleGoalRate(scheduleDayResDtoList);
 
         courseService.updateCourseUsageHistory(courseId, memberId, (double) rate);
 
@@ -328,7 +337,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         List<ScheduleDayResDto> scheduleDayResDtoList = scheduleRepository.getScheduleDayResDtoList(memberId, scheduleId).orElseThrow(ScheduleNotFoundException::new);
 
         // 달성률
-        int rate = getScheduleGoalRate(scheduleDayResDtoList);
+        int rate = courseService.getScheduleGoalRate(scheduleDayResDtoList);
 
         ScheduleInProgressResDto result = ScheduleInProgressResDto.builder()
                 .scheduleId(scheduleId)
@@ -371,53 +380,6 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
         }
         return scheduleDayId;
-    }
-
-
-    private int getScheduleGoalRate(List<ScheduleDayResDto> scheduleDayResDtoList) {
-
-        int rate = 0;
-        int size = scheduleDayResDtoList.size();
-        int dayRate = 100 / size;
-
-        // 첫쨰날도 방문 안했을때
-        if (!scheduleDayResDtoList.get(0).isVisit()) {
-            List<ScheduleWayPointResDto> scheduleWayPointResDtoList = scheduleDayResDtoList.get(0).getScheduleWayPointList();
-            int wayPointSize = scheduleWayPointResDtoList.size();
-            int wayPointCount = 0;
-            for (ScheduleWayPointResDto scheduleWayPointResDto : scheduleWayPointResDtoList) {
-                if (scheduleWayPointResDto.getState() == 0) {
-                    wayPointCount++;
-                }
-            }
-            rate = dayRate * (wayPointCount / wayPointSize);
-            return rate;
-        }
-
-        int dayCount = 0;
-        for (ScheduleDayResDto scheduleDayResDto : scheduleDayResDtoList) {
-            if (scheduleDayResDto.isVisit()) {
-                dayCount++;
-            } else {
-                List<ScheduleWayPointResDto> scheduleWayPointResDtoList = scheduleDayResDto.getScheduleWayPointList();
-                int wayPointSize = scheduleWayPointResDtoList.size();
-                int wayPointCount = 0;
-                for (ScheduleWayPointResDto scheduleWayPointResDto : scheduleWayPointResDtoList) {
-                    if (scheduleWayPointResDto.getState() == 0) {
-                        wayPointCount++;
-                    }
-                }
-                rate += dayRate * (wayPointCount / wayPointSize);
-            }
-        }
-
-        if (dayCount == size) {
-            return 100;
-        }
-
-        rate += (dayCount * dayRate);
-
-        return rate;
     }
 
     @Override

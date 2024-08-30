@@ -273,6 +273,13 @@ public class GroupServiceImpl implements GroupService {
         return groupRepositoryCustom.findMemberLikeGroupList(memberId);
     }
 
+    @Override
+    public GroupResDto getMemberJoinGroup(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        return groupRepositoryCustom.findGroupByMemberId(memberId);
+
+    }
+
     private GroupJoinStatus getGroupJoinStatus(GroupMember groupMember, Long groupId) {
         GroupJoinStatus groupJoinStatus = GroupJoinStatus.NOT_JOINED_GROUP;
         if (groupMember != null) {

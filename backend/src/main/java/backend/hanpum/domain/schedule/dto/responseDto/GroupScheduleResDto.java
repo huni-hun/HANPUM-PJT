@@ -21,6 +21,6 @@ public class GroupScheduleResDto {
     String endPoint;
     String startDate;
     String endDate;
-    boolean state;
+    int state;
     List<GroupMemberResDto> groupMemberResDtoList;
 }
