@@ -15,7 +15,7 @@ function LoginPage() {
   const init = useRecoilValue(isInitAtom);
   const navigate = useNavigate();
 
-  console.log('init ::', init);
+  // console.log('init ::', init);
 
   // useEffect(() => {
   //   setInit(true);

@@ -113,7 +113,6 @@ export async function GetRefreshToken() {
 
 // 비밀번호 찾기 인증 메일 TODO
 export async function CertificationFindPw(loginId: string, email: string) {
-  console.log(loginId, email);
   const { data } = await api.post('/api/auth/find-password', {
     loginId,
     email,

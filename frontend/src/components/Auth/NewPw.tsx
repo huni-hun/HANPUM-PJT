@@ -12,14 +12,18 @@ import { STATUS } from '@/constants';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 
-function NewPw() {
+function NewPw({
+  setStep,
+}: {
+  setStep: React.Dispatch<React.SetStateAction<number>>;
+}) {
   const [updatePwReq, setUpdatePwReq] = useState({
-    email: '',
+    email: localStorage.getItem('email'),
     password: '',
     checkPassword: '',
   });
 
-  console.log(updatePwReq);
+  // console.log(updatePwReq);
 
   const [dirty, setDirty] = useState<
     Partial<Record<keyof UserSignupFormValues, boolean>>
@@ -45,13 +49,13 @@ function NewPw() {
   const validate = useMemo(() => {
     let errors: Partial<UserSignupFormValues> = {};
 
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if ((updatePwReq.email?.trim() || '').length === 0) {
-      errors.email = '이메일을 입력해주세요.';
-    } else if (!emailPattern.test(updatePwReq.email?.trim() || '')) {
-      errors.email = '유효한 이메일 형식을 입력해 주세요.';
-    }
+    // if ((updatePwReq.email?.trim() || '').length === 0) {
+    //   errors.email = '이메일을 입력해주세요.';
+    // } else if (!emailPattern.test(updatePwReq.email?.trim() || '')) {
+    //   errors.email = '유효한 이메일 형식을 입력해 주세요.';
+    // }
 
     // 비밀번호 유효성 검사
     const passwordPattern =
@@ -82,6 +86,8 @@ function NewPw() {
       onSuccess: (res) => {
         if (res.status === STATUS.success) {
           toast.success(res.message);
+          localStorage.removeItem('email');
+          setStep(2);
         }
         if (res.status === STATUS.error) {
           toast.error(res.message);
@@ -106,16 +112,18 @@ function NewPw() {
         <TextField
           label="이메일"
           name="email"
-          placeholder="123456@naver.com"
-          onChange={handleUpdatePwReq}
-          value={updatePwReq.email}
-          onBlur={handleBlur}
-          hasError={dirty.email && Boolean(validate.email)}
+          // placeholder="123456@naver.com"
+          // onChange={handleUpdatePwReq}
+          readOnly
+          value={localStorage.getItem('email') || ''}
+          // onBlur={handleBlur}
+          // hasError={dirty.email && Boolean(validate.email)}
         />
-        <Message
+        {/* <Message
           hasError={dirty.email && Boolean(validate.email)}
           text={dirty.email ? validate.email || '' : ''}
-        />
+        /> */}
+        <Spacing size={2.4} />
 
         <TextField
           label="비밀번호"
@@ -160,7 +168,7 @@ function NewPw() {
         label={'다음'}
         onClick={() => {
           changePassword({
-            email: updatePwReq.email,
+            email: updatePwReq.email || '',
             password: updatePwReq.password,
           });
         }}

@@ -56,11 +56,12 @@ function FindPage() {
     ({ loginId, email }: { loginId: string; email: string }) =>
       CertificationFindPw(loginId, email),
     {
-      onSuccess: (res) => {
+      onSuccess: (res, variables) => {
+        const { email } = variables;
         if (res.status === STATUS.success) {
           toast.success(res.message);
           setSendMail(true);
-          // setStep(1);
+          localStorage.setItem('email', email);
         }
         if (res.status === STATUS.error) {
           toast.error(res.message);
@@ -99,7 +100,7 @@ function FindPage() {
         />
       )}
 
-      {param === 'pw' && step === 1 && <NewPw />}
+      {param === 'pw' && step === 1 && <NewPw setStep={setStep} />}
 
       {param === 'pw' && step === 2 && (
         <SuccessFindLayout loginId={loginId} setStep={setStep} />

@@ -17,7 +17,7 @@ function SuccessFindLayout({
   setStep: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const param = useParams().account?.split(':')[1];
-  console.log(param);
+  // console.log(param);
   const navigate = useNavigate();
 
   const setInit = useSetRecoilState(isInitAtom);
@@ -26,14 +26,38 @@ function SuccessFindLayout({
       <div className="text-container">
         <img src={successImg} alt="성공 체크" />
 
-        <Flex direction="column" $align="center" $gap="8px">
-          <Text $typography="t16" color="grey2">
-            회원님의 아이디는
-          </Text>
-          <Text $typography="t20" $bold={true} color="main">
-            {loginId}
-          </Text>
-        </Flex>
+        {param === 'id' && (
+          <Flex direction="column" $align="center" $gap="8px">
+            <Text $typography="t20" $bold={true} color="main">
+              아이디 조회 완료!
+            </Text>
+            <Text $typography="t16" color="grey2">
+              회원님의 아이디는
+            </Text>
+
+            <Flex
+              $justify="center"
+              style={{ marginTop: '9px' }}
+              $align="end"
+              $gap={3}
+            >
+              <Text $typography="t20" $bold={true} color="main">
+                {loginId}
+              </Text>
+              <Text $typography="t12" $bold={true} color="black">
+                입니다.
+              </Text>
+            </Flex>
+          </Flex>
+        )}
+
+        {param === 'pw' && (
+          <Flex direction="column" $align="center" $gap="8px">
+            <Text $typography="t20" $bold={true} color="main">
+              비밀번호 변경 완료!
+            </Text>
+          </Flex>
+        )}
       </div>
 
       <FixedBottomButton
