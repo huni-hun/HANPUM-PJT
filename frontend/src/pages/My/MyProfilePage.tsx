@@ -3,7 +3,6 @@ import Icon from '@/components/common/Icon/Icon';
 import { colors } from '@/styles/colorPalette';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import ProfileItem from '@/components/My/ProfileItem';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { GetUser } from '@/api/mypage/GET';
 import { STATUS } from '@/constants';
@@ -12,6 +11,7 @@ import { AxiosError } from 'axios';
 import { genderKor } from '@/utils/util';
 import { ChangeProfileImg } from '@/api/mypage/PUT';
 import { ChangeEvent } from 'react';
+import ProfileItem from '@/components/My/edit/ProfileItem';
 
 function MyProfilePage() {
   const navigate = useNavigate();

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import * as S from '../Style/My/MyRoot.styled';
-import BaseButton from '../common/BaseButton';
+import * as S from '../../Style/My/category/MyRoot.styled';
+import BaseButton from '../../common/BaseButton';
 
-import Text from '../common/Text';
-import Flex from '../common/Flex';
-import Icon from '../common/Icon/Icon';
-import CardLong from '../common/CardLong/CardLong';
+import Text from '../../common/Text';
+import Flex from '../../common/Flex';
+import Icon from '../../common/Icon/Icon';
+import CardLong from '../../common/CardLong/CardLong';
 
 function MyRoot() {
   const root = [

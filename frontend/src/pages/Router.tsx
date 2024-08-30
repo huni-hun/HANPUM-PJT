@@ -39,6 +39,7 @@ import {
   MyProfilePage,
   CategoryLayout,
   MeetAddMainPage,
+  ConfigPage,
 } from './index'; // index.tsx에서 컴포넌트를 가져옵니다.
 
 import useIsAuth from '@/hooks/auth/useIsAuth';
@@ -98,6 +99,7 @@ export default function Router() {
           <Route path="/mypage/review/:course_id" element={<ReviewPage />} />
           <Route path="/myprofile" element={<MyProfilePage />} />
           <Route path="/myprofile/:category" element={<CategoryLayout />} />
+          <Route path="/config" element={<ConfigPage />} />
         </>
       </Routes>
     </BrowserRouter>

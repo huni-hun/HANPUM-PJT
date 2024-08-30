@@ -1,11 +1,11 @@
 import { colors } from '@/styles/colorPalette';
 import styled from 'styled-components';
-import Header from '../common/Header/Header';
+import Header from '../../common/Header/Header';
 import { useNavigate, useParams } from 'react-router-dom';
-import Flex from '../common/Flex';
-import Text from '../common/Text';
+import Flex from '../../common/Flex';
+import Text from '../../common/Text';
 import { useEffect, useState } from 'react';
-import Icon from '../common/Icon/Icon';
+import Icon from '../../common/Icon/Icon';
 import { SignupRequestValues } from '@/models/signup';
 import {
   dateFormat,
@@ -24,11 +24,11 @@ import { ChangeNickname, ChangeUserInfo } from '@/api/mypage/PUT';
 import { STATUS } from '@/constants';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
-import TextField from '../common/TextField/TextField';
-import BaseButton from '../common/BaseButton';
+import TextField from '../../common/TextField/TextField';
+import BaseButton from '../../common/BaseButton';
 import { CheckNickname } from '@/api/signup/POST';
 import { useAlert } from '@/hooks/global/useAlert';
-import Calender from '../Signup/Calender';
+import Calender from '../../Signup/Calender';
 
 function CategoryLayout() {
   const param = useParams().category?.split(
@@ -315,8 +315,6 @@ function CategoryLayout() {
                 hasFloat={
                   <Icon name="IconMyRooteClose" size={12} onClick={clickInit} />
                 }
-                // hasError={dirty.birthDate && Boolean(validate.birthDate)}
-                // helpMessage={validate.birthDate}
               />
             )}
           </div>

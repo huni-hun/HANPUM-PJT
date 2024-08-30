@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import * as S from '../Style/My/Interest.styled';
-import NoHave from './NoHave';
-import CardLong from '../common/CardLong/CardLong';
+import * as S from '../../Style/My/category/Interest.styled';
 import { useQuery } from 'react-query';
 import { GetInterestMeetList } from '@/api/mypage/GET';
 import { STATUS } from '@/constants';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
+import NoHave from '../NoHave';
+import CardLong from '@/components/common/CardLong/CardLong';
 
 function Interest() {
   const [tab, setTab] = useState('경로');
