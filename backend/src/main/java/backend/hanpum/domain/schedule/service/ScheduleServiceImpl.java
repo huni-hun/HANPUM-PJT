@@ -189,7 +189,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .endPoint(scheduleResDto.getEndPoint())
                 .startDate(scheduleResDto.getStartDate())
                 .endDate(scheduleResDto.getEndDate())
-                .state(scheduleResDto.isState())
+                .state(scheduleResDto.getState())
                 .groupMemberResDtoList(groupMemberListGetResDto.getGroupMemberResList())
                 .build();
 

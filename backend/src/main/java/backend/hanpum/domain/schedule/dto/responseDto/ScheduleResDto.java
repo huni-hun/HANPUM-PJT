@@ -16,6 +16,6 @@ public class ScheduleResDto {
     String endPoint;
     String startDate;
     String endDate;
-    boolean state;
+    int state;
 
 }
