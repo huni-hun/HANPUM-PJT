@@ -1,10 +1,7 @@
 package backend.hanpum.domain.schedule.dto.responseDto;
 
 import backend.hanpum.domain.course.dto.responseDto.AttractionResDto;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 

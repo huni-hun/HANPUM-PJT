@@ -27,6 +27,7 @@ import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.auth.MemberInfoInvalidException;
 import backend.hanpum.exception.exception.common.JsonBadMappingException;
 import backend.hanpum.exception.exception.common.UriBadSyntaxException;
+import backend.hanpum.exception.exception.course.CourseNotFoundException;
 import backend.hanpum.exception.exception.group.GroupMemberNotFoundException;
 import backend.hanpum.exception.exception.group.GroupNotFoundException;
 import backend.hanpum.exception.exception.group.GroupPermissionException;
@@ -73,7 +74,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         Long courseId = schedulePostReqDto.getCourseId();
 
-        Course course = courseRepository.findById(courseId).orElseThrow(ScheduleNotFoundException::new);
+        Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
 
         // 개인 일정 3개 이상 못만들게
