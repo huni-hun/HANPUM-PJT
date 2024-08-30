@@ -2,7 +2,7 @@ import { decodeToken } from '@/utils/util';
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: `${process.env.REACT_APP_BASEURL}`,
+  baseURL: `https://hanpum.com`,
 });
 
 api.interceptors.request.use((config) => {

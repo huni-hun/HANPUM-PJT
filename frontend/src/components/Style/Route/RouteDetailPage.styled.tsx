@@ -58,7 +58,6 @@ export const RouteInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 10px;
 `;
 
 export const ImgBox = styled.div<StyledProps>`
@@ -464,6 +463,7 @@ export const PlaceCardBox = styled.div`
   background-color: #ffffff;
   border-radius: 1.2rem;
   box-shadow: 0px 4px 4px 0 rgba(0, 0, 0, 0.25);
+  margin-bottom: 0.8rem;
 `;
 
 export const PlaceCard = styled.div`

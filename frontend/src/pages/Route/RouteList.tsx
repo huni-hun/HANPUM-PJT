@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { getRouteList } from '@/api/route/GET';
 import { RouteListProps } from '@/models/route';
 import { useNavigate } from 'react-router-dom';
+import CardLong from '@/components/common/CardLong/CardLong';
 
 function RouteList() {
   const [arr, setArr] = useState<RouteListProps[]>([]);

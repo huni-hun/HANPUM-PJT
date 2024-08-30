@@ -62,7 +62,7 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
   useEffect(() => {
     getRouteReview(routeid as string).then((result) => {
       let arr: RouteReviewProps[] = [];
-      if (result.status === 200) {
+      if (result.data.status !== 'ERROR' && result.status === 200) {
         result.data.data.map((ele: any) => {
           let data: RouteReviewProps = {
             memberId: ele.memberId,
