@@ -46,6 +46,7 @@ function RouteListSearchResult(props: RouteListSearchResultProps) {
       <R.MainContainer>
         {props.searchResult.map((ele: RouteListProps) => (
           <RouteListMoreCard
+            id={ele.routeId}
             title={ele.routeName}
             start={ele.start}
             end={ele.end}

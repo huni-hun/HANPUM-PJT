@@ -47,7 +47,13 @@ function RouteAddMainPage() {
 
   return (
     <R.Container>
-      <Header purpose="title" title="기본정보 입력" clickBack={() => {}} />
+      <Header
+        purpose="title"
+        title="기본정보 입력"
+        clickBack={() => {
+          navigator(-1);
+        }}
+      />
       <R.MainContainer>
         <R.OverFlow>
           {!imgBoxClick ? (
@@ -303,17 +309,13 @@ function RouteAddMainPage() {
             width={25}
             height={6}
             fc="ffffff"
-            bc={
-              typeChecked.length > 0 && imgReady && explanationReady
-                ? colors.main
-                : colors.grey2
-            }
+            bc={explanationReady ? colors.main : colors.grey2}
             radius={0.7}
             fontSize={1.6}
             children="다음"
             color="#ffffff"
             onClick={() => {
-              if (typeChecked.length > 0 && imgReady && explanationReady) {
+              if (explanationReady) {
                 navigator('/route/addDetail', {
                   state: {
                     imgSrc: imgSrc,

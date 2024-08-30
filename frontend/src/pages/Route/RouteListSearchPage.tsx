@@ -3,13 +3,14 @@ import * as R from '@/components/Style/Route/RouteListSearchPage.styled';
 import { colors } from '@/styles/colorPalette';
 import Button from '@/components/common/Button/Button';
 import { Slider } from '@mui/material';
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import {
   getRouteSearchList,
   getRouteSearchListWithProps,
 } from '@/api/route/GET';
 import RouteListSearchResult from './RouteListSearchResult';
 import { RouteListProps } from '@/models/route';
+import { useNavigate } from 'react-router-dom';
 
 function RouteListSearchPage() {
   const [sliderValue, setSliderValue] = useState<number>(0);
@@ -18,6 +19,8 @@ function RouteListSearchPage() {
   const [keyword, setKeyword] = useState<string>('');
   const [searchSucess, setSearchSucess] = useState<boolean>(false);
   const [searchResult, setSearchResult] = useState<RouteListProps[]>([]);
+
+  const navigator = useNavigate();
 
   const searchHandler = () => {
     if (dateValue > 0 || sliderValue > 0 || selectType.length > 0) {
@@ -97,7 +100,9 @@ function RouteListSearchPage() {
     <R.Container>
       <Header
         purpose="search"
-        clickBack={() => {}}
+        clickBack={() => {
+          navigator(-1);
+        }}
         back={true}
         changeEven={(e: React.ChangeEvent<HTMLInputElement>) => {
           setKeyword(e.target.value);

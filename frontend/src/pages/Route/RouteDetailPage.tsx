@@ -222,7 +222,9 @@ function RouteDetailPage() {
             fontSize={1.6}
             children="일정 생성"
             color="#ffffff"
-            onClick={() => {}}
+            onClick={() => {
+              navigate('/schedule/addSchedule');
+            }}
           />
         </R.ButtonBox>
       </R.BottomContainer>

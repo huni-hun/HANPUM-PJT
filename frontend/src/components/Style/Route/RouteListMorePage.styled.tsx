@@ -26,6 +26,7 @@ export const RouteCard = styled.div`
   align-items: start;
   justify-content: center;
   border-bottom: 0.1rem solid ${colors.grey1};
+  margin-bottom: 2.4rem;
 `;
 
 export const ContentBox = styled.div`
