@@ -1,6 +1,7 @@
 package backend.hanpum.domain.course.controller;
 
 import backend.hanpum.config.jwt.UserDetailsImpl;
+import backend.hanpum.domain.auth.dto.requestDto.KakaoSignUpCompleteReqDto;
 import backend.hanpum.domain.course.dto.requestDto.*;
 import backend.hanpum.domain.course.dto.responseDto.*;
 import backend.hanpum.domain.course.enums.CourseTypes;
@@ -9,11 +10,13 @@ import backend.hanpum.exception.format.code.ApiResponse;
 import backend.hanpum.exception.format.response.ResponseCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -39,16 +42,20 @@ public class CourseController {
 
     @Operation(summary = "경로 생성", description = "경로 생성 API")
     @PostMapping()
-    public ResponseEntity<?> makeCourse(@ModelAttribute MakeCourseReqDto makeCourseReqDto) {
-        courseService.makeCourse(makeCourseReqDto);
+    public ResponseEntity<?> makeCourse(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                        @RequestPart(required = false) MultipartFile multipartFile,
+                                        @RequestPart MakeCourseReqDto makeCourseReqDto) {
+        courseService.makeCourse(userDetails.getMember().getMemberId(), multipartFile, makeCourseReqDto);
 
         return response.success(ResponseCode.COURSE_MAKE_SUCCESS);
     }
 
     @Operation(summary = "경로 수정", description = "경로 수정 API")
     @PutMapping()
-    public ResponseEntity<?> editCourse(@ModelAttribute EditCourseReqDto editCourseReqDto) {
-        courseService.editCourse(editCourseReqDto);
+    public ResponseEntity<?> editCourse(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                        @RequestPart(required = false) MultipartFile multipartFile,
+                                        @RequestPart EditCourseReqDto editCourseReqDto) {
+        courseService.editCourse(userDetails.getMember().getMemberId(), multipartFile, editCourseReqDto);
 
         return response.success(ResponseCode.COURSE_EDIT_SUCCESS);
     }

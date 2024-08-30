@@ -8,13 +8,14 @@ import backend.hanpum.domain.course.dto.responseDto.*;
 import backend.hanpum.domain.course.enums.CourseTypes;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface CourseService {
     CourseListMapResDto getCourseList(CourseTypes targetCourse, Double maxDistance, Integer maxDays, List<CourseTypes> selectedTypes, String keyword, Pageable pageable);
-    void makeCourse(MakeCourseReqDto makeCourseReqDto);
-    void editCourse(EditCourseReqDto editCourseReqDto);
+    void makeCourse(Long memberId, MultipartFile multipartFile, MakeCourseReqDto makeCourseReqDto);
+    void editCourse(Long memberId, MultipartFile multipartFile, EditCourseReqDto editCourseReqDto);
     void deleteCourse(Long memberId, Long courseId);
     CourseDetailResDto getCourseDetail(Long courseId);
     GetCourseDayResDto getCourseDay(Long courseId, Integer day);
