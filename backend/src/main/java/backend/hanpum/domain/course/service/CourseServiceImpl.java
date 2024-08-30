@@ -8,12 +8,19 @@ import backend.hanpum.domain.course.enums.CourseTypes;
 import backend.hanpum.domain.course.repository.*;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
+import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
+import backend.hanpum.domain.schedule.dto.responseDto.ScheduleTempResDto;
+import backend.hanpum.domain.schedule.dto.responseDto.ScheduleWayPointResDto;
+import backend.hanpum.domain.schedule.repository.ScheduleRepository;
+import backend.hanpum.domain.schedule.service.ScheduleService;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.auth.MemberNotFoundException;
 import backend.hanpum.exception.exception.common.JsonBadMappingException;
 import backend.hanpum.exception.exception.common.JsonBadProcessingException;
 import backend.hanpum.exception.exception.common.UriBadSyntaxException;
 import backend.hanpum.exception.exception.course.*;
+import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
+import backend.hanpum.exception.exception.schedule.ValidScheduleNotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -45,9 +52,11 @@ public class CourseServiceImpl implements CourseService {
     private final CourseDayRepository courseDayRepository;
     private final AttractionRepository attractionRepository;
     private final WaypointRepository waypointRepository;
+    private final ScheduleRepository scheduleRepository;
     private final CourseUsageHistoryRepository courseUsageHistoryRepository;
+
     private final S3ImageService s3ImageService;
-    
+
     private static final List<String> SIDO_LIST = Arrays.asList(
             "서울", "부산", "대구", "인천", "광주",
             "대전", "울산", "세종특별자치시", "경기", "강원특별자치도",
@@ -751,6 +760,88 @@ public class CourseServiceImpl implements CourseService {
         }
 
         return courseResDtoList;
+    }
+
+    @Override
+    public List<UsedCourseResDto> getUsedCourseList(Long memberId) {
+        List<CourseUsageHistory> courseUsageHistoryList = courseUsageHistoryRepository.findByMember_memberId(memberId);
+        List<UsedCourseResDto> usedCourseResDtoList = new ArrayList<>();
+
+        // 진행중인 일정 정보 가져오기
+        ScheduleTempResDto scheduleTempResDto = scheduleRepository.getScheduleTempResDto(memberId).orElseThrow(ValidScheduleNotFoundException::new);
+        Long scheduleId = scheduleTempResDto.getScheduleId();
+
+        // ScheduleDayResDto
+        List<ScheduleDayResDto> scheduleDayResDtoList = scheduleRepository.getScheduleDayResDtoList(memberId, scheduleId).orElseThrow(ScheduleNotFoundException::new);
+
+        // 달성률
+        int rate = getScheduleGoalRate(scheduleDayResDtoList);
+
+        for(CourseUsageHistory courseUsageHistory : courseUsageHistoryList) {
+            Course course = courseUsageHistory.getCourse();
+            usedCourseResDtoList.add(UsedCourseResDto.builder()
+                    .courseUsedId(courseUsageHistory.getCourseUsageHistoryId())
+                    .courseId(course.getCourseId())
+                    .startDate(courseUsageHistory.getStartDate())
+                    .endDate(courseUsageHistory.getEndDate())
+                    .useFlag(courseUsageHistory.getUseFlag())
+                    .courseName(course.getCourseName())
+                    .startPoint(course.getStartPoint())
+                    .endPoint(course.getEndPoint())
+                    .backgroundImg(course.getBackgroundImg())
+                    .progressRate(rate)
+                    .build()
+            );
+        }
+
+        return usedCourseResDtoList;
+    }
+
+    @Override
+    public int getScheduleGoalRate(List<ScheduleDayResDto> scheduleDayResDtoList) {
+
+        int rate = 0;
+        int size = scheduleDayResDtoList.size();
+        int dayRate = 100 / size;
+
+        // 첫쨰날도 방문 안했을때
+        if (!scheduleDayResDtoList.get(0).isVisit()) {
+            List<ScheduleWayPointResDto> scheduleWayPointResDtoList = scheduleDayResDtoList.get(0).getScheduleWayPointList();
+            int wayPointSize = scheduleWayPointResDtoList.size();
+            int wayPointCount = 0;
+            for (ScheduleWayPointResDto scheduleWayPointResDto : scheduleWayPointResDtoList) {
+                if (scheduleWayPointResDto.getState() == 0) {
+                    wayPointCount++;
+                }
+            }
+            rate = dayRate * (wayPointCount / wayPointSize);
+            return rate;
+        }
+
+        int dayCount = 0;
+        for (ScheduleDayResDto scheduleDayResDto : scheduleDayResDtoList) {
+            if (scheduleDayResDto.isVisit()) {
+                dayCount++;
+            } else {
+                List<ScheduleWayPointResDto> scheduleWayPointResDtoList = scheduleDayResDto.getScheduleWayPointList();
+                int wayPointSize = scheduleWayPointResDtoList.size();
+                int wayPointCount = 0;
+                for (ScheduleWayPointResDto scheduleWayPointResDto : scheduleWayPointResDtoList) {
+                    if (scheduleWayPointResDto.getState() == 0) {
+                        wayPointCount++;
+                    }
+                }
+                rate += dayRate * (wayPointCount / wayPointSize);
+            }
+        }
+
+        if (dayCount == size) {
+            return 100;
+        }
+
+        rate += (dayCount * dayRate);
+
+        return rate;
     }
 
 }

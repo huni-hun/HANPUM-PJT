@@ -6,6 +6,7 @@ import backend.hanpum.domain.course.dto.requestDto.MultiWaypointSearchReqDto;
 import backend.hanpum.domain.course.dto.requestDto.SearchWaypointReqDto;
 import backend.hanpum.domain.course.dto.responseDto.*;
 import backend.hanpum.domain.course.enums.CourseTypes;
+import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -30,4 +31,8 @@ public interface CourseService {
     List<MultiWaypointSearchResDto> searchMultiWaypointCourse(List<MultiWaypointSearchReqDto> multiWaypointSearchReqDtoList);
     List<CourseResDto> getInterestCourseList(Long memberId);
     List<CourseResDto> getSelfMadeCourseList(Long memberId);
+    List<UsedCourseResDto> getUsedCourseList(Long memberId);
+
+    // 진행률 계산
+    int getScheduleGoalRate(List<ScheduleDayResDto> scheduleDayResDtoList);
 }
