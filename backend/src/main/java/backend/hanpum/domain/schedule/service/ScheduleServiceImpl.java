@@ -224,7 +224,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         List<ScheduleDayResDto> scheduleDayResDtoList = scheduleRepository.getScheduleDayResDtoList(memberId, scheduleId).orElseThrow(ScheduleNotFoundException::new);
 
         // 달성률
-        int rate = getScheduleGoalRate(scheduleDayResDtoList);
+        int rate = courseService.getScheduleGoalRate(scheduleDayResDtoList);
 
         courseService.updateCourseUsageHistory(courseId, memberId, (double) rate);
 
@@ -328,7 +328,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         List<ScheduleDayResDto> scheduleDayResDtoList = scheduleRepository.getScheduleDayResDtoList(memberId, scheduleId).orElseThrow(ScheduleNotFoundException::new);
 
         // 달성률
-        int rate = getScheduleGoalRate(scheduleDayResDtoList);
+        int rate = courseService.getScheduleGoalRate(scheduleDayResDtoList);
 
         ScheduleInProgressResDto result = ScheduleInProgressResDto.builder()
                 .scheduleId(scheduleId)
@@ -371,53 +371,6 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
         }
         return scheduleDayId;
-    }
-
-    @Override
-    public int getScheduleGoalRate(List<ScheduleDayResDto> scheduleDayResDtoList) {
-
-        int rate = 0;
-        int size = scheduleDayResDtoList.size();
-        int dayRate = 100 / size;
-
-        // 첫쨰날도 방문 안했을때
-        if (!scheduleDayResDtoList.get(0).isVisit()) {
-            List<ScheduleWayPointResDto> scheduleWayPointResDtoList = scheduleDayResDtoList.get(0).getScheduleWayPointList();
-            int wayPointSize = scheduleWayPointResDtoList.size();
-            int wayPointCount = 0;
-            for (ScheduleWayPointResDto scheduleWayPointResDto : scheduleWayPointResDtoList) {
-                if (scheduleWayPointResDto.getState() == 0) {
-                    wayPointCount++;
-                }
-            }
-            rate = dayRate * (wayPointCount / wayPointSize);
-            return rate;
-        }
-
-        int dayCount = 0;
-        for (ScheduleDayResDto scheduleDayResDto : scheduleDayResDtoList) {
-            if (scheduleDayResDto.isVisit()) {
-                dayCount++;
-            } else {
-                List<ScheduleWayPointResDto> scheduleWayPointResDtoList = scheduleDayResDto.getScheduleWayPointList();
-                int wayPointSize = scheduleWayPointResDtoList.size();
-                int wayPointCount = 0;
-                for (ScheduleWayPointResDto scheduleWayPointResDto : scheduleWayPointResDtoList) {
-                    if (scheduleWayPointResDto.getState() == 0) {
-                        wayPointCount++;
-                    }
-                }
-                rate += dayRate * (wayPointCount / wayPointSize);
-            }
-        }
-
-        if (dayCount == size) {
-            return 100;
-        }
-
-        rate += (dayCount * dayRate);
-
-        return rate;
     }
 
     @Override
