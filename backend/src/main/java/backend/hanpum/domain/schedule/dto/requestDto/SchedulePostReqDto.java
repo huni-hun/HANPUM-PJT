@@ -11,6 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SchedulePostReqDto {
     private Long courseId;
-    private String title;
     private String startDate;
 }

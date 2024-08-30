@@ -43,7 +43,9 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                                 schedule.endDate,
                                 schedule.state
                         )).from(schedule)
-                .where(schedule.type.eq("private").and(schedule.member.memberId.eq(memberId)))
+                .where(schedule.type.eq("private")
+                        .and(schedule.member.memberId.eq(memberId))
+                        .and(schedule.state.in(0, 1)))
                 .fetch());
     }
 
@@ -63,7 +65,9 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                                 schedule.endDate,
                                 schedule.state
                         )).from(schedule)
-                .where(schedule.type.eq("group").and(schedule.group.groupId.eq(groupId)))
+                .where(schedule.type.eq("group")
+                        .and(schedule.group.groupId.eq(groupId))
+                        .and(schedule.state.in(0, 1)))
                 .fetchOne());
 
     }
@@ -281,6 +285,16 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 )).from(schedule)
                 .where(schedule.state.eq(1).and(memberCondition(memberId))
                 )
+                .fetchOne());
+    }
+
+    @Override
+    public Optional<Long> checkMyScheduleCnt(Long memberId) {
+        return Optional.ofNullable(query.select(schedule.count())
+                .from(schedule)
+                .where(schedule.member.memberId.eq(memberId)
+                        .and(schedule.type.eq("private"))
+                        .and(schedule.state.in(0, 1)))
                 .fetchOne());
     }
 

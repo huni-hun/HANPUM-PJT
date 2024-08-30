@@ -1,9 +1,10 @@
 package backend.hanpum.domain.schedule.dto.responseDto;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class NearByAttractionResDto {
     String title;

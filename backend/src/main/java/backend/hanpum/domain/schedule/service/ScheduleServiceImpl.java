@@ -27,6 +27,7 @@ import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.auth.MemberInfoInvalidException;
 import backend.hanpum.exception.exception.common.JsonBadMappingException;
 import backend.hanpum.exception.exception.common.UriBadSyntaxException;
+import backend.hanpum.exception.exception.course.CourseNotFoundException;
 import backend.hanpum.exception.exception.group.GroupMemberNotFoundException;
 import backend.hanpum.exception.exception.group.GroupNotFoundException;
 import backend.hanpum.exception.exception.group.GroupPermissionException;
@@ -73,8 +74,14 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         Long courseId = schedulePostReqDto.getCourseId();
 
-        Course course = courseRepository.findById(courseId).orElseThrow(ScheduleNotFoundException::new);
+        Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+
+        // 개인 일정 3개 이상 못만들게
+        Long myScheduleCnt = scheduleRepository.checkMyScheduleCnt(memberId).orElseThrow(ScheduleNotFoundException::new);
+        if (myScheduleCnt >= 3) {
+            throw new CreateCountExceededException();
+        }
 
         String startDate = schedulePostReqDto.getStartDate();
         int daySize = course.getTotalDays();
@@ -164,7 +171,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public List<ScheduleResDto> getMyScheduleList(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
-        List<ScheduleResDto> scheduleResDtoList = scheduleRepository.getMyScheduleByMemberId(memberId).orElseThrow(ScheduleNotFoundException::new);
+        List<ScheduleResDto> scheduleResDtoList = scheduleRepository.getMyScheduleByMemberId(memberId)
+                .filter(list -> !list.isEmpty())
+                .orElseThrow(ScheduleNotFoundException::new);
         return scheduleResDtoList;
     }
 
@@ -189,7 +198,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .endPoint(scheduleResDto.getEndPoint())
                 .startDate(scheduleResDto.getStartDate())
                 .endDate(scheduleResDto.getEndDate())
-                .state(scheduleResDto.isState())
+                .state(scheduleResDto.getState())
                 .groupMemberResDtoList(groupMemberListGetResDto.getGroupMemberResList())
                 .build();
 
