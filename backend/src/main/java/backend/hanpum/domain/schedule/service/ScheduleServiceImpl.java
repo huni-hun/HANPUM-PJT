@@ -170,7 +170,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public List<ScheduleResDto> getMyScheduleList(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
-        List<ScheduleResDto> scheduleResDtoList = scheduleRepository.getMyScheduleByMemberId(memberId).orElseThrow(ScheduleNotFoundException::new);
+        List<ScheduleResDto> scheduleResDtoList = scheduleRepository.getMyScheduleByMemberId(memberId)
+                .filter(list -> !list.isEmpty())
+                .orElseThrow(ScheduleNotFoundException::new);
         return scheduleResDtoList;
     }
 
