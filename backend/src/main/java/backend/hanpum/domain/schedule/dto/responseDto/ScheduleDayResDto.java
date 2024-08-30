@@ -9,7 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ScheduleDayResDto {
-    Long ScheduleDayId;
+    Long scheduleDayId;
     String date;
     boolean visit;
     boolean running;
@@ -20,4 +20,17 @@ public class ScheduleDayResDto {
     List<ScheduleWayPointResDto> scheduleWayPointList;
     @Setter
     List<AttractionResDto> attractionList;
+
+    public ScheduleDayResDto(Long scheduleDayId, String date, boolean visit, boolean running, String totalDistance, String totalDuration, String totalCalories) {
+        this.scheduleDayId = scheduleDayId;
+        this.date = date;
+        this.visit = visit;
+        this.running = running;
+        this.totalDistance = totalDistance;
+        this.totalDuration = totalDuration;
+        this.totalCalories = totalCalories;
+    }
+
 }
+
+
