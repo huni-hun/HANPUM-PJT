@@ -284,6 +284,16 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .fetchOne());
     }
 
+    @Override
+    public Optional<Long> checkMyScheduleCnt(Long memberId) {
+        return Optional.ofNullable(query.select(schedule.count())
+                .from(schedule)
+                .where(schedule.member.memberId.eq(memberId)
+                        .and(schedule.type.eq("private"))
+                        .and(schedule.state.in(0, 1)))
+                .fetchOne());
+    }
+
     private BooleanExpression memberCondition(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         Long groupId = member.getGroupMember() == null ? null : member.getGroupMember().getGroup().getGroupId();

@@ -23,5 +23,5 @@ public interface ScheduleRepositoryCustom {
 
     Optional<ScheduleTempResDto> getScheduleTempResDto(Long memberId);
 
-
+    Optional<Long> checkMyScheduleCnt(Long memberId);
 }

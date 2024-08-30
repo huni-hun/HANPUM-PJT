@@ -76,6 +76,12 @@ public class ScheduleServiceImpl implements ScheduleService {
         Course course = courseRepository.findById(courseId).orElseThrow(ScheduleNotFoundException::new);
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
 
+        // 개인 일정 3개 이상 못만들게
+        Long myScheduleCnt = scheduleRepository.checkMyScheduleCnt(memberId).orElseThrow(ScheduleNotFoundException::new);
+        if (myScheduleCnt >= 3) {
+            throw new CreateCountExceededException();
+        }
+
         String startDate = schedulePostReqDto.getStartDate();
         int daySize = course.getTotalDays();
         String endDate = calculateDate(startDate, daySize - 1);     // ex) 10일부터 4박5일이면 14일
