@@ -6,8 +6,6 @@ import {
   useNavigate,
 } from 'react-router-dom';
 
-import Header from '@/components/common/Header/Header';
-
 import {
   LoginPage,
   MainPage,
@@ -43,12 +41,10 @@ import {
   ConfigLayout,
 } from './index'; // index.tsx에서 컴포넌트를 가져옵니다.
 
-import useIsAuth from '@/hooks/auth/useIsAuth';
+// import useIsAuth from '@/hooks/auth/useIsAuth';
 import ConfigDetailPage from './My/ConfigDetailPage';
 
 export default function Router() {
-  const isAuthEnticated = useIsAuth();
-
   return (
     <BrowserRouter>
       <Routes>
