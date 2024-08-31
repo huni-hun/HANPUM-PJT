@@ -1,6 +1,5 @@
 package backend.hanpum.domain.member.service;
 
-import backend.hanpum.domain.member.dto.requestDto.DeleteMemberReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdateMemberInfoReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdateNicknameReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdatePasswordReqDto;

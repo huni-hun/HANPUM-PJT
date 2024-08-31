@@ -6,7 +6,6 @@ import backend.hanpum.domain.course.service.CourseService;
 import backend.hanpum.domain.group.dto.responseDto.GroupListGetResDto;
 import backend.hanpum.domain.group.dto.responseDto.LikeGroupListGetResDto;
 import backend.hanpum.domain.group.service.GroupService;
-import backend.hanpum.domain.member.dto.requestDto.DeleteMemberReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdateMemberInfoReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdateNicknameReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdatePasswordReqDto;

@@ -5,7 +5,6 @@ import backend.hanpum.config.s3.S3ImageService;
 import backend.hanpum.domain.course.repository.CourseUsageHistoryRepository;
 import backend.hanpum.domain.course.repository.InterestCourseRepository;
 import backend.hanpum.domain.group.repository.LikeGroupRepository;
-import backend.hanpum.domain.member.dto.requestDto.DeleteMemberReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdateMemberInfoReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdateNicknameReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdatePasswordReqDto;
