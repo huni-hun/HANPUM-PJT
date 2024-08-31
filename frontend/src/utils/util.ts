@@ -120,6 +120,8 @@ export function returnConfigTitle(param: ConfigType): string {
       return '이용약관 및 정책';
     case 'withdraw':
       return '회원탈퇴';
+    case 'pw':
+      return '비밀번호 변경';
     default:
       return '';
   }

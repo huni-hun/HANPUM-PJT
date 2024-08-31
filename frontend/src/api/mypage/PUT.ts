@@ -3,7 +3,7 @@ import api from '../index';
 import CryptoJS from 'crypto-js';
 
 // 비밀번호 변경 TODO
-export async function ChangePw(
+export async function UpdatePassword(
   currentPassword: string,
   updatePassword: string,
 ) {

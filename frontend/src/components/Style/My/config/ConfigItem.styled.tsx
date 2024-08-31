@@ -61,4 +61,5 @@ export const WithdrawContainer = styled.div`
 export const ChangePwContainer = styled.div`
   height: 100%;
   background-color: ${colors.white};
+  padding: 20px 24px;
 `;

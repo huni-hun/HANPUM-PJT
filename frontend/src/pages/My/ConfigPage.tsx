@@ -47,7 +47,7 @@ function ConfigPage() {
           >
             계정
           </Text>
-          {/* <ConfigItem label="비밀번호 변경" url="/config/:pw" /> */}
+          <ConfigItem label="비밀번호 변경" url="/config/:pw" />
           <ConfigItem label="회원탈퇴" url="/config/:withdraw" />
         </Flex>
       </div>

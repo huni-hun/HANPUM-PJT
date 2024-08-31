@@ -6,12 +6,12 @@ import Announcement from './Announcement';
 import Policy from './Policy';
 import { colors } from '@/styles/colorPalette';
 import Withdraw from './Withdraw';
+import ChangePw from './ChangePw';
 
 type ConfigType = 'announcement' | 'policy' | 'withdraw' | 'pw';
 
 function ConfigLayout() {
   const param = useParams().category?.split(':')[1] as ConfigType;
-  console.log(param);
   const navigate = useNavigate();
   return (
     <Layout>
@@ -26,6 +26,7 @@ function ConfigLayout() {
       {param === 'announcement' && <Announcement param={param} />}
       {param === 'policy' && <Policy param={param} />}
 
+      {param === 'pw' && <ChangePw />}
       {param === 'withdraw' && <Withdraw />}
     </Layout>
   );

@@ -15,8 +15,6 @@ function ConfigDetailPage() {
   const navigate = useNavigate();
   const { category, id } = useParams();
   const paramCategory = category?.split(':')[1] as ConfigType;
-  // console.log(param.id);
-  // console.log(ANNOUNCEMENT.filter((item) => item.id === param.id));
 
   const configInfoList = () => {
     if (paramCategory === 'announcement') {
