@@ -75,11 +75,11 @@ const Form = () => {
 
   const { mutate } = useMutation(
     ({ loginId, password }: { loginId: string; password: string }) =>
-      Login(loginId, CryptoJS.SHA256(password).toString()),
+      Login(loginId, password),
     {
       onSuccess: (res) => {
         if (res.status === STATUS.success) {
-          // console.log(res);
+          console.log(res);
           const { accessToken } = res.data.tokenResDto;
           toast.success(res.message);
 

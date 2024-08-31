@@ -40,6 +40,7 @@ import ReviewPage from '@pages/My/ReviewPage';
 import MyProfilePage from '@pages/My/MyProfilePage';
 import CategoryLayout from '@/components/My/edit/CategoryLayout';
 import ConfigPage from '@pages/My/ConfigPage';
+import ConfigLayout from '@components/My/config/ConfigLayout';
 
 export {
   LoginPage,
@@ -79,4 +80,5 @@ export {
   MyProfilePage,
   CategoryLayout,
   ConfigPage,
+  ConfigLayout,
 };

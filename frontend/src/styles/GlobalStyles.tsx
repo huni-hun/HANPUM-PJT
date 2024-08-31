@@ -5,6 +5,11 @@ import { colors } from './colorPalette';
 export const GlobalStyle = createGlobalStyle`
   ${reset}
 
+  @font-face {
+    font-family: 'Noto';
+    src: url('/fonts/NotoSansKR-VariableFont_wght.ttf');
+  }
+
 
   html, body, #root {
   /* margin: 0 auto; */
@@ -33,7 +38,7 @@ export const GlobalStyle = createGlobalStyle`
     justify-content: center;
     align-items: center;
 
-
+    font-family: 'Noto', sans-serif;
 
   }
 
