@@ -157,7 +157,12 @@ function ScheduleMainPage() {
 
   return (
     <ScheduleMainPageContainer>
-      <Header purpose="user" clickBack={() => navigate(-1)} isShadow />
+      <Header
+        purpose="user"
+        clickBack={() => navigate(-1)}
+        isShadow
+        plusBtnclick={() => navigate('/schedule/addSchedule')}
+      />
 
       <S.SchduleTypeContainer>
         <S.SchduleTypeBox>
@@ -189,8 +194,8 @@ function ScheduleMainPage() {
       </S.SchduleTypeContainer>
       {/* 진행중 tab */}
       {isSelected === 'Proceeding' && (
-        <R.Main>
-          <R.Overflow>
+        <S.Main>
+          <S.Overflow>
             <R.RouteInfoContainer>
               <Feed routeData={dummtFeedData} />
               <FeedInfo
@@ -234,14 +239,14 @@ function ScheduleMainPage() {
                 setSelectedDay={setSelectedDay}
               /> */}
             </R.RouteDetailInfoContainer>
-          </R.Overflow>
-        </R.Main>
+          </S.Overflow>
+        </S.Main>
       )}
 
       {/* 내 일정 tab */}
       {isSelected === 'Mine' && (
-        <R.Main>
-          <R.Overflow>
+        <S.Main>
+          <S.Overflow>
             {dummyCardData.map((data, index) => (
               <SchduleCard
                 key={index}
@@ -256,14 +261,14 @@ function ScheduleMainPage() {
                 onClick={clickCard}
               />
             ))}
-          </R.Overflow>
-        </R.Main>
+          </S.Overflow>
+        </S.Main>
       )}
 
       {/* 모임 일정 tab */}
       {isSelected === 'Class' && (
-        <R.Main>
-          <R.Overflow>
+        <S.Main>
+          <S.Overflow>
             <R.RouteInfoContainer>
               <Feed routeData={dummtFeedData} isUserContainer />
               <FeedInfo
@@ -296,8 +301,8 @@ function ScheduleMainPage() {
                 members={dummyMemberData.members}
               />
             </S.ScheduleMainContainer>
-          </R.Overflow>
-        </R.Main>
+          </S.Overflow>
+        </S.Main>
       )}
       <BottomTab />
     </ScheduleMainPageContainer>

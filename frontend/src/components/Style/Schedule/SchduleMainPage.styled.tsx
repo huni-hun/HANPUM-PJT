@@ -14,6 +14,26 @@ export const Container = styled.div`
   }
 `;
 
+export const Main = styled.div`
+  width: 100vw;
+  height: 93vh;
+  display: flex;
+  flex-direction: row;
+  overflow-y: auto;
+  padding-bottom: 8vh;
+`;
+
+export const Overflow = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
 export const HeaderContainer = styled.div`
   height: 10vh;
   display: flex;
