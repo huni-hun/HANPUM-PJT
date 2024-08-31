@@ -76,16 +76,17 @@ function RouteList() {
           <R.CardContainer>
             <R.BlankBox />
             <R.OverFlow>
-              {arr.map((ele: RouteListProps) => (
+              {arr.length > 0 && (
                 <CardLong
-                  key={ele.routeId}
+                  key={arr[0].routeId}
                   hasHeart={true}
-                  item={ele}
-                  onClickCard={() => navigator(`/route/detail/${ele.routeId}`)}
+                  item={arr[0]}
+                  onClickCard={() =>
+                    navigator(`/route/detail/${arr[0].routeId}`)
+                  }
                 />
-              ))}
+              )}
             </R.OverFlow>
-
             <R.BlankBox />
           </R.CardContainer>
         </R.RouteCardContainer>

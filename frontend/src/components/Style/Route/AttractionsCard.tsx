@@ -12,7 +12,7 @@ function AttractionsCard(ele: AttractionsProps) {
           <R.PlacetAddressBox>{ele.address}</R.PlacetAddressBox>
         </R.PlaceTextBox>
         <R.PlaceImg>
-          <R.PlaceImage src="http://tong.visitkorea.or.kr/cms/resource/85/3051785_image2_1.JPG" />
+          <R.PlaceImage src={ele.img} />
         </R.PlaceImg>
       </R.PlaceCard>
     </R.PlaceCardBox>

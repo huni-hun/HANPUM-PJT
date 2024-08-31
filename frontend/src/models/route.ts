@@ -68,6 +68,7 @@ export interface RouteDetailProps {
   routeComment: number;
   start: string;
   end: string;
+  img: string;
 }
 
 export interface RouteDetailDayProps {
@@ -94,6 +95,7 @@ export interface AttractionsProps {
   address: string;
   latitude: number;
   longitude: number;
+  img: string;
 }
 
 export interface RouteReviewProps {
@@ -117,19 +119,19 @@ export interface AttractionsAddCardProps {
   img: string;
 }
 
-export interface WayPointListProps {
+export interface WayPointReqDto {
   type: string;
   name: string;
   address: string;
   lat: number;
   lon: number;
-  pointNumber: number;
-  distance: number;
-  duration: number;
-  calorie: number;
+  pointNumber: string;
+  distance: string;
+  duration: string;
+  calorie: string;
 }
 
-export interface AttractionsAddProps {
+export interface AttractionReqDto {
   address: string;
   lat: number;
   lon: number;
@@ -138,19 +140,18 @@ export interface AttractionsAddProps {
   type: string;
 }
 
-export interface DateRouteDetailProps {
+export interface CourseDayReqDto {
   dayNumber: number;
-  wayPointReqDtoList: WayPointListProps[];
-  attractionReqDtoList: AttractionsAddProps[];
+  wayPointReqDtoList: WayPointReqDto[];
+  attractionReqDtoList: AttractionReqDto[];
 }
 
 export interface AddRouteProps {
-  memberId: number;
   courseName: string;
   content: string;
   openState: boolean;
   writeState: boolean;
   courseTypeList: string[];
-  bgImage: string;
-  courseDayReqDtoList: DateRouteDetailProps[];
+  multipartFile: Blob | string;
+  courseDayReqDtoList: CourseDayReqDto[];
 }

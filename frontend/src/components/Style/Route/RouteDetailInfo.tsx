@@ -6,14 +6,15 @@ import {
   RouteDetailDayProps,
   RouteReviewProps,
 } from '@/models/route';
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 import Map from '@/components/common/Map/Map';
 import RoutePlaceCard from './RoutePlaceCard';
 import AttractionsCard from './AttractionsCard';
 import ReviewCard from './ReviewCard';
 import { Select } from '@mobiscroll/react';
 import Icon from '@/components/common/Icon/Icon';
+import RouteRetouchPlaceCard from './RouteRetouchPlaceCard';
 
 interface RouteDetailInfoProps {
   selected: string;
@@ -33,10 +34,79 @@ interface RouteDetailInfoProps {
 
 function RouteDetailInfo(props: RouteDetailInfoProps) {
   const { routeid } = useParams();
+  const location = useLocation();
+
+  const draggingPos = useRef<any>(null);
+  const dragOverPos = useRef<any>(null);
 
   const [dayOfRoute, setDayOfRoute] = useState<DaysOfRouteProps[]>([]);
   const [reviews, setReviews] = useState<RouteReviewProps[]>([]);
   const [reviewLoading, setReviewLoading] = useState<boolean>(false);
+
+  const handleDragStart = (position: number) => {
+    draggingPos.current = position;
+  };
+
+  const handleDragEnter = (position: number) => {
+    dragOverPos.current = position;
+  };
+
+  const handleDrop = () => {
+    if (draggingPos.current === null || dragOverPos.current === null) return;
+
+    const newItems = [...dayOfRoute];
+    const draggingItem = newItems[draggingPos.current];
+
+    newItems.splice(draggingPos.current, 1);
+    newItems.splice(dragOverPos.current, 0, draggingItem);
+
+    const reorderedItems = newItems.map((item, index) => ({
+      ...item,
+      order: index,
+    }));
+
+    draggingPos.current = null;
+    dragOverPos.current = null;
+
+    setDayOfRoute(reorderedItems);
+  };
+
+  const handleTouchStart = (position: number) => {
+    draggingPos.current = position;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    const touchLocation = e.targetTouches[0];
+    const element = document.elementFromPoint(
+      touchLocation.clientX,
+      touchLocation.clientY,
+    );
+
+    if (element && element.getAttribute('data-position')) {
+      const newPosition = parseInt(element.getAttribute('data-position')!, 10);
+      dragOverPos.current = newPosition;
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (draggingPos.current === null || dragOverPos.current === null) return;
+
+    const newItems = [...dayOfRoute];
+    const draggingItem = newItems[draggingPos.current];
+
+    newItems.splice(draggingPos.current, 1);
+    newItems.splice(dragOverPos.current, 0, draggingItem);
+
+    const reorderedItems = newItems.map((item, index) => ({
+      ...item,
+      order: index,
+    }));
+
+    draggingPos.current = null;
+    dragOverPos.current = null;
+
+    setDayOfRoute(reorderedItems);
+  };
 
   useEffect(() => {
     getRouteDayDetail(routeid as string, props.selectedDay).then((result) => {
@@ -88,28 +158,59 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
             <R.MapBox>
               <Map
                 linePath={props.linePath}
-                latitude={props.latitude}
-                longitude={props.longitude}
+                latitude={props.longitude}
+                longitude={props.latitude}
               />
             </R.MapBox>
             <R.DetailHeader>
-              <R.HeaderOverflow>
-                {props.dayData.map((ele) => (
-                  <R.DayContainer>
-                    <R.DayBox
-                      selected={ele.dayNum === props.selectedDay}
-                      onClick={() => {
-                        props.setSelectedDay(ele.dayNum);
-                      }}
-                    >{`Day ${ele.dayNum}`}</R.DayBox>
-                  </R.DayContainer>
-                ))}
-              </R.HeaderOverflow>
+              {location.pathname.includes('retouch') ? (
+                <R.RetouchHeaderOverflow>
+                  {props.dayData.map((ele) => (
+                    <R.DayContainer>
+                      <R.DayBox
+                        selected={ele.dayNum === props.selectedDay}
+                        onClick={() => {
+                          props.setSelectedDay(ele.dayNum);
+                        }}
+                      >{`Day ${ele.dayNum}`}</R.DayBox>
+                    </R.DayContainer>
+                  ))}
+                </R.RetouchHeaderOverflow>
+              ) : (
+                <R.HeaderOverflow>
+                  {props.dayData.map((ele) => (
+                    <R.DayContainer>
+                      <R.DayBox
+                        selected={ele.dayNum === props.selectedDay}
+                        onClick={() => {
+                          props.setSelectedDay(ele.dayNum);
+                        }}
+                      >
+                        {`Day ${ele.dayNum}`}
+                      </R.DayBox>
+                    </R.DayContainer>
+                  ))}
+                </R.HeaderOverflow>
+              )}
             </R.DetailHeader>
             <R.DetailMain>
               <R.DetailMainOverflow>
                 {dayOfRoute.length > 0
-                  ? dayOfRoute.map((ele) => <RoutePlaceCard {...ele} />)
+                  ? dayOfRoute.map((ele, idx) =>
+                      location.pathname.includes('retouch') ? (
+                        <RouteRetouchPlaceCard
+                          handleTouchMove={handleTouchMove}
+                          handleTouchEnd={handleTouchEnd}
+                          dropHandler={handleDrop}
+                          data={ele}
+                          dragEndHandler={handleDragEnter}
+                          dragStartHandler={handleDragStart}
+                          idx={idx}
+                        />
+                      ) : (
+                        <RoutePlaceCard {...ele} />
+                      ),
+                    )
                   : null}
               </R.DetailMainOverflow>
             </R.DetailMain>
@@ -153,8 +254,8 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
             <R.MapBox>
               <Map
                 linePath={props.linePath}
-                latitude={props.latitude}
-                longitude={props.longitude}
+                latitude={props.longitude}
+                longitude={props.latitude}
               />
             </R.MapBox>
             <R.DetailHeader>

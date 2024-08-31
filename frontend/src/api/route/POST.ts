@@ -1,8 +1,9 @@
 import axios from 'axios';
 import api from '../index';
+import { AddRouteProps } from '@/models/route';
 
-export const PostSearchPlace = (keyword: string) => {
-  const response = api.post(
+export const PostSearchPlace = async (keyword: string) => {
+  const response = await api.post(
     '/api/course/search/waypoint',
     {
       keyword: keyword,
@@ -17,8 +18,8 @@ export const PostSearchPlace = (keyword: string) => {
   return response;
 };
 
-export const PostSearchAttractions = (keyword: string) => {
-  const response = api.post(
+export const PostSearchAttractions = async (keyword: string) => {
+  const response = await api.post(
     '/api/course/search/attraction',
     {
       keyword: keyword,
@@ -33,13 +34,13 @@ export const PostSearchAttractions = (keyword: string) => {
   return response;
 };
 
-export const GetDistance = (
+export const GetDistance = async (
   startlat: number,
   startlon: number,
   endlat: number,
   endlon: number,
 ) => {
-  const response = axios.post(
+  const response = await axios.post(
     'http://localhost:8000/api/course/search/multiWaypoint',
     [
       {
@@ -57,6 +58,31 @@ export const GetDistance = (
       },
     },
   );
+
+  return response;
+};
+
+export const AddRoute = async (data: AddRouteProps) => {
+  const formData = new FormData();
+
+  const { multipartFile, ...rest } = data;
+  console.log(multipartFile);
+  console.log(rest);
+  const makeCourseReqDto = new Blob([JSON.stringify(rest)], {
+    type: 'application/json',
+  });
+  makeCourseReqDto.text().then((res) => {
+    console.log(res);
+  });
+
+  formData.append('makeCourseReqDto', makeCourseReqDto);
+  formData.append('multipartFile', multipartFile);
+
+  const response = await api.post('/api/course', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 
   return response;
 };

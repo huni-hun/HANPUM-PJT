@@ -31,6 +31,10 @@ export { ReactComponent as IconGreenChecked } from './GreenChecked.svg';
 export { ReactComponent as IconRetouch } from './IconRetouch.svg';
 export { ReactComponent as IconClose } from './IconClose.svg';
 export { ReactComponent as IconCameraGrey } from './IconCamera.svg';
+export { ReactComponent as IconLockBlack } from './IconLock.svg';
+export { ReactComponent as IconDeleteBlack } from './IconDelete.svg';
+export { ReactComponent as IconRetouchDelete } from './RetouchDelete.svg';
+export { ReactComponent as IconReOrder } from './IconReOrder.svg';
 
 // header
 export { ReactComponent as IconUser } from './user.svg';

@@ -7,23 +7,23 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '@/components/common/Header/Header';
 import {
   AttractionsAddCardProps,
-  AttractionsAddProps,
-  DateRouteDetailProps,
+  AttractionReqDto,
+  CourseDayReqDto,
   searchPlaceProps,
-  WayPointListProps,
+  WayPointReqDto,
 } from '@/models/route';
 
 interface RouteAddPagePlaceProps {
   selectedPlace: searchPlaceProps;
   setSearchOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setPageOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setWayPoints: React.Dispatch<React.SetStateAction<WayPointListProps[]>>;
-  wayPoints: WayPointListProps[];
-  setDateDetail: React.Dispatch<React.SetStateAction<DateRouteDetailProps[]>>;
-  dateDetail: DateRouteDetailProps[];
+  setWayPoints: React.Dispatch<React.SetStateAction<WayPointReqDto[]>>;
+  wayPoints: WayPointReqDto[];
+  setDateDetail: React.Dispatch<React.SetStateAction<CourseDayReqDto[]>>;
+  dateDetail: CourseDayReqDto[];
   day: number;
-  setAttractions: React.Dispatch<React.SetStateAction<AttractionsAddProps[]>>;
-  attractions: AttractionsAddProps[];
+  setAttractions: React.Dispatch<React.SetStateAction<AttractionReqDto[]>>;
+  attractions: AttractionReqDto[];
   pointType: string;
   setAttractionsCard: React.Dispatch<
     React.SetStateAction<AttractionsAddCardProps[]>
@@ -36,23 +36,23 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
   const navigator = useNavigate();
 
   const setWayPoint = () => {
-    let way: WayPointListProps = {
+    let way: WayPointReqDto = {
       type: '경유지',
       name: props.selectedPlace.placeName,
       address: props.selectedPlace.address,
       lat: props.selectedPlace.latitude,
       lon: props.selectedPlace.longitude,
-      pointNumber: props.wayPoints.length + 1,
-      distance: 0,
-      duration: 0,
-      calorie: 0,
+      pointNumber: `${props.wayPoints.length + 1}`,
+      distance: '0',
+      duration: '0',
+      calorie: '0',
     };
 
     props.setWayPoints((pre) => {
       const updatedWayPoints = [...pre, way];
 
-      let newDateDetail: DateRouteDetailProps[] = [...props.dateDetail];
-      newDateDetail.map((ele: DateRouteDetailProps) => {
+      let newDateDetail: CourseDayReqDto[] = [...props.dateDetail];
+      newDateDetail.map((ele: CourseDayReqDto) => {
         if (ele.dayNumber === props.day) {
           ele.wayPointReqDtoList = updatedWayPoints;
         }
@@ -67,7 +67,7 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
   };
 
   const setAttraction = () => {
-    let attraction: AttractionsAddProps = {
+    let attraction: AttractionReqDto = {
       name: props.selectedPlace.placeName,
       address: props.selectedPlace.address,
       lat: props.selectedPlace.latitude,
@@ -87,8 +87,8 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
     props.setAttractions((pre) => {
       const updatedAttractions = [...pre, attraction];
 
-      let newDateDetail: DateRouteDetailProps[] = [...props.dateDetail];
-      newDateDetail.map((ele: DateRouteDetailProps) => {
+      let newDateDetail: CourseDayReqDto[] = [...props.dateDetail];
+      newDateDetail.map((ele: CourseDayReqDto) => {
         if (ele.dayNumber === props.day) {
           ele.attractionReqDtoList = updatedAttractions;
         }

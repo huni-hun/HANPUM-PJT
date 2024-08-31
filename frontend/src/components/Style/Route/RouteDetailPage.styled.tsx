@@ -64,7 +64,6 @@ export const ImgBox = styled.div<StyledProps>`
   width: 100%;
   height: 29.3rem;
   background-color: #d9d9d9;
-  background-image: url(${(props) => props.backgroundImg || ''});
   background-size: cover;
   background-position: center;
   position: relative;
@@ -410,6 +409,20 @@ export const HeaderOverflow = styled.div`
   }
   width: 95%;
   height: 100%;
+`;
+
+export const RetouchHeaderOverflow = styled.div`
+  flex-direction: row;
+  display: flex;
+  align-items: center;
+  padding: 0 0 0 1.6rem;
+  overflow-x: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  width: 95%;
+  height: 100%;
+  border-bottom: 0.15rem solid ${colors.grey1};
 `;
 
 export const DayContainer = styled.div`

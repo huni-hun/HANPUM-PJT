@@ -1,26 +1,25 @@
-import Icon from '@/components/common/Icon/Icon';
+import BottomSheet from '@/components/Style/Route/BottomSheet';
+import ReviewModal from '@/components/Style/Route/ReviewModal';
 import * as R from '@/components/Style/Route/RouteDetailPage.styled';
-import { useEffect, useState } from 'react';
+import Button from '@/components/common/Button/Button';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getRouteDetail } from '@/api/route/GET';
 import {
   AttractionsProps,
   RouteDetailDayProps,
   RouteDetailProps,
 } from '@/models/route';
-import Header from '@/components/common/Header/Header';
-import Button from '@/components/common/Button/Button';
+import { getRouteDetail } from '@/api/route/GET';
 import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
-import BottomSheet from '@/components/Style/Route/BottomSheet';
-import ReviewModal from '@/components/Style/Route/ReviewModal';
+import Header from '@/components/common/Header/Header';
+import Icon from '@/components/common/Icon/Icon';
 
-function RouteDetailPage() {
+function RouteDetailRetouchPage() {
   const { routeid } = useParams();
   const navigate = useNavigate();
 
   const [selected, setSelected] = useState<string>('course');
   const [selectedDay, setSelectedDay] = useState<number>(1);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [routeData, setRouteData] = useState<RouteDetailProps>(null!);
   const [dayData, setDayData] = useState<RouteDetailDayProps[]>([]);
   const [routeType, setRouteType] = useState<string[]>([]);
@@ -32,8 +31,7 @@ function RouteDetailPage() {
   const [linePath, setLinePath] = useState([]);
   const [bsType, setBsType] = useState<string>('설정');
   const [reviewType, setReviewType] = useState<string>('최신순');
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [retouch, setRetouch] = useState<boolean>(false);
+  const [open, setIsopen] = useState<boolean>(false);
 
   useEffect(() => {
     if (dayData.length === 0) {
@@ -101,7 +99,6 @@ function RouteDetailPage() {
           navigate(-1);
         }}
         clickOption={() => {
-          setIsOpen(true);
           setBsType('설정');
         }}
       />
@@ -182,18 +179,11 @@ function RouteDetailPage() {
               >
                 관광지
               </R.ContentBox>
-              <R.ContentBox
-                selected={selected === 'review'}
-                onClick={() => {
-                  setSelected('review');
-                }}
-              >
-                리뷰
-              </R.ContentBox>
             </R.ContentSelecContainer>
           </R.RouteInfoContainer>
           <R.RouteDetailInfoContainer>
             <RouteDetailInfo
+              setIsOpen={setIsopen}
               linePath={linePath}
               selected={selected}
               selectedDay={selectedDay}
@@ -203,51 +193,14 @@ function RouteDetailPage() {
               attractions={attractions}
               setLoading={setLoading}
               setSelectedDay={setSelectedDay}
-              setIsOpen={setIsOpen}
               setBsType={setBsType}
               reviewType={reviewType}
             />
           </R.RouteDetailInfoContainer>
         </R.Overflow>
       </R.Main>
-      <R.BottomContainer>
-        <R.WriteTextBox
-          onClick={() => {
-            setIsModalOpen(true);
-          }}
-        >
-          리뷰작성
-        </R.WriteTextBox>
-        <R.ButtonBox>
-          <Button
-            width={65}
-            height={6}
-            fc="ffffff"
-            bc="#1A823B"
-            radius={0.7}
-            fontSize={1.6}
-            children="일정 생성"
-            color="#ffffff"
-            onClick={() => {
-              navigate('/schedule/addSchedule');
-            }}
-          />
-        </R.ButtonBox>
-      </R.BottomContainer>
-      {isOpen && (
-        <BottomSheet
-          id={Number(routeid)}
-          selected={reviewType}
-          setSelected={setReviewType}
-          bsType={bsType}
-          setIsOpen={setIsOpen}
-        />
-      )}
-      {isModalOpen && (
-        <ReviewModal isVisible={isModalOpen} setIsOpen={setIsModalOpen} />
-      )}
     </R.Container>
   ) : null;
 }
 
-export default RouteDetailPage;
+export default RouteDetailRetouchPage;
