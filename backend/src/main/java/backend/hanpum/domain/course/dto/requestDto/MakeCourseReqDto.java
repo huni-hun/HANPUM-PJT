@@ -13,13 +13,11 @@ import java.util.List;
 @AllArgsConstructor
 public class MakeCourseReqDto {
     // 경로 기본정보
-    private Long memberId;
     private String courseName;
     private String content;
     private boolean openState;
     private boolean writeState;
     private List<String> courseTypeList;
-    private MultipartFile bgImage;
 
     // 코스 일차
     List<CourseDayReqDto> courseDayReqDtoList;

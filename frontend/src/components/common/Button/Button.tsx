@@ -3,8 +3,8 @@ import * as B from './Button.styled';
 interface ButtonProps {
   width: number;
   height: number;
-  fontColor?: string;
-  backgroundColor?: string;
+  fc?: string;
+  bc?: string;
   radius?: number;
   fontSize?: number;
   children: string;

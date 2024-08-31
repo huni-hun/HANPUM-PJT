@@ -188,6 +188,7 @@ function FindPwComponent({
         <TextField
           label="이메일"
           name="email"
+          placeholder="123456@naver.com"
           onChange={handlePwReq}
           value={findPwReq.email}
           hasError={

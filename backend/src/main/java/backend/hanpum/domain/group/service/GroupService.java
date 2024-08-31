@@ -3,7 +3,6 @@ package backend.hanpum.domain.group.service;
 import backend.hanpum.domain.group.dto.requestDto.ApplyPostReqDto;
 import backend.hanpum.domain.group.dto.requestDto.GroupPostReqDto;
 import backend.hanpum.domain.group.dto.responseDto.*;
-import backend.hanpum.domain.member.entity.Member;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,4 +24,5 @@ public interface GroupService {
     boolean likeGroup(Long memberId, Long groupId);
     void quitJoinGroup(Long memberId, Long groupId);
     LikeGroupListGetResDto getMemberLikeGroupList(Long memberId);
+    GroupResDto getMemberJoinGroup(Long memberId);
 }

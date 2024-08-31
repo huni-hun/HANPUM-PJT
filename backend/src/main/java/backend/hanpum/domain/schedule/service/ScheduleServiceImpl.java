@@ -7,14 +7,12 @@ import backend.hanpum.domain.course.repository.CourseRepository;
 import backend.hanpum.domain.course.service.CourseService;
 import backend.hanpum.domain.group.dto.responseDto.GroupMemberListGetResDto;
 import backend.hanpum.domain.group.entity.Group;
+import backend.hanpum.domain.group.enums.JoinType;
 import backend.hanpum.domain.group.repository.GroupRepository;
 import backend.hanpum.domain.group.service.GroupService;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
-import backend.hanpum.domain.schedule.dto.requestDto.MemoPostReqDto;
-import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
-import backend.hanpum.domain.schedule.dto.requestDto.ScheduleRunReqDto;
-import backend.hanpum.domain.schedule.dto.requestDto.ScheduleStartReqDto;
+import backend.hanpum.domain.schedule.dto.requestDto.*;
 import backend.hanpum.domain.schedule.dto.responseDto.*;
 import backend.hanpum.domain.schedule.entity.Memo;
 import backend.hanpum.domain.schedule.entity.Schedule;
@@ -29,8 +27,10 @@ import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.auth.MemberInfoInvalidException;
 import backend.hanpum.exception.exception.common.JsonBadMappingException;
 import backend.hanpum.exception.exception.common.UriBadSyntaxException;
+import backend.hanpum.exception.exception.course.CourseNotFoundException;
 import backend.hanpum.exception.exception.group.GroupMemberNotFoundException;
 import backend.hanpum.exception.exception.group.GroupNotFoundException;
+import backend.hanpum.exception.exception.group.GroupPermissionException;
 import backend.hanpum.exception.exception.schedule.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -74,17 +74,22 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         Long courseId = schedulePostReqDto.getCourseId();
 
-        Course course = courseRepository.findById(courseId).orElseThrow(ScheduleNotFoundException::new);
+        Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
 
-        String startDate = schedulePostReqDto.getStartDate();
-//        int daySize = course.getDate()
-//        String endDate = calculateDate(startDate, daySize);
+        // 개인 일정 3개 이상 못만들게
+        Long myScheduleCnt = scheduleRepository.checkMyScheduleCnt(memberId).orElseThrow(ScheduleNotFoundException::new);
+        if (myScheduleCnt >= 3) {
+            throw new CreateCountExceededException();
+        }
 
+        String startDate = schedulePostReqDto.getStartDate();
+        int daySize = course.getTotalDays();
+        String endDate = calculateDate(startDate, daySize - 1);     // ex) 10일부터 4박5일이면 14일
         Schedule schedule = Schedule.builder()
                 .type("private")
                 .startDate(startDate)
-//                .endDate(endDate)
+                .endDate(endDate)
                 .member(member)
                 .course(course)
                 .build();
@@ -107,10 +112,13 @@ public class ScheduleServiceImpl implements ScheduleService {
         Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
 
         String startDate = schedulePostReqDto.getStartDate();
+        int daySize = course.getTotalDays();
+        String endDate = calculateDate(startDate, daySize - 1);
 
         Schedule schedule = Schedule.builder()
                 .type("group")
                 .startDate(startDate)
+                .endDate(endDate)
                 .group(group)
                 .course(course)
                 .build();
@@ -163,7 +171,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public List<ScheduleResDto> getMyScheduleList(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
-        List<ScheduleResDto> scheduleResDtoList = scheduleRepository.getMyScheduleByMemberId(memberId).orElseThrow(ScheduleNotFoundException::new);
+        List<ScheduleResDto> scheduleResDtoList = scheduleRepository.getMyScheduleByMemberId(memberId)
+                .filter(list -> !list.isEmpty())
+                .orElseThrow(ScheduleNotFoundException::new);
         return scheduleResDtoList;
     }
 
@@ -188,7 +198,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .endPoint(scheduleResDto.getEndPoint())
                 .startDate(scheduleResDto.getStartDate())
                 .endDate(scheduleResDto.getEndDate())
-                .state(scheduleResDto.isState())
+                .state(scheduleResDto.getState())
                 .groupMemberResDtoList(groupMemberListGetResDto.getGroupMemberResList())
                 .build();
 
@@ -203,17 +213,32 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public void deleteSchedule(Long memberId, Long ScheduleId) {
-        Schedule schedule = scheduleRepository.findById(ScheduleId).orElseThrow(ScheduleNotFoundException::new);
+    public void deleteSchedule(Long memberId, Long scheduleId) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(ScheduleNotFoundException::new);
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        Long courseId = schedule.getCourse().getCourseId();
 
         /* 접근 권한 확인용 */
-        if (!schedule.getMember().equals(member)) {
+        if (schedule.getType().equals("private") && !schedule.getMember().equals(member)) {
             throw new MemberInfoInvalidException();
+        } else if (schedule.getType().equals("group")) {
+            Long groupId = member.getGroupMember().getGroup().getGroupId();
+            if (!schedule.getGroup().getGroupId().equals(groupId) || member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) {
+                throw new GroupPermissionException();
+            }
         }
         /**/
 
-        scheduleRepository.deleteById(ScheduleId);
+        // ScheduleDayResDto
+        List<ScheduleDayResDto> scheduleDayResDtoList = scheduleRepository.getScheduleDayResDtoList(memberId, scheduleId).orElseThrow(ScheduleNotFoundException::new);
+
+        // 달성률
+        int rate = courseService.getScheduleGoalRate(scheduleDayResDtoList);
+
+        courseService.updateCourseUsageHistory(courseId, memberId, (double) rate);
+
+        scheduleRepository.deleteById(scheduleId);
+
     }
 
     @Transactional
@@ -240,12 +265,16 @@ public class ScheduleServiceImpl implements ScheduleService {
     public Long runAndStop(Long memberId, ScheduleRunReqDto scheduleRunReqDto) {
         ScheduleDay scheduleDay = scheduleDayRepository.findById(scheduleRunReqDto.getScheduleDayId()).orElseThrow(ScheduleDayNotFoundException::new);
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        Schedule schedule = scheduleDay.getSchedule();
 
-        /* 접근 권한 확인용 */
-        if (!scheduleDay.getSchedule().getMember().equals(member)) {
+        if (schedule.getType().equals("private") && !schedule.getMember().equals(member)) {
             throw new MemberInfoInvalidException();
+        } else if (schedule.getType().equals("group")) {
+            Long groupId = member.getGroupMember().getGroup().getGroupId();
+            if (!schedule.getGroup().getGroupId().equals(groupId) || member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) {
+                throw new GroupPermissionException();
+            }
         }
-        /* */
 
         scheduleDay.runAndStop();
 
@@ -258,11 +287,23 @@ public class ScheduleServiceImpl implements ScheduleService {
         ScheduleWayPoint scheduleWayPoint = scheduleWayPointRepository.findById(memoPostReqDto.scheduleWayPointId).orElseThrow();
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
 
-        /* 접근 권한 확인용 */
-        if (!scheduleWayPoint.getScheduleDay().getSchedule().getMember().equals(member)) {
-            throw new MemberInfoInvalidException();
-        }
-        /* */
+//        /* 접근 권한 확인용 */
+//        if (!scheduleWayPoint.getScheduleDay().getSchedule().getMember().equals(member)) {
+//            throw new MemberInfoInvalidException();
+//        }
+//        /* */
+
+        /* 모임일정에 메모를 남기는 로직이 되게 애매함
+           모임일정에서 모임에 포함된 모두가 ScheduleWayPoint에 메모를 남길 수 있다고 할때
+           모든 모임의 모든사람들이 그 메모를 공유하게됨
+           그룹장만 메모를 남길 수 있다고 칠때 메모의 의미가 퇴색되는 것 같음
+           (모두가 공유하고 해야하는 내용이면 공지 때려버리지 뭣하러 메모?)
+
+           그렇다고 메모를 위해 모임 Schedule을 모임에 속한 개인만큼 생성하는건 비 효율적
+
+           만약 구현한다면 ScheduleWayPoint, MemberId, MemoId로 구성된 중간 entity를 생성 후
+           자기가 작성한 메모만 볼 수 있게 해야할것같은데 귀찮아서 그렇게 까지 해야하나 싶음
+        */
 
         Memo memo = Memo.builder()
                 .content(memoPostReqDto.getContent())
@@ -285,7 +326,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Transactional(readOnly = true)
     @Override
-    public ScheduleInProgressResDto getRunningSchedule(Long memberId, double lat, double lon) {
+    public ScheduleInProgressResDto getRunningSchedule(Long memberId) {
 
         // 진행중인 일정 정보 가져오기
         ScheduleTempResDto scheduleTempResDto = scheduleRepository.getScheduleTempResDto(memberId).orElseThrow(ValidScheduleNotFoundException::new);
@@ -296,7 +337,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         List<ScheduleDayResDto> scheduleDayResDtoList = scheduleRepository.getScheduleDayResDtoList(memberId, scheduleId).orElseThrow(ScheduleNotFoundException::new);
 
         // 달성률
-        int rate = getScheduleGoalRate(scheduleDayResDtoList);
+        int rate = courseService.getScheduleGoalRate(scheduleDayResDtoList);
 
         ScheduleInProgressResDto result = ScheduleInProgressResDto.builder()
                 .scheduleId(scheduleId)
@@ -311,51 +352,34 @@ public class ScheduleServiceImpl implements ScheduleService {
         return result;
     }
 
+    @Override
+    public Long setArriveScheduleWayPoint(ScheduleWayPointReqDto scheduleWayPointReqDto) {
+        Long scheduleWayPointId = scheduleWayPointReqDto.getScheduleWayPointId();
 
-    private int getScheduleGoalRate(List<ScheduleDayResDto> scheduleDayResDtoList) {
+        // 현재 WayPoint 방문처리
+        ScheduleWayPoint scheduleWayPoint = scheduleWayPointRepository.findById(scheduleWayPointId).orElseThrow(ScheduleWayPointNotFoundException::new);
+        scheduleWayPoint.updateVisit(2);
 
-        int rate = 0;
-        int size = scheduleDayResDtoList.size();
-        int dayRate = 100 / size;
+        ScheduleDay scheduleDay = scheduleWayPoint.getScheduleDay();
+        Long scheduleDayId = scheduleDay.getId();
+        List<ScheduleWayPoint> scheduleWayPointList = scheduleDay.getScheduleWayPointList();
 
-        // 첫쨰날도 방문 안했을때
-        if (!scheduleDayResDtoList.get(0).isVisit()) {
-            List<ScheduleWayPointResDto> scheduleWayPointResDtoList = scheduleDayResDtoList.get(0).getScheduleWayPointList();
-            int wayPointSize = scheduleWayPointResDtoList.size();
-            int wayPointCount = 0;
-            for (ScheduleWayPointResDto scheduleWayPointResDto : scheduleWayPointResDtoList) {
-                if (scheduleWayPointResDto.isVisit()) {
-                    wayPointCount++;
-                }
-            }
-            rate = dayRate * (wayPointCount / wayPointSize);
-            return rate;
-        }
+        // 0: 진행전, 1: 진행중, 2: 진행완료
 
-        int dayCount = 0;
-        for (ScheduleDayResDto scheduleDayResDto : scheduleDayResDtoList) {
-            if (scheduleDayResDto.isVisit()) {
-                dayCount++;
-            } else {
-                List<ScheduleWayPointResDto> scheduleWayPointResDtoList = scheduleDayResDto.getScheduleWayPointList();
-                int wayPointSize = scheduleWayPointResDtoList.size();
-                int wayPointCount = 0;
-                for (ScheduleWayPointResDto scheduleWayPointResDto : scheduleWayPointResDtoList) {
-                    if (scheduleWayPointResDto.isVisit()) {
-                        wayPointCount++;
-                    }
-                }
-                rate += dayRate * (wayPointCount / wayPointSize);
+        // 다음 경유지를 진행중 상태로 만들기
+        // 다음 WayPoint 찾기 (현재 pointNumber를 기반으로)
+        String currentPoint = scheduleWayPoint.getWaypoint().getPointNumber();
+        int currentPointNumber = Integer.parseInt(currentPoint);
+
+        // 다음 WayPoint 결정
+        for (ScheduleWayPoint wayPoint : scheduleWayPointList) {
+            int pointIndex = Integer.parseInt(wayPoint.getWaypoint().getPointNumber());
+            if (pointIndex == currentPointNumber + 1) { // 다음 WayPoint 찾기
+                wayPoint.updateVisit(1); // 다음 WayPoint 상태를 '진행 중'으로 업데이트
+                break;
             }
         }
-
-        if (dayCount == size) {
-            return 100;
-        }
-
-        rate += (dayCount * dayRate);
-
-        return rate;
+        return scheduleDayId;
     }
 
     @Override
@@ -420,4 +444,5 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new JsonBadMappingException();
         }
     }
+
 }

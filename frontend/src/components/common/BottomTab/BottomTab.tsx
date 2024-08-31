@@ -22,33 +22,48 @@ function BottomTab() {
           name={curTab.includes('route') ? 'IconRouteGreen' : 'IconRouteGrey'}
           size={20}
         />
-        <Bt.TabText isSelected={curTab.includes('route')}>경로</Bt.TabText>
+        <Bt.TabText selected={curTab.includes('route')}>경로</Bt.TabText>
       </Bt.BottomTabItem>
       <Bt.BottomTabItem
         onClick={() => {
-          navigator('/meet');
+          navigator('/meet/list');
         }}
       >
         <Icon
           name={curTab.includes('meet') ? 'IconClassSelect' : 'IconClass'}
           size={20}
         />
-        <Bt.TabText isSelected={curTab.includes('meet')}>모임</Bt.TabText>
+        <Bt.TabText selected={curTab.includes('meet')}>모임</Bt.TabText>
       </Bt.BottomTabItem>
       <Bt.BottomTabItem
         onClick={() => {
-          navigator('/main');
+          navigator('/home');
         }}
       >
         <Icon
-          name={curTab.includes('main') ? 'IconHomeSelect' : 'IconHome'}
+          name={curTab.includes('/home') ? 'IconHomeSelect' : 'IconHome'}
           size={20}
         />
-        <Bt.TabText isSelected={curTab.includes('main')}>홈</Bt.TabText>
+        <Bt.TabText selected={curTab.includes('/home')}>홈</Bt.TabText>
       </Bt.BottomTabItem>
       <Bt.BottomTabItem
         onClick={() => {
-          setCurTab('Community');
+          navigator('/schedule/main');
+        }}
+      >
+        <Icon
+          name={
+            curTab === '/schedule/main' ? 'IconScheduleSelect' : 'IconSchedule'
+          }
+          size={20}
+        />
+        <Bt.TabText selected={curTab.includes('/schedule/main')}>
+          일정
+        </Bt.TabText>
+      </Bt.BottomTabItem>
+      <Bt.BottomTabItem
+        onClick={() => {
+          navigator('/setting');
         }}
       >
         <Icon
@@ -57,18 +72,7 @@ function BottomTab() {
           }
           size={20}
         />
-        <Bt.TabText isSelected={curTab.includes('meet')}>게시판</Bt.TabText>
-      </Bt.BottomTabItem>
-      <Bt.BottomTabItem
-        onClick={() => {
-          navigator('/schedule/main');
-        }}
-      >
-        <Icon
-          name={curTab === 'Schedule' ? 'IconScheduleSelect' : 'IconSchedule'}
-          size={20}
-        />
-        <Bt.TabText isSelected={curTab.includes('schedule')}>일정</Bt.TabText>
+        <Bt.TabText selected={curTab.includes('meet')}>설정</Bt.TabText>
       </Bt.BottomTabItem>
     </Bt.BottomTab>
   );

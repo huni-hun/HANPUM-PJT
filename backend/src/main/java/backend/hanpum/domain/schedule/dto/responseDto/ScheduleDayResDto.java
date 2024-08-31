@@ -1,10 +1,7 @@
 package backend.hanpum.domain.schedule.dto.responseDto;
 
 import backend.hanpum.domain.course.dto.responseDto.AttractionResDto;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -12,7 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ScheduleDayResDto {
-    Long ScheduleDayId;
+    Long scheduleDayId;
     String date;
     boolean visit;
     boolean running;
@@ -23,4 +20,17 @@ public class ScheduleDayResDto {
     List<ScheduleWayPointResDto> scheduleWayPointList;
     @Setter
     List<AttractionResDto> attractionList;
+
+    public ScheduleDayResDto(Long scheduleDayId, String date, boolean visit, boolean running, String totalDistance, String totalDuration, String totalCalories) {
+        this.scheduleDayId = scheduleDayId;
+        this.date = date;
+        this.visit = visit;
+        this.running = running;
+        this.totalDistance = totalDistance;
+        this.totalDuration = totalDuration;
+        this.totalCalories = totalCalories;
+    }
+
 }
+
+

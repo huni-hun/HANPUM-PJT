@@ -36,7 +36,7 @@ function MyPage() {
         purpose="mypage"
         title={'내프로필'}
         clickBack={() => {
-          navigate('/main');
+          navigate('/home');
         }}
       />
 

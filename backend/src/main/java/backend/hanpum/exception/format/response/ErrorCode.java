@@ -25,6 +25,7 @@ public enum ErrorCode {
     VALID_SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "유효한 일정이 없습니다."),
     NEARBY_ATTRACTION_NOT_FOUND(HttpStatus.NOT_FOUND, "거리 조건에 맞는 관광지 정보가 없습니다."),
     BAD_SCHEDULE_STATE_UPDATE_REQUEST(HttpStatus.BAD_REQUEST, "올바르지 않은 일정 상태 전환 요청입니다."),
+    CREATE_COUNT_EXCEEDED(HttpStatus.BAD_REQUEST, "개인 일정 생성 횟수 제한을 초과하였습니다."),
 
     /* 날씨 */
     WEATHER_PARSING_EXCEPTION(HttpStatus.BAD_REQUEST, "날씨 정보를 불러오는 중 에러가 발생했습니다."),
@@ -70,7 +71,6 @@ public enum ErrorCode {
     REFRESH_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "리프레쉬 토큰이 존재하지 않습니다. 다시 로그인해 주세요."),
     ACCESS_TOKEN_INVALID(HttpStatus.BAD_REQUEST, "잘못된 엑세스 토큰입니다."),
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "일치하는 회원 정보가 없습니다."),
-    TEMPORARY_PASSWORD_MAIL_SEND_FAILED(HttpStatus.BAD_REQUEST, "임시 비밀번호 메일 전송에 실패했습니다."),
     ;
 
     private final HttpStatus status;

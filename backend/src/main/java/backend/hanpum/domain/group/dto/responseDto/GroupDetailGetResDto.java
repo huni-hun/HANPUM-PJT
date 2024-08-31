@@ -27,13 +27,15 @@ public class GroupDetailGetResDto {
     private String startPoint; // 출발지
     private String endPoint; // 목적지
     private Integer totalDays; // 총 일정 기간
+    private String startDate; // 일정 시작일
+    private String endDate; // 일정 출발일
     private boolean isLike; // 좋아요 눌렀는지 안눌렀는지
     private GroupJoinStatus groupJoinStatus; // 조회한 멤버 상태
 
     public GroupDetailGetResDto(String title, String groupImg,
                                 String description, Date recruitmentStart, Date recruitmentPeriod,
-                                Long recruitedCount, int recruitmentCount, int likeCount, String startPoint,
-                                String endPoint, Integer totalDays, boolean isLike) {
+                                Long recruitedCount, int recruitmentCount, int likeCount, String startPoint, String endPoint,
+                                Integer totalDays, String startDate, String endDate, boolean isLike) {
         this.title = title;
         this.groupImg = groupImg;
         this.description = description;
@@ -45,6 +47,8 @@ public class GroupDetailGetResDto {
         this.startPoint = startPoint;
         this.endPoint = endPoint;
         this.totalDays = totalDays;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.isLike = isLike;
     }
 }

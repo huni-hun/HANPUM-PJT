@@ -1,10 +1,7 @@
 package backend.hanpum.domain.schedule.controller;
 
 import backend.hanpum.config.jwt.UserDetailsImpl;
-import backend.hanpum.domain.schedule.dto.requestDto.MemoPostReqDto;
-import backend.hanpum.domain.schedule.dto.requestDto.SchedulePostReqDto;
-import backend.hanpum.domain.schedule.dto.requestDto.ScheduleRunReqDto;
-import backend.hanpum.domain.schedule.dto.requestDto.ScheduleStartReqDto;
+import backend.hanpum.domain.schedule.dto.requestDto.*;
 import backend.hanpum.domain.schedule.dto.responseDto.*;
 import backend.hanpum.domain.schedule.service.ScheduleService;
 import backend.hanpum.exception.format.code.ApiResponse;
@@ -16,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.ResultSet;
 import java.util.List;
 
 @Tag(name = "Schedule 컨트롤러", description = "Schedule Controller API")
@@ -30,7 +28,7 @@ public class ScheduleController {
     @Operation(summary = "개인 일정 생성", description = "개인 일정 생성")
     @PostMapping
     public ResponseEntity<?> createSchedule(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                            SchedulePostReqDto schedulePostReqDto) {
+                                            @RequestBody SchedulePostReqDto schedulePostReqDto) {
         Long memberId = userDetails.getMember().getMemberId();
         Long scheduleId = scheduleService.createSchedule(memberId, schedulePostReqDto);
         return response.success(ResponseCode.SCHEDULE_CREATED, scheduleId);
@@ -39,7 +37,7 @@ public class ScheduleController {
     @Operation(summary = "모임 일정 생성", description = "모임 일정 생성")
     @PostMapping("/group")
     public ResponseEntity<?> updateSchedule(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                            SchedulePostReqDto schedulePostReqDto) {
+                                            @RequestBody SchedulePostReqDto schedulePostReqDto) {
         Long memberId = userDetails.getMember().getMemberId();
         Long scheduleId = scheduleService.createGroupSchedule(memberId, schedulePostReqDto);
         return response.success(ResponseCode.GROUP_SCHEDULE_CREATED, scheduleId);
@@ -102,7 +100,7 @@ public class ScheduleController {
     @Operation(summary = "메모 작성", description = "경유지 메모작성")
     @PostMapping("/memo")
     public ResponseEntity<?> createMemo(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                        MemoPostReqDto memoPostReqDto) {
+                                        @RequestBody MemoPostReqDto memoPostReqDto) {
         Long memberId = userDetails.getMember().getMemberId();
         scheduleService.createMemo(memberId, memoPostReqDto);
         return response.success(ResponseCode.MEMO_CREATED);
@@ -110,12 +108,18 @@ public class ScheduleController {
 
     @Operation(summary = "진행중인 일정", description = "진행중 일정 조회")
     @GetMapping("/running")
-    public ResponseEntity<?> getRunningSchedule(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                @RequestParam double lat,
-                                                @RequestParam double lon) {
+    public ResponseEntity<?> getRunningSchedule(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         Long memberId = userDetails.getMember().getMemberId();
-        ScheduleInProgressResDto result = scheduleService.getRunningSchedule(memberId, lat, lon);
+        ScheduleInProgressResDto result = scheduleService.getRunningSchedule(memberId);
         return response.success(ResponseCode.RUNNING_SCHEDULE_FETCHED, result);
+    }
+
+    @Operation(summary = "경유지 방문처리", description = "현재 위치가 다음 경유지에 일정 수준 이상 가까워지면 방문처리")
+    @PostMapping("/arrive")
+    public ResponseEntity<?> setArriveScheduleWayPoint(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                       @RequestBody ScheduleWayPointReqDto scheduleWayPointReqDto) {
+        Long scheduleDayId = scheduleService.setArriveScheduleWayPoint(scheduleWayPointReqDto);
+        return response.success(ResponseCode.SCHEDULE_WAY_POINT_STATE_CHANGED, scheduleDayId);
     }
 
     @Operation(summary = "주변 관광지 정보 가져오기", description = "주변 관광지 정보 가져오기")

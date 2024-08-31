@@ -107,4 +107,41 @@ export interface searchPlaceProps {
   address: string;
   latitude: number;
   longitude: number;
+  img?: string;
+}
+
+export interface WayPointListProps {
+  type: string;
+  name: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  point: number;
+  distance: number;
+  duration: number;
+  calorie: number;
+}
+
+export interface AttractionsAddProps {
+  address: string;
+  latitude: number;
+  longitude: number;
+  name: string;
+  img: string;
+}
+
+export interface DateRouteDetailProps {
+  date: number;
+  wayPointList: WayPointListProps[];
+  attractionsList: AttractionsAddProps[];
+}
+
+export interface AddRouteProps {
+  memberId: number;
+  routeName: string;
+  routeContent: string;
+  openState: boolean;
+  writeState: boolean;
+  routeType: string[];
+  dateOfRoute: DateRouteDetailProps[];
 }

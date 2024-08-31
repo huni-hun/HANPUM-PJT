@@ -2,11 +2,18 @@ import Header from '@/components/common/Header/Header';
 import Icon from '@/components/common/Icon/Icon';
 import Button from '@/components/common/Button/Button';
 import * as R from '@/components/Style/Route/RouteAddCompletePage.styled';
+import { useNavigate } from 'react-router-dom';
 
 function RouteAddCompletePage() {
+  const navigator = useNavigate();
   return (
     <R.Container>
-      <Header purpose="result" clickBack={() => {}} />
+      <Header
+        purpose="result"
+        clickBack={() => {
+          navigator(-1);
+        }}
+      />
       <R.MainContainer>
         <Icon name="IconRouteAddComplete" size={260} />
         <R.TextBox>
@@ -18,8 +25,8 @@ function RouteAddCompletePage() {
         <Button
           width={70}
           height={6}
-          fontColor="ffffff"
-          backgroundColor="#1A823B"
+          fc="ffffff"
+          bc="#1A823B"
           radius={0.7}
           fontSize={1.6}
           children="시작하기"

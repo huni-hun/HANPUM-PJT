@@ -21,12 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -182,16 +177,24 @@ public class AuthServiceImpl implements AuthService {
                         .orElseThrow(MemberNotFoundException::new);
         return FindMemberLoginIdResDto.builder().loginId(member.getLoginId()).build();
     }
+    @Override
+    public void sendFindPasswordAuthCode(SendFindPasswordAuthCodeReqDto sendFindPasswordAuthCodeReqDto) {
+        String loginId = sendFindPasswordAuthCodeReqDto.getLoginId();
+        String email = sendFindPasswordAuthCodeReqDto.getEmail();
+        memberRepository.findByLoginIdAndEmail(loginId, email).orElseThrow(MemberInfoInvalidException::new);
+        String authCode = generateAuthCode();
+        createFindPasswordMail(email, authCode);
+        redisDao.setEmailAuthCode(email, authCode);
+    }
 
     @Override
     @Transactional
-    public void findMemberPassword(FindMemberPasswordReqDto findMemberPasswordReqDto) {
-        Member member =
-                memberRepository.findByLoginIdAndEmail(findMemberPasswordReqDto.getLoginId(), findMemberPasswordReqDto.getEmail())
-                        .orElseThrow(MemberNotFoundException::new);
-        String tempPassword = generateRandomPassword();
-        createTempPasswordMail(member.getEmail(), tempPassword);
-        member.updateMemberPassword(passwordEncoder.encode(tempPassword));
+    public void passwordReset(FindMemberPasswordReqDto findMemberPasswordReqDto) {
+        String email = findMemberPasswordReqDto.getEmail();
+        Member member = memberRepository.findMemberByEmail(email).orElseThrow(MemberNotFoundException::new);
+        checkEmailAuthenticated(email);
+        member.updateMemberPassword(passwordEncoder.encode(findMemberPasswordReqDto.getPassword()));
+        redisDao.deleteEmail(email);
     }
 
     private void checkLoginIdAuthenticated(String loginId) {
@@ -219,32 +222,6 @@ public class AuthServiceImpl implements AuthService {
         return UUID.randomUUID().toString().substring(0, 8);
     }
 
-    private String generateRandomPassword(){
-        String upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        String lowerCase = "abcdefghijklmnopqrstuvwxyz";
-        String digits = "0123456789";
-        String specialCharacters = "!@#$%^&*?";
-        String allCharacters = upperCase + lowerCase + digits + specialCharacters;
-
-        SecureRandom secureRandom = new SecureRandom();
-        StringBuilder stringBuilder = new StringBuilder();
-        List<Character> randomPassword = new ArrayList<>();
-        int passwordLength = secureRandom.nextInt(9) + 8;
-
-        randomPassword.add(upperCase.charAt(secureRandom.nextInt(upperCase.length())));
-        randomPassword.add(lowerCase.charAt(secureRandom.nextInt(lowerCase.length())));
-        randomPassword.add(digits.charAt(secureRandom.nextInt(digits.length())));
-        randomPassword.add(specialCharacters.charAt(secureRandom.nextInt(specialCharacters.length())));
-        IntStream.range(0, passwordLength - 4)
-                .forEach(i -> randomPassword.add(allCharacters.charAt(secureRandom.nextInt(allCharacters.length()))));
-        Collections.shuffle(randomPassword);
-
-        for (Character character : randomPassword) {
-            stringBuilder.append(character);
-        }
-        return stringBuilder.toString();
-    }
-
     private void createAuthMail(String email, String authCode) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
@@ -257,15 +234,15 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
-    private void createTempPasswordMail(String email, String tempPassword) {
+    private void createFindPasswordMail(String email, String authCode) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
-        message.setSubject("한품 임시 비밀번호 발송");
-        message.setText("임시비밀번호 : " + tempPassword);
+        message.setSubject("한품 비밀번호 찾기 인증 코드 발송");
+        message.setText("인증코드 : " + authCode);
         try {
             javaMailSender.send(message);
         } catch (MailException e) {
-            throw new TemporaryPasswordMailSendFailedException();
+            throw new AuthenticationMailSendFailedException();
         }
     }
 }

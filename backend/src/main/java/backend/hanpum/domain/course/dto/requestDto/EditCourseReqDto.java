@@ -17,7 +17,6 @@ public class EditCourseReqDto {
     private boolean openState;
     private boolean writeState;
     private List<String> courseTypeList;
-    private MultipartFile bgImage;
 
     // 코스 일차
     List<CourseDayReqDto> courseDayReqDtoList;

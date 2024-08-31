@@ -62,7 +62,7 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
   useEffect(() => {
     getRouteReview(routeid as string).then((result) => {
       let arr: RouteReviewProps[] = [];
-      if (result.status === 200) {
+      if (result.data.status !== 'ERROR' && result.status === 200) {
         result.data.data.map((ele: any) => {
           let data: RouteReviewProps = {
             memberId: ele.memberId,
@@ -97,7 +97,7 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
                 {props.dayData.map((ele) => (
                   <R.DayContainer>
                     <R.DayBox
-                      isSelected={ele.dayNum === props.selectedDay}
+                      selected={ele.dayNum === props.selectedDay}
                       onClick={() => {
                         props.setSelectedDay(ele.dayNum);
                       }}
@@ -162,7 +162,7 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
                 {props.dayData.map((ele) => (
                   <R.DayContainer>
                     <R.DayBox
-                      isSelected={ele.dayNum === props.selectedDay}
+                      selected={ele.dayNum === props.selectedDay}
                       onClick={() => {
                         props.setSelectedDay(ele.dayNum);
                       }}

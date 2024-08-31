@@ -39,6 +39,7 @@ export { ReactComponent as IconBackArrow } from './BackArrow.svg';
 export { ReactComponent as IconSearch } from './search.svg';
 export { ReactComponent as IconRouteAdd } from './RouteAddIcon.svg';
 export { ReactComponent as IconArrowBlack } from './ArrowBlack.svg';
+export { ReactComponent as IconHeaderPlus } from './HeaderPlus.svg';
 
 // 진행중인 일정
 export { ReactComponent as IconSun } from './sun.svg';

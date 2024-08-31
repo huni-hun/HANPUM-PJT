@@ -16,5 +16,5 @@ public class AttractionReqDto {
     private String address;
     private Double lat;
     private Double lon;
-    private MultipartFile image;
+    private String image;
 }

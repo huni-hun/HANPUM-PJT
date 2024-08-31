@@ -37,7 +37,7 @@ function RouteDetailPage() {
   useEffect(() => {
     if (dayData.length === 0) {
       getRouteDetail(routeid as string).then((result) => {
-        if (result.status === 200) {
+        if (result.data.status !== 'ERROR' && result.status === 200) {
           let num = 0;
           let rd: RouteDetailProps = {
             routeName: result.data.data.course.courseName,
@@ -161,7 +161,7 @@ function RouteDetailPage() {
             </R.RouteDateBox>
             <R.ContentSelecContainer>
               <R.ContentBox
-                isSelected={selected === 'course'}
+                selected={selected === 'course'}
                 onClick={() => {
                   setSelected('course');
                 }}
@@ -169,7 +169,7 @@ function RouteDetailPage() {
                 코스
               </R.ContentBox>
               <R.ContentBox
-                isSelected={selected === 'information'}
+                selected={selected === 'information'}
                 onClick={() => {
                   setSelected('information');
                 }}
@@ -177,7 +177,7 @@ function RouteDetailPage() {
                 관광지
               </R.ContentBox>
               <R.ContentBox
-                isSelected={selected === 'review'}
+                selected={selected === 'review'}
                 onClick={() => {
                   setSelected('review');
                 }}
@@ -216,13 +216,15 @@ function RouteDetailPage() {
           <Button
             width={65}
             height={6}
-            fontColor="ffffff"
-            backgroundColor="#1A823B"
+            fc="ffffff"
+            bc="#1A823B"
             radius={0.7}
             fontSize={1.6}
             children="일정 생성"
             color="#ffffff"
-            onClick={() => {}}
+            onClick={() => {
+              navigate('/schedule/addSchedule');
+            }}
           />
         </R.ButtonBox>
       </R.BottomContainer>

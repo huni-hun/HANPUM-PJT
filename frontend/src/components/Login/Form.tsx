@@ -92,7 +92,7 @@ const Form = () => {
             sessionStorage.setItem('token', JSON.stringify(token));
           }
           setIsAuthenticated(true);
-          navigate('/main');
+          navigate('/home');
         }
         if (res.status === STATUS.error) {
           toast.error(res.message);

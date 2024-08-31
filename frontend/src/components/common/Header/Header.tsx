@@ -13,10 +13,14 @@ interface HeaderProps {
   back?: boolean;
   isShadow?: boolean;
   isBorder?: boolean;
+  searchValue?: string;
   clickBack: () => void;
   complete?: () => void;
   focus?: boolean;
   clickOption?: () => void;
+  changeEven?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  keyDownEven?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  plusBtnclick?: () => void;
 }
 
 const Header = ({
@@ -31,6 +35,10 @@ const Header = ({
   clickOption,
   isBorder = false,
   isShadow = false,
+  changeEven,
+  keyDownEven,
+  searchValue,
+  plusBtnclick,
 }: HeaderProps) => {
   const navigate = useNavigate();
   const onClickHandler = (to: string) => {
@@ -87,7 +95,8 @@ const Header = ({
       case 'root':
         return (
           <Flex $align="center" $justify="center">
-            <Flex direction="column" $gap={4}>
+            <Flex></Flex>
+            <Flex direction="column" $gap={4} $align="end">
               <Text as="div" $bold={true} $typography="t10" color="grey2">
                 출발지
               </Text>
@@ -95,7 +104,10 @@ const Header = ({
                 {depart}
               </Text>
             </Flex>
-            <Flex direction="column" $gap={4}>
+            <Flex $justify="center" $align="center">
+              <Icon name="IconGreyLeftArrow" size={15} />
+            </Flex>
+            <Flex direction="column" $gap={4} $align="start">
               <Text as="div" $bold={true} $typography="t10" color="grey2">
                 도착지
               </Text>
@@ -103,6 +115,7 @@ const Header = ({
                 {arrive}
               </Text>
             </Flex>
+            <Flex></Flex>
           </Flex>
         );
       case 'route-detail':
@@ -120,18 +133,13 @@ const Header = ({
       case 'merge':
         return (
           <Flex $align="center" $justify="space-between">
-            <div className="search-bar">
+            <div className="search-bar" onClick={clickOption}>
               <Icon name="IconSearch" size={14} />
               <input type="text" />
             </div>
             <Flex $gap={20} style={{ width: 'auto', marginLeft: '9px' }}>
               <Icon
-                name="IconBookMarkInHeader"
-                size={14}
-                onClick={() => onClickHandler('noti')}
-              />
-              <Icon
-                name="IconNotification"
+                name="IconHeaderPlus"
                 onClick={() => onClickHandler('noti')}
                 size={14}
               />
@@ -160,7 +168,12 @@ const Header = ({
           <Flex style={{ marginLeft: '2rem' }} $align="start">
             <div className="search-bar">
               <Icon name="IconSearch" size={14} />
-              <input type="text" />
+              <input
+                type="text"
+                onChange={changeEven}
+                onKeyDown={keyDownEven}
+                value={searchValue}
+              />
             </div>
           </Flex>
         );
@@ -232,7 +245,14 @@ const Header = ({
   return (
     <>
       <S.HeaderWrapper isShadow={isShadow} isBorder={isBorder}>
-        {back && <Icon name="IconBackArrow" className="back-arrow" size={15} />}
+        {back && (
+          <Icon
+            name="IconBackArrow"
+            className="back-arrow"
+            size={15}
+            onClick={clickBack}
+          />
+        )}
         {renderHeader()}
       </S.HeaderWrapper>
     </>

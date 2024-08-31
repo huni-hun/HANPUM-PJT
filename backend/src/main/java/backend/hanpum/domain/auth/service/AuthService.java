@@ -19,5 +19,6 @@ public interface AuthService {
     void logout(String accessToken);
     ReissueAccessTokenResDto reissueToken(String accessToken);
     FindMemberLoginIdResDto findMemberLoginId(String name, String email);
-    void findMemberPassword(FindMemberPasswordReqDto findMemberPasswordReqDto);
+    void sendFindPasswordAuthCode(SendFindPasswordAuthCodeReqDto sendFindPasswordAuthCodeReqDto);
+    void passwordReset(FindMemberPasswordReqDto findMemberPasswordReqDto);
 }

@@ -4,11 +4,68 @@ import { colors } from '@/styles/colorPalette';
 import Button from '@/components/common/Button/Button';
 import { Slider } from '@mui/material';
 import { useState } from 'react';
+import {
+  getRouteSearchList,
+  getRouteSearchListWithProps,
+} from '@/api/route/GET';
+import RouteListSearchResult from './RouteListSearchResult';
+import { RouteListProps } from '@/models/route';
+import { useNavigate } from 'react-router-dom';
 
 function RouteListSearchPage() {
   const [sliderValue, setSliderValue] = useState<number>(0);
   const [dateValue, setDateValue] = useState<number>(0);
   const [selectType, setSelectType] = useState<string[]>([]);
+  const [keyword, setKeyword] = useState<string>('');
+  const [searchSucess, setSearchSucess] = useState<boolean>(false);
+  const [searchResult, setSearchResult] = useState<RouteListProps[]>([]);
+
+  const navigator = useNavigate();
+
+  const searchHandler = () => {
+    if (dateValue > 0 || sliderValue > 0 || selectType.length > 0) {
+      let distance = `&maxDistance=${sliderValue}`;
+      let days = `&maxDays=${dateValue}`;
+      let types = `&selectedTypes=${selectType.join(',')}`;
+
+      const response = getRouteSearchListWithProps(
+        keyword,
+        distance,
+        days,
+        types,
+      );
+
+      response.then((res) => {
+        if (res.status === 200) {
+          setSearchSucess(true);
+        }
+      });
+    } else {
+      const response = getRouteSearchList(keyword);
+      response.then((res) => {
+        if (res.status === 200) {
+          res.data.data.courseListMap.searchResult.map((ele: any) => {
+            let data: RouteListProps = {
+              routeName: ele.courseName,
+              routeContent: ele.content,
+              routeScore: ele.scoreAvg,
+              routeComment: ele.commentCnt,
+              routeId: ele.courseId,
+              img: ele.backgroundImg,
+              writeState: ele.writeState,
+              openState: ele.openState,
+              memberId: ele.memberId,
+              writeDate: ele.writeDate,
+              start: ele.startPoint,
+              end: ele.endPoint,
+            };
+            setSearchResult((pre) => [...pre, data]);
+          });
+          setSearchSucess(true);
+        }
+      });
+    }
+  };
 
   const typeArr = [
     '해안길',
@@ -33,9 +90,29 @@ function RouteListSearchPage() {
     '힐링',
   ];
 
-  return (
+  return searchSucess ? (
+    <RouteListSearchResult
+      keyword={keyword}
+      setSearchSucess={setSearchSucess}
+      searchResult={searchResult}
+    />
+  ) : (
     <R.Container>
-      <Header purpose="search" clickBack={() => {}} back={true} />
+      <Header
+        purpose="search"
+        clickBack={() => {
+          navigator(-1);
+        }}
+        back={true}
+        changeEven={(e: React.ChangeEvent<HTMLInputElement>) => {
+          setKeyword(e.target.value);
+        }}
+        keyDownEven={(e: React.KeyboardEvent<HTMLInputElement>) => {
+          if (e.code === 'Enter' || e.key === 'Enter') {
+            searchHandler();
+          }
+        }}
+      />
       <R.MainContainer>
         <R.SliderBox>
           <R.SliderTextBox>
@@ -109,7 +186,17 @@ function RouteListSearchPage() {
             {typeArr.map((ele) => (
               <R.Type
                 onClick={() => {
-                  setSelectType((pre) => [...pre, ele]);
+                  if (selectType.includes(ele)) {
+                    let arr: string[] = [];
+                    selectType.map((el: string) => {
+                      if (ele !== el) {
+                        arr.push(el);
+                      }
+                    });
+                    setSelectType(arr);
+                  } else {
+                    setSelectType((pre) => [...pre, ele]);
+                  }
                 }}
                 isSelect={selectType.includes(ele)}
               >
@@ -124,13 +211,15 @@ function RouteListSearchPage() {
           <Button
             width={35}
             height={6}
-            fontColor="ffffff"
-            backgroundColor="#1A823B"
+            fc="ffffff"
+            bc="#1A823B"
             radius={0.7}
             fontSize={1.6}
             children="경로 검색"
             color="#ffffff"
-            onClick={() => {}}
+            onClick={() => {
+              searchHandler();
+            }}
           />
         </R.ButtonBox>
       </R.BottomContainer>

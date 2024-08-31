@@ -30,7 +30,7 @@ function LoginPage() {
       if (memberType === 'KAKAO_INCOMPLETE') {
         navigate('/signup');
       } else {
-        navigate('/main');
+        navigate('/home');
       }
     }
   }, [tryKakao]);

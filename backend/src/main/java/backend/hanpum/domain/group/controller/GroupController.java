@@ -56,6 +56,13 @@ public class GroupController {
         return response.success(ResponseCode.GROUP_LIST_FETCHED, groupListGetResDto);
     }
 
+    @Operation(summary = "회원 참여 모임 조회", description = "회원 참여 모임 조회 API")
+    @GetMapping("/member")
+    public ResponseEntity<?> getMemberJoinGroup(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        GroupResDto groupResDto = groupService.getMemberJoinGroup(userDetails.getMember().getMemberId());
+        return response.success(ResponseCode.GROUP_MEMBER_JOIN_FETCHED, groupResDto);
+    }
+
     @Operation(summary = "모임 상세 조회", description = "모임 상세 조회 API")
     @GetMapping("/{groupId}")
     public ResponseEntity<?> getGroupDetail(@AuthenticationPrincipal UserDetailsImpl userDetails,

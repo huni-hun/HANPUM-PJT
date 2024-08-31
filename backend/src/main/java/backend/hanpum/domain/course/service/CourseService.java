@@ -6,14 +6,16 @@ import backend.hanpum.domain.course.dto.requestDto.MultiWaypointSearchReqDto;
 import backend.hanpum.domain.course.dto.requestDto.SearchWaypointReqDto;
 import backend.hanpum.domain.course.dto.responseDto.*;
 import backend.hanpum.domain.course.enums.CourseTypes;
+import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface CourseService {
     CourseListMapResDto getCourseList(CourseTypes targetCourse, Double maxDistance, Integer maxDays, List<CourseTypes> selectedTypes, String keyword, Pageable pageable);
-    void makeCourse(MakeCourseReqDto makeCourseReqDto);
-    void editCourse(EditCourseReqDto editCourseReqDto);
+    void makeCourse(Long memberId, MultipartFile multipartFile, MakeCourseReqDto makeCourseReqDto);
+    void editCourse(Long memberId, MultipartFile multipartFile, EditCourseReqDto editCourseReqDto);
     void deleteCourse(Long memberId, Long courseId);
     CourseDetailResDto getCourseDetail(Long courseId);
     GetCourseDayResDto getCourseDay(Long courseId, Integer day);
@@ -29,4 +31,9 @@ public interface CourseService {
     List<SearchWaypointResDto> searchWaypointByKeyword(String keyword);
     List<MultiWaypointSearchResDto> searchMultiWaypointCourse(List<MultiWaypointSearchReqDto> multiWaypointSearchReqDtoList);
     List<CourseResDto> getInterestCourseList(Long memberId);
+    List<CourseResDto> getSelfMadeCourseList(Long memberId);
+    List<UsedCourseResDto> getUsedCourseList(Long memberId);
+
+    // 진행률 계산
+    int getScheduleGoalRate(List<ScheduleDayResDto> scheduleDayResDtoList);
 }

@@ -47,7 +47,13 @@ function RouteAddMainPage() {
 
   return (
     <R.Container>
-      <Header purpose="title" title="기본정보 입력" clickBack={() => {}} />
+      <Header
+        purpose="title"
+        title="기본정보 입력"
+        clickBack={() => {
+          navigator(-1);
+        }}
+      />
       <R.MainContainer>
         <R.OverFlow>
           {!imgBoxClick ? (
@@ -104,8 +110,8 @@ function RouteAddMainPage() {
                 <Button
                   width={25}
                   height={6}
-                  fontColor="ffffff"
-                  backgroundColor={imgReady ? '#1A823B' : '#D9D9D9'}
+                  fc="ffffff"
+                  bc={imgReady ? '#1A823B' : '#D9D9D9'}
                   radius={0.7}
                   fontSize={1.6}
                   children="등록"
@@ -173,8 +179,8 @@ function RouteAddMainPage() {
                 <Button
                   width={25}
                   height={6}
-                  fontColor="ffffff"
-                  backgroundColor={explanationReady ? '#1A823B' : '#D9D9D9'}
+                  fc="ffffff"
+                  bc={explanationReady ? '#1A823B' : '#D9D9D9'}
                   radius={0.7}
                   fontSize={1.6}
                   children="등록"
@@ -220,7 +226,7 @@ function RouteAddMainPage() {
                         let arr = [...typeChecked];
                         let newArr: string[] = [];
                         arr.map((e) => {
-                          if (e != ele) {
+                          if (e !== ele) {
                             newArr.push(e);
                           }
                         });
@@ -268,10 +274,8 @@ function RouteAddMainPage() {
                 <Button
                   width={25}
                   height={6}
-                  fontColor="ffffff"
-                  backgroundColor={
-                    typeChecked.length > 0 ? '#1A823B' : '#D9D9D9'
-                  }
+                  fc="ffffff"
+                  bc={typeChecked.length > 0 ? '#1A823B' : '#D9D9D9'}
                   radius={0.7}
                   fontSize={1.6}
                   children="등록"
@@ -304,19 +308,23 @@ function RouteAddMainPage() {
           <Button
             width={25}
             height={6}
-            fontColor="ffffff"
-            backgroundColor={
-              typeChecked.length > 0 && imgReady && explanationReady
-                ? colors.main
-                : colors.grey2
-            }
+            fc="ffffff"
+            bc={explanationReady ? colors.main : colors.grey2}
             radius={0.7}
             fontSize={1.6}
             children="다음"
             color="#ffffff"
             onClick={() => {
-              if (typeChecked.length > 0 && imgReady && explanationReady) {
-                navigator('/route/addDetail');
+              if (explanationReady) {
+                navigator('/route/addDetail', {
+                  state: {
+                    imgSrc: imgSrc,
+                    typeChecked: typeChecked,
+                    routeTitle: routeTitle,
+                    routeExplane: routeExplane,
+                    isOpen: isOpen,
+                  },
+                });
               }
             }}
           />
