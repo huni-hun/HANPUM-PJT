@@ -23,7 +23,7 @@ function MainPage() {
 
   return (
     <MainPageContainer>
-      <Header purpose="search" clickBack={() => navigate(-1)} />
+      <Header purpose="main" clickBack={() => {}} />
       <div className="container">
         <div className="padding-box">
           <Schedule />

@@ -214,22 +214,15 @@ const Header = ({
           </Flex>
         );
 
-      default:
+      case 'main':
         return (
-          <S.HeaderWrapper>
-            <Flex $justify="end">
-              <Icon
-                name="IconNotification"
-                onClick={() => onClickHandler('noti')}
-                size={14}
-              />
-              <Icon
-                name="IconUser"
-                onClick={() => onClickHandler('my')}
-                size={14}
-              />
-            </Flex>
-          </S.HeaderWrapper>
+          <Flex $justify="end">
+            <Icon
+              name="IconUser"
+              onClick={() => onClickHandler('my')}
+              size={20}
+            />
+          </Flex>
         );
     }
   };
@@ -240,7 +233,6 @@ const Header = ({
         {back && <Icon name="IconBackArrow" className="back-arrow" size={15} />}
         {renderHeader()}
       </S.HeaderWrapper>
-      {/* <Outlet /> */}
     </>
   );
 };

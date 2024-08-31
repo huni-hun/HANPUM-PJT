@@ -15,6 +15,7 @@ export const HeaderWrapper = styled.div<HeaderWrapperProps>`
   position: sticky;
   top: 0;
   z-index: 10;
+  border-bottom: 1px solid ${colors.grey1};
   box-shadow: ${({ isShadow }) =>
     isShadow ? '0px 4px 6px rgba(0, 0, 0, 0.1)' : 'none'};
 
