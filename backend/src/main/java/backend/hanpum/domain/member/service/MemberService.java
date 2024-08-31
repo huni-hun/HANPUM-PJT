@@ -13,5 +13,5 @@ public interface MemberService {
     void updatePassword(Long memberId, UpdatePasswordReqDto updatePasswordReqDto);
     void updateMemberInfo(Long memberId, UpdateMemberInfoReqDto updateMemberInfoReqDto);
     void updateMemberProfileImg(Long memberId, MultipartFile multipartFile);
-    void deleteMember(Long memberId, DeleteMemberReqDto deleteMemberReqDto);
+    void deleteMember(Long memberId);
 }

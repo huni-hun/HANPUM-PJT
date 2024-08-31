@@ -106,11 +106,8 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     @Transactional
-    public void deleteMember(Long memberId, DeleteMemberReqDto deleteMemberReqDto) {
+    public void deleteMember(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
-        if (!passwordEncoder.matches(deleteMemberReqDto.getPassword(), member.getPassword())) {
-            throw new LoginInfoInvalidException();
-        }
         if (member.getGroupMember() != null) {
             throw new GroupAlreadyJoinedException();
         }
