@@ -102,9 +102,8 @@ public class MemberController {
 
     @Operation(summary = "회원 탈퇴", description = "회원 탈퇴 API")
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteUser(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                        @RequestBody @Valid DeleteMemberReqDto deleteMemberReqDto) {
-        memberService.deleteMember(userDetails.getMember().getMemberId(), deleteMemberReqDto);
+    public ResponseEntity<?> deleteUser(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        memberService.deleteMember(userDetails.getMember().getMemberId());
         return response.success(ResponseCode.MEMBER_DELETE_SUCCESS);
     }
 }
