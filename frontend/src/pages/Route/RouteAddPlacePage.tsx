@@ -40,12 +40,12 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
       type: '경유지',
       name: props.selectedPlace.placeName,
       address: props.selectedPlace.address,
-      latitude: props.selectedPlace.latitude,
-      longitude: props.selectedPlace.longitude,
-      point: props.wayPoints.length + 1,
-      distance: 123,
-      duration: 432,
-      calorie: 123,
+      lat: props.selectedPlace.latitude,
+      lon: props.selectedPlace.longitude,
+      pointNumber: props.wayPoints.length + 1,
+      distance: 0,
+      duration: 0,
+      calorie: 0,
     };
 
     props.setWayPoints((pre) => {
@@ -53,8 +53,8 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
 
       let newDateDetail: DateRouteDetailProps[] = [...props.dateDetail];
       newDateDetail.map((ele: DateRouteDetailProps) => {
-        if (ele.date === props.day) {
-          ele.wayPointList = updatedWayPoints;
+        if (ele.dayNumber === props.day) {
+          ele.wayPointReqDtoList = updatedWayPoints;
         }
       });
       props.setDateDetail(newDateDetail);
@@ -70,9 +70,10 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
     let attraction: AttractionsAddProps = {
       name: props.selectedPlace.placeName,
       address: props.selectedPlace.address,
-      latitude: props.selectedPlace.latitude,
-      longitude: props.selectedPlace.longitude,
+      lat: props.selectedPlace.latitude,
+      lon: props.selectedPlace.longitude,
       img: props.selectedPlace.img as string,
+      type: '관광지',
     };
 
     let attractionCardInfo: AttractionsAddCardProps = {
@@ -88,8 +89,8 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
 
       let newDateDetail: DateRouteDetailProps[] = [...props.dateDetail];
       newDateDetail.map((ele: DateRouteDetailProps) => {
-        if (ele.date === props.day) {
-          ele.attractionsList = updatedAttractions;
+        if (ele.dayNumber === props.day) {
+          ele.attractionReqDtoList = updatedAttractions;
         }
       });
       props.setDateDetail(newDateDetail);

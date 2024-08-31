@@ -111,14 +111,19 @@ export interface searchPlaceProps {
   longitude: number;
   img?: string;
 }
+export interface AttractionsAddCardProps {
+  keyword: string;
+  name: string;
+  img: string;
+}
 
 export interface WayPointListProps {
   type: string;
   name: string;
   address: string;
-  latitude: number;
-  longitude: number;
-  point: number;
+  lat: number;
+  lon: number;
+  pointNumber: number;
   distance: number;
   duration: number;
   calorie: number;
@@ -126,30 +131,26 @@ export interface WayPointListProps {
 
 export interface AttractionsAddProps {
   address: string;
-  latitude: number;
-  longitude: number;
+  lat: number;
+  lon: number;
   name: string;
   img: string;
-}
-
-export interface AttractionsAddCardProps {
-  keyword: string;
-  name: string;
-  img: string;
+  type: string;
 }
 
 export interface DateRouteDetailProps {
-  date: number;
-  wayPointList: WayPointListProps[];
-  attractionsList: AttractionsAddProps[];
+  dayNumber: number;
+  wayPointReqDtoList: WayPointListProps[];
+  attractionReqDtoList: AttractionsAddProps[];
 }
 
 export interface AddRouteProps {
   memberId: number;
-  routeName: string;
-  routeContent: string;
+  courseName: string;
+  content: string;
   openState: boolean;
   writeState: boolean;
-  routeType: string[];
-  dateOfRoute: DateRouteDetailProps[];
+  courseTypeList: string[];
+  bgImage: string;
+  courseDayReqDtoList: DateRouteDetailProps[];
 }
