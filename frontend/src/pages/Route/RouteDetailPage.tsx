@@ -37,7 +37,7 @@ function RouteDetailPage() {
   useEffect(() => {
     if (dayData.length === 0) {
       getRouteDetail(routeid as string).then((result) => {
-        if (result.status === 200) {
+        if (result.data.status !== 'ERROR' && result.status === 200) {
           let num = 0;
           let rd: RouteDetailProps = {
             routeName: result.data.data.course.courseName,
@@ -222,7 +222,9 @@ function RouteDetailPage() {
             fontSize={1.6}
             children="일정 생성"
             color="#ffffff"
-            onClick={() => {}}
+            onClick={() => {
+              navigate('/schedule/addSchedule');
+            }}
           />
         </R.ButtonBox>
       </R.BottomContainer>

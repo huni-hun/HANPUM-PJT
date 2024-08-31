@@ -2,11 +2,18 @@ import Header from '@/components/common/Header/Header';
 import Icon from '@/components/common/Icon/Icon';
 import Button from '@/components/common/Button/Button';
 import * as R from '@/components/Style/Route/RouteAddCompletePage.styled';
+import { useNavigate } from 'react-router-dom';
 
 function RouteAddCompletePage() {
+  const navigator = useNavigate();
   return (
     <R.Container>
-      <Header purpose="result" clickBack={() => {}} />
+      <Header
+        purpose="result"
+        clickBack={() => {
+          navigator(-1);
+        }}
+      />
       <R.MainContainer>
         <Icon name="IconRouteAddComplete" size={260} />
         <R.TextBox>

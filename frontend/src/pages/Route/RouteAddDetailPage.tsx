@@ -3,7 +3,7 @@ import * as R from '../../components/Style/Route/RouteAddDetailPage.styled';
 import Icon from '@/components/common/Icon/Icon';
 import Map from '@/components/common/Map/Map';
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '@/components/common/Header/Header';
 import SearchPlacePage from './SearchPlacePage';
 import {
@@ -32,6 +32,7 @@ function RouteAddDetailPage() {
 
   const location = useLocation();
   const data = { ...location.state };
+  const navigate = useNavigate();
 
   const getSuccess = (pos: GeolocationPosition) => {
     setCurLatitude(pos.coords.latitude);
@@ -115,7 +116,9 @@ function RouteAddDetailPage() {
         purpose="root"
         depart="서울"
         arrive="대전"
-        clickBack={() => {}}
+        clickBack={() => {
+          navigate(-1);
+        }}
         back={true}
       />
       <R.MainContainer>
@@ -213,7 +216,9 @@ function RouteAddDetailPage() {
             fontSize={1.6}
             children="경로완성"
             color="#ffffff"
-            onClick={() => {}}
+            onClick={() => {
+              navigate('/route/add/complete');
+            }}
           />
         </R.ButtonBox>
       </R.BottomContainer>

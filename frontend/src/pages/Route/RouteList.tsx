@@ -8,9 +8,11 @@ import { useEffect, useState } from 'react';
 import { getRouteList } from '@/api/route/GET';
 import { RouteListProps } from '@/models/route';
 import { useNavigate } from 'react-router-dom';
+import CardLong from '@/components/common/CardLong/CardLong';
 
 function RouteList() {
   const [arr, setArr] = useState<RouteListProps[]>([]);
+  const [morePageOpen, setMoreOpenPage] = useState<boolean>(false);
   const navigator = useNavigate();
 
   useEffect(() => {
@@ -39,6 +41,11 @@ function RouteList() {
       }
     });
   }, []);
+
+  const clickMoreBtn = (keyword: string) => {
+    navigator('/route/list/more', { state: { keyword: keyword } });
+  };
+
   return (
     <R.RouteListContainer>
       <Header
@@ -54,7 +61,13 @@ function RouteList() {
           <R.RouteTypeHeader>
             <R.TypeTitle>김미미님에게 잘 맞는 경로</R.TypeTitle>
             <R.MoreButton>
-              <R.MoreText>더보기</R.MoreText>
+              <R.MoreText
+                onClick={() => {
+                  clickMoreBtn('해안길');
+                }}
+              >
+                더보기
+              </R.MoreText>
               <Icon name="IconLeftBlackArrow" size={10} />
             </R.MoreButton>
           </R.RouteTypeHeader>
@@ -70,7 +83,7 @@ function RouteList() {
             <R.TypeTitle>지금 가장 인기 있는 코스</R.TypeTitle>
             <R.MoreButton
               onClick={() => {
-                navigator('/route/list/more');
+                clickMoreBtn('해안길');
               }}
             >
               <R.MoreText>더보기</R.MoreText>
@@ -90,7 +103,13 @@ function RouteList() {
           <R.RouteTypeHeader>
             <R.TypeTitle>지금 가장 인기 있는 코스</R.TypeTitle>
             <R.MoreButton>
-              <R.MoreText>더보기</R.MoreText>
+              <R.MoreText
+                onClick={() => {
+                  clickMoreBtn('해안길');
+                }}
+              >
+                더보기
+              </R.MoreText>
               <Icon name="IconLeftBlackArrow" size={10} />
             </R.MoreButton>
           </R.RouteTypeHeader>
@@ -107,7 +126,13 @@ function RouteList() {
           <R.RouteTypeHeader>
             <R.TypeTitle>지금 가장 인기 있는 코스</R.TypeTitle>
             <R.MoreButton>
-              <R.MoreText>더보기</R.MoreText>
+              <R.MoreText
+                onClick={() => {
+                  clickMoreBtn('해안길');
+                }}
+              >
+                더보기
+              </R.MoreText>
               <Icon name="IconLeftBlackArrow" size={10} />
             </R.MoreButton>
           </R.RouteTypeHeader>

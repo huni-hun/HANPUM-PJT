@@ -1,5 +1,6 @@
 import Icon from '@/components/common/Icon/Icon';
 import * as R from '@/components/Style/Route/RouteListMorePage.styled';
+import { useNavigate } from 'react-router-dom';
 
 interface RouteListMoreCardProps {
   title: string;
@@ -8,11 +9,18 @@ interface RouteListMoreCardProps {
   score: number;
   review: number;
   img: string;
+  id: number;
 }
 
 function RouteListMoreCard(props: RouteListMoreCardProps) {
+  const navigator = useNavigate();
+
   return (
-    <R.RouteCard>
+    <R.RouteCard
+      onClick={() => {
+        navigator(`/route/detail/${props.id}`);
+      }}
+    >
       <R.ContentBox>
         <R.Img />
         <R.TextBox>

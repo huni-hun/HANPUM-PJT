@@ -135,12 +135,7 @@ const Header = ({
             </div>
             <Flex $gap={20} style={{ width: 'auto', marginLeft: '9px' }}>
               <Icon
-                name="IconBookMarkInHeader"
-                size={14}
-                onClick={() => onClickHandler('noti')}
-              />
-              <Icon
-                name="IconNotification"
+                name="IconHeaderPlus"
                 onClick={() => onClickHandler('noti')}
                 size={14}
               />
@@ -235,7 +230,7 @@ const Header = ({
           <S.HeaderWrapper>
             <Flex $justify="end">
               <Icon
-                name="IconNotification"
+                name="IconHeaderPlus"
                 onClick={() => onClickHandler('noti')}
                 size={14}
               />

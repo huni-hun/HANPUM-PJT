@@ -55,6 +55,9 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
 
       return updatedWayPoints;
     });
+
+    props.setPageOpen(false);
+    props.setSearchOpen(false);
   };
 
   const setAttraction = () => {
@@ -79,6 +82,9 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
 
       return updatedWayPoints;
     });
+
+    props.setPageOpen(false);
+    props.setSearchOpen(false);
   };
 
   // console.log(placeInfo);
