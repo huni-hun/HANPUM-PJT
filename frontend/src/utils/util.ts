@@ -4,6 +4,8 @@ import CryptoJS from 'crypto-js';
 
 const secretKey = process.env.REACT_APP_SECRET_KEY;
 
+type ConfigType = 'announcement' | 'policy' | 'withdraw';
+
 // 생년월일
 //2024-08-14T07:13:27.725Z -> 2024년01월14일
 export function dateFormat(date: string | undefined) {
@@ -107,5 +109,18 @@ export function returnTitle(param: keyof SignupRequestValues) {
   }
   if (param === 'gender') {
     return '성별';
+  }
+}
+
+export function returnConfigTitle(param: ConfigType): string {
+  switch (param) {
+    case 'announcement':
+      return '공지사항';
+    case 'policy':
+      return '이용약관 및 정책';
+    case 'withdraw':
+      return '회원탈퇴';
+    default:
+      return '';
   }
 }
