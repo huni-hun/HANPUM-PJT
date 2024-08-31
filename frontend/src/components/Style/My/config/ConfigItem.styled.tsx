@@ -7,7 +7,10 @@ export const ConfigItemContainer = styled.div`
   height: 2.2rem;
 `;
 
-export const PolicyContainer = styled.div``;
+export const PolicyContainer = styled.div`
+  height: 100%;
+  background-color: ${colors.white};
+`;
 
 export const AnnouncementContainer = styled.div`
   height: 100%;

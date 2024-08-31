@@ -2,7 +2,7 @@ import Flex from '@/components/common/Flex';
 import Header from '@/components/common/Header/Header';
 import Text from '@/components/common/Text';
 import TextLineBreaks from '@/components/common/TextLineBreaks';
-import { ANNOUNCEMENT } from '@/constants';
+import { ANNOUNCEMENT, POLICY } from '@/constants';
 import { colors } from '@/styles/colorPalette';
 import { returnConfigTitle } from '@/utils/util';
 import React from 'react';
@@ -13,39 +13,50 @@ type ConfigType = 'announcement' | 'policy' | 'withdraw';
 
 function ConfigDetailPage() {
   const navigate = useNavigate();
-  const param = useParams();
-  console.log(param.id);
-  console.log(ANNOUNCEMENT.filter((item) => item.id === param.id));
+  const { category, id } = useParams();
+  const paramCategory = category?.split(':')[1] as ConfigType;
+  // console.log(param.id);
+  // console.log(ANNOUNCEMENT.filter((item) => item.id === param.id));
+
+  const configInfoList = () => {
+    if (paramCategory === 'announcement') {
+      return ANNOUNCEMENT;
+    } else if (paramCategory === 'policy') {
+      return POLICY;
+    }
+    return [];
+  };
+
+  const filteredData = configInfoList().filter((item) => item.id === id);
+
   return (
     <ConfigDetailPageContainer>
       <Header
         purpose="title"
-        title={returnConfigTitle(param.category?.split(':')[1] as ConfigType)}
+        title={returnConfigTitle(paramCategory)}
         clickBack={() => {
           navigate(-1);
         }}
       />
 
       <div className="container">
-        {ANNOUNCEMENT.filter((item) => item.id === param.id).map(
-          (announcement) => (
-            <Flex key={announcement.id} direction="column">
-              <Text $typography="t20" $bold={true}>
-                {announcement.title}
-              </Text>
-              <Text
-                $typography="t12"
-                color="grey2"
-                style={{ margin: '6px 0px 28px' }}
-              >
-                {announcement.date}
-              </Text>
-              <p>
-                <TextLineBreaks>{announcement.desc}</TextLineBreaks>
-              </p>
-            </Flex>
-          ),
-        )}
+        {filteredData.map((category) => (
+          <Flex key={category.id} direction="column">
+            <Text $typography="t20" $bold={true}>
+              {category.title}
+            </Text>
+            <Text
+              $typography="t12"
+              color="grey2"
+              style={{ margin: '6px 0px 28px' }}
+            >
+              {category.date}
+            </Text>
+            <p>
+              <TextLineBreaks>{category.desc}</TextLineBreaks>
+            </p>
+          </Flex>
+        ))}
       </div>
     </ConfigDetailPageContainer>
   );

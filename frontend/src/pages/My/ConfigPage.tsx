@@ -29,7 +29,7 @@ function ConfigPage() {
             안내
           </Text>
           <ConfigItem label="공지사항" url="/config/:announcement" />
-          {/* <ConfigItem label="이용약관 및 정책" /> */}
+          <ConfigItem label="이용약관 및 정책" url="/config/:policy" />
         </Flex>
       </div>
 
