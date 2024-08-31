@@ -9,7 +9,7 @@ import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
-type ConfigType = 'announcement' | 'policy' | 'withdraw';
+type ConfigType = 'announcement' | 'policy' | 'withdraw' | 'pw';
 
 function ConfigDetailPage() {
   const navigate = useNavigate();

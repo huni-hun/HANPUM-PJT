@@ -17,7 +17,7 @@ function MyProfilePage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery('getUser', GetUser);
+  const { data } = useQuery('getUser', GetUser);
 
   const { mutate: changeProfileImg } = useMutation(ChangeProfileImg, {
     onSuccess: (res) => {

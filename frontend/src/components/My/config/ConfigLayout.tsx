@@ -5,8 +5,9 @@ import styled from 'styled-components';
 import Announcement from './Announcement';
 import Policy from './Policy';
 import { colors } from '@/styles/colorPalette';
+import Withdraw from './Withdraw';
 
-type ConfigType = 'announcement' | 'policy' | 'withdraw';
+type ConfigType = 'announcement' | 'policy' | 'withdraw' | 'pw';
 
 function ConfigLayout() {
   const param = useParams().category?.split(':')[1] as ConfigType;
@@ -24,6 +25,8 @@ function ConfigLayout() {
 
       {param === 'announcement' && <Announcement param={param} />}
       {param === 'policy' && <Policy param={param} />}
+
+      {param === 'withdraw' && <Withdraw />}
     </Layout>
   );
 }

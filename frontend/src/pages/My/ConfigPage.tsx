@@ -2,12 +2,14 @@ import Flex from '@/components/common/Flex';
 import Header from '@/components/common/Header/Header';
 import Text from '@/components/common/Text';
 import ConfigItem from '@/components/My/config/ConfigItem';
+import { useAlert } from '@/hooks/global/useAlert';
 import { colors } from '@/styles/colorPalette';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 function ConfigPage() {
   const navigate = useNavigate();
+
   return (
     <ConfigPageContainer>
       <Header
@@ -35,7 +37,7 @@ function ConfigPage() {
 
       <div className="line" />
 
-      {/* <div className="container">
+      <div className="container">
         <Flex direction="column">
           <Text
             as="div"
@@ -45,10 +47,10 @@ function ConfigPage() {
           >
             계정
           </Text>
-          <ConfigItem label="비밀번호 변경" />
-          <ConfigItem label="회원탈퇴" />
+          {/* <ConfigItem label="비밀번호 변경" url="/config/:pw" /> */}
+          <ConfigItem label="회원탈퇴" url="/config/:withdraw" />
         </Flex>
-      </div> */}
+      </div>
     </ConfigPageContainer>
   );
 }

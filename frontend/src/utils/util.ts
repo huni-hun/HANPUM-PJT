@@ -4,7 +4,7 @@ import CryptoJS from 'crypto-js';
 
 const secretKey = process.env.REACT_APP_SECRET_KEY;
 
-type ConfigType = 'announcement' | 'policy' | 'withdraw';
+type ConfigType = 'announcement' | 'policy' | 'withdraw' | 'pw';
 
 // 생년월일
 //2024-08-14T07:13:27.725Z -> 2024년01월14일
