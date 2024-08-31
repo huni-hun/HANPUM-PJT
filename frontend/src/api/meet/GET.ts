@@ -1,4 +1,4 @@
-import api from '..';
+import api from '../index';
 
 /** 모임 신청 리스트 조회 */
 export const GetMeetApplyList = async (groupId: number, token: string) => {
@@ -66,3 +66,9 @@ export const GetMeetList = async (token: string) => {
 
   return response.data;
 };
+
+// 내가 만든 모임 조회
+export async function GetMyMeet() {
+  const { data } = await api.get('/api/group/member');
+  return data;
+}

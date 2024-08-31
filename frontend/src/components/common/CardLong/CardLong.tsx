@@ -5,6 +5,7 @@ import Text from '../Text';
 import { Root } from '@/models/root';
 import { useEffect, useState } from 'react';
 import Flex from '../Flex';
+import { MeetInfo } from '@/models/meet';
 
 function CardLong({
   item,
@@ -26,11 +27,6 @@ function CardLong({
   // const [isSwiped, setIsSwiped] = useState(false);
   const [startX, setStartX] = useState<number | null>(null);
   const [canDeleted, setCanDeleted] = useState(false);
-
-  // console.log('isSwiped ::', isSwiped);
-  // console.log('startX ::', startX);
-  // console.log('canDeleted ::', canDeleted);
-  // const [isDeleteConfirmVisible, setIsDeleteConfirmVisible] = useState(false);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setStartX(e.touches[0].clientX);

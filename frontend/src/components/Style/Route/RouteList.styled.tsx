@@ -6,6 +6,28 @@ export const RouteListContainer = styled.div`
   box-sizing: border-box;
   overflow: scroll;
   background-color: #ffffff;
+  .cardLong {
+    width: 100%;
+    height: 16rem;
+    border-radius: 20px;
+    margin: 16px 0 24px;
+    position: relative;
+    overflow: hidden;
+
+    .black-bg {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      background-color: rgba(0, 0, 0, 0.3);
+      z-index: 2;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
 `;
 
 export const RouteListHeader = styled.div`
@@ -57,11 +79,13 @@ export const IconBox = styled.div`
 `;
 
 export const MainContainer = styled.div`
-  width: 100vw;
-  height: auto;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  padding: 16px 16px 0px 16px;
+  box-sizing: border-box;
+  overflow-y: hidden;
   padding-bottom: 8vh;
 `;
 
@@ -123,6 +147,7 @@ export const TypeTitle = styled.p`
   font-size: 2rem;
   font-weight: bold;
   padding-left: 2rem;
+  margin-bottom: 1.6rem;
 `;
 
 export const MoreButton = styled.div`

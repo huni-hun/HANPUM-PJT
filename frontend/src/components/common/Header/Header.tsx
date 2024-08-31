@@ -92,6 +92,28 @@ const Header = ({
             </Text>
           </Flex>
         );
+
+      case 'meet':
+        return (
+          <Flex $justify="end" $gap={16}>
+            <Icon
+              name="IconFilter"
+              onClick={() => onClickHandler('mypage')}
+              size={20}
+            />
+            <Icon
+              name="IconHeaderPlus"
+              onClick={() => onClickHandler('mypage')}
+              size={20}
+            />
+            <Icon
+              name="IconUser"
+              onClick={() => onClickHandler('mypage')}
+              size={20}
+            />
+          </Flex>
+        );
+
       case 'root':
         return (
           <Flex $align="center" $justify="center">
