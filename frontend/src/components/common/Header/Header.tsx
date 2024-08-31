@@ -19,6 +19,7 @@ interface HeaderProps {
   clickOption?: () => void;
   changeEven?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   keyDownEven?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  plusBtnclick?: () => void;
 }
 
 const Header = ({
@@ -35,6 +36,7 @@ const Header = ({
   changeEven,
   keyDownEven,
   searchValue,
+  plusBtnclick,
 }: HeaderProps) => {
   const navigate = useNavigate();
   const onClickHandler = (to: string) => {
@@ -228,12 +230,8 @@ const Header = ({
       default:
         return (
           <S.HeaderWrapper>
-            <Flex $justify="end">
-              <Icon
-                name="IconHeaderPlus"
-                onClick={() => onClickHandler('noti')}
-                size={14}
-              />
+            <Flex $justify="space-around">
+              <Icon name="IconHeaderPlus" onClick={plusBtnclick} size={14} />
               <Icon
                 name="IconUser"
                 onClick={() => onClickHandler('my')}

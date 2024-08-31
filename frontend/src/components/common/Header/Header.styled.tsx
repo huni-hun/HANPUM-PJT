@@ -61,4 +61,13 @@ export const HeaderWrapper = styled.div<HeaderWrapperProps>`
       }
     }
   }
+
+  .defalut {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 3.4rem;
+    padding: 0 12px;
+    font-size: 1.4rem;
+  }
 `;
