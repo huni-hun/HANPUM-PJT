@@ -157,7 +157,7 @@ function ScheduleMainPage() {
 
   return (
     <ScheduleMainPageContainer>
-      <Header purpose="user" clickBack={() => navigate(-1)} />
+      <Header purpose="user" clickBack={() => navigate(-1)} isShadow />
 
       <S.SchduleTypeContainer>
         <S.SchduleTypeBox>
@@ -299,7 +299,7 @@ function ScheduleMainPage() {
           </R.Overflow>
         </R.Main>
       )}
-      {/* <BottomTab /> */}
+      <BottomTab />
     </ScheduleMainPageContainer>
   );
 }

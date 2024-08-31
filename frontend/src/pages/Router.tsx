@@ -51,7 +51,7 @@ export default function Router() {
     <BrowserRouter>
       <Routes>
         <>
-          <Route path="/" element={<MainPage />} />
+          <Route path="/home" element={<MainPage />} />
           {/* 일정 */}
           <Route path="/schedule/main" element={<ScheduleMainPage />} />
           <Route path="/schedule/addSchedule" element={<AddSchedulePage />} />

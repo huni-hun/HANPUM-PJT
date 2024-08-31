@@ -26,7 +26,7 @@ function BottomTab() {
       </Bt.BottomTabItem>
       <Bt.BottomTabItem
         onClick={() => {
-          navigator('/meet');
+          navigator('/meet/list');
         }}
       >
         <Icon
@@ -37,18 +37,33 @@ function BottomTab() {
       </Bt.BottomTabItem>
       <Bt.BottomTabItem
         onClick={() => {
-          navigator('/main');
+          navigator('/home');
         }}
       >
         <Icon
-          name={curTab.includes('main') ? 'IconHomeSelect' : 'IconHome'}
+          name={curTab.includes('/home') ? 'IconHomeSelect' : 'IconHome'}
           size={20}
         />
-        <Bt.TabText selected={curTab.includes('main')}>홈</Bt.TabText>
+        <Bt.TabText selected={curTab.includes('/home')}>홈</Bt.TabText>
       </Bt.BottomTabItem>
       <Bt.BottomTabItem
         onClick={() => {
-          setCurTab('Community');
+          navigator('/schedule/main');
+        }}
+      >
+        <Icon
+          name={
+            curTab === '/schedule/main' ? 'IconScheduleSelect' : 'IconSchedule'
+          }
+          size={20}
+        />
+        <Bt.TabText selected={curTab.includes('/schedule/main')}>
+          일정
+        </Bt.TabText>
+      </Bt.BottomTabItem>
+      <Bt.BottomTabItem
+        onClick={() => {
+          navigator('/setting');
         }}
       >
         <Icon
@@ -57,18 +72,7 @@ function BottomTab() {
           }
           size={20}
         />
-        <Bt.TabText selected={curTab.includes('meet')}>게시판</Bt.TabText>
-      </Bt.BottomTabItem>
-      <Bt.BottomTabItem
-        onClick={() => {
-          navigator('/schedule/main');
-        }}
-      >
-        <Icon
-          name={curTab === 'Schedule' ? 'IconScheduleSelect' : 'IconSchedule'}
-          size={20}
-        />
-        <Bt.TabText selected={curTab.includes('schedule')}>일정</Bt.TabText>
+        <Bt.TabText selected={curTab.includes('meet')}>설정</Bt.TabText>
       </Bt.BottomTabItem>
     </Bt.BottomTab>
   );
