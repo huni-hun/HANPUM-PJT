@@ -15,15 +15,9 @@ import { encodeToken } from '@/utils/util';
 import { colors } from '@/styles/colorPalette';
 
 function MainPage() {
-  // const decodeTokenObj = JSON.parse(localStorage.getItem('token') || '');
-  // const temp = decodeToken(decodeTokenObj);
-  // console.log(temp?.accessToken);
-  // console.log(temp?.refreshToken);
-  const navigate = useNavigate();
-
   return (
     <MainPageContainer>
-      <Header purpose="main" clickBack={() => {}} />
+      <Header purpose="main" isBorder={true} clickBack={() => {}} />
       <div className="container">
         <div className="padding-box">
           <Schedule />

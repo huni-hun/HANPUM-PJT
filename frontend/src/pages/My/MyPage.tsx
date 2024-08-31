@@ -19,7 +19,7 @@ function MyPage() {
     GetUser,
     {
       onSuccess: (res) => {
-        console.log('res ::', res.data);
+        // console.log('res ::', res.data);
         if (res.status === STATUS.success) {
         } else if (res.status === STATUS.error) {
           toast.error(res.message);
@@ -36,7 +36,7 @@ function MyPage() {
         purpose="mypage"
         title={'내프로필'}
         clickBack={() => {
-          navigate('/');
+          navigate('/main');
         }}
       />
 

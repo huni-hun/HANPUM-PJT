@@ -34,7 +34,7 @@ export async function ChangeUserInfo(
 
 // 프로필 이미지 변경
 export async function ChangeProfileImg(img: Blob) {
-  console.log(img);
+  // console.log(img);
   const formData = new FormData();
   formData.append('multipartFile', img);
 

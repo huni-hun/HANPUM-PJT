@@ -24,7 +24,7 @@ function ChangePw() {
     updatePassword: '',
   });
 
-  console.log(updatePasswordReq);
+  // console.log(updatePasswordReq);
 
   const handleReqChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -79,7 +79,7 @@ function ChangePw() {
     ) {
       errors.checkPassword = '비밀번호가 일치하지 않습니다.';
     }
-    console.log(errors);
+    // console.log(errors);
     return errors;
   }, [updatePasswordReq]);
 
@@ -92,6 +92,7 @@ function ChangePw() {
       onSuccess: (res) => {
         if (res.status === STATUS.success) {
           toast.success(res.message);
+          navigate('/myprofile');
         }
         if (res.status === STATUS.error) {
           toast.error(res.message);

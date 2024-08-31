@@ -6,8 +6,6 @@ import {
   useNavigate,
 } from 'react-router-dom';
 
-import Header from '@/components/common/Header/Header';
-
 import {
   LoginPage,
   MainPage,
@@ -43,17 +41,15 @@ import {
   ConfigLayout,
 } from './index'; // index.tsx에서 컴포넌트를 가져옵니다.
 
-import useIsAuth from '@/hooks/auth/useIsAuth';
+// import useIsAuth from '@/hooks/auth/useIsAuth';
 import ConfigDetailPage from './My/ConfigDetailPage';
 
 export default function Router() {
-  const isAuthEnticated = useIsAuth();
-
   return (
     <BrowserRouter>
       <Routes>
         <>
-          <Route path="/" element={<MainPage />} />
+          <Route path="/main" element={<MainPage />} />
           {/* 일정 */}
           <Route path="/schedule/main" element={<ScheduleMainPage />} />
           <Route path="/schedule/addSchedule" element={<AddSchedulePage />} />

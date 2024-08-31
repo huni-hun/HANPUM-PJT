@@ -12,6 +12,7 @@ interface HeaderProps {
   depart?: string;
   back?: boolean;
   isShadow?: boolean;
+  isBorder?: boolean;
   clickBack: () => void;
   complete?: () => void;
   focus?: boolean;
@@ -28,6 +29,7 @@ const Header = ({
   complete,
   focus,
   clickOption,
+  isBorder = false,
   isShadow = false,
 }: HeaderProps) => {
   const navigate = useNavigate();
@@ -219,7 +221,7 @@ const Header = ({
           <Flex $justify="end">
             <Icon
               name="IconUser"
-              onClick={() => onClickHandler('my')}
+              onClick={() => onClickHandler('mypage')}
               size={20}
             />
           </Flex>
@@ -229,7 +231,7 @@ const Header = ({
 
   return (
     <>
-      <S.HeaderWrapper isShadow={isShadow}>
+      <S.HeaderWrapper isShadow={isShadow} isBorder={isBorder}>
         {back && <Icon name="IconBackArrow" className="back-arrow" size={15} />}
         {renderHeader()}
       </S.HeaderWrapper>

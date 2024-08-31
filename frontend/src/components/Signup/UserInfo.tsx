@@ -128,6 +128,8 @@ function UserInfo({
     } else if (checkInputCodeMessage) {
       errors.inputAuthCode = checkInputCodeMessage;
     }
+
+    // console.log(errors);
     return errors;
   }, [
     formValues,
@@ -292,13 +294,11 @@ function UserInfo({
         }
       />
       <Message
-        hasError={
-          dirty.loginId && Boolean(validate.loginId || validate.checkLoginId)
-        }
+        hasError={dirty.loginId && Boolean(validate.loginId)}
         text={
           validate.loginId ||
           validate.checkLoginId ||
-          '※영문, 숫자를 조합해서 입력해주세요.(6~13자)'
+          '※영문과 숫자를 조합하여 6~13자로 입력해 주세요.'
         }
       />
 
