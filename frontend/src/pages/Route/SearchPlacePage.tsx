@@ -2,6 +2,7 @@ import { PostSearchAttractions, PostSearchPlace } from '@/api/route/POST';
 import Icon from '@/components/common/Icon/Icon';
 import * as R from '@/components/Style/Route/SearchPlacePage.styled';
 import {
+  AttractionsAddCardProps,
   AttractionsAddProps,
   AttractionsProps,
   DateRouteDetailProps,
@@ -21,6 +22,10 @@ interface SearchPlacePageProps {
   day: number;
   setAttractions: React.Dispatch<React.SetStateAction<AttractionsAddProps[]>>;
   attractions: AttractionsAddProps[];
+  setAttractionsCard: React.Dispatch<
+    React.SetStateAction<AttractionsAddCardProps[]>
+  >;
+  attractionsCard: AttractionsAddCardProps[];
   pointType: string;
 }
 
@@ -84,6 +89,9 @@ function SearchPlacePage(props: SearchPlacePageProps) {
 
   return pageOpen ? (
     <RouteAddPlacePage
+      setAttractionsCard={props.setAttractionsCard}
+      attractionsCard={props.attractionsCard}
+      keyword={searchText}
       setAttractions={props.setAttractions}
       attractions={props.attractions}
       pointType={props.pointType}

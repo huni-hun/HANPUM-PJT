@@ -170,9 +170,6 @@ function RouteAddMainPage() {
                 value={routeExplane}
                 onChange={(e) => {
                   setRouteExplane(e.target.value);
-                  if (routeTitle !== '') {
-                    setExplanationReady(true);
-                  }
                 }}
               />
               <R.ImgBtnBox>
@@ -180,14 +177,19 @@ function RouteAddMainPage() {
                   width={25}
                   height={6}
                   fc="ffffff"
-                  bc={explanationReady ? '#1A823B' : '#D9D9D9'}
+                  bc={
+                    routeExplane.length > 0 && routeTitle.length > 0
+                      ? '#1A823B'
+                      : '#D9D9D9'
+                  }
                   radius={0.7}
                   fontSize={1.6}
                   children="등록"
                   color="#ffffff"
                   onClick={() => {
-                    if (explanationReady) {
+                    if (routeExplane.length > 0 && routeTitle.length > 0) {
                       setExplanationBoxClick(false);
+                      setExplanationReady(true);
                     }
                   }}
                 />

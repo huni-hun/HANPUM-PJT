@@ -8,6 +8,7 @@ import Header from '@/components/common/Header/Header';
 import SearchPlacePage from './SearchPlacePage';
 import {
   AddRouteProps,
+  AttractionsAddCardProps,
   AttractionsAddProps,
   AttractionsProps,
   DateRouteDetailProps,
@@ -28,6 +29,9 @@ function RouteAddDetailPage() {
   const [dateDetail, setDateDetail] = useState<DateRouteDetailProps[]>([]);
   const [wayPoints, setWayPoints] = useState<WayPointListProps[]>([]);
   const [attractions, setAttractions] = useState<AttractionsAddProps[]>([]);
+  const [attractionsCard, setAttractionsCard] = useState<
+    AttractionsAddCardProps[]
+  >([]);
   const [pointType, setPointType] = useState<string>('wp');
 
   const location = useLocation();
@@ -100,6 +104,8 @@ function RouteAddDetailPage() {
 
   return searchOpen ? (
     <SearchPlacePage
+      setAttractionsCard={setAttractionsCard}
+      attractionsCard={attractionsCard}
       pointType={pointType}
       attractions={attractions}
       setAttractions={setAttractions}
@@ -181,13 +187,17 @@ function RouteAddDetailPage() {
               <R.AttractionsBox>
                 <R.AttrantiosTypeBox>관광지</R.AttrantiosTypeBox>
                 <R.AttractionsOverflow>
-                  {attractions.length > 0 &&
-                    attractions.map((ele: AttractionsAddProps) => (
+                  {attractionsCard.length > 0 &&
+                    attractionsCard.map((ele: AttractionsAddCardProps) => (
                       <R.AttractionCard img={ele.img}>
-                        <R.AttractionCardTitle>TEST</R.AttractionCardTitle>
+                        <R.AttractionCardTitle>
+                          {ele.keyword}
+                        </R.AttractionCardTitle>
                         <R.AttractionCardDetail>
                           <Icon name="IconFlag" size={20} />
-                          {ele.name}
+                          <R.AttractionCardDetailText>
+                            {ele.name}
+                          </R.AttractionCardDetailText>
                         </R.AttractionCardDetail>
                       </R.AttractionCard>
                     ))}

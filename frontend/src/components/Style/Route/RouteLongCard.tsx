@@ -5,7 +5,7 @@ import test from '../../../assets/img/mountain.jpg';
 import { useNavigate } from 'react-router-dom';
 import { RouteListProps } from '@/models/route';
 
-function RouteCard(props: RouteListProps) {
+function RouteLongCard(props: RouteListProps) {
   const navigator = useNavigate();
   return (
     <C.Card
@@ -32,7 +32,7 @@ function RouteCard(props: RouteListProps) {
             <C.RouteText>{props.start}</C.RouteText>
             <Icon name="IconArrowWhite" size={10} path="" />
             <C.RouteText>{props.end}</C.RouteText>
-            <C.RouteDistanceBox>{props.totalDistance}km</C.RouteDistanceBox>
+            <C.RouteDistanceBox>76km</C.RouteDistanceBox>
           </C.RouteBox>
         </C.RouteNTitleBox>
         {/* <C.BContent>
@@ -44,4 +44,4 @@ function RouteCard(props: RouteListProps) {
   );
 }
 
-export default RouteCard;
+export default RouteLongCard;

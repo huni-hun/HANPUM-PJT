@@ -248,6 +248,7 @@ export const RouteDateInfoBox = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
+  position: relative;
 `;
 
 export const RoutePlaceInfoBox = styled.div`
@@ -259,7 +260,6 @@ export const RoutePlaceInfoBox = styled.div`
   border-radius: 1.2rem;
   flex-direction: column;
   justify-content: center;
-  position: relative;
 `;
 
 export const PointText = styled.p`

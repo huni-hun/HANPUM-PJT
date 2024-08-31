@@ -58,6 +58,8 @@ function RouteListSearchPage() {
               writeDate: ele.writeDate,
               start: ele.startPoint,
               end: ele.endPoint,
+              totalDistance: Math.round(ele.totalDistance),
+              totalDays: ele.totalDays,
             };
             setSearchResult((pre) => [...pre, data]);
           });

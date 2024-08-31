@@ -264,3 +264,17 @@ export const AttractionCardDetail = styled.div`
   font-weight: bold;
   color: ${colors.white};
 `;
+
+export const AttractionCardDetailText = styled.div`
+  width: 70%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  white-space: nowrap; /* 텍스트가 줄바꿈 없이 한 줄로 유지되도록 설정 */
+  overflow: hidden; /* 부모 요소를 넘는 부분을 숨김 */
+  text-overflow: clip;
+  font-size: 1.2rem;
+  font-weight: bold;
+`;

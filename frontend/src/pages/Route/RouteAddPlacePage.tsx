@@ -6,6 +6,7 @@ import Map from '../../components/common/Map/Map';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '@/components/common/Header/Header';
 import {
+  AttractionsAddCardProps,
   AttractionsAddProps,
   DateRouteDetailProps,
   searchPlaceProps,
@@ -24,6 +25,11 @@ interface RouteAddPagePlaceProps {
   setAttractions: React.Dispatch<React.SetStateAction<AttractionsAddProps[]>>;
   attractions: AttractionsAddProps[];
   pointType: string;
+  setAttractionsCard: React.Dispatch<
+    React.SetStateAction<AttractionsAddCardProps[]>
+  >;
+  attractionsCard: AttractionsAddCardProps[];
+  keyword: string;
 }
 
 function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
@@ -69,18 +75,26 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
       img: props.selectedPlace.img as string,
     };
 
+    let attractionCardInfo: AttractionsAddCardProps = {
+      keyword: props.keyword,
+      name: props.selectedPlace.placeName,
+      img: props.selectedPlace.img as string,
+    };
+
+    props.setAttractionsCard((pre) => [...pre, attractionCardInfo]);
+
     props.setAttractions((pre) => {
-      const updatedWayPoints = [...pre, attraction];
+      const updatedAttractions = [...pre, attraction];
 
       let newDateDetail: DateRouteDetailProps[] = [...props.dateDetail];
       newDateDetail.map((ele: DateRouteDetailProps) => {
         if (ele.date === props.day) {
-          ele.attractionsList = updatedWayPoints;
+          ele.attractionsList = updatedAttractions;
         }
       });
       props.setDateDetail(newDateDetail);
 
-      return updatedWayPoints;
+      return updatedAttractions;
     });
 
     props.setPageOpen(false);
@@ -126,28 +140,20 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
             <Button
               width={35}
               height={6}
-              fc="1A823B"
-              bc="#ffffff"
-              radius={0.7}
-              fontSize={1.6}
-              children="관광지 추가"
-              color="#1A823B"
-              onClick={() => {
-                setAttraction();
-              }}
-              fontWeight="bold"
-            />
-            <Button
-              width={35}
-              height={6}
               fc="ffffff"
               bc="#1A823B"
               radius={0.7}
               fontSize={1.6}
-              children="경유지 추가"
+              children={
+                props.pointType === 'wp' ? '경유지 추가' : '관광지 추가'
+              }
               color="#ffffff"
               onClick={() => {
-                setWayPoint();
+                if (props.pointType === 'wp') {
+                  setWayPoint();
+                } else {
+                  setAttraction();
+                }
               }}
               fontWeight="bold"
             />

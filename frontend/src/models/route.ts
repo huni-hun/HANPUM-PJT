@@ -56,6 +56,8 @@ export interface RouteListProps {
   writeDate: string;
   start: string;
   end: string;
+  totalDistance: number;
+  totalDays: number;
 }
 
 export interface RouteDetailProps {
@@ -126,6 +128,12 @@ export interface AttractionsAddProps {
   address: string;
   latitude: number;
   longitude: number;
+  name: string;
+  img: string;
+}
+
+export interface AttractionsAddCardProps {
+  keyword: string;
   name: string;
   img: string;
 }

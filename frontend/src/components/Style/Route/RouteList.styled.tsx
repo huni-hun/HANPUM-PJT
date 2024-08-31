@@ -151,7 +151,7 @@ export const OverFlow = styled.div`
   flex-direction: row;
   align-items: center;
   height: 19vh;
-  width: 96vw;
+  width: 92vw;
   overflow-x: auto;
   &::-webkit-scrollbar {
     display: none;

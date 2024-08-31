@@ -124,7 +124,7 @@ export const TitleBox = styled.div`
 `;
 
 export const RouteContentBox = styled.div`
-  width: 70%;
+  width: 50%;
   hegiht: 30%;
   display: flex;
   flex-direction: row;
