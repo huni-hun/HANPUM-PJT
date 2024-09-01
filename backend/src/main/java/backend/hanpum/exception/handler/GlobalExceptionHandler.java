@@ -92,6 +92,20 @@ public class GlobalExceptionHandler {
         return response.error(e.getErrorCode());
     }
 
+    @ExceptionHandler(InterestAlreadyExistsException.class)
+    protected ResponseEntity<?> handle(InterestAlreadyExistsException e) {
+        log.error("InterestAlreadyExistsException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(InterestCourseNotFoundException.class)
+    protected ResponseEntity<?> handle(InterestCourseNotFoundException e) {
+        log.error("InterestCourseNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
     /* 일정 */
     @ExceptionHandler(ScheduleNotFoundException.class)
     protected ResponseEntity<?> handle(ScheduleNotFoundException e) {
