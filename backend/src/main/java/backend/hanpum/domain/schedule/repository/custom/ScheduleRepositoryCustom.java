@@ -1,5 +1,6 @@
 package backend.hanpum.domain.schedule.repository.custom;
 
+import backend.hanpum.domain.course.enums.CourseTypes;
 import backend.hanpum.domain.schedule.dto.responseDto.*;
 
 import java.util.List;
@@ -23,4 +24,6 @@ public interface ScheduleRepositoryCustom {
     Optional<ScheduleTempResDto> getScheduleTempResDto(Long memberId);
 
     Optional<Long> checkMyScheduleCnt(Long memberId);
+
+    List<CourseTypes> getCourseTypes(Long courseId);
 }

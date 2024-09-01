@@ -3,6 +3,7 @@ package backend.hanpum.domain.schedule.service;
 import backend.hanpum.domain.course.entity.Course;
 import backend.hanpum.domain.course.entity.CourseDay;
 import backend.hanpum.domain.course.entity.Waypoint;
+import backend.hanpum.domain.course.enums.CourseTypes;
 import backend.hanpum.domain.course.repository.CourseRepository;
 import backend.hanpum.domain.course.service.CourseService;
 import backend.hanpum.domain.group.dto.responseDto.GroupMemberListGetResDto;
@@ -346,6 +347,9 @@ public class ScheduleServiceImpl implements ScheduleService {
         ScheduleTempResDto scheduleTempResDto = scheduleRepository.getScheduleTempResDto(memberId).orElseThrow(ValidScheduleNotFoundException::new);
 
         Long scheduleId = scheduleTempResDto.getScheduleId();
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(ScheduleNotFoundException::new);
+        Course course = schedule.getCourse();
+        Long courseId = course.getCourseId();
 
         // ScheduleDayResDto
         List<ScheduleDayResDto> scheduleDayResDtoList = scheduleRepository.getScheduleDayResDtoList(memberId, scheduleId).orElseThrow(ScheduleNotFoundException::new);
@@ -353,8 +357,14 @@ public class ScheduleServiceImpl implements ScheduleService {
         // 달성률
         int rate = courseService.getScheduleGoalRate(scheduleDayResDtoList);
 
+        // 해시태그
+        List<CourseTypes> courseTypes = scheduleRepository.getCourseTypes(courseId);
+
         ScheduleInProgressResDto result = ScheduleInProgressResDto.builder()
                 .scheduleId(scheduleId)
+                .title(course.getCourseName())
+                .content(course.getContent())
+                .backgroundImg(course.getBackgroundImg())
                 .startPoint(scheduleTempResDto.getStartPoint())
                 .endPoint(scheduleTempResDto.getEndPoint())
                 .startDate(scheduleTempResDto.getStartDate())
@@ -362,6 +372,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .totalDistance(scheduleTempResDto.getTotalDistance())
                 .rate(rate)
                 .scheduleDayResDtoList(scheduleDayResDtoList)
+                .courseTypes(courseTypes)
                 .build();
         return result;
     }

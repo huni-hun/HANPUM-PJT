@@ -1,16 +1,12 @@
 package backend.hanpum.domain.schedule.repository.custom;
 
 import backend.hanpum.domain.course.dto.responseDto.AttractionResDto;
-import backend.hanpum.domain.course.dto.responseDto.CourseDayResDto;
 import backend.hanpum.domain.course.enums.CourseTypes;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.domain.schedule.dto.responseDto.*;
-import backend.hanpum.domain.schedule.entity.Schedule;
-import backend.hanpum.domain.schedule.repository.ScheduleRepository;
 import backend.hanpum.exception.exception.auth.MemberNotFoundException;
 import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
-import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -204,7 +200,8 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .fetch();
     }
 
-    private List<CourseTypes> getCourseTypes(Long courseId) {
+    @Override
+    public List<CourseTypes> getCourseTypes(Long courseId) {
         List<CourseTypes> courseTypes = query
                 .select(courseType.typeName)
                 .from(courseType)
