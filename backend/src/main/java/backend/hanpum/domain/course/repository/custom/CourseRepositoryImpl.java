@@ -223,10 +223,10 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
     }
 
     @Override
-    public Optional<CourseUsageHistory> getCourseUsageHistory(Long courseId, Long memberId) {
+    public List<CourseUsageHistory> getCourseUsageHistory(Long courseId, Long memberId) {
         QCourseUsageHistory qCourseUsageHistory = QCourseUsageHistory.courseUsageHistory;
 
-        CourseUsageHistory courseUsageHistory = query
+        List<CourseUsageHistory> courseUsageHistoryList = query
                 .select(Projections.constructor(CourseUsageHistory.class,
                         qCourseUsageHistory.courseUsageHistoryId,
                         qCourseUsageHistory.startDate,
@@ -239,8 +239,8 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
                 .where(qCourseUsageHistory.course.courseId.eq(courseId)
                         .and(qCourseUsageHistory.member.memberId.eq(memberId)))
                 .orderBy(qCourseUsageHistory.courseUsageHistoryId.desc())
-                .fetchOne();
+                .fetch();
 
-        return Optional.of(courseUsageHistory);
+        return courseUsageHistoryList;
     }
 }
