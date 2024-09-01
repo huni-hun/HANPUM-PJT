@@ -3,11 +3,9 @@ package backend.hanpum.domain.schedule.repository.custom;
 import backend.hanpum.domain.course.dto.responseDto.AttractionResDto;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
-import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
-import backend.hanpum.domain.schedule.dto.responseDto.ScheduleResDto;
-import backend.hanpum.domain.schedule.dto.responseDto.ScheduleTempResDto;
-import backend.hanpum.domain.schedule.dto.responseDto.ScheduleWayPointResDto;
+import backend.hanpum.domain.schedule.dto.responseDto.*;
 import backend.hanpum.exception.exception.auth.MemberNotFoundException;
+import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -70,6 +68,37 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         .and(schedule.state.in(0, 1)))
                 .fetchOne());
 
+    }
+
+    @Override
+    public Optional<ScheduleDetailResDto> getScheduleDetail(Long memberId, Long scheduleId) {
+
+        ScheduleDetailResDto scheduleDetailResDto = query.select(Projections.constructor(ScheduleDetailResDto.class,
+                        schedule.id,
+                        schedule.course.content,
+                        schedule.course.backgroundImg,
+                        schedule.course.courseName,
+                        schedule.type,
+                        schedule.course.startPoint,
+                        schedule.course.endPoint,
+                        schedule.startDate,
+                        schedule.endDate,
+                        schedule.state,
+                        schedule.course.totalDistance
+//                        Projections.list(
+//                                schedule.course.courseTypes
+//                        )
+                )).from(schedule)
+                .where(schedule.id.eq(scheduleId)
+                        .and(schedule.member.memberId.eq(memberId)))
+                .fetchOne();
+
+        if (scheduleDetailResDto != null) {
+            List<ScheduleDayResDto> scheduleDayResDtoList = getScheduleDayResDtoList(memberId, scheduleId).orElseThrow(ScheduleDayNotFoundException::new);
+            scheduleDetailResDto.setScheduleDayResDtoList(scheduleDayResDtoList);
+        }
+
+        return Optional.ofNullable(scheduleDetailResDto);
     }
 
 

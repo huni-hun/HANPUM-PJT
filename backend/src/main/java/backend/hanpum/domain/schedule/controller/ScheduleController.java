@@ -59,6 +59,15 @@ public class ScheduleController {
         return response.success(ResponseCode.GROUP_SCHEDULE_LIST_FETCHED, GroupScheduleResDto);
     }
 
+    @Operation(summary = "일정 상세 조회", description = "개인 일정 상세 조회")
+    @GetMapping("/detail/{scheduleId}")
+    public ResponseEntity<?> getScheduleDetail(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                               @PathVariable Long scheduleId) {
+        Long memberId = userDetails.getMember().getMemberId();
+        ScheduleDetailResDto result = scheduleService.getScheduleDetail(memberId, scheduleId);
+        return response.success(ResponseCode.SCHEDULE_DETAIL_FETCHED, result);
+    }
+
 
     @Operation(summary = "일차별 일정 조회", description = "일차별 일정 조회")
     @GetMapping("/day/{dayNumber}")

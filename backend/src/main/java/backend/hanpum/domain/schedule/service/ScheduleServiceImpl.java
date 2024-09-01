@@ -205,6 +205,19 @@ public class ScheduleServiceImpl implements ScheduleService {
         return groupScheduleResDto;
     }
 
+    @Override
+    public ScheduleDetailResDto getScheduleDetail(Long memberId, Long scheduleId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(ScheduleNotFoundException::new);
+
+        if (schedule.getType().equals("private") && schedule.getMember().getMemberId() == memberId) {
+            ScheduleDetailResDto scheduleDetailResDto = scheduleRepository.getScheduleDetail(memberId, scheduleId).orElseThrow(ScheduleNotFoundException::new);
+            return scheduleDetailResDto;
+        } else {
+            throw new MemberInfoInvalidException();
+        }
+    }
+
     @Transactional(readOnly = true)
     @Override
     public ScheduleDayResDto getMyScheduleDay(Long memberId, Long ScheduleId, int day) {
