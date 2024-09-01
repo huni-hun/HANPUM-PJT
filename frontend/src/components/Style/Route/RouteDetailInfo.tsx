@@ -35,6 +35,7 @@ interface RouteDetailInfoProps {
   setDayOfRoute: React.Dispatch<React.SetStateAction<DaysOfRouteProps[]>>;
   clickWayBtn?: () => void;
   clickAttryBtn?: () => void;
+  setSelectedIdx: React.Dispatch<React.SetStateAction<number>>;
 }
 
 function RouteDetailInfo(props: RouteDetailInfoProps) {
@@ -71,10 +72,6 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
     props.setDayOfRoute(reorderedItems);
   };
 
-  const handleTouchStart = (position: number) => {
-    draggingPos.current = position;
-  };
-
   const handleTouchMove = (e: React.TouchEvent) => {
     const touchLocation = e.targetTouches[0];
     const element = document.elementFromPoint(
@@ -106,6 +103,10 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
     dragOverPos.current = null;
 
     props.setDayOfRoute(reorderedItems);
+  };
+
+  const selectHandler = (i: number) => {
+    props.setSelectedIdx(i);
   };
 
   const renderMain = () => {
@@ -157,6 +158,7 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
                   ? props.dayOfRoute.map((ele, idx) =>
                       location.pathname.includes('retouch') ? (
                         <RouteRetouchPlaceCard
+                          selectHandler={selectHandler}
                           handleTouchMove={handleTouchMove}
                           handleTouchEnd={handleTouchEnd}
                           dropHandler={handleDrop}

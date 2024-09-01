@@ -7,8 +7,8 @@ interface StyledProps {
 }
 
 export const Container = styled.div`
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   background-color: #f5f5f5;
@@ -33,11 +33,9 @@ export const HeaderButton = styled.div`
 `;
 
 export const Main = styled.div`
-  width: 100vw;
+  width: 100%;
   height: 93vh;
   display: flex;
-  flex-direction: row;
-  overflow-y: auto;
 `;
 
 export const Overflow = styled.div`

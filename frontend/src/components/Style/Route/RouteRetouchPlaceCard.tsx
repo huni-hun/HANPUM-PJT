@@ -9,13 +9,25 @@ interface RouteRetouchPlaceCardProps {
   dropHandler: () => void;
   handleTouchMove: (e: React.TouchEvent) => void;
   handleTouchEnd: () => void;
+  selectHandler: (i: number) => void;
   idx: number;
 }
 
 function RouteRetouchPlaceCard(props: RouteRetouchPlaceCardProps) {
   return (
     <R.RetouchCardContainer>
-      <Icon name="IconRetouchDelete" size={15} style={{ marginLeft: '2rem' }} />
+      <R.RetouchIconBox
+        onClick={() => {
+          props.selectHandler(props.idx);
+        }}
+      >
+        <Icon
+          name="IconRetouchDelete"
+          size={15}
+          style={{ marginLeft: '2rem' }}
+        />
+      </R.RetouchIconBox>
+
       <R.RetouchCard>
         <R.RetouchPlaceInfoBox>
           <R.PlaceName>{props.data.routeName}</R.PlaceName>

@@ -51,6 +51,7 @@ function RouteDetailRetouchPage() {
   const [attractionsCard, setAttractionsCard] = useState<
     AttractionsAddCardProps[]
   >([]);
+  const [selectedIdx, setSelectedIdx] = useState<number>(-1);
   const [pointType, setPointType] = useState<string>('wp');
 
   const [reviews, setReviews] = useState<RouteReviewProps[]>([]);
@@ -220,23 +221,39 @@ function RouteDetailRetouchPage() {
   }, [selectedDay]);
 
   useEffect(() => {
-    let arr: DaysOfRouteProps[] = [];
-
-    if (dateDetail.length > 0) {
+    if (selectedIdx >= 0) {
+      let newWay: WayPointReqDto[] = [];
       wayPoints.map((ele: WayPointReqDto, idx: number) => {
-        let data: DaysOfRouteProps = {
-          routeName: ele.name,
-          routeAddress: ele.address,
-          routeType: ele.type,
-          routeId: idx,
-          routePoint: ele.pointNumber,
-          latitude: ele.lat,
-          longitude: ele.lon,
-        };
-        arr.push(data);
+        if (selectedIdx !== idx) {
+          newWay.push(ele);
+        }
       });
-      setWayPoints(dateDetail[selectedDay - 1].wayPointReqDtoList);
+      dateDetail[selectedDay - 1].wayPointReqDtoList = newWay;
+      setWayPoints(newWay);
     }
+  }, [selectedIdx]);
+
+  useEffect(() => {
+    let arr: DaysOfRouteProps[] = [];
+    if (dateDetail.length > 0) {
+      if (dateDetail[selectedDay - 1].wayPointReqDtoList.length > 0) {
+        wayPoints.map((ele: WayPointReqDto, idx: number) => {
+          let data: DaysOfRouteProps = {
+            routeName: ele.name,
+            routeAddress: ele.address,
+            routeType: ele.type,
+            routeId: idx,
+            routePoint: ele.pointNumber,
+            latitude: ele.lat,
+            longitude: ele.lon,
+          };
+          arr.push(data);
+        });
+
+        setWayPoints(dateDetail[selectedDay - 1].wayPointReqDtoList);
+      }
+    }
+
     setDayOfRoute(arr);
   }, [wayPoints]);
 
@@ -294,6 +311,7 @@ function RouteDetailRetouchPage() {
       });
 
       let route: RetouchRouteProps = {
+        courseId: Number(routeid),
         courseName: addRoute.courseName,
         content: addRoute.content,
         openState: addRoute.openState,
@@ -301,11 +319,9 @@ function RouteDetailRetouchPage() {
         courseTypeList: addRoute.courseTypeList,
         courseDayReqDtoList: dateDetail,
         multipartFile: addRoute.multipartFile,
-        courseId: Number(routeid),
       };
 
       setAddRoute(route);
-      console.log(route);
     }
   }, [dateDetail]);
 
@@ -401,7 +417,9 @@ function RouteDetailRetouchPage() {
                   <R.ArrowBox>
                     <Icon name="IconArrowBlack" size={10} />
                   </R.ArrowBox>
-                  <R.DistanceNumBox>{totalDistance}km</R.DistanceNumBox>
+                  <R.DistanceNumBox>
+                    {Math.round(totalDistance)}km
+                  </R.DistanceNumBox>
                 </R.RouteIconBox>
               </R.RouteDateInfoBox>
               <R.RouteDateTextBox>
@@ -430,6 +448,7 @@ function RouteDetailRetouchPage() {
           </R.RouteInfoContainer>
           <R.RouteDetailInfoContainer>
             <RouteDetailInfo
+              setSelectedIdx={setSelectedIdx}
               dayOfRoute={dayOfRoute}
               reviews={reviews}
               setDayOfRoute={setDayOfRoute}

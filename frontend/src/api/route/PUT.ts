@@ -1,7 +1,7 @@
-import { AddRouteProps } from '@/models/route';
+import { AddRouteProps, RetouchRouteProps } from '@/models/route';
 import api from '../index';
 
-export const RetouchRoute = async (data: AddRouteProps) => {
+export const RetouchRoute = async (data: RetouchRouteProps) => {
   const formData = new FormData();
 
   const { multipartFile, ...rest } = data;
@@ -20,7 +20,7 @@ export const RetouchRoute = async (data: AddRouteProps) => {
     headers: {
       'Content-Type': 'multipart/form-data',
       Authorization:
-        'Bearer yJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiQ09NTU9OIiwic3ViIjoiaGFucHVtMSIsImlhdCI6MTcyNTE4NjkyMSwiZXhwIjoxNzI1MjU4OTIxfQ.nsTiEZhdH52hxvPgYNo93LNlm9h6UOZzZPeTGKBWakM',
+        'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiQ09NTU9OIiwic3ViIjoiaGFucHVtMSIsImlhdCI6MTcyNTE5MzAyNywiZXhwIjoxNzI1MjY1MDI3fQ.So7RT5ZryrX-G4UYXxgqG47xr8W_IGTtV2XOJ0lXOHY',
     },
   });
 

@@ -157,8 +157,8 @@ export interface AddRouteProps {
 }
 
 export interface RetouchRouteProps {
-  courseName: string;
   courseId: number;
+  courseName: string;
   content: string;
   openState: boolean;
   writeState: boolean;

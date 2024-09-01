@@ -43,7 +43,7 @@ function RouteDetailPage() {
   const [dayOfRoute, setDayOfRoute] = useState<DaysOfRouteProps[]>([]);
   const [reviewLoading, setReviewLoading] = useState<boolean>(false);
   const [reviews, setReviews] = useState<RouteReviewProps[]>([]);
-
+  const [selectedIdx, setSelectedIdx] = useState<number>(-1);
   useEffect(() => {
     if (dayData.length === 0) {
       getRouteDetail(routeid as string).then((result) => {
@@ -114,6 +114,7 @@ function RouteDetailPage() {
           };
           arr.push(data);
         });
+        arr.sort((a: any, b: any) => a.routePoint - b.routePoint);
         setDayOfRoute(arr);
 
         setLatitude(arr[0].latitude);
@@ -208,7 +209,9 @@ function RouteDetailPage() {
                   <R.ArrowBox>
                     <Icon name="IconArrowBlack" size={10} />
                   </R.ArrowBox>
-                  <R.DistanceNumBox>{totalDistance}km</R.DistanceNumBox>
+                  <R.DistanceNumBox>
+                    {Math.round(totalDistance)}km
+                  </R.DistanceNumBox>
                 </R.RouteIconBox>
               </R.RouteDateInfoBox>
               <R.RouteDateTextBox>
@@ -245,6 +248,7 @@ function RouteDetailPage() {
           </R.RouteInfoContainer>
           <R.RouteDetailInfoContainer>
             <RouteDetailInfo
+              setSelectedIdx={setSelectedIdx}
               reviews={reviews}
               setDayOfRoute={setDayOfRoute}
               dayOfRoute={dayOfRoute}
