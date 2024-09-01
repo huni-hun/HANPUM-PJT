@@ -2,9 +2,9 @@ import styled from 'styled-components';
 
 export const RouteListContainer = styled.div`
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   box-sizing: border-box;
-  overflow: scroll;
+  /* overflow: scroll; */
   background-color: #ffffff;
   .small-list {
     display: flex;
@@ -70,7 +70,7 @@ export const MainContainer = styled.div`
   padding: 16px 16px 0px 16px;
   box-sizing: border-box;
   overflow-y: hidden;
-  padding-bottom: 8vh;
+  padding-bottom: 10vh;
 `;
 
 export const ButtonContainer = styled.div`

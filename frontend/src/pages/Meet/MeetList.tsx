@@ -1,5 +1,4 @@
-/** 모임 List (main) */
-
+import { useEffect, useRef, useCallback } from 'react';
 import Header from '@/components/common/Header/Header';
 import Icon from '../../components/common/Icon/Icon';
 import * as R from '../../components/Style/Route/RouteList.styled';
@@ -7,26 +6,23 @@ import BottomTab from '@/components/common/BottomTab/BottomTab';
 import { useNavigate } from 'react-router-dom';
 import Text from '@/components/common/Text';
 import Flex from '@/components/common/Flex';
-import { useQuery } from 'react-query';
+import { useInfiniteQuery, useQuery } from 'react-query';
 import { GetGroupList, GetMyMeet } from '@/api/meet/GET';
 import { STATUS } from '@/constants';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
-import { useInfiniteQuery } from 'react-query';
-import { useRef, useState } from 'react';
 import MeetLongCard from '@/components/Meet/MeetLongCard';
 import MeetSmallCard from '@/components/Meet/MeetSmallCard';
 import { MeetInfo } from '@/models/meet';
 
 function RouteList() {
-  // const [arr, setArr] = useState<RouteListProps[]>([]);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
   const navigator = useNavigate();
 
-  const [page, setPage] = useState(1);
-
+  // 내 모임
   const { data: myMeet } = useQuery('getmyMeet', GetMyMeet, {
     onSuccess: (res) => {
-      // console.log('res ::', res.data);
       if (res.status === STATUS.success) {
       } else if (res.status === STATUS.error) {
         toast.error(res.message);
@@ -37,13 +33,22 @@ function RouteList() {
     },
   });
 
-  const { data: groupListData, isLoading } = useQuery(
-    ['getGroupList', page], // 페이지를 쿼리 키에 포함하여 변경 시 다시 페칭
-    () => GetGroupList({ pageable: { page: page, size: 4, sort: ['asc'] } }),
+  // 모임 리스트 (무한 스크롤)
+  const {
+    data: groupListData,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+  } = useInfiniteQuery(
+    'getGroupList',
+    ({ pageParam = 0 }) =>
+      GetGroupList({ pageable: { page: pageParam, size: 4, sort: ['asc'] } }),
     {
-      onSuccess: (res) => {
-        // toast.success('데이터를 성공적으로 가져왔습니다.');
-        console.log(res.data.groupResDtoList);
+      getNextPageParam: (lastPage, pages) => {
+        const morePagesExist = lastPage.data.groupResDtoList.length > 0;
+        if (!morePagesExist) return undefined;
+        return pages.length;
       },
       onError: (error: AxiosError) => {
         toast.error(error.message);
@@ -51,7 +56,33 @@ function RouteList() {
     },
   );
 
-  // console.log();
+  const handleObserver = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const target = entries[0];
+      if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    },
+    [hasNextPage, isFetchingNextPage, fetchNextPage],
+  );
+
+  useEffect(() => {
+    if (observerRef.current) observerRef.current.disconnect();
+
+    observerRef.current = new IntersectionObserver(handleObserver, {
+      root: null,
+      rootMargin: '0px',
+      threshold: 1.0,
+    });
+
+    if (loadMoreRef.current) {
+      observerRef.current.observe(loadMoreRef.current);
+    }
+
+    return () => {
+      if (observerRef.current) observerRef.current.disconnect();
+    };
+  }, [handleObserver, loadMoreRef]);
 
   return (
     <R.RouteListContainer>
@@ -79,10 +110,12 @@ function RouteList() {
             <Icon name="IconDownArrow" />
           </Flex>
           <div className="small-list">
-            {groupListData &&
-              groupListData.data.groupResDtoList.map((groupData: MeetInfo) => (
+            {groupListData?.pages.map((page) =>
+              page.data.groupResDtoList.map((groupData: MeetInfo) => (
                 <MeetSmallCard key={groupData.groupId} data={groupData} />
-              ))}
+              )),
+            )}
+            <div ref={loadMoreRef} style={{ height: '1px' }} />
           </div>
         </Flex>
       </R.MainContainer>

@@ -74,11 +74,13 @@ export const GetMeetDetailList = async (groupId: number, token: string) => {
 export async function GetGroupList(requestDto: MeetRequestDto) {
   // const { startPoint, endPoint, maxTotalDays, maxRecruitmentCount, pageable } =
   //   requestDto;
+  const { pageable } = requestDto;
+  const { page } = pageable;
   const { data } = await api.get('/api/group', {
     params: {
-      page: 1,
+      page: page + 1,
       size: 4,
-      sort: 'asc',
+      sort: 'desc',
     },
   });
   return data;
