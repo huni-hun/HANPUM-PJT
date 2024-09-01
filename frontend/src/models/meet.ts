@@ -23,8 +23,22 @@ export interface MeetInfo {
   startDate: string;
   startPoint: string;
   title: string;
-  totalDadys: number;
+  totalDays: number;
   totalDistance: number;
   recruitedCount: number;
   recruitmentCount: number;
+}
+
+export interface MeetRequestDto {
+  startPoint?: string;
+  endPoint?: string;
+  maxTotalDays?: number;
+  maxRecruitmentCount?: number;
+  pageable: MeetPageAble;
+}
+
+export interface MeetPageAble {
+  page: number;
+  size: number;
+  sort: string[];
 }

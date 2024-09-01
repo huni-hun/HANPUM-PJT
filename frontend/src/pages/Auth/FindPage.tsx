@@ -112,5 +112,5 @@ export default FindPage;
 
 const FindPageContainer = styled.div`
   background-color: ${colors.white};
-  height: 100vh;
+  /* height: 100vh; */
 `;

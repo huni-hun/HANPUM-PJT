@@ -17,7 +17,7 @@ import { colors } from '@/styles/colorPalette';
 function MainPage() {
   return (
     <MainPageContainer>
-      <Header purpose="main" isBorder={true} clickBack={() => {}} />
+      <Header purpose="main" isborder={true} clickBack={() => {}} />
       <div className="container">
         <div className="padding-box">
           <Schedule />

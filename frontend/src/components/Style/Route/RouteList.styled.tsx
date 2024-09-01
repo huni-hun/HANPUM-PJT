@@ -6,27 +6,11 @@ export const RouteListContainer = styled.div`
   box-sizing: border-box;
   overflow: scroll;
   background-color: #ffffff;
-  .cardLong {
-    width: 100%;
-    height: 16rem;
-    border-radius: 20px;
-    margin: 16px 0 24px;
-    position: relative;
-    overflow: hidden;
-
-    .black-bg {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      background-color: rgba(0, 0, 0, 0.3);
-      z-index: 2;
-    }
-
-    img {
-      width: 100%;
-      height: 100%;
-    }
+  .small-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 0;
+    justify-content: space-between;
   }
 `;
 

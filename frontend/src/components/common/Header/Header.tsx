@@ -12,7 +12,7 @@ interface HeaderProps {
   depart?: string;
   back?: boolean;
   isShadow?: boolean;
-  isBorder?: boolean;
+  isborder?: boolean;
   searchValue?: string;
   clickBack: () => void;
   complete?: () => void;
@@ -33,7 +33,7 @@ const Header = ({
   complete,
   focus,
   clickOption,
-  isBorder = false,
+  isborder = false,
   isShadow = false,
   changeEven,
   keyDownEven,
@@ -266,7 +266,7 @@ const Header = ({
 
   return (
     <>
-      <S.HeaderWrapper isShadow={isShadow} isBorder={isBorder}>
+      <S.HeaderWrapper isShadow={isShadow} isborder={isborder}>
         {back && (
           <Icon
             name="IconBackArrow"
