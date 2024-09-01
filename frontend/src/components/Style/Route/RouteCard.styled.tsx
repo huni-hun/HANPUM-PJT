@@ -92,6 +92,9 @@ export const RouteBox = styled.div`
   flex-direction: row;
   align-items: end;
   justify-content: space-between;
+  white-space: nowrap; /* 텍스트가 줄바꿈 없이 한 줄로 유지되도록 설정 */
+  overflow: hidden; /* 부모 요소를 넘는 부분을 숨김 */
+  text-overflow: clip; /* 넘치는 텍스트를 자르기 */
 `;
 
 export const RouteDistanceBox = styled.div`

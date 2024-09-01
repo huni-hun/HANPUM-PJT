@@ -270,16 +270,21 @@ function RouteAddDetailPage() {
             children="경로완성"
             color="#ffffff"
             onClick={() => {
-              AddRoute(addRoute)
-                .then((res) => {
-                  console.log(res);
-                  if (res.status === 200) {
-                    navigate('/route/add/complete');
-                  }
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
+              if (
+                addRoute.courseDayReqDtoList.length > 0 &&
+                addRoute.courseDayReqDtoList[0].wayPointReqDtoList.length > 0
+              ) {
+                AddRoute(addRoute)
+                  .then((res) => {
+                    console.log(res);
+                    if (res.status === 200) {
+                      navigate('/route/add/complete');
+                    }
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+              }
             }}
           />
         </R.ButtonBox>

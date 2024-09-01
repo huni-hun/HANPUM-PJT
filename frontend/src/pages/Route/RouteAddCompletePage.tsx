@@ -11,7 +11,7 @@ function RouteAddCompletePage() {
       <Header
         purpose="result"
         clickBack={() => {
-          navigator(-1);
+          navigator('/route/list');
         }}
       />
       <R.MainContainer>
