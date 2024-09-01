@@ -14,5 +14,5 @@ public interface CourseRepositoryCustom {
     Optional<CourseListMapResDto> getCourseList(CourseTypes targetCourse, Double maxDistance, Integer maxDays, List<CourseTypes> selectedTypes, String keyword, Pageable pageable);
     Optional<CourseDetailResDto> getCourseDetailByCourseId(Long courseId);
     Optional<GetCourseDayResDto> getCourseDayByCourseIdAndDay(Long courseId, Integer day);
-    Optional<CourseUsageHistory> getCourseUsageHistory(Long courseId, Long memberId);
+    List<CourseUsageHistory> getCourseUsageHistory(Long courseId, Long memberId);
 }

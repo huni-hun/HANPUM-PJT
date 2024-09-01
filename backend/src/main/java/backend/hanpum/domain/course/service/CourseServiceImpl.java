@@ -518,12 +518,11 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Transactional
     public void updateCourseUsageHistory(Long courseId, Long memberId, Double achieveRate) {
-        Optional<CourseUsageHistory> optionalCourseUsageHistory = courseRepository.getCourseUsageHistory(courseId, memberId);
+        List<CourseUsageHistory> courseUsageHistoryList = courseRepository.getCourseUsageHistory(courseId, memberId);
 
         Date currentDate = new Date();
-        optionalCourseUsageHistory.ifPresent(courseUsageHistory ->
-                courseUsageHistory.updateHistoryState(currentDate, false, achieveRate)
-        );
+
+        courseUsageHistoryList.get(0).updateHistoryState(currentDate, false, achieveRate);
     }
 
     @Override
