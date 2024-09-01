@@ -5,14 +5,24 @@ import Button from '@/components/common/Button/Button';
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
+  RetouchRouteProps,
+  AttractionReqDto,
+  AttractionsAddCardProps,
   AttractionsProps,
+  CourseDayReqDto,
+  DaysOfRouteProps,
   RouteDetailDayProps,
   RouteDetailProps,
+  RouteReviewProps,
+  WayPointReqDto,
 } from '@/models/route';
-import { getRouteDetail } from '@/api/route/GET';
+import { getRouteDayDetail, getRouteDetail } from '@/api/route/GET';
 import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
 import Header from '@/components/common/Header/Header';
 import Icon from '@/components/common/Icon/Icon';
+import SearchPlacePage from './SearchPlacePage';
+import { GetDistance } from '@/api/route/POST';
+import { RetouchRoute } from '@/api/route/PUT';
 
 function RouteDetailRetouchPage() {
   const { routeid } = useParams();
@@ -32,11 +42,21 @@ function RouteDetailRetouchPage() {
   const [bsType, setBsType] = useState<string>('설정');
   const [reviewType, setReviewType] = useState<string>('최신순');
   const [open, setIsopen] = useState<boolean>(false);
+  const [dayOfRoute, setDayOfRoute] = useState<DaysOfRouteProps[]>([]);
+  const [addRoute, setAddRoute] = useState<RetouchRouteProps>(null!);
+  const [dateDetail, setDateDetail] = useState<CourseDayReqDto[]>([]);
+  const [wayPoints, setWayPoints] = useState<WayPointReqDto[]>([]);
+  const [attractionsr, setAttractionsr] = useState<AttractionReqDto[]>([]);
+  const [searchOpen, setSearchOpen] = useState<boolean>(false);
+  const [attractionsCard, setAttractionsCard] = useState<
+    AttractionsAddCardProps[]
+  >([]);
+  const [pointType, setPointType] = useState<string>('wp');
 
+  const [reviews, setReviews] = useState<RouteReviewProps[]>([]);
   useEffect(() => {
     if (dayData.length === 0) {
       getRouteDetail(routeid as string).then((result) => {
-        console.log(result);
         if (result.data.status !== 'ERROR' && result.status === 200) {
           let num = 0;
           let rd: RouteDetailProps = {
@@ -66,8 +86,6 @@ function RouteDetailRetouchPage() {
           });
           setRouteType(type);
           setTotalDistance(num);
-          setLatitude(result.data.data.attractions[0].lat);
-          setLongitude(result.data.data.attractions[0].lon);
 
           let attArr: AttractionsProps[] = [];
           result.data.data.attractions.map((ele: any) => {
@@ -80,17 +98,242 @@ function RouteDetailRetouchPage() {
               longitude: ele.lon,
               img: ele.img,
             };
+
+            let attraction: AttractionReqDto = {
+              address: ele.address,
+              lat: ele.lat,
+              lon: ele.lon,
+              name: ele.name,
+              type: ele.type,
+              img: ele.img,
+            };
+            setAttractionsr((pre) => [...pre, attraction]);
             attArr.push(attData);
           });
           setAttractions(attArr);
         }
 
+        let courselist: CourseDayReqDto[] = [];
+
+        result.data.data.courseDays.map((ele: any) => {
+          let course: CourseDayReqDto = {
+            dayNumber: ele.dayNumber,
+            wayPointReqDtoList: [],
+            attractionReqDtoList: [],
+          };
+
+          courselist.push(course);
+        });
+        setDateDetail(courselist);
+
+        let route: RetouchRouteProps = {
+          courseName: result.data.data.course.courseName,
+          content: result.data.data.course.content,
+          openState: result.data.data.course.openState,
+          writeState: result.data.data.course.writeState,
+          courseTypeList: result.data.data.course.courseTypes,
+          multipartFile: result.data.data.course.backgroundImg,
+          courseDayReqDtoList: courselist,
+          courseId: Number(routeid),
+        };
+        setAddRoute(route);
         setLoading(true);
       });
     }
   }, []);
 
-  return loading ? (
+  useEffect(() => {
+    let copyDetail: CourseDayReqDto[] = [...dateDetail];
+
+    if (loading) {
+      dateDetail.map((ele: CourseDayReqDto, idx: number) => {
+        if (ele.wayPointReqDtoList.length < 1) {
+          getRouteDayDetail(routeid as string, ele.dayNumber).then((result) => {
+            if (result.status === 200) {
+              let wayPoints: WayPointReqDto[] = [];
+              let arr: DaysOfRouteProps[] = [];
+              result.data.data.wayPoints.map((ele: any) => {
+                let waypoint: WayPointReqDto = {
+                  type: ele.type,
+                  name: ele.name,
+                  address: ele.address,
+                  lat: ele.lat,
+                  lon: ele.lon,
+                  pointNumber: ele.pointNumber,
+                  distance: ele.distance,
+                  duration: ele.duration,
+                  calorie: ele.calorie,
+                };
+                wayPoints.push(waypoint);
+
+                let data: DaysOfRouteProps = {
+                  routeName: ele.name,
+                  routeAddress: ele.address,
+                  routeType: ele.type,
+                  routeId: idx,
+                  routePoint: ele.pointNumber,
+                  latitude: ele.lat,
+                  longitude: ele.lon,
+                };
+                arr.push(data);
+              });
+              setDayOfRoute(arr);
+              copyDetail[idx].wayPointReqDtoList = wayPoints;
+              copyDetail[idx].attractionReqDtoList = attractionsr;
+
+              // wayPoints가 존재할 때에만 latitude와 longitude를 설정
+            }
+          });
+          setSelectedDay(idx + 1);
+        }
+      });
+      setDateDetail(copyDetail);
+      setIsopen(true);
+    }
+  }, [loading]);
+
+  useEffect(() => {
+    let arr: DaysOfRouteProps[] = [];
+
+    if (dateDetail.length > 0) {
+      dateDetail[selectedDay - 1].wayPointReqDtoList.map(
+        (ele: WayPointReqDto, idx: number) => {
+          let data: DaysOfRouteProps = {
+            routeName: ele.name,
+            routeAddress: ele.address,
+            routeType: ele.type,
+            routeId: idx,
+            routePoint: ele.pointNumber,
+            latitude: ele.lat,
+            longitude: ele.lon,
+          };
+          arr.push(data);
+        },
+      );
+      setWayPoints(dateDetail[selectedDay - 1].wayPointReqDtoList);
+      if (arr.length > 0) {
+        setLatitude(arr[0].latitude);
+        setLongitude(arr[0].longitude);
+      }
+    }
+    setDayOfRoute(arr);
+  }, [selectedDay]);
+
+  useEffect(() => {
+    let arr: DaysOfRouteProps[] = [];
+
+    if (dateDetail.length > 0) {
+      wayPoints.map((ele: WayPointReqDto, idx: number) => {
+        let data: DaysOfRouteProps = {
+          routeName: ele.name,
+          routeAddress: ele.address,
+          routeType: ele.type,
+          routeId: idx,
+          routePoint: ele.pointNumber,
+          latitude: ele.lat,
+          longitude: ele.lon,
+        };
+        arr.push(data);
+      });
+      setWayPoints(dateDetail[selectedDay - 1].wayPointReqDtoList);
+    }
+    setDayOfRoute(arr);
+  }, [wayPoints]);
+
+  useEffect(() => {
+    let attArr: AttractionsProps[] = [];
+    if (attractionsr.length > 0) {
+      attractionsr.map((ele: AttractionReqDto, idx: number) => {
+        let attData: AttractionsProps = {
+          name: ele.name,
+          type: ele.type,
+          attractionId: idx,
+          address: ele.address,
+          latitude: ele.lat,
+          longitude: ele.lon,
+          img: ele.img,
+        };
+
+        attArr.push(attData);
+      });
+    }
+
+    setAttractions(attArr);
+  }, [attractionsr]);
+
+  useEffect(() => {
+    if (wayPoints.length >= 2) {
+      let startlat = wayPoints[wayPoints.length - 2].lat;
+      let startlon = wayPoints[wayPoints.length - 2].lon;
+      let endlat = wayPoints[wayPoints.length - 1].lat;
+      let endlon = wayPoints[wayPoints.length - 1].lon;
+
+      GetDistance(startlat, startlon, endlat, endlon).then((res) => {
+        if (res.status === 200 && res.data.status === 'SUCCESS') {
+          let dist = Number(res.data.data[0].distance) / 1000;
+          let cal = 3.5 * 70 * (dist / 4);
+          let duration = dist / 4;
+
+          let curWay = [...wayPoints];
+          curWay[curWay.length - 2].distance = `${dist}`;
+          curWay[curWay.length - 2].calorie = `${cal}`;
+          curWay[curWay.length - 2].duration = `${duration}`;
+
+          curWay.map((ele: WayPointReqDto, idx: number) => {
+            if (idx === 0) {
+              ele.type = '출발지';
+            } else if (idx === curWay.length - 1) {
+              ele.type = '도착지';
+            } else {
+              ele.type = '경유지';
+            }
+          });
+
+          setWayPoints(curWay);
+        }
+      });
+
+      let route: RetouchRouteProps = {
+        courseName: addRoute.courseName,
+        content: addRoute.content,
+        openState: addRoute.openState,
+        writeState: false,
+        courseTypeList: addRoute.courseTypeList,
+        courseDayReqDtoList: dateDetail,
+        multipartFile: addRoute.multipartFile,
+        courseId: Number(routeid),
+      };
+
+      setAddRoute(route);
+      console.log(route);
+    }
+  }, [dateDetail]);
+
+  const clickWayBtn = () => {
+    setPointType('wp');
+    setSearchOpen(true);
+  };
+
+  const clickAttryBtn = () => {
+    setPointType('nwp');
+    setSearchOpen(true);
+  };
+
+  return searchOpen ? (
+    <SearchPlacePage
+      setAttractionsCard={setAttractionsCard}
+      attractionsCard={attractionsCard}
+      pointType={pointType}
+      attractions={attractionsr}
+      setAttractions={setAttractionsr}
+      day={selectedDay}
+      dateDetail={dateDetail}
+      setDateDetail={setDateDetail}
+      setSearchOpen={setSearchOpen}
+      setWayPoints={setWayPoints}
+      wayPoints={wayPoints}
+    />
+  ) : loading && open ? (
     <R.Container>
       <Header
         purpose="route-detail"
@@ -99,7 +342,11 @@ function RouteDetailRetouchPage() {
           navigate(-1);
         }}
         clickOption={() => {
-          setBsType('설정');
+          RetouchRoute(addRoute).then((ele) => {
+            if (ele.status === 200) {
+              navigate(-1);
+            }
+          });
         }}
       />
       <R.Main>
@@ -183,6 +430,9 @@ function RouteDetailRetouchPage() {
           </R.RouteInfoContainer>
           <R.RouteDetailInfoContainer>
             <RouteDetailInfo
+              dayOfRoute={dayOfRoute}
+              reviews={reviews}
+              setDayOfRoute={setDayOfRoute}
               setIsOpen={setIsopen}
               linePath={linePath}
               selected={selected}
@@ -195,6 +445,8 @@ function RouteDetailRetouchPage() {
               setSelectedDay={setSelectedDay}
               setBsType={setBsType}
               reviewType={reviewType}
+              clickAttryBtn={clickAttryBtn}
+              clickWayBtn={clickWayBtn}
             />
           </R.RouteDetailInfoContainer>
         </R.Overflow>

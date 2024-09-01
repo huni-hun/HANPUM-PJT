@@ -40,8 +40,8 @@ export const GetDistance = async (
   endlat: number,
   endlon: number,
 ) => {
-  const response = await axios.post(
-    'http://localhost:8000/api/course/search/multiWaypoint',
+  const response = await api.post(
+    '/api/course/search/multiWaypoint',
     [
       {
         x: startlat,
@@ -81,6 +81,8 @@ export const AddRoute = async (data: AddRouteProps) => {
   const response = await api.post('/api/course', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
+      Authorization:
+        'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiQ09NTU9OIiwic3ViIjoiaGFucHVtMSIsImlhdCI6MTcyNTE4NjkyMSwiZXhwIjoxNzI1MjU4OTIxfQ.nsTiEZhdH52hxvPgYNo93LNlm9h6UOZzZPeTGKBWakM',
     },
   });
 

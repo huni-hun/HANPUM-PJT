@@ -2,11 +2,17 @@ import Icon from '@/components/common/Icon/Icon';
 import * as R from '@/components/Style/Route/RouteDetailPage.styled';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getRouteDetail } from '@/api/route/GET';
+import {
+  getRouteDayDetail,
+  getRouteDetail,
+  getRouteReview,
+} from '@/api/route/GET';
 import {
   AttractionsProps,
+  DaysOfRouteProps,
   RouteDetailDayProps,
   RouteDetailProps,
+  RouteReviewProps,
 } from '@/models/route';
 import Header from '@/components/common/Header/Header';
 import Button from '@/components/common/Button/Button';
@@ -34,11 +40,13 @@ function RouteDetailPage() {
   const [reviewType, setReviewType] = useState<string>('최신순');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [retouch, setRetouch] = useState<boolean>(false);
+  const [dayOfRoute, setDayOfRoute] = useState<DaysOfRouteProps[]>([]);
+  const [reviewLoading, setReviewLoading] = useState<boolean>(false);
+  const [reviews, setReviews] = useState<RouteReviewProps[]>([]);
 
   useEffect(() => {
     if (dayData.length === 0) {
       getRouteDetail(routeid as string).then((result) => {
-        console.log(result);
         if (result.data.status !== 'ERROR' && result.status === 200) {
           let num = 0;
           let rd: RouteDetailProps = {
@@ -68,8 +76,6 @@ function RouteDetailPage() {
           });
           setRouteType(type);
           setTotalDistance(num);
-          setLatitude(result.data.data.attractions[0].lat);
-          setLongitude(result.data.data.attractions[0].lon);
 
           let attArr: AttractionsProps[] = [];
           result.data.data.attractions.map((ele: any) => {
@@ -90,6 +96,51 @@ function RouteDetailPage() {
         setLoading(true);
       });
     }
+  }, []);
+
+  useEffect(() => {
+    getRouteDayDetail(routeid as string, selectedDay).then((result) => {
+      if (result.status === 200) {
+        let arr: DaysOfRouteProps[] = [];
+        result.data.data.wayPoints.map((ele: any) => {
+          let data: DaysOfRouteProps = {
+            routeName: ele.name,
+            routeAddress: ele.address,
+            routeType: ele.type,
+            routeId: ele.waypointId,
+            routePoint: ele.pointNumber,
+            latitude: ele.lat,
+            longitude: ele.lon,
+          };
+          arr.push(data);
+        });
+        setDayOfRoute(arr);
+
+        setLatitude(arr[0].latitude);
+        setLongitude(arr[0].longitude);
+      }
+    });
+  }, [selectedDay]);
+
+  useEffect(() => {
+    getRouteReview(routeid as string).then((result) => {
+      let arr: RouteReviewProps[] = [];
+      if (result.data.status !== 'ERROR' && result.status === 200) {
+        result.data.data.map((ele: any) => {
+          let data: RouteReviewProps = {
+            memberId: ele.memberId,
+            routeId: ele.courseId,
+            content: ele.content,
+            score: ele.score,
+            writeDate: ele.writeDate,
+          };
+          arr.push(data);
+        });
+
+        setReviews(arr);
+      }
+      setReviewLoading(true);
+    });
   }, []);
 
   return loading ? (
@@ -194,6 +245,9 @@ function RouteDetailPage() {
           </R.RouteInfoContainer>
           <R.RouteDetailInfoContainer>
             <RouteDetailInfo
+              reviews={reviews}
+              setDayOfRoute={setDayOfRoute}
+              dayOfRoute={dayOfRoute}
               linePath={linePath}
               selected={selected}
               selectedDay={selectedDay}

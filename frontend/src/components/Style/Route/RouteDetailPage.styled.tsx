@@ -118,10 +118,10 @@ export const RouteNameInfoContainer = styled.div`
 
 export const RouteTypeContainer = styled.div`
   width: 100%;
-  height: 20%;
+  height: 27%;
   display: flex;
   flex-direction: row;
-  align-items: start;
+  align-items: center;
   overflow: auto;
 `;
 
@@ -525,6 +525,9 @@ export const PlacetTitleBox = styled.div`
   display: flex;
   flex-direction: row;
   align-items: start;
+  white-space: nowrap; /* 텍스트가 줄바꿈 없이 한 줄로 유지되도록 설정 */
+  overflow: hidden; /* 부모 요소를 넘는 부분을 숨김 */
+  text-overflow: clip; /* 넘치는 텍스트를 자르기 */
 `;
 
 export const TypeBox = styled.div`
@@ -550,6 +553,9 @@ export const PlacetAddressBox = styled.div`
   align-items: center;
   font-size: 1.2rem;
   color: ${colors.grey2};
+  white-space: nowrap; /* 텍스트가 줄바꿈 없이 한 줄로 유지되도록 설정 */
+  overflow: hidden; /* 부모 요소를 넘는 부분을 숨김 */
+  text-overflow: clip; /* 넘치는 텍스트를 자르기 */
 `;
 
 export const PlaceImgBox = styled.div`
@@ -730,4 +736,13 @@ export const WriteTextBox = styled.div`
   justify-content: end;
   padding: 4rem 0 0 0;
   font-size: 1.4rem;
+`;
+
+export const AddBtnContainer = styled.div`
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
 `;

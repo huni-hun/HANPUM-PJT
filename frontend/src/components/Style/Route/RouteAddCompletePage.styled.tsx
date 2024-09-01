@@ -34,7 +34,7 @@ export const Text = styled.p`
 
 export const BtnContainer = styled.div`
   width: 100%;
-  height: 20%;
+  height: 10%;
   display: flex;
   flex-direction: column;
   align-items: center;

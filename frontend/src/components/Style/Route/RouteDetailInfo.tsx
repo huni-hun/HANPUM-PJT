@@ -15,6 +15,7 @@ import ReviewCard from './ReviewCard';
 import { Select } from '@mobiscroll/react';
 import Icon from '@/components/common/Icon/Icon';
 import RouteRetouchPlaceCard from './RouteRetouchPlaceCard';
+import Button from '@/components/common/Button/Button';
 
 interface RouteDetailInfoProps {
   selected: string;
@@ -25,23 +26,22 @@ interface RouteDetailInfoProps {
   attractions: AttractionsProps[];
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedDay: React.Dispatch<React.SetStateAction<number>>;
-  //   reviews: RouteReviewProps[];
+  reviews: RouteReviewProps[];
   linePath: any[];
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setBsType: React.Dispatch<React.SetStateAction<string>>;
   reviewType: string;
+  dayOfRoute: DaysOfRouteProps[];
+  setDayOfRoute: React.Dispatch<React.SetStateAction<DaysOfRouteProps[]>>;
+  clickWayBtn?: () => void;
+  clickAttryBtn?: () => void;
 }
 
 function RouteDetailInfo(props: RouteDetailInfoProps) {
-  const { routeid } = useParams();
   const location = useLocation();
 
   const draggingPos = useRef<any>(null);
   const dragOverPos = useRef<any>(null);
-
-  const [dayOfRoute, setDayOfRoute] = useState<DaysOfRouteProps[]>([]);
-  const [reviews, setReviews] = useState<RouteReviewProps[]>([]);
-  const [reviewLoading, setReviewLoading] = useState<boolean>(false);
 
   const handleDragStart = (position: number) => {
     draggingPos.current = position;
@@ -54,7 +54,7 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
   const handleDrop = () => {
     if (draggingPos.current === null || dragOverPos.current === null) return;
 
-    const newItems = [...dayOfRoute];
+    const newItems = [...props.dayOfRoute];
     const draggingItem = newItems[draggingPos.current];
 
     newItems.splice(draggingPos.current, 1);
@@ -68,7 +68,7 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
     draggingPos.current = null;
     dragOverPos.current = null;
 
-    setDayOfRoute(reorderedItems);
+    props.setDayOfRoute(reorderedItems);
   };
 
   const handleTouchStart = (position: number) => {
@@ -91,7 +91,7 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
   const handleTouchEnd = () => {
     if (draggingPos.current === null || dragOverPos.current === null) return;
 
-    const newItems = [...dayOfRoute];
+    const newItems = [...props.dayOfRoute];
     const draggingItem = newItems[draggingPos.current];
 
     newItems.splice(draggingPos.current, 1);
@@ -105,50 +105,8 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
     draggingPos.current = null;
     dragOverPos.current = null;
 
-    setDayOfRoute(reorderedItems);
+    props.setDayOfRoute(reorderedItems);
   };
-
-  useEffect(() => {
-    getRouteDayDetail(routeid as string, props.selectedDay).then((result) => {
-      if (result.status === 200) {
-        let arr: DaysOfRouteProps[] = [];
-        result.data.data.wayPoints.map((ele: any) => {
-          let data: DaysOfRouteProps = {
-            routeName: ele.name,
-            routeAddress: ele.address,
-            routeType: ele.type,
-            routeId: ele.waypointId,
-            routePoint: ele.pointNumber,
-            latitude: ele.lat,
-            longitude: ele.lon,
-          };
-          arr.push(data);
-        });
-        setDayOfRoute(arr);
-      }
-    });
-  }, [props.selectedDay]);
-
-  useEffect(() => {
-    getRouteReview(routeid as string).then((result) => {
-      let arr: RouteReviewProps[] = [];
-      if (result.data.status !== 'ERROR' && result.status === 200) {
-        result.data.data.map((ele: any) => {
-          let data: RouteReviewProps = {
-            memberId: ele.memberId,
-            routeId: ele.courseId,
-            content: ele.content,
-            score: ele.score,
-            writeDate: ele.writeDate,
-          };
-          arr.push(data);
-        });
-
-        setReviews(arr);
-      }
-      setReviewLoading(true);
-    });
-  }, []);
 
   const renderMain = () => {
     switch (props.selected) {
@@ -195,8 +153,8 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
             </R.DetailHeader>
             <R.DetailMain>
               <R.DetailMainOverflow>
-                {dayOfRoute.length > 0
-                  ? dayOfRoute.map((ele, idx) =>
+                {props.dayOfRoute.length > 0
+                  ? props.dayOfRoute.map((ele, idx) =>
                       location.pathname.includes('retouch') ? (
                         <RouteRetouchPlaceCard
                           handleTouchMove={handleTouchMove}
@@ -212,6 +170,25 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
                       ),
                     )
                   : null}
+                {location.pathname.includes('retouch') && (
+                  <R.AddBtnContainer>
+                    <Button
+                      width={65}
+                      height={6}
+                      fc="ffffff"
+                      bc="#1A823B"
+                      radius={0.7}
+                      fontSize={1.6}
+                      children="경유지 추가"
+                      color="#ffffff"
+                      onClick={() => {
+                        if (props.clickWayBtn !== undefined) {
+                          props.clickWayBtn();
+                        }
+                      }}
+                    />
+                  </R.AddBtnContainer>
+                )}
               </R.DetailMainOverflow>
             </R.DetailMain>
           </>
@@ -241,7 +218,7 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
             </R.DetailHeader>
             <R.DetailMain>
               <R.DetailMainOverflow>
-                {reviews.map((ele: RouteReviewProps) => (
+                {props.reviews.map((ele: RouteReviewProps) => (
                   <ReviewCard {...ele} />
                 ))}
               </R.DetailMainOverflow>
@@ -277,6 +254,25 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
                 {props.attractions.map((ele: AttractionsProps) => (
                   <AttractionsCard {...ele} />
                 ))}
+                {location.pathname.includes('retouch') && (
+                  <R.AddBtnContainer>
+                    <Button
+                      width={65}
+                      height={6}
+                      fc="ffffff"
+                      bc="#1A823B"
+                      radius={0.7}
+                      fontSize={1.6}
+                      children="관광지 추가"
+                      color="#ffffff"
+                      onClick={() => {
+                        if (props.clickAttryBtn !== undefined) {
+                          props.clickAttryBtn();
+                        }
+                      }}
+                    />
+                  </R.AddBtnContainer>
+                )}
               </R.DetailMainOverflow>
             </R.DetailMain>
           </>

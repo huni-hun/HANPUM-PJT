@@ -155,3 +155,14 @@ export interface AddRouteProps {
   multipartFile: Blob | string;
   courseDayReqDtoList: CourseDayReqDto[];
 }
+
+export interface RetouchRouteProps {
+  courseName: string;
+  courseId: number;
+  content: string;
+  openState: boolean;
+  writeState: boolean;
+  courseTypeList: string[];
+  multipartFile: Blob | string;
+  courseDayReqDtoList: CourseDayReqDto[];
+}
