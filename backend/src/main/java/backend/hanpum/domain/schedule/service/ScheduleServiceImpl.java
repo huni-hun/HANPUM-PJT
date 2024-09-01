@@ -209,9 +209,10 @@ public class ScheduleServiceImpl implements ScheduleService {
     public ScheduleDetailResDto getScheduleDetail(Long memberId, Long scheduleId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(ScheduleNotFoundException::new);
+        Long courseId = schedule.getCourse().getCourseId();
 
-        if (schedule.getType().equals("private") && schedule.getMember().getMemberId() == memberId) {
-            ScheduleDetailResDto scheduleDetailResDto = scheduleRepository.getScheduleDetail(memberId, scheduleId).orElseThrow(ScheduleNotFoundException::new);
+        if (schedule.getType().equals("private") && schedule.getMember().getMemberId().equals(memberId)) {
+            ScheduleDetailResDto scheduleDetailResDto = scheduleRepository.getScheduleDetail(memberId, scheduleId, courseId).orElseThrow(ScheduleNotFoundException::new);
             return scheduleDetailResDto;
         } else {
             throw new MemberInfoInvalidException();

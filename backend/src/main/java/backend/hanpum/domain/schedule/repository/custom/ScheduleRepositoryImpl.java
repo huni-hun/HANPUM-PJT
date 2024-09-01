@@ -1,11 +1,16 @@
 package backend.hanpum.domain.schedule.repository.custom;
 
 import backend.hanpum.domain.course.dto.responseDto.AttractionResDto;
+import backend.hanpum.domain.course.dto.responseDto.CourseDayResDto;
+import backend.hanpum.domain.course.enums.CourseTypes;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.domain.schedule.dto.responseDto.*;
+import backend.hanpum.domain.schedule.entity.Schedule;
+import backend.hanpum.domain.schedule.repository.ScheduleRepository;
 import backend.hanpum.exception.exception.auth.MemberNotFoundException;
 import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
+import backend.hanpum.exception.exception.schedule.ScheduleNotFoundException;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -16,6 +21,7 @@ import java.util.Optional;
 
 import static backend.hanpum.domain.course.entity.QAttraction.attraction;
 import static backend.hanpum.domain.course.entity.QCourseDay.courseDay;
+import static backend.hanpum.domain.course.entity.QCourseType.courseType;
 import static backend.hanpum.domain.course.entity.QWaypoint.waypoint;
 import static backend.hanpum.domain.schedule.entity.QSchedule.schedule;
 import static backend.hanpum.domain.schedule.entity.QScheduleDay.scheduleDay;
@@ -71,7 +77,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     }
 
     @Override
-    public Optional<ScheduleDetailResDto> getScheduleDetail(Long memberId, Long scheduleId) {
+    public Optional<ScheduleDetailResDto> getScheduleDetail(Long memberId, Long scheduleId, Long courseId) {
 
         ScheduleDetailResDto scheduleDetailResDto = query.select(Projections.constructor(ScheduleDetailResDto.class,
                         schedule.id,
@@ -85,9 +91,6 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         schedule.endDate,
                         schedule.state,
                         schedule.course.totalDistance
-//                        Projections.list(
-//                                schedule.course.courseTypes
-//                        )
                 )).from(schedule)
                 .where(schedule.id.eq(scheduleId)
                         .and(schedule.member.memberId.eq(memberId)))
@@ -96,6 +99,8 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         if (scheduleDetailResDto != null) {
             List<ScheduleDayResDto> scheduleDayResDtoList = getScheduleDayResDtoList(memberId, scheduleId).orElseThrow(ScheduleDayNotFoundException::new);
             scheduleDetailResDto.setScheduleDayResDtoList(scheduleDayResDtoList);
+            List<CourseTypes> courseTypes = getCourseTypes(courseId);
+            scheduleDetailResDto.setCourseTypes(courseTypes);
         }
 
         return Optional.ofNullable(scheduleDetailResDto);
@@ -197,6 +202,15 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .from(attraction)
                 .where(attraction.courseDay.scheduleDayList.any().id.eq(scheduleDayId))
                 .fetch();
+    }
+
+    private List<CourseTypes> getCourseTypes(Long courseId) {
+        List<CourseTypes> courseTypes = query
+                .select(courseType.typeName)
+                .from(courseType)
+                .where(courseType.course.courseId.eq(courseId))
+                .fetch();
+        return courseTypes;
     }
 
     /* case 2 */

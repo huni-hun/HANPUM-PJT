@@ -11,7 +11,7 @@ public interface ScheduleRepositoryCustom {
 
     Optional<ScheduleResDto> getGroupScheduleByMemberId(Long memberId);
 
-    Optional<ScheduleDetailResDto> getScheduleDetail(Long memberId, Long scheduleId);
+    Optional<ScheduleDetailResDto> getScheduleDetail(Long memberId, Long scheduleId, Long courseId);
 
     // 일차별 하나씩만
     Optional<ScheduleDayResDto> getScheduleDayResDto(Long memberId, Long scheduleId, int day);

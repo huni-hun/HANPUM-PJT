@@ -23,8 +23,8 @@ public class ScheduleDetailResDto {
     String endDate;         // 도착일
     int state;              // 진행 상태
     Double totalDistance;   // 총 이동거리
-//    @Setter
-//    List<CourseTypes> courseTypes;  //해시태그
+    @Setter
+    List<CourseTypes> courseTypes;  //해시태그
     @Setter
     List<ScheduleDayResDto> scheduleDayResDtoList;
 
