@@ -45,6 +45,7 @@ public enum ResponseCode {
 
     /* 모임 */
     GROUP_CREATED_SUCCESS(HttpStatus.OK, "모임이 성공적으로 생성되었습니다."),
+    GROUP_UPDATE_SUCCESS(HttpStatus.OK, "모임이 성공적으로 수정되었습니다."),
     GROUP_DELETE_SUCCESS(HttpStatus.OK, "모임이 성공적으로 삭제되었습니다."),
     GROUP_LIST_FETCHED(HttpStatus.OK, "모임 리스트가 성공적으로 조회되었습니다."),
     GROUP_MEMBER_JOIN_FETCHED(HttpStatus.OK, "회원 참여 모임이 성공적으로 조회되었습니다."),
@@ -83,6 +84,7 @@ public enum ResponseCode {
     MEMBER_LIKE_GROUP_LIST_FETCHED(HttpStatus.OK, "관심 모임 리스트가 성공적으로 조회되었습니다."),
     MEMBER_LIKE_COURSE_LIST_FETCHED(HttpStatus.OK, "관심 경로 리스트가 성공적으로 조회되었습니다."),
     MEMBER_MADE_COURSE_LIST_FETCHED(HttpStatus.OK, "내가 만든 경로 리스트가 성공적으로 조회되었습니다."),
+    MEMBER_USED_COURSE_LIST_FETCHED(HttpStatus.OK, "내가 사용한 경로 리스트가 성공적으로 조회되었습니다."),
     MEMBER_DELETE_SUCCESS(HttpStatus.OK, "회원탈퇴가 성공적으로 완료되었습니다."),
     ;
 

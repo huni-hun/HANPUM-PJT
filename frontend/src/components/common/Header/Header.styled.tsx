@@ -3,6 +3,7 @@ import { colors } from '@styles/colorPalette';
 
 interface HeaderWrapperProps {
   isShadow?: boolean;
+  isBorder?: boolean;
 }
 
 export const HeaderWrapper = styled.div<HeaderWrapperProps>`
@@ -15,6 +16,7 @@ export const HeaderWrapper = styled.div<HeaderWrapperProps>`
   position: sticky;
   top: 0;
   z-index: 10;
+  border-bottom: ${({ isBorder }) => (isBorder ? '1px solid #D9D9D9' : 'none')};
   box-shadow: ${({ isShadow }) =>
     isShadow ? '0px 4px 6px rgba(0, 0, 0, 0.1)' : 'none'};
 

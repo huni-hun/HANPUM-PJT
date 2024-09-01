@@ -23,7 +23,7 @@ export const EntryContainer = styled.div`
       padding-bottom: 8rem;
 
       .circle {
-        width: 560px;
+        width: 56rem;
         opacity: 0.3;
         background-color: ${colors.main}; /* 초록색 배경 */
         border-radius: 300px 300px 0 0;

@@ -40,11 +40,11 @@ export async function CheckNickname(nickname: string) {
 export async function SignUp(signupReq: SignupRequestValues) {
   const formData = new FormData();
 
-  const { multipartFile, password, ...rest } = signupReq;
+  const { multipartFile, ...rest } = signupReq;
 
   // 비밀번호 hash화
-  const hashedPassword = CryptoJS.SHA256(password).toString();
-  const updatedRest = { ...rest, password: hashedPassword };
+  // const hashedPassword = CryptoJS.SHA256(password).toString();
+  const updatedRest = { ...rest };
 
   const signUpReqDto = new Blob([JSON.stringify(updatedRest)], {
     type: 'application/json',
@@ -111,7 +111,7 @@ export async function GetRefreshToken() {
   return data;
 }
 
-// 비밀번호 찾기 인증 메일 TODO
+// 비밀번호 찾기 인증 메일
 export async function CertificationFindPw(loginId: string, email: string) {
   const { data } = await api.post('/api/auth/find-password', {
     loginId,

@@ -233,7 +233,6 @@ function ProfileConfig({
   console.log(formValues);
 
   const submitLocal = () => {
-    console.log('local');
     const signupReq: SignupRequestValues = {
       loginId: formValues.loginId || '',
       password: formValues.password || '',

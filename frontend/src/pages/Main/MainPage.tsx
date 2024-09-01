@@ -12,25 +12,22 @@ import Cookies from 'js-cookie';
 import { useSetRecoilState } from 'recoil';
 import { signupStepAtom } from '@/atoms/signupStepAtom';
 import { encodeToken } from '@/utils/util';
+import { colors } from '@/styles/colorPalette';
 
 function MainPage() {
-  // const decodeTokenObj = JSON.parse(localStorage.getItem('token') || '');
-  // const temp = decodeToken(decodeTokenObj);
-  // console.log(temp?.accessToken);
-  // console.log(temp?.refreshToken);
-  const navigate = useNavigate();
-
   return (
     <MainPageContainer>
-      <Header purpose="search" clickBack={() => navigate(-1)} />
-      <div className="padding-box">
-        <Schedule />
-        <Text $typography="t20">동동님을 위한 추천코스</Text>
-        <Course />
-        <Text $typography="t20">모임추천</Text>
+      <Header purpose="main" isBorder={true} clickBack={() => {}} />
+      <div className="container">
+        <div className="padding-box">
+          <Schedule />
+          <Text $typography="t20">동동님을 위한 추천코스</Text>
+          <Course />
+          <Text $typography="t20">한품 PICK 모임 추천</Text>
+        </div>
+        <Meet />
+        <BottomTab />
       </div>
-      <Meet />
-      <BottomTab />
     </MainPageContainer>
   );
 }
@@ -41,9 +38,14 @@ const MainPageContainer = styled.div`
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  overflow: hidden;
-  .padding-box {
-    padding: 0px 16px;
-    box-sizing: border-box;
+  background-color: ${colors.white};
+  .container {
+    width: 100%;
+    height: 100%;
+    /* background-color: pink; */
+    .padding-box {
+      padding: 0px 16px;
+      box-sizing: border-box;
+    }
   }
 `;

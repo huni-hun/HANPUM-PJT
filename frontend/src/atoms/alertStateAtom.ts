@@ -5,7 +5,7 @@ export interface AlertState {
   title?: string | null;
   purpose?: string;
   description?: string | null;
-  onButtonClick: (cancel?: boolean) => void;
+  onButtonClick: (cancel?: boolean, submit?: boolean) => void;
   element?: React.ReactNode;
 }
 
@@ -17,6 +17,6 @@ export const alertStateAtom = atom<AlertState>({
     title: null,
     description: null,
     element: null,
-    onButtonClick: (cancel?: boolean) => {},
+    onButtonClick: (cancel?: boolean, submit?: boolean) => {},
   },
 });

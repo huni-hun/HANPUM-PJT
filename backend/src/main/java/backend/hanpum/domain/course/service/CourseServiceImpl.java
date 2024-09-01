@@ -304,11 +304,9 @@ public class CourseServiceImpl implements CourseService {
                         newAttraction.getType(),
                         newAttraction.getAddress(),
                         newAttraction.getLat(),
-                        newAttraction.getLon());
+                        newAttraction.getLon(),
+                        newAttraction.getImage());
 
-                if(newAttraction.getImage() != null) {
-                    // S3 image update 로직
-                }
             } else {
                 Attraction attraction = Attraction.builder()
                         .courseDay(existDay)
@@ -520,10 +518,11 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Transactional
     public void updateCourseUsageHistory(Long courseId, Long memberId, Double achieveRate) {
-        CourseUsageHistory courseUsageHistory = courseUsageHistoryRepository.findByCourse_courseIdAndMember_memberId(courseId, memberId);
+        List<CourseUsageHistory> courseUsageHistoryList = courseRepository.getCourseUsageHistory(courseId, memberId);
 
         Date currentDate = new Date();
-        courseUsageHistory.updateHistoryState(currentDate, false, achieveRate);
+
+        courseUsageHistoryList.get(0).updateHistoryState(currentDate, false, achieveRate);
     }
 
     @Override

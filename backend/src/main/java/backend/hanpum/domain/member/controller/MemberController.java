@@ -2,11 +2,10 @@ package backend.hanpum.domain.member.controller;
 
 import backend.hanpum.config.jwt.UserDetailsImpl;
 import backend.hanpum.domain.course.dto.responseDto.CourseResDto;
+import backend.hanpum.domain.course.dto.responseDto.UsedCourseResDto;
 import backend.hanpum.domain.course.service.CourseService;
-import backend.hanpum.domain.group.dto.responseDto.GroupListGetResDto;
 import backend.hanpum.domain.group.dto.responseDto.LikeGroupListGetResDto;
 import backend.hanpum.domain.group.service.GroupService;
-import backend.hanpum.domain.member.dto.requestDto.DeleteMemberReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdateMemberInfoReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdateNicknameReqDto;
 import backend.hanpum.domain.member.dto.requestDto.UpdatePasswordReqDto;
@@ -98,6 +97,14 @@ public class MemberController {
         List<CourseResDto> madeCourseListGetResDto =
                 courseService.getSelfMadeCourseList(userDetails.getMember().getMemberId());
         return response.success(ResponseCode.MEMBER_MADE_COURSE_LIST_FETCHED, madeCourseListGetResDto);
+    }
+
+    @Operation(summary = "내가 사용한 경로 리스트 조회", description = "내가 사용한 경로 리스트 조회 API")
+    @GetMapping("/use-course")
+    public ResponseEntity<?> getMemberUsedCourse(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<UsedCourseResDto> usedCourseListGetResDto =
+                courseService.getUsedCourseList(userDetails.getMember().getMemberId());
+        return response.success(ResponseCode.MEMBER_MADE_COURSE_LIST_FETCHED, usedCourseListGetResDto);
     }
 
     @Operation(summary = "회원 탈퇴", description = "회원 탈퇴 API")

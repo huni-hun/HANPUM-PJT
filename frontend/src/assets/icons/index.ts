@@ -84,3 +84,4 @@ export { ReactComponent as IconMyRooteClose } from './myRootClose.svg';
 export { ReactComponent as IconHeartWhiteFill } from './heart_white_fill.svg';
 export { ReactComponent as IconLock } from './lock.svg';
 export { ReactComponent as IconDelete } from './delete.svg';
+export { ReactComponent as IconRightArrowGrey } from './rightArrow_grey.svg';

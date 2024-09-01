@@ -221,4 +221,26 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
 
         return Optional.of(result);
     }
+
+    @Override
+    public List<CourseUsageHistory> getCourseUsageHistory(Long courseId, Long memberId) {
+        QCourseUsageHistory qCourseUsageHistory = QCourseUsageHistory.courseUsageHistory;
+
+        List<CourseUsageHistory> courseUsageHistoryList = query
+                .select(Projections.constructor(CourseUsageHistory.class,
+                        qCourseUsageHistory.courseUsageHistoryId,
+                        qCourseUsageHistory.startDate,
+                        qCourseUsageHistory.endDate,
+                        qCourseUsageHistory.useFlag,
+                        qCourseUsageHistory.achieveRate,
+                        qCourseUsageHistory.course,
+                        qCourseUsageHistory.member))
+                .from(qCourseUsageHistory)
+                .where(qCourseUsageHistory.course.courseId.eq(courseId)
+                        .and(qCourseUsageHistory.member.memberId.eq(memberId)))
+                .orderBy(qCourseUsageHistory.courseUsageHistoryId.desc())
+                .fetch();
+
+        return courseUsageHistoryList;
+    }
 }

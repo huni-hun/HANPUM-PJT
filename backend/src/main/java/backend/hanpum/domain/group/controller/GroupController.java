@@ -3,6 +3,7 @@ package backend.hanpum.domain.group.controller;
 import backend.hanpum.config.jwt.UserDetailsImpl;
 import backend.hanpum.domain.group.dto.requestDto.ApplyPostReqDto;
 import backend.hanpum.domain.group.dto.requestDto.GroupPostReqDto;
+import backend.hanpum.domain.group.dto.requestDto.GroupUpdateReqDto;
 import backend.hanpum.domain.group.dto.responseDto.*;
 import backend.hanpum.domain.group.service.GroupService;
 import backend.hanpum.exception.format.code.ApiResponse;
@@ -33,6 +34,16 @@ public class GroupController {
                                        @RequestPart @Valid GroupPostReqDto groupPostReqDto) {
         GroupPostResDto groupPostResDto = groupService.createGroup(userDetails.getMember().getMemberId(), multipartFile, groupPostReqDto);
         return response.success(ResponseCode.GROUP_CREATED_SUCCESS, groupPostResDto);
+    }
+
+    @Operation(summary = "모임 수정", description = "모임 수정 API")
+    @PutMapping("/{groupId}")
+    public ResponseEntity<?> groupUpdate(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                         @PathVariable Long groupId,
+                                         @RequestPart(required = false) MultipartFile multipartFile,
+                                         @RequestPart @Valid GroupUpdateReqDto groupUpdateReqDto) {
+        groupService.updateGroup(userDetails.getMember().getMemberId(), groupId, multipartFile, groupUpdateReqDto);
+        return response.success(ResponseCode.GROUP_UPDATE_SUCCESS);
     }
 
     @Operation(summary = "모임 삭제", description = "모임 삭제 API")

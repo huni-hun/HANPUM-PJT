@@ -41,3 +41,13 @@ export interface Gender {
   label: string;
   value: string;
 }
+
+// 비밀번호 변경
+export interface ChangePasswordValues {
+  currentPassword: string;
+  updatePassword: string;
+}
+
+export interface ChangePasswordIncludCheckValues extends ChangePasswordValues {
+  checkPassword: string;
+}
