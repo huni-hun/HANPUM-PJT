@@ -44,5 +44,5 @@ public interface ScheduleService {
     Long setArriveScheduleWayPoint(ScheduleWayPointReqDto scheduleWayPointReqDto);
 
     // 주변 관광지 정보 가져오기
-    List<NearByAttractionResDto> getNearByAttractionList(String OS, int distance, double lat, double lon);
+    List<NearByAttractionResDto> getNearByAttractionList(int distance, double lat, double lon);
 }

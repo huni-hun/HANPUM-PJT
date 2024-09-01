@@ -383,11 +383,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<NearByAttractionResDto> getNearByAttractionList(String OS, int distance, double lat, double lon) {
+    public List<NearByAttractionResDto> getNearByAttractionList(int distance, double lat, double lon) {
         String url = new StringBuilder("https://apis.data.go.kr/B551011/KorService1/locationBasedList1")
                 .append("?numOfRows=10")
                 .append("&pageNo=1")
-                .append("&MobileOS=").append(OS)
+                .append("&MobileOS=ETC")
                 .append("&MobileApp=HANPUM")
                 .append("&_type=JSON")
                 .append("&arrange=O")
