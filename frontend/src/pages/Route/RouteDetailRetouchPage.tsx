@@ -257,6 +257,17 @@ function RouteDetailRetouchPage() {
     setDayOfRoute(arr);
   }, [wayPoints]);
 
+  const deleteAttracHandler = (i: string) => {
+    let newAttacR: AttractionReqDto[] = [];
+    attractionsr.map((ele: AttractionReqDto) => {
+      if (i !== ele.name) {
+        newAttacR.push(ele);
+      }
+    });
+
+    setAttractionsr(newAttacR);
+  };
+
   useEffect(() => {
     let attArr: AttractionsProps[] = [];
     if (attractionsr.length > 0) {
@@ -448,6 +459,7 @@ function RouteDetailRetouchPage() {
           </R.RouteInfoContainer>
           <R.RouteDetailInfoContainer>
             <RouteDetailInfo
+              deleteHandler={deleteAttracHandler}
               setSelectedIdx={setSelectedIdx}
               dayOfRoute={dayOfRoute}
               reviews={reviews}

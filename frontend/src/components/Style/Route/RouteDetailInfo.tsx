@@ -36,6 +36,7 @@ interface RouteDetailInfoProps {
   clickWayBtn?: () => void;
   clickAttryBtn?: () => void;
   setSelectedIdx: React.Dispatch<React.SetStateAction<number>>;
+  deleteHandler: (name: string) => void;
 }
 
 function RouteDetailInfo(props: RouteDetailInfoProps) {
@@ -254,7 +255,11 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
             <R.DetailMain>
               <R.DetailMainOverflow>
                 {props.attractions.map((ele: AttractionsProps) => (
-                  <AttractionsCard {...ele} />
+                  <AttractionsCard
+                    deleteHandler={props.deleteHandler}
+                    ele={ele}
+                    isAble={location.pathname.includes('retouch')}
+                  />
                 ))}
                 {location.pathname.includes('retouch') && (
                   <R.AddBtnContainer>

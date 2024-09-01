@@ -248,6 +248,7 @@ function RouteDetailPage() {
           </R.RouteInfoContainer>
           <R.RouteDetailInfoContainer>
             <RouteDetailInfo
+              deleteHandler={(name: string) => {}}
               setSelectedIdx={setSelectedIdx}
               reviews={reviews}
               setDayOfRoute={setDayOfRoute}
