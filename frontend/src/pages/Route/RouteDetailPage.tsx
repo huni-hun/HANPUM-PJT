@@ -3,6 +3,7 @@ import * as R from '@/components/Style/Route/RouteDetailPage.styled';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
+  getRouteDayAttraction,
   getRouteDayDetail,
   getRouteDetail,
   getRouteReview,
@@ -76,21 +77,6 @@ function RouteDetailPage() {
           });
           setRouteType(type);
           setTotalDistance(num);
-
-          let attArr: AttractionsProps[] = [];
-          result.data.data.attractions.map((ele: any) => {
-            let attData: AttractionsProps = {
-              name: ele.name,
-              type: ele.type,
-              attractionId: ele.attractionId,
-              address: ele.address,
-              latitude: ele.lat,
-              longitude: ele.lon,
-              img: ele.img,
-            };
-            attArr.push(attData);
-          });
-          setAttractions(attArr);
         }
 
         setLoading(true);
@@ -119,6 +105,25 @@ function RouteDetailPage() {
 
         setLatitude(arr[0].latitude);
         setLongitude(arr[0].longitude);
+      }
+    });
+
+    getRouteDayAttraction(routeid as string, selectedDay).then((res) => {
+      if (res.status === 200 && res.data.status === 'SUCCESS') {
+        let attArr: AttractionsProps[] = [];
+        res.data.data.map((ele: any) => {
+          let attData: AttractionsProps = {
+            name: ele.name,
+            type: ele.type,
+            attractionId: ele.attractionId,
+            address: ele.address,
+            latitude: ele.lat,
+            longitude: ele.lon,
+            img: ele.img,
+          };
+          attArr.push(attData);
+        });
+        setAttractions(attArr);
       }
     });
   }, [selectedDay]);

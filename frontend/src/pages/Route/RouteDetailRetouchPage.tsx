@@ -16,7 +16,11 @@ import {
   RouteReviewProps,
   WayPointReqDto,
 } from '@/models/route';
-import { getRouteDayDetail, getRouteDetail } from '@/api/route/GET';
+import {
+  getRouteDayAttraction,
+  getRouteDayDetail,
+  getRouteDetail,
+} from '@/api/route/GET';
 import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
 import Header from '@/components/common/Header/Header';
 import Icon from '@/components/common/Icon/Icon';
@@ -87,31 +91,6 @@ function RouteDetailRetouchPage() {
           });
           setRouteType(type);
           setTotalDistance(num);
-
-          let attArr: AttractionsProps[] = [];
-          result.data.data.attractions.map((ele: any) => {
-            let attData: AttractionsProps = {
-              name: ele.name,
-              type: ele.type,
-              attractionId: ele.attractionId,
-              address: ele.address,
-              latitude: ele.lat,
-              longitude: ele.lon,
-              img: ele.img,
-            };
-
-            let attraction: AttractionReqDto = {
-              address: ele.address,
-              lat: ele.lat,
-              lon: ele.lon,
-              name: ele.name,
-              type: ele.type,
-              img: ele.img,
-            };
-            setAttractionsr((pre) => [...pre, attraction]);
-            attArr.push(attData);
-          });
-          setAttractions(attArr);
         }
 
         let courselist: CourseDayReqDto[] = [];
@@ -180,12 +159,42 @@ function RouteDetailRetouchPage() {
               });
               setDayOfRoute(arr);
               copyDetail[idx].wayPointReqDtoList = wayPoints;
-              copyDetail[idx].attractionReqDtoList = attractionsr;
 
               // wayPoints가 존재할 때에만 latitude와 longitude를 설정
             }
           });
           setSelectedDay(idx + 1);
+        }
+        if (ele.wayPointReqDtoList.length < 1) {
+          let attArr: AttractionsProps[] = [];
+          getRouteDayAttraction(routeid as string, ele.dayNumber).then(
+            (result) => {
+              result.data.data.map((ele: any) => {
+                let attData: AttractionsProps = {
+                  name: ele.name,
+                  type: ele.type,
+                  attractionId: ele.attractionId,
+                  address: ele.address,
+                  latitude: ele.lat,
+                  longitude: ele.lon,
+                  img: ele.img,
+                };
+
+                let attraction: AttractionReqDto = {
+                  address: ele.address,
+                  lat: ele.lat,
+                  lon: ele.lon,
+                  name: ele.name,
+                  type: ele.type,
+                  img: ele.img,
+                };
+                setAttractionsr((pre) => [...pre, attraction]);
+                attArr.push(attData);
+              });
+            },
+          );
+          setAttractions(attArr);
+          copyDetail[idx].attractionReqDtoList = attractionsr;
         }
       });
       setDateDetail(copyDetail);

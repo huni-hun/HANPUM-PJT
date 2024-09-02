@@ -76,7 +76,7 @@ export const ImgBox = styled.div<StyledProps>`
 
 export const UserContainer = styled.div`
   width: 100%;
-  height: 7.8rem;
+  height: 4.4rem;
   display: flex;
   flex-direction: row;
   border-bottom: 0.1rem solid ${colors.grey2};
@@ -102,16 +102,16 @@ export const UserName = styled.p`
 
 export const RouteNameInfo = styled.div`
   width: 85vw;
-  height: 20vh;
+  height: 20.2rem;
   display: flex;
   flex-direction: column;
   /* border-bottom: 0.1rem solid #d9d9d9; */
-  padding: 2.4rem 0 1rem;
+  padding: 1.4rem 0 1rem 0;
 `;
 
 export const RouteNameInfoContainer = styled.div`
   width: 100%;
-  height: 70%;
+  height: 60%;
   display: flex;
   flex-direction: column;
 `;
@@ -194,12 +194,11 @@ export const RouteInfo = styled.p`
 
 export const RouteDateBox = styled.div`
   width: 85vw;
-  height: 19vh;
+  height: 16.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   position: relative;
-  padding-bottom: 2rem;
 `;
 
 export const StartDateBox = styled.div`
@@ -233,7 +232,7 @@ export const DateText = styled.p`
 
 export const RouteDateTilteBox = styled.div`
   width: 100%;
-  height: 20%;
+  height: 15%;
   font-size: 2rem;
   font-weight: bold;
   display: flex;
@@ -242,7 +241,7 @@ export const RouteDateTilteBox = styled.div`
 
 export const RouteDateInfoBox = styled.div`
   width: 100%;
-  height: 55%;
+  height: 60%;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -270,7 +269,7 @@ export const PointText = styled.p`
 
 export const RouteDateTextBox = styled.div`
   width: 100%;
-  height: 25%;
+  height: 15%;
   display: flex;
   justify-content: end;
   align-items: start;
@@ -359,7 +358,7 @@ export const Distance = styled.p`
 
 export const ContentSelecContainer = styled.div`
   width: 100vw;
-  height: 6vh;
+  height: 5.1rem;
   display: flex;
   flex-direction: row;
   border-bottom: 0.1rem solid #d9d9d9;
@@ -409,6 +408,7 @@ export const HeaderOverflow = styled.div`
   }
   width: 95%;
   height: 100%;
+  background-color: ${colors.white};
 `;
 
 export const RetouchHeaderOverflow = styled.div`
@@ -423,6 +423,7 @@ export const RetouchHeaderOverflow = styled.div`
   width: 95%;
   height: 100%;
   border-bottom: 0.15rem solid ${colors.grey1};
+  background-color: ${colors.white};
 `;
 
 export const DayContainer = styled.div`
