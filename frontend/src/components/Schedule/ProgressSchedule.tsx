@@ -11,17 +11,11 @@ const ProgressSchedule = ({
   departuresPlace,
   arrivalsPlace,
   /** 현재 거리, 전체 거리 계산 */
-  currentDistance,
+  totalDuration,
   totalDistance,
   percentage,
+  rate,
 }: FeedInfoProps) => {
-  const calculatedPercentage =
-    currentDistance && totalDistance
-      ? Math.round((currentDistance / totalDistance) * 100)
-      : 0;
-
-  const finalPercentage = percentage ?? calculatedPercentage;
-
   return (
     <>
       <R.RouteDateBox>
@@ -56,13 +50,13 @@ const ProgressSchedule = ({
           </R.PlaceBox>
 
           <S.PercentBox>
-            <S.PercentText>{finalPercentage}%</S.PercentText>
+            <S.PercentText>{percentage}%</S.PercentText>
             <S.CalculateDistance>
-              {currentDistance ?? 0}km / {totalDistance}km
+              {totalDuration}km / {totalDistance}km
             </S.CalculateDistance>
           </S.PercentBox>
         </R.StartDateBox>
-        <S.ProgressBar percentage={finalPercentage}>
+        <S.ProgressBar percentage={percentage || 0}>
           <div className="progress" />
         </S.ProgressBar>
         <S.ProgressBox>

@@ -33,8 +33,10 @@ export const HeaderButton = styled.div`
 `;
 
 export const Main = styled.div`
+
   width: 100%;
   height: 93vh;
+
   display: flex;
   flex-direction: row;
   overflow-y: auto;

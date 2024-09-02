@@ -20,6 +20,7 @@ export const Main = styled.div`
   display: flex;
   flex-direction: row;
   overflow-y: auto;
+
   padding-bottom: 8vh;
 `;
 
@@ -29,9 +30,19 @@ export const Overflow = styled.div`
   width: 100%;
   height: 100%;
   overflow-y: auto;
+  margin-top: 12vw;
+
   &::-webkit-scrollbar {
     display: none;
   }
+`;
+export const RouteInfoContainer = styled.div`
+  width: 100vw;
+  /* height: 80vh; */
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 export const HeaderContainer = styled.div`
@@ -64,6 +75,8 @@ export const SchduleTypeContainer = styled.div`
   display: flex;
   /* border-bottom: 0.2rem solid #fff; */
   background-color: #fff;
+  position: fixed;
+  width: 100%;
 `;
 
 export const SchduleTypeBox = styled.div`
@@ -84,13 +97,14 @@ export const ScheduleType = styled.p<{ isSelected: boolean }>`
 
 export const ScheduleMainContainer = styled.div`
   width: 100vw;
-  height: 75vh;
+  /* height: 75vh; */
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
-  padding-top: 2rem;
+  margin-top: 2rem;
+  padding-bottom: 2rem;
 `;
 
 export const SchduleProgressWrap = styled.div`
@@ -182,12 +196,31 @@ export const WeatherWrap = styled.div`
   box-sizing: border-box;
 
   p {
+  }
+
+  .weather_location {
     color: #fff;
     border-bottom: 0.1rem solid #fff;
     text-align: right;
     padding-bottom: 0.5rem;
     width: 99%;
     font-size: 1.3rem;
+  }
+`;
+
+export const WeatherContentWrap = styled.div`
+  display: flex;
+  box-sizing: border-box;
+  overflow-x: scroll;
+`;
+
+export const WeatherContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  border: 1px solid red;
+  box-sizing: border-box;
+
+  p {
   }
 `;
 

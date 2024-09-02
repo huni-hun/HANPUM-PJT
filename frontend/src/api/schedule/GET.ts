@@ -1,16 +1,8 @@
 import api from '../index';
 
 /** 일정 - 진행중 tab */
-export async function getRunningScheduleData(
-  lat: number,
-  lon: number,
-  token: string,
-) {
+export async function getRunningScheduleData(token: string) {
   const response = await api.get('/api/schedule/running', {
-    params: {
-      lat,
-      lon,
-    },
     headers: {
       Authorization: `Bearer ${token}`,
       accept: '*/*',
@@ -21,8 +13,26 @@ export async function getRunningScheduleData(
 }
 
 /** 일정 - 내일정 tab */
-export async function getMyScheduleData(id: string, token: string) {
+export async function getMyScheduleData(token: string) {
   const response = await api.get('/api/schedule', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      accept: '*/*',
+    },
+  });
+
+  return response.data;
+}
+
+/** 일정 - 내일정 tab 상세 */
+export async function getMyScheduleDetailData(
+  scheduleId: string,
+  token: string,
+) {
+  const response = await api.get(`/api/schedule/detail/${scheduleId}`, {
+    params: {
+      scheduleId: scheduleId,
+    },
     headers: {
       Authorization: `Bearer ${token}`,
       accept: '*/*',
@@ -75,6 +85,22 @@ export async function getNearbyLocData(
     params: {
       OS,
       distance,
+      lat,
+      lon,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+      accept: '*/*',
+    },
+  });
+
+  return response.data;
+}
+
+/** 날씨  */
+export async function getWeather(lat: number, lon: number, token: string) {
+  const response = await api.get('/api/weather', {
+    params: {
       lat,
       lon,
     },
