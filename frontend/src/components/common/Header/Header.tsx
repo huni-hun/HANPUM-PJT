@@ -98,12 +98,13 @@ const Header = ({
           <Flex $justify="end" $gap={16}>
             <Icon
               name="IconFilter"
-              onClick={() => onClickHandler('mypage')}
+              onClick={() => onClickHandler('meet/filter')}
               size={20}
             />
             <Icon
               name="IconHeaderPlus"
-              onClick={() => onClickHandler('mypage')}
+              // onClick={() => onClickHandler('mypage')}
+              onClick={() => {}}
               size={20}
             />
             <Icon

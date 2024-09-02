@@ -125,3 +125,21 @@ export const sortList: LabelValue[] = [
     value: 'nothing',
   },
 ];
+
+export const locationArray: string[] = [
+  '전체',
+  '서울',
+  '인천',
+  '경기',
+  '강원',
+  '대전',
+  '충남',
+  '충북',
+  '광주',
+  '전남',
+  '전북',
+  '부산',
+  '경남',
+  '경북',
+  '제주도',
+];

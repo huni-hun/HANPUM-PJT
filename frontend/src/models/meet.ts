@@ -29,11 +29,14 @@ export interface MeetInfo {
   recruitmentCount: number;
 }
 
-export interface MeetRequestDto {
+export interface MeetFilterInfo {
   startPoint?: string;
   endPoint?: string;
   maxTotalDays?: number;
   maxRecruitmentCount?: number;
+}
+
+export interface MeetRequestDto extends MeetFilterInfo {
   pageable: MeetPageAble;
 }
 
