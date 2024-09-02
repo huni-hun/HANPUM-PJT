@@ -188,6 +188,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 
     private List<AttractionResDto> getAttractionResDtoList(Long scheduleDayId) {
         return query.select(Projections.constructor(AttractionResDto.class,
+                        attraction.courseDay.dayNumber,
                         attraction.attractionId,
                         attraction.name,
                         attraction.type,
