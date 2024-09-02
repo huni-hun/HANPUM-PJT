@@ -474,7 +474,7 @@ function RouteDetailRetouchPage() {
               reviews={reviews}
               setDayOfRoute={setDayOfRoute}
               setIsOpen={setIsopen}
-              linePath={linePath}
+              linePath={[]}
               selected={selected}
               selectedDay={selectedDay}
               latitude={latitude}

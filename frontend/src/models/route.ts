@@ -166,3 +166,14 @@ export interface RetouchRouteProps {
   multipartFile: Blob | string;
   courseDayReqDtoList: CourseDayReqDto[];
 }
+
+export interface MapLinePathProps {
+  name: string;
+  x: number;
+  y: number;
+}
+
+export interface LineStartEndProps {
+  x: number;
+  y: number;
+}

@@ -1,5 +1,5 @@
 import { styled } from 'styled-components';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { colors } from '@/styles/colorPalette';
 
 declare global {
@@ -15,6 +15,9 @@ interface MapProps {
 }
 
 function Map(props: MapProps) {
+  const [isMapLoaded, setIsMapLoaded] = useState<boolean>(false);
+  const [kakaoMap, setKakaoMap] = useState<any>(null); // 스크립트 로드 상태 관리
+
   const setMap = () => {
     const mapScript = document.createElement('script');
     mapScript.async = true;
@@ -23,26 +26,7 @@ function Map(props: MapProps) {
 
     const onLoadKakaoMap = () => {
       window.kakao.maps.load(() => {
-        const container = document.getElementById('kakaoMap');
-        const options = {
-          center: new window.kakao.maps.LatLng(props.latitude, props.longitude), // 남한 전체가 보이도록 중앙 좌표 설정
-          level: 8, // 줌 레벨을 설정 (7-8 정도가 남한 전체를 보여줌)
-        };
-        const map = new window.kakao.maps.Map(container, options);
-
-        // Polyline 설정
-        if (props.linePath && props.linePath.length > 0) {
-          const polyLine = new window.kakao.maps.Polyline({
-            path: props.linePath.map(
-              (point) => new window.kakao.maps.LatLng(point.lat, point.lng),
-            ),
-            strokeWeight: 7,
-            strokeColor: colors.main,
-            strokeOpacity: 0.7,
-            strokeStyle: 'solid',
-          });
-          polyLine.setMap(map);
-        }
+        setIsMapLoaded(true); // 스크립트가 로드되면 상태 업데이트
       });
     };
 
@@ -55,6 +39,41 @@ function Map(props: MapProps) {
     setMap();
   }, []);
 
+  useEffect(() => {
+    if (isMapLoaded) {
+      const mapContainer = document.getElementById('kakaoMap');
+      const mapOptions = {
+        center: new window.kakao.maps.LatLng(props.latitude, props.longitude),
+        level: 8,
+      };
+
+      const map = new window.kakao.maps.Map(mapContainer, mapOptions);
+      setKakaoMap(map); // 맵 객체를 상태로
+    }
+  }, [isMapLoaded, props.latitude, props.longitude]);
+
+  useEffect(() => {
+    if (props.linePath !== undefined) {
+      if (kakaoMap && props.linePath.length > 0) {
+        const polyLine = new window.kakao.maps.Polyline({
+          path: props.linePath, // 전달받은 linePath 사용
+          strokeWeight: 7,
+          strokeColor: colors.main,
+          strokeOpacity: 0.7,
+          strokeStyle: 'solid',
+        });
+        polyLine.setMap(kakaoMap); // Polyline을 지도에 추가
+
+        const bounds = new window.kakao.maps.LatLngBounds();
+        props.linePath.forEach((line) => {
+          bounds.extend(line); // 각 LatLng 객체를 bounds에 추가
+        });
+
+        // 지도의 범위를 해당 경계 영역으로 설정
+        kakaoMap.setBounds(bounds);
+      }
+    }
+  }, [kakaoMap, props.linePath]);
   return <MapContainer id="kakaoMap"></MapContainer>;
 }
 

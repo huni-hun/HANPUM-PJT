@@ -11,6 +11,8 @@ import {
 import {
   AttractionsProps,
   DaysOfRouteProps,
+  LineStartEndProps,
+  MapLinePathProps,
   RouteDetailDayProps,
   RouteDetailProps,
   RouteReviewProps,
@@ -20,6 +22,7 @@ import Button from '@/components/common/Button/Button';
 import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
 import BottomSheet from '@/components/Style/Route/BottomSheet';
 import ReviewModal from '@/components/Style/Route/ReviewModal';
+import { GetLineData } from '@/api/route/POST';
 
 function RouteDetailPage() {
   const { routeid } = useParams();
@@ -36,7 +39,8 @@ function RouteDetailPage() {
   const [latitude, setLatitude] = useState<number>(0);
   const [longitude, setLongitude] = useState<number>(0);
   const [attractions, setAttractions] = useState<AttractionsProps[]>([]);
-  const [linePath, setLinePath] = useState([]);
+  const [linePath, setLinePath] = useState<MapLinePathProps[]>([]);
+  const [se, setSe] = useState<LineStartEndProps[]>([]);
   const [bsType, setBsType] = useState<string>('설정');
   const [reviewType, setReviewType] = useState<string>('최신순');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -45,6 +49,8 @@ function RouteDetailPage() {
   const [reviewLoading, setReviewLoading] = useState<boolean>(false);
   const [reviews, setReviews] = useState<RouteReviewProps[]>([]);
   const [selectedIdx, setSelectedIdx] = useState<number>(-1);
+  const [mapLines, setMapLines] = useState<any[]>([]);
+
   useEffect(() => {
     if (dayData.length === 0) {
       getRouteDetail(routeid as string).then((result) => {
@@ -88,6 +94,7 @@ function RouteDetailPage() {
     getRouteDayDetail(routeid as string, selectedDay).then((result) => {
       if (result.status === 200) {
         let arr: DaysOfRouteProps[] = [];
+        let lines: MapLinePathProps[] = [];
         result.data.data.wayPoints.map((ele: any) => {
           let data: DaysOfRouteProps = {
             routeName: ele.name,
@@ -99,9 +106,25 @@ function RouteDetailPage() {
             longitude: ele.lon,
           };
           arr.push(data);
+          if (ele.type === '경유지') {
+            let line: MapLinePathProps = {
+              name: ele.name,
+              x: ele.lat,
+              y: ele.lon,
+            };
+
+            lines.push(line);
+          } else {
+            let seData: LineStartEndProps = {
+              x: ele.lat,
+              y: ele.lon,
+            };
+            setSe((pre) => [...pre, seData]);
+          }
         });
         arr.sort((a: any, b: any) => a.routePoint - b.routePoint);
         setDayOfRoute(arr);
+        setLinePath(lines);
 
         setLatitude(arr[0].latitude);
         setLongitude(arr[0].longitude);
@@ -127,6 +150,33 @@ function RouteDetailPage() {
       }
     });
   }, [selectedDay]);
+
+  useEffect(() => {
+    if (linePath.length > 0) {
+      const mapLines: any[] = [];
+      GetLineData(linePath, se[0], se[1])
+        .then((res) => {
+          if (res.status === 200 && res.data.status === 'SUCCESS') {
+            res.data.data.map((ele: any) => {
+              ele.vertexes.map((vertex: any, index: number) => {
+                if (index % 2 === 0) {
+                  mapLines.push(
+                    new window.kakao.maps.LatLng(
+                      ele.vertexes[index + 1],
+                      ele.vertexes[index],
+                    ),
+                  );
+                }
+              });
+            });
+            setMapLines(mapLines);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [linePath]);
 
   useEffect(() => {
     getRouteReview(routeid as string).then((result) => {
@@ -258,7 +308,7 @@ function RouteDetailPage() {
               reviews={reviews}
               setDayOfRoute={setDayOfRoute}
               dayOfRoute={dayOfRoute}
-              linePath={linePath}
+              linePath={mapLines}
               selected={selected}
               selectedDay={selectedDay}
               latitude={latitude}

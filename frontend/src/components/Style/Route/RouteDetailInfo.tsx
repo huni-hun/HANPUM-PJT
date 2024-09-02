@@ -3,6 +3,7 @@ import * as R from '@/components/Style/Route/RouteDetailPage.styled';
 import {
   AttractionsProps,
   DaysOfRouteProps,
+  MapLinePathProps,
   RouteDetailDayProps,
   RouteReviewProps,
 } from '@/models/route';
