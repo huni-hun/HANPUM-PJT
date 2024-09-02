@@ -19,8 +19,6 @@ export const RetouchRoute = async (data: RetouchRouteProps) => {
   const response = await api.put('/api/course', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
-      Authorization:
-        'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiQ09NTU9OIiwic3ViIjoiaGFucHVtMSIsImlhdCI6MTcyNTE5MzAyNywiZXhwIjoxNzI1MjY1MDI3fQ.So7RT5ZryrX-G4UYXxgqG47xr8W_IGTtV2XOJ0lXOHY',
     },
   });
 

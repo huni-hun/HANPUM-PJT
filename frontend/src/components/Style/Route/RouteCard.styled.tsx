@@ -79,7 +79,7 @@ export const BottomContent = styled.div`
 `;
 
 export const RouteNTitleBox = styled.div`
-  width: 60%;
+  width: 70%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -98,7 +98,7 @@ export const RouteBox = styled.div`
 `;
 
 export const RouteDistanceBox = styled.div`
-  width: 20%;
+  width: 40%;
   height: 80%;
   display: flex;
   align-items: center;
