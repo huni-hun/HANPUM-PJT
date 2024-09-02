@@ -11,7 +11,7 @@ function RouteAddCompletePage() {
       <Header
         purpose="result"
         clickBack={() => {
-          navigator(-1);
+          navigator('/route/list');
         }}
       />
       <R.MainContainer>
@@ -31,7 +31,9 @@ function RouteAddCompletePage() {
           fontSize={1.6}
           children="시작하기"
           color="#ffffff"
-          onClick={() => {}}
+          onClick={() => {
+            navigator('/route/list');
+          }}
           fontWeight="bold"
         />
       </R.BtnContainer>

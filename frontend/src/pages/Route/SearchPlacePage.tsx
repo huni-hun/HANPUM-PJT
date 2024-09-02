@@ -2,11 +2,12 @@ import { PostSearchAttractions, PostSearchPlace } from '@/api/route/POST';
 import Icon from '@/components/common/Icon/Icon';
 import * as R from '@/components/Style/Route/SearchPlacePage.styled';
 import {
-  AttractionsAddProps,
+  AttractionsAddCardProps,
+  AttractionReqDto,
   AttractionsProps,
-  DateRouteDetailProps,
+  CourseDayReqDto,
   searchPlaceProps,
-  WayPointListProps,
+  WayPointReqDto,
 } from '@/models/route';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -14,13 +15,17 @@ import RouteAddPlacePage from './RouteAddPlacePage';
 
 interface SearchPlacePageProps {
   setSearchOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setWayPoints: React.Dispatch<React.SetStateAction<WayPointListProps[]>>;
-  wayPoints: WayPointListProps[];
-  setDateDetail: React.Dispatch<React.SetStateAction<DateRouteDetailProps[]>>;
-  dateDetail: DateRouteDetailProps[];
+  setWayPoints: React.Dispatch<React.SetStateAction<WayPointReqDto[]>>;
+  wayPoints: WayPointReqDto[];
+  setDateDetail: React.Dispatch<React.SetStateAction<CourseDayReqDto[]>>;
+  dateDetail: CourseDayReqDto[];
   day: number;
-  setAttractions: React.Dispatch<React.SetStateAction<AttractionsAddProps[]>>;
-  attractions: AttractionsAddProps[];
+  setAttractions: React.Dispatch<React.SetStateAction<AttractionReqDto[]>>;
+  attractions: AttractionReqDto[];
+  setAttractionsCard: React.Dispatch<
+    React.SetStateAction<AttractionsAddCardProps[]>
+  >;
+  attractionsCard: AttractionsAddCardProps[];
   pointType: string;
 }
 
@@ -84,6 +89,9 @@ function SearchPlacePage(props: SearchPlacePageProps) {
 
   return pageOpen ? (
     <RouteAddPlacePage
+      setAttractionsCard={props.setAttractionsCard}
+      attractionsCard={props.attractionsCard}
+      keyword={searchText}
       setAttractions={props.setAttractions}
       attractions={props.attractions}
       pointType={props.pointType}

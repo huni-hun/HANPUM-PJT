@@ -2,11 +2,17 @@ import Icon from '@/components/common/Icon/Icon';
 import * as R from '@/components/Style/Route/RouteDetailPage.styled';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getRouteDetail } from '@/api/route/GET';
+import {
+  getRouteDayDetail,
+  getRouteDetail,
+  getRouteReview,
+} from '@/api/route/GET';
 import {
   AttractionsProps,
+  DaysOfRouteProps,
   RouteDetailDayProps,
   RouteDetailProps,
+  RouteReviewProps,
 } from '@/models/route';
 import Header from '@/components/common/Header/Header';
 import Button from '@/components/common/Button/Button';
@@ -33,7 +39,11 @@ function RouteDetailPage() {
   const [bsType, setBsType] = useState<string>('설정');
   const [reviewType, setReviewType] = useState<string>('최신순');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
+  const [retouch, setRetouch] = useState<boolean>(false);
+  const [dayOfRoute, setDayOfRoute] = useState<DaysOfRouteProps[]>([]);
+  const [reviewLoading, setReviewLoading] = useState<boolean>(false);
+  const [reviews, setReviews] = useState<RouteReviewProps[]>([]);
+  const [selectedIdx, setSelectedIdx] = useState<number>(-1);
   useEffect(() => {
     if (dayData.length === 0) {
       getRouteDetail(routeid as string).then((result) => {
@@ -43,10 +53,11 @@ function RouteDetailPage() {
             routeName: result.data.data.course.courseName,
             routeContent: result.data.data.course.content,
             writeDate: result.data.data.course.writeDate,
-            routeComment: 3,
-            routeScore: 3.5,
+            routeComment: result.data.data.course.commentCnt,
+            routeScore: result.data.data.course.scoreAvg,
             start: result.data.data.course.startPoint,
             end: result.data.data.course.endPoint,
+            img: result.data.data.course.backgroundImg,
           };
           setRouteData(rd);
           result.data.data.courseDays.map((ele: any) => {
@@ -65,8 +76,6 @@ function RouteDetailPage() {
           });
           setRouteType(type);
           setTotalDistance(num);
-          setLatitude(result.data.data.attractions[0].lat);
-          setLongitude(result.data.data.attractions[0].lon);
 
           let attArr: AttractionsProps[] = [];
           result.data.data.attractions.map((ele: any) => {
@@ -77,6 +86,7 @@ function RouteDetailPage() {
               address: ele.address,
               latitude: ele.lat,
               longitude: ele.lon,
+              img: ele.img,
             };
             attArr.push(attData);
           });
@@ -86,6 +96,52 @@ function RouteDetailPage() {
         setLoading(true);
       });
     }
+  }, []);
+
+  useEffect(() => {
+    getRouteDayDetail(routeid as string, selectedDay).then((result) => {
+      if (result.status === 200) {
+        let arr: DaysOfRouteProps[] = [];
+        result.data.data.wayPoints.map((ele: any) => {
+          let data: DaysOfRouteProps = {
+            routeName: ele.name,
+            routeAddress: ele.address,
+            routeType: ele.type,
+            routeId: ele.waypointId,
+            routePoint: ele.pointNumber,
+            latitude: ele.lat,
+            longitude: ele.lon,
+          };
+          arr.push(data);
+        });
+        arr.sort((a: any, b: any) => a.routePoint - b.routePoint);
+        setDayOfRoute(arr);
+
+        setLatitude(arr[0].latitude);
+        setLongitude(arr[0].longitude);
+      }
+    });
+  }, [selectedDay]);
+
+  useEffect(() => {
+    getRouteReview(routeid as string).then((result) => {
+      let arr: RouteReviewProps[] = [];
+      if (result.data.status !== 'ERROR' && result.status === 200) {
+        result.data.data.map((ele: any) => {
+          let data: RouteReviewProps = {
+            memberId: ele.memberId,
+            routeId: ele.courseId,
+            content: ele.content,
+            score: ele.score,
+            writeDate: ele.writeDate,
+          };
+          arr.push(data);
+        });
+
+        setReviews(arr);
+      }
+      setReviewLoading(true);
+    });
   }, []);
 
   return loading ? (
@@ -104,7 +160,9 @@ function RouteDetailPage() {
       <R.Main>
         <R.Overflow>
           <R.RouteInfoContainer>
-            <R.ImgBox></R.ImgBox>
+            <R.ImgBox>
+              <img src={routeData.img} />
+            </R.ImgBox>
             <R.UserContainer>
               <R.UserImgBox>
                 <Icon name="IconUserBasicImg" size={42} />
@@ -151,7 +209,9 @@ function RouteDetailPage() {
                   <R.ArrowBox>
                     <Icon name="IconArrowBlack" size={10} />
                   </R.ArrowBox>
-                  <R.DistanceNumBox>{totalDistance}km</R.DistanceNumBox>
+                  <R.DistanceNumBox>
+                    {Math.round(totalDistance)}km
+                  </R.DistanceNumBox>
                 </R.RouteIconBox>
               </R.RouteDateInfoBox>
               <R.RouteDateTextBox>
@@ -188,6 +248,11 @@ function RouteDetailPage() {
           </R.RouteInfoContainer>
           <R.RouteDetailInfoContainer>
             <RouteDetailInfo
+              deleteHandler={(name: string) => {}}
+              setSelectedIdx={setSelectedIdx}
+              reviews={reviews}
+              setDayOfRoute={setDayOfRoute}
+              dayOfRoute={dayOfRoute}
               linePath={linePath}
               selected={selected}
               selectedDay={selectedDay}
@@ -230,6 +295,7 @@ function RouteDetailPage() {
       </R.BottomContainer>
       {isOpen && (
         <BottomSheet
+          id={Number(routeid)}
           selected={reviewType}
           setSelected={setReviewType}
           bsType={bsType}

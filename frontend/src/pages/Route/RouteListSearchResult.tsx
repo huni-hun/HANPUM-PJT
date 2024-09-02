@@ -58,6 +58,7 @@ function RouteListSearchResult(props: RouteListSearchResultProps) {
       </R.MainContainer>
       {isOpen && (
         <BottomSheet
+          id={0}
           selected={reviewType}
           setSelected={setReviewType}
           bsType={'정렬'}

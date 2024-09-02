@@ -138,11 +138,7 @@ const Header = ({
               <input type="text" />
             </div>
             <Flex $gap={20} style={{ width: 'auto', marginLeft: '9px' }}>
-              <Icon
-                name="IconHeaderPlus"
-                onClick={() => onClickHandler('noti')}
-                size={14}
-              />
+              <Icon name="IconHeaderPlus" onClick={plusBtnclick} size={14} />
               <Icon
                 name="IconUser"
                 onClick={() => onClickHandler('my')}

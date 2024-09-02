@@ -2,9 +2,9 @@ import * as S from './CardLong.styled';
 import image from '../../../assets/img/img1.jpg';
 import Icon from '../Icon/Icon';
 import Text from '../Text';
-import { Root } from '@/models/root';
 import { useEffect, useState } from 'react';
 import Flex from '../Flex';
+import { RouteListProps } from '@/models/route';
 
 function CardLong({
   item,
@@ -14,14 +14,16 @@ function CardLong({
   isSwiped,
   onSwipe,
   onClickOutside,
+  onClickCard,
 }: {
-  item: Root;
+  item: RouteListProps;
   hasHeart?: boolean;
   hasLock?: boolean;
   canDelete?: boolean;
   isSwiped?: boolean;
   onSwipe?: (id: number) => void;
   onClickOutside?: () => void;
+  onClickCard?: () => void;
 }) {
   // const [isSwiped, setIsSwiped] = useState(false);
   const [startX, setStartX] = useState<number | null>(null);
@@ -41,7 +43,7 @@ function CardLong({
       const deltaX = e.touches[0].clientX - startX;
       if (deltaX < -58) {
         if (onSwipe) {
-          onSwipe(item.courseId);
+          onSwipe(item.routeId);
         }
         setCanDeleted(true);
       } else {
@@ -81,7 +83,7 @@ function CardLong({
   }, [isSwiped]);
 
   return (
-    <S.CardLongContainer>
+    <S.CardLongContainer onClick={onClickCard}>
       <div
         className="card"
         onTouchStart={handleTouchStart}
@@ -105,16 +107,16 @@ function CardLong({
           </div>
 
           <Text $typography="t14" $bold={true} color="white">
-            {item.courseName}
+            {item.routeName}
           </Text>
 
           <div className="info-root">
             <Text $typography="t10" color="white">
-              {item.startPoint}
+              {item.start}
             </Text>
             <Icon name="IconArrowWhite" />
             <Text $typography="t10" color="white">
-              {item.endPoint}
+              {item.end}
             </Text>
             <div className="line" />
             <Text $typography="t10" color="white">

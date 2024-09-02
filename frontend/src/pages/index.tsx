@@ -18,6 +18,7 @@ import SearchPlacePage from './Route/SearchPlacePage';
 import RouteAddCompletePage from './Route/RouteAddCompletePage';
 import RoteListMorePage from './Route/RoteListMorePage';
 import RouteListSearchPage from './Route/RouteListSearchPage';
+import RouteDetailRetouchPage from './Route/RouteDetailRetouchPage';
 
 /** 모임 */
 import MeetList from '../pages/Meet/MeetList';
@@ -60,6 +61,7 @@ export {
   RouteAddCompletePage,
   RoteListMorePage,
   RouteListSearchPage,
+  RouteDetailRetouchPage,
 
   /** 모임 */
   MeetList,
