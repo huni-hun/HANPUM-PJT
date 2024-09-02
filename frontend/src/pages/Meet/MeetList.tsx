@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import Header from '@/components/common/Header/Header';
 import Icon from '../../components/common/Icon/Icon';
 import * as R from '../../components/Style/Route/RouteList.styled';
@@ -13,11 +13,24 @@ import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 import MeetLongCard from '@/components/Meet/MeetLongCard';
 import MeetSmallCard from '@/components/Meet/MeetSmallCard';
-import { MeetInfo } from '@/models/meet';
+import { MeetInfo, MeetRequestDto } from '@/models/meet';
+import { useAlert } from '@/hooks/global/useAlert';
+import SortBox from '@/components/Meet/SortBox';
 
 function RouteList() {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
+  const [openSort, setOpenSort] = useState(false);
+
+  const [requestDto, setRequestDto] = useState<MeetRequestDto>({
+    pageable: {
+      page: 0,
+      size: 4,
+      sort: 'latest,desc',
+    },
+  });
+
   const navigator = useNavigate();
 
   // 내 모임
@@ -41,9 +54,17 @@ function RouteList() {
     isFetching,
     isFetchingNextPage,
   } = useInfiniteQuery(
-    'getGroupList',
-    ({ pageParam = 0 }) =>
-      GetGroupList({ pageable: { page: pageParam, size: 4, sort: ['asc'] } }),
+    ['getGroupList', requestDto.pageable.sort],
+    ({ pageParam = 0 }) => {
+      const updatedRequestDto = {
+        ...requestDto,
+        pageable: {
+          ...requestDto.pageable,
+          page: pageParam,
+        },
+      };
+      return GetGroupList(updatedRequestDto);
+    },
     {
       getNextPageParam: (lastPage, pages) => {
         const morePagesExist = lastPage.data.groupResDtoList.length > 0;
@@ -56,6 +77,7 @@ function RouteList() {
     },
   );
 
+  // 옵저버 handler(스크롤이다 보니 useCallback 사용)
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       const target = entries[0];
@@ -72,7 +94,7 @@ function RouteList() {
     observerRef.current = new IntersectionObserver(handleObserver, {
       root: null,
       rootMargin: '0px',
-      threshold: 1.0,
+      threshold: 0.7,
     });
 
     if (loadMoreRef.current) {
@@ -83,6 +105,24 @@ function RouteList() {
       if (observerRef.current) observerRef.current.disconnect();
     };
   }, [handleObserver, loadMoreRef]);
+
+  // 정렬 토글함수
+  const handleToggleOpen = () => {
+    console.log('눌림');
+    setOpenSort(!openSort);
+  };
+
+  const clickSort = (stateValue: string) => {
+    if (stateValue === 'nothing') return;
+    setRequestDto((prev) => ({
+      ...prev,
+      pageable: {
+        ...prev.pageable,
+        sort: stateValue,
+        page: 0,
+      },
+    }));
+  };
 
   return (
     <R.RouteListContainer>
@@ -104,7 +144,7 @@ function RouteList() {
             $gap={3}
             style={{ paddingLeft: '8px', marginBottom: '16px' }}
           >
-            <Text $typography="t10" color="grey2">
+            <Text $typography="t10" color="grey2" onClick={handleToggleOpen}>
               최신순
             </Text>
             <Icon name="IconDownArrow" />
@@ -115,12 +155,21 @@ function RouteList() {
                 <MeetSmallCard key={groupData.groupId} data={groupData} />
               )),
             )}
+            {isFetching && <div>불러오는 중..</div>}
             <div ref={loadMoreRef} style={{ height: '1px' }} />
           </div>
         </Flex>
       </R.MainContainer>
 
-      <BottomTab />
+      {openSort ? (
+        <SortBox
+          onClick={handleToggleOpen}
+          sortState={requestDto}
+          clickSort={clickSort}
+        />
+      ) : (
+        <BottomTab />
+      )}
     </R.RouteListContainer>
   );
 }

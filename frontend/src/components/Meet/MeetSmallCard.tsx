@@ -74,7 +74,7 @@ const MeetSmallCardContainer = styled.div`
     height: 16.6rem;
     border-radius: 12px;
 
-    border: 1px solid #000;
+    border: 1px solid #e1e1e1;
     box-sizing: border-box;
   }
   .bg {

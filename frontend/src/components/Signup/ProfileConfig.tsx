@@ -6,11 +6,7 @@ import BaseButton from '../common/BaseButton';
 import { useAlert } from '@/hooks/global/useAlert';
 import Calender from './Calender';
 import Cookies from 'js-cookie';
-import {
-  Gender,
-  SignupRequestValues,
-  UserSignupFormValues,
-} from '@/models/signup';
+import { SignupRequestValues, UserSignupFormValues } from '@/models/signup';
 import {
   ChangeEvent,
   Dispatch,
@@ -22,7 +18,7 @@ import { dateFormat, telnumberFormat } from '@/utils/util';
 import { useMutation } from 'react-query';
 import { CheckNickname, KaKaoLogin, SignUp } from '@/api/signup/POST';
 import { toast } from 'react-toastify';
-import { STATUS } from '@/constants';
+import { genderList, STATUS } from '@/constants';
 import { AxiosError } from 'axios';
 import FixedBottomButton from '../common/FixedBottomButton';
 import Flex from '../common/Flex';
@@ -40,20 +36,6 @@ function ProfileConfig({
   formValues: Partial<UserSignupFormValues>;
   clickNext: () => void;
 }) {
-  const genderList: Gender[] = [
-    {
-      label: '남성',
-      value: 'MAN',
-    },
-    {
-      label: '여성',
-      value: 'WOMAN',
-    },
-    {
-      label: '기타',
-      value: 'OTHER',
-    },
-  ];
   const { open } = useAlert();
 
   const [dirty, setDirty] = useState<

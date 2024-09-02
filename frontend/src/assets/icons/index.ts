@@ -64,6 +64,10 @@ export { ReactComponent as IconHeartGreyFill } from './heart_grey_fill.svg';
 export { ReactComponent as IconSquareGreyFill } from './square_grey_fill.svg';
 export { ReactComponent as IconFlagBold } from './icon_flag_bold.svg';
 
+// 모임 모달
+export { ReactComponent as IconSortModalCheck } from './sortmodal_check.svg';
+export { ReactComponent as IconSortModalClose } from './sortmodal_close.svg';
+
 // 회원 가입 페이지
 export { ReactComponent as IconCheck } from './check.svg';
 export { ReactComponent as IconCamera } from './camera.svg';

@@ -1,4 +1,4 @@
-import { Term } from '@/models/signup';
+import { LabelValue, Term } from '@/models/signup';
 
 export const DEFAULT_SIZE = 20;
 
@@ -86,5 +86,42 @@ export const WITHDRAW = [
     id: '03',
     title: '이용이 불가능해요',
     desc: '현재 사용 중인 혜택 및 서비스를 더 이상 이용할 수 없습니다',
+  },
+];
+export const genderList: LabelValue[] = [
+  {
+    label: '남성',
+    value: 'MAN',
+  },
+  {
+    label: '여성',
+    value: 'WOMAN',
+  },
+  {
+    label: '기타',
+    value: 'OTHER',
+  },
+];
+
+export const sortList: LabelValue[] = [
+  {
+    label: '최신 순',
+    value: 'latest, desc',
+  },
+  {
+    label: '인기가 많은 순',
+    value: 'likeCount, desc',
+  },
+  {
+    label: '경로 길이 짧은 순',
+    value: 'totalDistance, desc',
+  },
+  {
+    label: '경로 길이 긴 순',
+    value: 'totalDistance, asc',
+  },
+  {
+    label: '설정 안함',
+    value: 'nothing',
   },
 ];

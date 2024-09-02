@@ -18,8 +18,6 @@ interface AlertProps {
 
 function WithdrawAlert({
   open,
-  title,
-  description,
   buttonConfirm = '확인',
   buttonCancel = '취소',
   onButtonClick,

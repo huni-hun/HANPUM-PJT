@@ -37,7 +37,7 @@ export interface UserSignupFormValues extends SignupRequestValues {
   checkNickname: string; // 닉네임 인증코드 에러
 }
 
-export interface Gender {
+export interface LabelValue {
   label: string;
   value: string;
 }

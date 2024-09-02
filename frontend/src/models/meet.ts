@@ -40,5 +40,5 @@ export interface MeetRequestDto {
 export interface MeetPageAble {
   page: number;
   size: number;
-  sort: string[];
+  sort: string;
 }
