@@ -158,23 +158,9 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
                 .where(qCourseDay.course.courseId.eq(courseId))
                 .fetch();
 
-        List<AttractionResDto> attractions = query
-                .select(Projections.constructor(AttractionResDto.class,
-                        qAttraction.attractionId,
-                        qAttraction.name,
-                        qAttraction.type,
-                        qAttraction.address,
-                        qAttraction.lat,
-                        qAttraction.lon,
-                        qAttraction.img))
-                .from(qAttraction)
-                .where(qAttraction.courseDay.course.courseId.eq(courseId))
-                .fetch();
-
         CourseDetailResDto result = CourseDetailResDto.builder()
                 .course(courseResDto)
                 .courseDays(courseDays)
-                .attractions(attractions)
                 .build();
 
         return Optional.of(result);

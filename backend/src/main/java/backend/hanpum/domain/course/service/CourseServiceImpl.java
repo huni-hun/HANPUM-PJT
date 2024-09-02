@@ -403,6 +403,27 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public List<AttractionResDto> getCourseDayAttractions(Long courseId, Integer day) {
+        List<Attraction> attractionList = attractionRepository.findByCourseDay_Course_CourseIdAndCourseDay_dayNumber(courseId, day);
+
+        List<AttractionResDto> resDtoList = new ArrayList<>();
+        for(Attraction attraction : attractionList) {
+            resDtoList.add(AttractionResDto.builder()
+                    .dayNumber(attraction.getCourseDay().getDayNumber())
+                    .attractionId(attraction.getAttractionId())
+                    .name(attraction.getName())
+                    .type(attraction.getType())
+                    .address(attraction.getAddress())
+                    .lat(attraction.getLat())
+                    .lon(attraction.getLon())
+                    .img(attraction.getImg())
+                    .build());
+        }
+
+        return resDtoList;
+    }
+
+    @Override
     @Transactional
     public void addInterestCourse(Long courseId, Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);

@@ -84,6 +84,14 @@ public class CourseController {
         return response.success(ResponseCode.COURSE_DAY_FETCHED, getCourseDayResDto);
     }
 
+    @Operation(summary = "경로 일차 관광지 조회", description = "경로 일차 관광지 조회 API")
+    @GetMapping("/{course_id}/days/{day}/attract")
+    public ResponseEntity<?> getCourseDayAttractions(@PathVariable("course_id") Long courseId, @PathVariable("day") Integer day) {
+        List<AttractionResDto> getAttractionResDtoList = courseService.getCourseDayAttractions(courseId, day);
+
+        return response.success(ResponseCode.COURSE_DAY_ATTRACTION_FETCHED, getAttractionResDtoList);
+    }
+
     @Operation(summary = "관심 경로 등록", description = "관심 경로 등록 API")
     @GetMapping("{course_id}/like")
     public ResponseEntity<?> addInterestCourse(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable("course_id") Long courseId) {

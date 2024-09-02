@@ -33,6 +33,7 @@ public enum ResponseCode {
     COURSE_DELETE_SUCCESS(HttpStatus.OK, "경로 삭제가 성공적으로 완료되었습니다."),
     COURSE_DETAIL_FETCHED(HttpStatus.OK, "경로 상세정보가 성공적으로 조회되었습니다."),
     COURSE_DAY_FETCHED(HttpStatus.OK, "경로 일차 정보가 성공적으로 조회되었습니다."),
+    COURSE_DAY_ATTRACTION_FETCHED(HttpStatus.OK, "경로 일차 관광지 정보가 성공적으로 조회되었습니다."),
     ADD_INTEREST_COURSE_SUCCESS(HttpStatus.OK, "관심 경로 추가가 성공적으로 완료되었습니다."),
     DELETE_INTEREST_COURSE_SUCCESS(HttpStatus.OK, "관심 경로 삭제가 성공적으로 완료되었습니다."),
     COURSE_REVIEWS_FETCHED(HttpStatus.OK, "경로 리뷰 조회가 성공적으로 완료되었습니다."),

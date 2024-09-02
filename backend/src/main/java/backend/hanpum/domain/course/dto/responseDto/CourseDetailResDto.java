@@ -14,5 +14,4 @@ import java.util.List;
 public class CourseDetailResDto {
     CourseResDto course;
     List<CourseDayResDto> courseDays;
-    List<AttractionResDto> attractions;
 }

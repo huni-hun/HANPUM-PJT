@@ -19,6 +19,7 @@ public interface CourseService {
     void deleteCourse(Long memberId, Long courseId);
     CourseDetailResDto getCourseDetail(Long courseId);
     GetCourseDayResDto getCourseDay(Long courseId, Integer day);
+    List<AttractionResDto> getCourseDayAttractions(Long courseId, Integer day);
     void addInterestCourse(Long courseId, Long memberId);
     void deleteInterestCourse(Long courseId, Long memberId);
     List<CourseReviewResDto> getCourseReviews(Long courseId, Pageable pageable);
