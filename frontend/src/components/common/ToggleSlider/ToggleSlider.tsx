@@ -2,13 +2,15 @@ import { Slider } from '@mui/material';
 import * as R from './ToggleSlider.styled';
 import { useState } from 'react';
 import { colors } from '@/styles/colorPalette';
+import { useRecoilValue } from 'recoil';
+import { meetFilterInfoAtom } from '@/atoms/meetFilterAtom';
 
 interface ToggleSliderProps {
   title: string;
   unit: string;
   min?: number;
   max?: number;
-  initialValue?: number;
+  value: number;
   onChange?: (value: number) => void;
 }
 
@@ -17,31 +19,30 @@ function ToggleSlider({
   unit,
   min = 0,
   max = 15,
-  initialValue = 0,
+  value,
   onChange,
 }: ToggleSliderProps) {
-  const [sliderValue, setSliderValue] = useState(initialValue);
+  // console.log(sliderValue);
+  // const meetInfo = useRecoilValue(meetFilterInfoAtom);
 
   const handleSliderChange = (event: Event, newValue: number | number[]) => {
     if (typeof newValue === 'number') {
-      setSliderValue(newValue);
       if (onChange) {
         onChange(newValue);
       }
     }
   };
-
   return (
     <R.SliderBox>
       <R.SliderTextBox>
         <R.SliderText>{title}</R.SliderText>
-        <R.ContentText>{`${min}${unit} ${sliderValue > 0 ? `~ ${sliderValue}${unit}` : ''}`}</R.ContentText>
+        <R.ContentText>{`${min}${unit} ${value > 0 ? `~ ${value}${unit}` : ''}`}</R.ContentText>
       </R.SliderTextBox>
       <Slider
         size="medium"
         min={min}
         max={max}
-        value={sliderValue}
+        value={value}
         onChange={handleSliderChange}
         aria-label={title}
         valueLabelDisplay="auto"

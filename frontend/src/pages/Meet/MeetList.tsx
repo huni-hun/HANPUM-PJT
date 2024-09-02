@@ -14,22 +14,27 @@ import { AxiosError } from 'axios';
 import MeetLongCard from '@/components/Meet/MeetLongCard';
 import MeetSmallCard from '@/components/Meet/MeetSmallCard';
 import { MeetInfo, MeetRequestDto } from '@/models/meet';
-import { useAlert } from '@/hooks/global/useAlert';
 import SortBox from '@/components/Meet/SortBox';
+import { meetFilterInfoAtom } from '@/atoms/meetFilterAtom';
+import { useRecoilValue } from 'recoil';
 
-function RouteList() {
+function MeetList() {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   const [openSort, setOpenSort] = useState(false);
+  const meetFilterInfo = useRecoilValue(meetFilterInfoAtom);
 
   const [requestDto, setRequestDto] = useState<MeetRequestDto>({
+    ...meetFilterInfo,
     pageable: {
       page: 0,
       size: 4,
       sort: 'latest,desc',
     },
   });
+
+  // console.log(requestDto);
 
   const navigator = useNavigate();
 
@@ -63,12 +68,15 @@ function RouteList() {
           page: pageParam,
         },
       };
+      // console.log(updatedRequestDto);
       return GetGroupList(updatedRequestDto);
     },
     {
       getNextPageParam: (lastPage, pages) => {
         const morePagesExist = lastPage.data.groupResDtoList.length > 0;
-        if (!morePagesExist) return undefined;
+        const isLastPage =
+          lastPage.data.groupResDtoList.length < requestDto.pageable.size;
+        if (!morePagesExist || isLastPage) return undefined;
         return pages.length;
       },
       onError: (error: AxiosError) => {
@@ -108,7 +116,7 @@ function RouteList() {
 
   // 정렬 토글함수
   const handleToggleOpen = () => {
-    console.log('눌림');
+    // console.log('눌림');
     setOpenSort(!openSort);
   };
 
@@ -150,10 +158,24 @@ function RouteList() {
             <Icon name="IconDownArrow" />
           </Flex>
           <div className="small-list">
-            {groupListData?.pages.map((page) =>
-              page.data.groupResDtoList.map((groupData: MeetInfo) => (
-                <MeetSmallCard key={groupData.groupId} data={groupData} />
-              )),
+            {groupListData?.pages[0]?.data.groupResDtoList.length === 0 ? (
+              <Text
+                $typography="t14"
+                $bold={true}
+                style={{
+                  paddingLeft: '8px',
+                  minHeight: '220px',
+                  height: '100%',
+                }}
+              >
+                필터링 된 데이터가 없습니다.
+              </Text>
+            ) : (
+              groupListData?.pages.map((page) =>
+                page.data.groupResDtoList.map((groupData: MeetInfo) => (
+                  <MeetSmallCard key={groupData.groupId} data={groupData} />
+                )),
+              )
             )}
             {isFetching && <div>불러오는 중..</div>}
             <div ref={loadMoreRef} style={{ height: '1px' }} />
@@ -174,4 +196,4 @@ function RouteList() {
   );
 }
 
-export default RouteList;
+export default MeetList;

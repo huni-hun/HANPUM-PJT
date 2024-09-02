@@ -1,16 +1,27 @@
 /** 모임 - 지역 filter  component (지역 prosp로 넘겨주는 중) */
 import React from 'react';
-import { Table, TableCell, TableRow } from './FilterTable.styled';
-import { MeetFilterProps } from '@/models/meet';
+// import { Table, TableCell, TableRow } from './FilterTable.styled';
+// import { MeetFilterProps } from '@/models/meet';
 import styled from 'styled-components';
 import { colors } from '@/styles/colorPalette';
 import { locationArray } from '@/constants';
 
-const FilterTable = ({ onClick }: MeetFilterProps) => {
+const FilterTable = ({
+  locationFilterClick,
+  canClick,
+}: {
+  locationFilterClick?: (location: string) => void;
+  canClick: boolean;
+}) => {
   return (
-    <FilterTableContainer>
+    <FilterTableContainer canClick={canClick}>
       {locationArray.map((location) => (
-        <div className="location-item">{location}</div>
+        <div
+          className="location-item"
+          onClick={() => locationFilterClick?.(location)}
+        >
+          {location}
+        </div>
       ))}
     </FilterTableContainer>
   );
@@ -18,11 +29,11 @@ const FilterTable = ({ onClick }: MeetFilterProps) => {
 
 export default FilterTable;
 
-const FilterTableContainer = styled.div`
+const FilterTableContainer = styled.div<{ canClick: boolean }>`
   width: 100%;
   height: 17.1rem;
   border-radius: 12px;
-  border: 1px solid ${colors.grey3};
+  border: 1px solid ${({ canClick }) => (canClick ? colors.main : colors.grey3)};
   box-sizing: border-box;
   margin: 29px 0 24px;
   display: grid;

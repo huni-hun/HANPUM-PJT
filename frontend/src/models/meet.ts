@@ -1,6 +1,7 @@
-export interface MeetFilterProps {
-  onClick?: (location: string, row: number, col: number) => void;
-}
+// export interface MeetFilterProps {
+//   onClick?: (location: string) => void;
+//   canClick: React.Dispatch<React.SetStateAction<boolean>>;
+// }
 
 export interface MeetModalProps {
   title?: string;

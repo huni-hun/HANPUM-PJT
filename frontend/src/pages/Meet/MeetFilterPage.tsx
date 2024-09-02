@@ -2,15 +2,12 @@
 
 import { useState } from 'react';
 import * as M from '@/components/Style/Meet/MeetFilter.styled';
-import * as R from '@/components/Style/Route/RouteListSearchPage.styled';
 import Header from '@/components/common/Header/Header';
 
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-import { RouteDetailProps } from '@/models/route';
 import FilterTable from '@/components/Meet/FilterTable';
-import { Slider } from '@mui/material';
 import { colors } from '@/styles/colorPalette';
 import ToggleSlider from '@/components/common/ToggleSlider/ToggleSlider';
 import Icon from '@/components/common/Icon/Icon';
@@ -22,15 +19,52 @@ import BaseButton from '@/components/common/BaseButton';
 
 function MeetFilterPage() {
   const navigate = useNavigate();
-  // const [routeData, setRouteData] = useState<RouteDetailProps | null>(null);
-  // const [dateValue, setDateValue] = useState<number>(0);
-  /** location table에서 cell 선택시 지역 뽑기 */
-  const locationFilterClick = (location: string) => {
-    console.log(`${location}`, '지역이 나옵니다.');
-  };
 
   const [meetFilterInfo, setMeetFilterInfo] =
     useRecoilState(meetFilterInfoAtom);
+
+  const [selectedField, setSelectedField] = useState<
+    'startPoint' | 'endPoint' | null
+  >(null);
+
+  /** location table에서 cell 선택시 지역 뽑기 */
+  const locationFilterClick = (location: string) => {
+    if (selectedField === 'startPoint') {
+      setMeetFilterInfo((prev) => ({
+        ...prev,
+        startPoint: location,
+      }));
+    } else if (selectedField === 'endPoint') {
+      setMeetFilterInfo((prev) => ({
+        ...prev,
+        endPoint: location,
+      }));
+    }
+    setSelectedField(null);
+  };
+
+  const revertInfo = () => {
+    setMeetFilterInfo({
+      startPoint: '',
+      endPoint: '',
+      maxTotalDays: 0,
+      maxRecruitmentCount: 0,
+    });
+  };
+
+  const handleTotalDaysChange = (value: number) => {
+    setMeetFilterInfo((prev) => ({
+      ...prev,
+      maxTotalDays: value,
+    }));
+  };
+
+  const handleRecruitmentCountChange = (value: number) => {
+    setMeetFilterInfo((prev) => ({
+      ...prev,
+      maxRecruitmentCount: value,
+    }));
+  };
 
   console.log(meetFilterInfo);
 
@@ -45,8 +79,15 @@ function MeetFilterPage() {
 
       <div className="container">
         <div className="location-box">
-          <div className="location-item">
-            <Text $typography="t12" color="grey1" $bold={true}>
+          <div
+            className="location-item"
+            onClick={() => setSelectedField('startPoint')}
+          >
+            <Text
+              $typography="t12"
+              color={meetFilterInfo?.startPoint ? 'black' : 'grey1'}
+              $bold={true}
+            >
               출발지
             </Text>
             <Text $typography="t14">
@@ -58,42 +99,55 @@ function MeetFilterPage() {
             <Icon name="IconArrowBlack" width={9} height={6} />
           </div>
 
-          <div className="location-item">
-            <Text $typography="t12" color="grey1" $bold={true}>
+          <div
+            className="location-item"
+            onClick={() => setSelectedField('endPoint')}
+          >
+            <Text
+              $typography="t12"
+              color={meetFilterInfo?.endPoint ? 'black' : 'grey1'}
+              $bold={true}
+            >
               도착지
             </Text>
             <Text $typography="t14">
-              {meetFilterInfo?.startPoint || '정보 없음'}
+              {meetFilterInfo?.endPoint || '정보 없음'}
             </Text>
           </div>
         </div>
 
-        <FilterTable onClick={locationFilterClick} />
-        {/* <M.FilterBox>
-          <FilterTable onClick={locationFilterClick} />
-        </M.FilterBox> */}
+        <FilterTable
+          locationFilterClick={locationFilterClick}
+          canClick={selectedField !== null}
+        />
+
         <M.ToggleSliderBox>
           <ToggleSlider
             title="일정기간"
             unit="일"
             min={0}
             max={15}
-            initialValue={0}
-            onChange={(value) => console.log(`소요일차: ${value}일`)}
+            value={meetFilterInfo.maxTotalDays || 0}
+            onChange={handleTotalDaysChange}
           />
           <ToggleSlider
             title="모집일자"
             unit="인"
             min={0}
             max={15}
-            initialValue={0}
-            onChange={(value) => console.log(`모집일자: ${value}인`)}
+            value={meetFilterInfo.maxRecruitmentCount || 0}
+            onChange={handleRecruitmentCountChange}
           />
         </M.ToggleSliderBox>
       </div>
 
       <div className="apply_btn-container">
-        <Flex style={{ width: 'auto' }} $align="center" $gap={6}>
+        <Flex
+          style={{ width: 'auto' }}
+          $align="center"
+          $gap={6}
+          onClick={revertInfo}
+        >
           <Icon name="IconRevert" />
           <Text $typography="t14" $bold={true}>
             초기화
@@ -104,7 +158,9 @@ function MeetFilterPage() {
           fontSize={1.7}
           // $weak={!sendAuthCode}
 
-          onClick={() => {}}
+          onClick={() => {
+            navigate('/meet/list');
+          }}
         >
           필터 적용
         </BaseButton>

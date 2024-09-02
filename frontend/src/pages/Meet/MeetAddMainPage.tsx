@@ -99,7 +99,7 @@ function MeetAddMainPage() {
                 unit="인"
                 min={3}
                 max={15}
-                initialValue={0}
+                value={0}
                 onChange={(value) => console.log(`소요일차: ${value}일`)}
               />
             </M.ToggleSliderBox>

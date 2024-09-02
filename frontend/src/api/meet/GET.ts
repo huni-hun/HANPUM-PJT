@@ -75,13 +75,30 @@ export async function GetGroupList(requestDto: MeetRequestDto) {
   const { startPoint, endPoint, maxTotalDays, maxRecruitmentCount, pageable } =
     requestDto;
   const { page, size, sort } = pageable;
-  const { data } = await api.get('/api/group', {
-    params: {
-      page,
-      size,
-      sort,
-    },
-  });
+
+  const params: any = {
+    'pageable.page': page,
+    'pageable.size': size,
+    'pageable.sort': sort,
+  };
+
+  if (startPoint) {
+    params.startPoint = startPoint;
+  }
+
+  if (endPoint) {
+    params.endPoint = endPoint;
+  }
+
+  if (maxTotalDays && maxTotalDays > 0) {
+    params.maxTotalDays = maxTotalDays;
+  }
+
+  if (maxRecruitmentCount && maxRecruitmentCount > 0) {
+    params.maxRecruitmentCount = maxRecruitmentCount;
+  }
+
+  const { data } = await api.get('/api/group', { params });
   return data;
 }
 
