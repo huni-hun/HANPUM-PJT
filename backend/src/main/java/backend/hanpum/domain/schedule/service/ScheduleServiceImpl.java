@@ -3,6 +3,7 @@ package backend.hanpum.domain.schedule.service;
 import backend.hanpum.domain.course.entity.Course;
 import backend.hanpum.domain.course.entity.CourseDay;
 import backend.hanpum.domain.course.entity.Waypoint;
+import backend.hanpum.domain.course.enums.CourseTypes;
 import backend.hanpum.domain.course.repository.CourseRepository;
 import backend.hanpum.domain.course.service.CourseService;
 import backend.hanpum.domain.group.dto.responseDto.GroupMemberListGetResDto;
@@ -205,6 +206,20 @@ public class ScheduleServiceImpl implements ScheduleService {
         return groupScheduleResDto;
     }
 
+    @Override
+    public ScheduleDetailResDto getScheduleDetail(Long memberId, Long scheduleId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(ScheduleNotFoundException::new);
+        Long courseId = schedule.getCourse().getCourseId();
+
+        if (schedule.getType().equals("private") && schedule.getMember().getMemberId().equals(memberId)) {
+            ScheduleDetailResDto scheduleDetailResDto = scheduleRepository.getScheduleDetail(memberId, scheduleId, courseId).orElseThrow(ScheduleNotFoundException::new);
+            return scheduleDetailResDto;
+        } else {
+            throw new MemberInfoInvalidException();
+        }
+    }
+
     @Transactional(readOnly = true)
     @Override
     public ScheduleDayResDto getMyScheduleDay(Long memberId, Long ScheduleId, int day) {
@@ -332,6 +347,9 @@ public class ScheduleServiceImpl implements ScheduleService {
         ScheduleTempResDto scheduleTempResDto = scheduleRepository.getScheduleTempResDto(memberId).orElseThrow(ValidScheduleNotFoundException::new);
 
         Long scheduleId = scheduleTempResDto.getScheduleId();
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(ScheduleNotFoundException::new);
+        Course course = schedule.getCourse();
+        Long courseId = course.getCourseId();
 
         // ScheduleDayResDto
         List<ScheduleDayResDto> scheduleDayResDtoList = scheduleRepository.getScheduleDayResDtoList(memberId, scheduleId).orElseThrow(ScheduleNotFoundException::new);
@@ -339,8 +357,14 @@ public class ScheduleServiceImpl implements ScheduleService {
         // 달성률
         int rate = courseService.getScheduleGoalRate(scheduleDayResDtoList);
 
+        // 해시태그
+        List<CourseTypes> courseTypes = scheduleRepository.getCourseTypes(courseId);
+
         ScheduleInProgressResDto result = ScheduleInProgressResDto.builder()
                 .scheduleId(scheduleId)
+                .title(course.getCourseName())
+                .content(course.getContent())
+                .backgroundImg(course.getBackgroundImg())
                 .startPoint(scheduleTempResDto.getStartPoint())
                 .endPoint(scheduleTempResDto.getEndPoint())
                 .startDate(scheduleTempResDto.getStartDate())
@@ -348,6 +372,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .totalDistance(scheduleTempResDto.getTotalDistance())
                 .rate(rate)
                 .scheduleDayResDtoList(scheduleDayResDtoList)
+                .courseTypes(courseTypes)
                 .build();
         return result;
     }
@@ -383,11 +408,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<NearByAttractionResDto> getNearByAttractionList(String OS, int distance, double lat, double lon) {
+    public List<NearByAttractionResDto> getNearByAttractionList(int distance, double lat, double lon) {
         String url = new StringBuilder("https://apis.data.go.kr/B551011/KorService1/locationBasedList1")
                 .append("?numOfRows=10")
                 .append("&pageNo=1")
-                .append("&MobileOS=").append(OS)
+                .append("&MobileOS=ETC")
                 .append("&MobileApp=HANPUM")
                 .append("&_type=JSON")
                 .append("&arrange=O")

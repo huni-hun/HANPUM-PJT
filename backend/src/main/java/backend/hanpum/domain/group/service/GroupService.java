@@ -2,6 +2,7 @@ package backend.hanpum.domain.group.service;
 
 import backend.hanpum.domain.group.dto.requestDto.ApplyPostReqDto;
 import backend.hanpum.domain.group.dto.requestDto.GroupPostReqDto;
+import backend.hanpum.domain.group.dto.requestDto.GroupUpdateReqDto;
 import backend.hanpum.domain.group.dto.responseDto.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface GroupService {
 
     GroupPostResDto createGroup(Long memberId, MultipartFile multipartFile, GroupPostReqDto groupPostReqDto);
+    void updateGroup(Long memberId, Long groupId, MultipartFile multipartFile, GroupUpdateReqDto groupUpdateReqDto);
     void deleteGroup(Long memberId, Long groupId);
     GroupListGetResDto getGroupList(Long memberId, String startPoint, String endPoint, Integer maxTotalDays,
                                     Integer maxRecruitmentCount, Pageable pageable);

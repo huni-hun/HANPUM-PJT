@@ -1,12 +1,14 @@
 import Icon from '@/components/common/Icon/Icon';
 import * as R from '@/components/Style/Route/RouteBottom.styled';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface BottomSheetProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   bsType: string;
   setSelected: React.Dispatch<React.SetStateAction<string>>;
   selected: string;
+
   route?: string;
   onEdit?: () => void; // 추가
   onDelete?: () => void; // 추가
@@ -20,11 +22,16 @@ interface BottomSheetProps {
   route?: string;
   onEdit?: () => void; // 추가
   onDelete?: () => void; // 추가
+
+  id: number;
+
 }
 
 function BottomSheet(props: BottomSheetProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isClosing, setIsClosing] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   const handleClose = () => {
     setIsClosing(true);
@@ -45,15 +52,25 @@ function BottomSheet(props: BottomSheetProps) {
         return (
           <R.BottomSheetMain>
             {settingContent.map((ele) => (
+
               <R.SettingBox key={ele}>
+
+              <R.SettingBox
+                onClick={() => {
+                  if (ele === '수정') {
+                    navigate(`/route/detail/retouch/${props.id}`);
+                  }
+                }}
+              >
+
                 <R.SettingIconBox>
                   <Icon
                     name={
                       ele === '공개 여부'
-                        ? 'IconLock'
+                        ? 'IconLockBlack'
                         : ele === '수정'
                           ? 'IconRetouch'
-                          : 'IconDelete'
+                          : 'IconDeleteBlack'
                     }
                     size={20}
                   />

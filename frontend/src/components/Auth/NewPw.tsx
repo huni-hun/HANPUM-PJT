@@ -165,7 +165,7 @@ function NewPw({
         )}
       </div>
       <FixedBottomButton
-        label={'다음'}
+        label={'변경하기'}
         onClick={() => {
           changePassword({
             email: updatePwReq.email || '',

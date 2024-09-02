@@ -12,6 +12,7 @@ interface HeaderProps {
   depart?: string;
   back?: boolean;
   isShadow?: boolean;
+  isBorder?: boolean;
   searchValue?: string;
   clickBack: () => void;
   complete?: () => void;
@@ -32,6 +33,7 @@ const Header = ({
   complete,
   focus,
   clickOption,
+  isBorder = false,
   isShadow = false,
   changeEven,
   keyDownEven,
@@ -136,11 +138,7 @@ const Header = ({
               <input type="text" />
             </div>
             <Flex $gap={20} style={{ width: 'auto', marginLeft: '9px' }}>
-              <Icon
-                name="IconHeaderPlus"
-                onClick={() => onClickHandler('noti')}
-                size={14}
-              />
+              <Icon name="IconHeaderPlus" onClick={plusBtnclick} size={14} />
               <Icon
                 name="IconUser"
                 onClick={() => onClickHandler('my')}
@@ -227,25 +225,22 @@ const Header = ({
           </Flex>
         );
 
-      default:
+      case 'main':
         return (
-          <S.HeaderWrapper>
-            <Flex $justify="space-around">
-              <Icon name="IconHeaderPlus" onClick={plusBtnclick} size={14} />
-              <Icon
-                name="IconUser"
-                onClick={() => onClickHandler('my')}
-                size={14}
-              />
-            </Flex>
-          </S.HeaderWrapper>
+          <Flex $justify="end">
+            <Icon
+              name="IconUser"
+              onClick={() => onClickHandler('mypage')}
+              size={20}
+            />
+          </Flex>
         );
     }
   };
 
   return (
     <>
-      <S.HeaderWrapper isShadow={isShadow}>
+      <S.HeaderWrapper isShadow={isShadow} isBorder={isBorder}>
         {back && (
           <Icon
             name="IconBackArrow"
@@ -256,7 +251,6 @@ const Header = ({
         )}
         {renderHeader()}
       </S.HeaderWrapper>
-      {/* <Outlet /> */}
     </>
   );
 };

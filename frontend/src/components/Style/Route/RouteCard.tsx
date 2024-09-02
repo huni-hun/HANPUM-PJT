@@ -29,10 +29,16 @@ function RouteCard(props: RouteListProps) {
           </C.RouteContentBox>
           <C.TitleBox>{props.routeName}</C.TitleBox>
           <C.RouteBox>
-            <C.RouteText>{props.start}</C.RouteText>
+            <C.RouteText>
+              {props.start.length > 2
+                ? props.start.substring(0, 2)
+                : props.start}
+            </C.RouteText>
             <Icon name="IconArrowWhite" size={10} path="" />
-            <C.RouteText>{props.end}</C.RouteText>
-            <C.RouteDistanceBox>76km</C.RouteDistanceBox>
+            <C.RouteText>
+              {props.end.length > 2 ? props.end.substring(0, 2) : props.end}
+            </C.RouteText>
+            <C.RouteDistanceBox>{props.totalDistance}km</C.RouteDistanceBox>
           </C.RouteBox>
         </C.RouteNTitleBox>
         {/* <C.BContent>

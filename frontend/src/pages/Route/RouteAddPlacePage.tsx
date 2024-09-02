@@ -6,49 +6,55 @@ import Map from '../../components/common/Map/Map';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '@/components/common/Header/Header';
 import {
-  AttractionsAddProps,
-  DateRouteDetailProps,
+  AttractionsAddCardProps,
+  AttractionReqDto,
+  CourseDayReqDto,
   searchPlaceProps,
-  WayPointListProps,
+  WayPointReqDto,
 } from '@/models/route';
 
 interface RouteAddPagePlaceProps {
   selectedPlace: searchPlaceProps;
   setSearchOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setPageOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setWayPoints: React.Dispatch<React.SetStateAction<WayPointListProps[]>>;
-  wayPoints: WayPointListProps[];
-  setDateDetail: React.Dispatch<React.SetStateAction<DateRouteDetailProps[]>>;
-  dateDetail: DateRouteDetailProps[];
+  setWayPoints: React.Dispatch<React.SetStateAction<WayPointReqDto[]>>;
+  wayPoints: WayPointReqDto[];
+  setDateDetail: React.Dispatch<React.SetStateAction<CourseDayReqDto[]>>;
+  dateDetail: CourseDayReqDto[];
   day: number;
-  setAttractions: React.Dispatch<React.SetStateAction<AttractionsAddProps[]>>;
-  attractions: AttractionsAddProps[];
+  setAttractions: React.Dispatch<React.SetStateAction<AttractionReqDto[]>>;
+  attractions: AttractionReqDto[];
   pointType: string;
+  setAttractionsCard: React.Dispatch<
+    React.SetStateAction<AttractionsAddCardProps[]>
+  >;
+  attractionsCard: AttractionsAddCardProps[];
+  keyword: string;
 }
 
 function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
   const navigator = useNavigate();
 
   const setWayPoint = () => {
-    let way: WayPointListProps = {
+    let way: WayPointReqDto = {
       type: '경유지',
       name: props.selectedPlace.placeName,
       address: props.selectedPlace.address,
-      latitude: props.selectedPlace.latitude,
-      longitude: props.selectedPlace.longitude,
-      point: props.wayPoints.length + 1,
-      distance: 123,
-      duration: 432,
-      calorie: 123,
+      lat: props.selectedPlace.latitude,
+      lon: props.selectedPlace.longitude,
+      pointNumber: `${props.wayPoints.length + 1}`,
+      distance: '0',
+      duration: '0',
+      calorie: '0',
     };
 
     props.setWayPoints((pre) => {
       const updatedWayPoints = [...pre, way];
 
-      let newDateDetail: DateRouteDetailProps[] = [...props.dateDetail];
-      newDateDetail.map((ele: DateRouteDetailProps) => {
-        if (ele.date === props.day) {
-          ele.wayPointList = updatedWayPoints;
+      let newDateDetail: CourseDayReqDto[] = [...props.dateDetail];
+      newDateDetail.map((ele: CourseDayReqDto) => {
+        if (ele.dayNumber === props.day) {
+          ele.wayPointReqDtoList = updatedWayPoints;
         }
       });
       props.setDateDetail(newDateDetail);
@@ -61,26 +67,35 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
   };
 
   const setAttraction = () => {
-    let attraction: AttractionsAddProps = {
+    let attraction: AttractionReqDto = {
       name: props.selectedPlace.placeName,
       address: props.selectedPlace.address,
-      latitude: props.selectedPlace.latitude,
-      longitude: props.selectedPlace.longitude,
+      lat: props.selectedPlace.latitude,
+      lon: props.selectedPlace.longitude,
+      img: props.selectedPlace.img as string,
+      type: '관광지',
+    };
+
+    let attractionCardInfo: AttractionsAddCardProps = {
+      keyword: props.keyword,
+      name: props.selectedPlace.placeName,
       img: props.selectedPlace.img as string,
     };
 
-    props.setAttractions((pre) => {
-      const updatedWayPoints = [...pre, attraction];
+    props.setAttractionsCard((pre) => [...pre, attractionCardInfo]);
 
-      let newDateDetail: DateRouteDetailProps[] = [...props.dateDetail];
-      newDateDetail.map((ele: DateRouteDetailProps) => {
-        if (ele.date === props.day) {
-          ele.attractionsList = updatedWayPoints;
+    props.setAttractions((pre) => {
+      const updatedAttractions = [...pre, attraction];
+
+      let newDateDetail: CourseDayReqDto[] = [...props.dateDetail];
+      newDateDetail.map((ele: CourseDayReqDto) => {
+        if (ele.dayNumber === props.day) {
+          ele.attractionReqDtoList = updatedAttractions;
         }
       });
       props.setDateDetail(newDateDetail);
 
-      return updatedWayPoints;
+      return updatedAttractions;
     });
 
     props.setPageOpen(false);
@@ -126,28 +141,20 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
             <Button
               width={35}
               height={6}
-              fc="1A823B"
-              bc="#ffffff"
-              radius={0.7}
-              fontSize={1.6}
-              children="관광지 추가"
-              color="#1A823B"
-              onClick={() => {
-                setAttraction();
-              }}
-              fontWeight="bold"
-            />
-            <Button
-              width={35}
-              height={6}
               fc="ffffff"
               bc="#1A823B"
               radius={0.7}
               fontSize={1.6}
-              children="경유지 추가"
+              children={
+                props.pointType === 'wp' ? '경유지 추가' : '관광지 추가'
+              }
               color="#ffffff"
               onClick={() => {
-                setWayPoint();
+                if (props.pointType === 'wp') {
+                  setWayPoint();
+                } else {
+                  setAttraction();
+                }
               }}
               fontWeight="bold"
             />

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class AttractionResDto {
+    Integer dayNumber;
     Long attractionId;
     String name;
     String type;

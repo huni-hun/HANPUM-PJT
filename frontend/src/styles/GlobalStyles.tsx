@@ -5,6 +5,24 @@ import { colors } from './colorPalette';
 export const GlobalStyle = createGlobalStyle`
   ${reset}
 
+  
+
+@font-face {
+  font-family: 'Noto Sans KR';
+  src: url('/fonts/NotoSansKR-Regular.woff2') format('woff2'),
+        url('/fonts/NotoSansKR-Regular.woff') format('woff');
+  font-weight: 500; 
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Noto Sans KR';
+  src: url('/fonts/NotoSansKR-Bold.woff2') format('woff2'),
+        url('/fonts/NotoSansKR-Bold.woff') format('woff');
+  font-weight: 700; 
+  font-display: swap;
+}
+
 
   html, body, #root {
   /* margin: 0 auto; */
@@ -12,6 +30,8 @@ export const GlobalStyle = createGlobalStyle`
     width: 100%;
     height: 100%;
     box-sizing: border-box;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
   }
 
   #root {
@@ -33,7 +53,7 @@ export const GlobalStyle = createGlobalStyle`
     justify-content: center;
     align-items: center;
 
-
+    /* font-family: 'Noto', sans-serif; */
 
   }
 

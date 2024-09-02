@@ -19,6 +19,7 @@ import SearchPlacePage from './Route/SearchPlacePage';
 import RouteAddCompletePage from './Route/RouteAddCompletePage';
 import RoteListMorePage from './Route/RoteListMorePage';
 import RouteListSearchPage from './Route/RouteListSearchPage';
+import RouteDetailRetouchPage from './Route/RouteDetailRetouchPage';
 
 /** 모임 */
 import MeetList from '../pages/Meet/MeetList';
@@ -41,6 +42,7 @@ import ReviewPage from '@pages/My/ReviewPage';
 import MyProfilePage from '@pages/My/MyProfilePage';
 import CategoryLayout from '@/components/My/edit/CategoryLayout';
 import ConfigPage from '@pages/My/ConfigPage';
+import ConfigLayout from '@components/My/config/ConfigLayout';
 
 export {
   LoginPage,
@@ -61,6 +63,7 @@ export {
   RouteAddCompletePage,
   RoteListMorePage,
   RouteListSearchPage,
+  RouteDetailRetouchPage,
 
   /** 모임 */
   MeetList,
@@ -81,4 +84,5 @@ export {
   MyProfilePage,
   CategoryLayout,
   ConfigPage,
+  ConfigLayout,
 };

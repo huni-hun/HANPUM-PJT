@@ -1,7 +1,6 @@
 import { ChangePassword } from '@/api/mypage/PUT';
 import { FindId } from '@/api/signup/GET';
 import { CertificationFindPw } from '@/api/signup/POST';
-import { FindPw } from '@/api/signup/PUT';
 import FindIdComponent from '@/components/Auth/FindId';
 import FindPwComponent from '@/components/Auth/FindPw';
 import NewPw from '@/components/Auth/NewPw';

@@ -126,13 +126,13 @@ export const TypeTitle = styled.p`
 `;
 
 export const MoreButton = styled.div`
-  width: 10vw;
+  width: 4.5rem;
   height: 6vh;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  padding-right: 3rem;
+  margin-right: 3rem;
 `;
 
 export const MoreText = styled.p`
@@ -150,8 +150,8 @@ export const OverFlow = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: 19vh;
-  width: 96vw;
+  height: 100%;
+  width: 100%;
   overflow-x: auto;
   &::-webkit-scrollbar {
     display: none;

@@ -1,14 +1,14 @@
 import { FeedProps } from '@/models/route';
 import { colors } from '@/styles/colorPalette';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 interface StyledProps {
   backgroundImg?: string;
 }
 
 export const Container = styled.div`
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   background-color: #f5f5f5;
@@ -33,8 +33,10 @@ export const HeaderButton = styled.div`
 `;
 
 export const Main = styled.div`
-  width: 100vw;
-  height: 83vh;
+
+  width: 100%;
+  height: 93vh;
+
   display: flex;
   flex-direction: row;
   overflow-y: auto;
@@ -64,7 +66,6 @@ export const ImgBox = styled.div<StyledProps>`
   width: 100%;
   height: 29.3rem;
   background-color: #d9d9d9;
-  background-image: url(${(props) => props.backgroundImg || ''});
   background-size: cover;
   background-position: center;
   position: relative;
@@ -77,7 +78,7 @@ export const ImgBox = styled.div<StyledProps>`
 
 export const UserContainer = styled.div`
   width: 100%;
-  height: 7.8rem;
+  height: 4.4rem;
   display: flex;
   flex-direction: row;
   border-bottom: 0.1rem solid ${colors.grey2};
@@ -103,26 +104,26 @@ export const UserName = styled.p`
 
 export const RouteNameInfo = styled.div`
   width: 85vw;
-  height: 20vh;
+  height: 20.2rem;
   display: flex;
   flex-direction: column;
   /* border-bottom: 0.1rem solid #d9d9d9; */
-  padding: 2.4rem 0 1rem;
+  padding: 1.4rem 0 1rem 0;
 `;
 
 export const RouteNameInfoContainer = styled.div`
   width: 100%;
-  height: 70%;
+  height: 60%;
   display: flex;
   flex-direction: column;
 `;
 
 export const RouteTypeContainer = styled.div`
   width: 100%;
-  height: 20%;
+  height: 27%;
   display: flex;
   flex-direction: row;
-  align-items: start;
+  align-items: center;
   overflow: auto;
 `;
 
@@ -195,12 +196,11 @@ export const RouteInfo = styled.p`
 
 export const RouteDateBox = styled.div`
   width: 85vw;
-  height: 19vh;
+  height: 16.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   position: relative;
-  padding-bottom: 2rem;
 `;
 
 export const StartDateBox = styled.div`
@@ -234,7 +234,7 @@ export const DateText = styled.p`
 
 export const RouteDateTilteBox = styled.div`
   width: 100%;
-  height: 20%;
+  height: 15%;
   font-size: 2rem;
   font-weight: bold;
   display: flex;
@@ -243,11 +243,12 @@ export const RouteDateTilteBox = styled.div`
 
 export const RouteDateInfoBox = styled.div`
   width: 100%;
-  height: 55%;
+  height: 60%;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
+  position: relative;
 `;
 
 export const RoutePlaceInfoBox = styled.div`
@@ -259,7 +260,6 @@ export const RoutePlaceInfoBox = styled.div`
   border-radius: 1.2rem;
   flex-direction: column;
   justify-content: center;
-  position: relative;
 `;
 
 export const PointText = styled.p`
@@ -271,7 +271,7 @@ export const PointText = styled.p`
 
 export const RouteDateTextBox = styled.div`
   width: 100%;
-  height: 25%;
+  height: 15%;
   display: flex;
   justify-content: end;
   align-items: start;
@@ -360,7 +360,7 @@ export const Distance = styled.p`
 
 export const ContentSelecContainer = styled.div`
   width: 100vw;
-  height: 6vh;
+  height: 5.1rem;
   display: flex;
   flex-direction: row;
   border-bottom: 0.1rem solid #d9d9d9;
@@ -410,6 +410,22 @@ export const HeaderOverflow = styled.div`
   }
   width: 95%;
   height: 100%;
+  background-color: ${colors.white};
+`;
+
+export const RetouchHeaderOverflow = styled.div`
+  flex-direction: row;
+  display: flex;
+  align-items: center;
+  padding: 0 0 0 1.6rem;
+  overflow-x: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  width: 95%;
+  height: 100%;
+  border-bottom: 0.15rem solid ${colors.grey1};
+  background-color: ${colors.white};
 `;
 
 export const DayContainer = styled.div`
@@ -454,16 +470,71 @@ export const DetailMainOverflow = styled.div`
   }
 `;
 
-export const PlaceCardBox = styled.div`
+const swipedIn = keyframes`
+  from {
+    width: 100%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  to {
+    width: 87%;
+    left: 0%;
+    transform: translate(0, -50%);
+  }
+`;
+
+const swipedOut = keyframes`
+  from {
+    width: 87%;
+    left: 0%;
+    transform: translate(0, -50%);
+  }
+  to {
+    width: 100%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+`;
+
+export const PlaceCardCotainer = styled.div`
   width: 34.3rem;
   height: 8.8rem;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  background-color: ${colors.red};
+  border-radius: 1.2rem;
+  box-shadow: 0px 4px 4px 0 rgba(0, 0, 0, 0.25);
+  margin-bottom: 0.8rem;
+  position: relative;
+`;
+
+export const PlaceCardDeleteIcon = styled.div`
+  width: 3rem;
+  height: 3.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  font-size: 1.2rem;
+  color: ${colors.white};
+  margin-right: 1.3rem;
+`;
+
+export const PlaceCardBox = styled.div<{ isSwiped: boolean }>`
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #ffffff;
   border-radius: 1.2rem;
-  box-shadow: 0px 4px 4px 0 rgba(0, 0, 0, 0.25);
-  margin-bottom: 0.8rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: ${(props) => (props.isSwiped ? swipedIn : swipedOut)} 0.5s ease
+    forwards;
 `;
 
 export const PlaceCard = styled.div`
@@ -512,6 +583,9 @@ export const PlacetTitleBox = styled.div`
   display: flex;
   flex-direction: row;
   align-items: start;
+  white-space: nowrap; /* 텍스트가 줄바꿈 없이 한 줄로 유지되도록 설정 */
+  overflow: hidden; /* 부모 요소를 넘는 부분을 숨김 */
+  text-overflow: clip; /* 넘치는 텍스트를 자르기 */
 `;
 
 export const TypeBox = styled.div`
@@ -537,6 +611,9 @@ export const PlacetAddressBox = styled.div`
   align-items: center;
   font-size: 1.2rem;
   color: ${colors.grey2};
+  white-space: nowrap; /* 텍스트가 줄바꿈 없이 한 줄로 유지되도록 설정 */
+  overflow: hidden; /* 부모 요소를 넘는 부분을 숨김 */
+  text-overflow: clip; /* 넘치는 텍스트를 자르기 */
 `;
 
 export const PlaceImgBox = styled.div`
@@ -717,4 +794,13 @@ export const WriteTextBox = styled.div`
   justify-content: end;
   padding: 4rem 0 0 0;
   font-size: 1.4rem;
+`;
+
+export const AddBtnContainer = styled.div`
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
 `;

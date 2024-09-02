@@ -19,25 +19,26 @@ function RouteList() {
     const data: RouteListProps[] = [];
     getRouteList('해안길').then((result) => {
       if (result.status === 200) {
-        let response: RouteListProps = {
-          routeName: result.data.data.courseListMap.해안길[0].courseName,
-          routeContent: result.data.data.courseListMap.해안길[0].content,
-          routeScore: result.data.data.courseListMap.해안길[0].scoreAvg,
-          routeComment: result.data.data.courseListMap.해안길[0].commentCnt,
-          routeId: result.data.data.courseListMap.해안길[0].courseId,
-          img: result.data.data.courseListMap.해안길[0].backgroundImg,
-          writeState: result.data.data.courseListMap.해안길[0].writeState,
-          openState: result.data.data.courseListMap.해안길[0].openState,
-          memberId: result.data.data.courseListMap.해안길[0].memberId,
-          writeDate: result.data.data.courseListMap.해안길[0].writeDate,
-          start: result.data.data.courseListMap.해안길[0].startPoint,
-          end: result.data.data.courseListMap.해안길[0].endPoint,
-        };
-        for (let i = 0; i < 5; i++) {
-          data.push(response);
-        }
+        result.data.data.courseListMap['해안길'].map((ele: any) => {
+          let data: RouteListProps = {
+            routeName: ele.courseName,
+            routeContent: ele.content,
+            routeScore: ele.scoreAvg,
+            routeComment: ele.commentCnt,
+            routeId: ele.courseId,
+            img: ele.backgroundImg,
+            writeState: ele.writeState,
+            openState: ele.openState,
+            memberId: ele.memberId,
+            writeDate: ele.writeDate,
+            start: ele.startPoint,
+            end: ele.endPoint,
+            totalDistance: Math.round(ele.totalDistance),
+            totalDays: ele.totalDays,
+          };
 
-        setArr(data);
+          setArr((pre) => [...pre, data]);
+        });
       }
     });
   }, []);
@@ -55,6 +56,7 @@ function RouteList() {
         clickOption={() => {
           navigator('/route/list/search');
         }}
+        plusBtnclick={() => navigator('/route/addMain')}
       />
       <R.MainContainer>
         <R.RouteCardContainer>
@@ -74,8 +76,18 @@ function RouteList() {
           <R.CardContainer>
             <R.BlankBox />
             <R.OverFlow>
-              <RouteCard {...arr[0]} />
+              {arr.length > 0 && (
+                <CardLong
+                  key={arr[0].routeId}
+                  hasHeart={true}
+                  item={arr[0]}
+                  onClickCard={() =>
+                    navigator(`/route/detail/${arr[0].routeId}`)
+                  }
+                />
+              )}
             </R.OverFlow>
+            <R.BlankBox />
           </R.CardContainer>
         </R.RouteCardContainer>
         <R.RouteCardContainer>

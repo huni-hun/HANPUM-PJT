@@ -158,23 +158,9 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
                 .where(qCourseDay.course.courseId.eq(courseId))
                 .fetch();
 
-        List<AttractionResDto> attractions = query
-                .select(Projections.constructor(AttractionResDto.class,
-                        qAttraction.attractionId,
-                        qAttraction.name,
-                        qAttraction.type,
-                        qAttraction.address,
-                        qAttraction.lat,
-                        qAttraction.lon,
-                        qAttraction.img))
-                .from(qAttraction)
-                .where(qAttraction.courseDay.course.courseId.eq(courseId))
-                .fetch();
-
         CourseDetailResDto result = CourseDetailResDto.builder()
                 .course(courseResDto)
                 .courseDays(courseDays)
-                .attractions(attractions)
                 .build();
 
         return Optional.of(result);
@@ -220,5 +206,27 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
                 build();
 
         return Optional.of(result);
+    }
+
+    @Override
+    public List<CourseUsageHistory> getCourseUsageHistory(Long courseId, Long memberId) {
+        QCourseUsageHistory qCourseUsageHistory = QCourseUsageHistory.courseUsageHistory;
+
+        List<CourseUsageHistory> courseUsageHistoryList = query
+                .select(Projections.constructor(CourseUsageHistory.class,
+                        qCourseUsageHistory.courseUsageHistoryId,
+                        qCourseUsageHistory.startDate,
+                        qCourseUsageHistory.endDate,
+                        qCourseUsageHistory.useFlag,
+                        qCourseUsageHistory.achieveRate,
+                        qCourseUsageHistory.course,
+                        qCourseUsageHistory.member))
+                .from(qCourseUsageHistory)
+                .where(qCourseUsageHistory.course.courseId.eq(courseId)
+                        .and(qCourseUsageHistory.member.memberId.eq(memberId)))
+                .orderBy(qCourseUsageHistory.courseUsageHistoryId.desc())
+                .fetch();
+
+        return courseUsageHistoryList;
     }
 }

@@ -6,7 +6,6 @@ import Terms from '@/components/Signup/Terms';
 import UserInfo from '@/components/Signup/UserInfo';
 
 import { UserSignupFormValues } from '@/models/signup';
-// import { IncludeStepSignupValues, SignupRequestValues, SignupStep } from '@/models/signup';
 import { colors } from '@/styles/colorPalette';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

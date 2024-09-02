@@ -26,36 +26,36 @@ function Interest() {
 
   const root = [
     {
-      courseId: 1,
-      courseName: '서울에서 대전까지',
-      backgroundImg: 'testurl',
-      content: '서울에서 대전까지 가는 초보자용 코스입니다.',
+      routeName: '대전에서 서울까지',
+      routeContent: '서울에서 대전까지 가는 초보자용 코스입니다.',
+      routeScore: 3.25,
+      routeComment: 2,
+      routeId: 1,
+      img: 'testurl',
       writeState: false,
       openState: true,
-      writeDate: '2024-08-27',
-      startPoint: '서울',
-      endPoint: '대전',
-      totalDistance: 76,
       memberId: 1,
-      courseTypes: null,
-      scoreAvg: 3.25,
-      commentCnt: 2,
+      writeDate: '2024-08-27',
+      start: '서울',
+      end: '대전',
+      totalDistance: 76,
+      totalDays: 6,
     },
     {
-      courseId: 2,
-      courseName: '대전에서 서울까지',
-      backgroundImg: 'testurl',
-      content: '서울에서 대전까지 가는 초보자용 코스입니다.',
+      routeName: '대전에서 서울까지',
+      routeContent: '서울에서 대전까지 가는 초보자용 코스입니다.',
+      routeScore: 3.25,
+      routeComment: 2,
+      routeId: 2,
+      img: 'testurl',
       writeState: false,
       openState: true,
-      writeDate: '2024-08-27',
-      startPoint: '서울',
-      endPoint: '대전',
-      totalDistance: 76,
       memberId: 1,
-      courseTypes: null,
-      scoreAvg: 3.25,
-      commentCnt: 2,
+      writeDate: '2024-08-27',
+      start: '서울',
+      end: '대전',
+      totalDistance: 76,
+      totalDays: 6,
     },
   ];
 
@@ -101,10 +101,10 @@ function Interest() {
           <div className="card-container">
             {root.map((item) => (
               <CardLong
-                key={item.courseId}
+                key={item.routeId}
                 hasHeart={true}
                 item={item}
-                isSwiped={swipedId === item.courseId}
+                isSwiped={swipedId === item.routeId}
                 onSwipe={handleSwipe}
                 onClickOutside={handleClickOutside}
               />

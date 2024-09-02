@@ -40,10 +40,6 @@ public class AuthServiceImpl implements AuthService {
         memberRepository.findMemberByEmail(email).ifPresent(member -> {
             throw new EmailDuplicatedException();
         });
-
-        if (redisDao.hasEmail(email)) {
-            throw new EmailDuplicatedException();
-        }
     }
 
     @Override
@@ -77,9 +73,6 @@ public class AuthServiceImpl implements AuthService {
         memberRepository.findMemberByLoginId(loginId).ifPresent(member -> {
             throw new LoginIdDuplicatedException();
         });
-        if (redisDao.hasLoginId(loginId)) {
-            throw new LoginIdDuplicatedException();
-        }
         redisDao.setLoginId(loginId);
     }
 
@@ -90,9 +83,6 @@ public class AuthServiceImpl implements AuthService {
         memberRepository.findMemberByNickname(nickname).ifPresent(member -> {
             throw new NicknameDuplicatedException();
         });
-        if (redisDao.hasNickname(nickname)) {
-            throw new NicknameDuplicatedException();
-        }
         redisDao.setNickName(nickname);
     }
 

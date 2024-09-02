@@ -43,11 +43,12 @@ public class Attraction {
     @Column(name = "img")
     private String img;
 
-    public void updateAttraction(String name, String type, String address, Double lat, Double lon) {
+    public void updateAttraction(String name, String type, String address, Double lat, Double lon, String img) {
         this.name = name;
         this.type = type;
         this.address = address;
         this.lat = lat;
         this.lon = lon;
+        this.img = img;
     }
 }

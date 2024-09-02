@@ -154,7 +154,7 @@ function FindPwComponent({
     <S.FindContainer>
       <div className="form-container">
         <Text $typography="t20" $bold={true} style={{ margin: '16px 0px' }}>
-          비밀번호 찾기
+          비밀번호 찾기 및 변경
         </Text>
         <Text $typography="t14" style={{ marginBottom: '24px' }}>
           가입한 계정 정보를 입력해주세요
@@ -188,6 +188,7 @@ function FindPwComponent({
         <TextField
           label="이메일"
           name="email"
+          placeholder="123456@naver.com"
           onChange={handlePwReq}
           value={findPwReq.email}
           hasError={

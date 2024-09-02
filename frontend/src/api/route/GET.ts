@@ -41,6 +41,12 @@ export async function getRouteDayDetail(id: string, day: number) {
   return response;
 }
 
+export async function getRouteDayAttraction(id: string, day: number) {
+  const response = await api.get(`/api/course/${id}/days/${day}/attract`);
+
+  return response;
+}
+
 export async function getRouteReview(id: string) {
   const response = await api.get(`/api/course/${id}/reviews`);
 

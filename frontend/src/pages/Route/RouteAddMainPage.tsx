@@ -15,6 +15,7 @@ function RouteAddMainPage() {
   const [explanationBoxClick, setExplanationBoxClick] =
     useState<boolean>(false);
   const [imgSrc, setImgSrc] = useState<string>('');
+  const [imgData, setImgData] = useState<File>(null!);
   const [explanationReady, setExplanationReady] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [typeBoxClick, setTypeBoxClick] = useState<boolean>(false);
@@ -89,14 +90,9 @@ function RouteAddMainPage() {
                     onChange={(e) => {
                       if (e.target.files) {
                         const file = e.target.files[0];
-                        const reader = new FileReader();
-                        reader.readAsDataURL(file);
-
-                        reader.onload = () => {
-                          if (reader.result !== null) {
-                            setImgSrc(reader.result?.toString());
-                          }
-                        };
+                        const reader = URL.createObjectURL(file);
+                        setImgData(file);
+                        setImgSrc(reader);
 
                         setImgReady(true);
                       }
@@ -170,9 +166,6 @@ function RouteAddMainPage() {
                 value={routeExplane}
                 onChange={(e) => {
                   setRouteExplane(e.target.value);
-                  if (routeTitle !== '') {
-                    setExplanationReady(true);
-                  }
                 }}
               />
               <R.ImgBtnBox>
@@ -180,14 +173,19 @@ function RouteAddMainPage() {
                   width={25}
                   height={6}
                   fc="ffffff"
-                  bc={explanationReady ? '#1A823B' : '#D9D9D9'}
+                  bc={
+                    routeExplane.length > 0 && routeTitle.length > 0
+                      ? '#1A823B'
+                      : '#D9D9D9'
+                  }
                   radius={0.7}
                   fontSize={1.6}
                   children="등록"
                   color="#ffffff"
                   onClick={() => {
-                    if (explanationReady) {
+                    if (routeExplane.length > 0 && routeTitle.length > 0) {
                       setExplanationBoxClick(false);
+                      setExplanationReady(true);
                     }
                   }}
                 />
@@ -318,7 +316,7 @@ function RouteAddMainPage() {
               if (explanationReady) {
                 navigator('/route/addDetail', {
                   state: {
-                    imgSrc: imgSrc,
+                    imgSrc: imgData,
                     typeChecked: typeChecked,
                     routeTitle: routeTitle,
                     routeExplane: routeExplane,

@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom';
 import { alertStateAtom } from '@/atoms/alertStateAtom';
 import Alert from './Alert';
 import CalenderAlert from './CalenderAlert';
+import WithdrawAlert from './WithdrawAlert';
 
 export function AlertProvider({ children }: { children: React.ReactNode }) {
   const alertState = useRecoilValue(alertStateAtom);
@@ -17,6 +18,10 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
 
     if (alertState.purpose === 'calender') {
       return <CalenderAlert {...alertState} />;
+    }
+
+    if (alertState.purpose === 'withdraw') {
+      return <WithdrawAlert {...alertState} />;
     }
   };
 
