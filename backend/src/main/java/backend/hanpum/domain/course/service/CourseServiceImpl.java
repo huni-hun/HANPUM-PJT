@@ -428,17 +428,26 @@ public class CourseServiceImpl implements CourseService {
     public void addInterestCourse(Long courseId, Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
-        InterestCourse interestCourse = InterestCourse.builder()
+        Optional<InterestCourse> interestCourse = interestCourseRepository.findByMember_MemberIdAndCourse_CourseId(memberId, courseId);
+        if(interestCourse.isPresent()) {
+            throw new InterestAlreadyExistsException();
+        }
+
+        InterestCourse newInterest = InterestCourse.builder()
                 .member(member)
                 .course(course)
                 .build();
 
-        interestCourseRepository.save(interestCourse);
+        interestCourseRepository.save(newInterest);
     }
 
     @Override
     @Transactional
     public void deleteInterestCourse(Long courseId, Long memberId) {
+        Optional<InterestCourse> interestCourse = interestCourseRepository.findByMember_MemberIdAndCourse_CourseId(memberId, courseId);
+        if(!interestCourse.isPresent()) {
+            throw new InterestCourseNotFoundException();
+        }
         interestCourseRepository.deleteByMember_MemberIdAndCourse_CourseId(memberId, courseId);
     }
 
