@@ -26,7 +26,7 @@ export const Container = styled.div`
   display: flex;
   align-items: end;
   position: fixed;
-  z-index: 9999;
+  z-index: 99;
 `;
 
 export const BottomSheetContainer = styled.div<{ isClosing: boolean }>`

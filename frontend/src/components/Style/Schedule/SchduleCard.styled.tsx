@@ -43,7 +43,7 @@ export const CardDateWrap = styled.div`
 export const CardDDay = styled.div`
   width: 13vw;
   height: 7vw;
-  background-color: #1c1c1e;
+  background-color: rgba(28, 28, 30, 0.9);
   border-radius: 1rem;
 
   font-weight: 500;
@@ -51,6 +51,7 @@ export const CardDDay = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0.3rem 0.6rem;
 `;
 
 export const CardScheduleDate = styled.div`

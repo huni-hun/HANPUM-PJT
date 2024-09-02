@@ -18,7 +18,7 @@ export interface FeedProps {
   /** feed에 userImg + userName이 있을 때 */
   isUserContainer?: boolean;
 
-  /** 모임 */
+  /** 모임 tab*/
   meetRouter?: boolean;
   meetDday?: number;
   memberCount?: number;
@@ -37,10 +37,11 @@ export interface FeedInfoProps {
   arrivalsPlace?: string;
   startDate?: string;
   endDate?: string;
-  currentDistance?: number;
+  totalDuration?: number;
   totalDistance: number;
   dayData: { dayNum: number }[];
   percentage?: number;
+  rate?: number;
 }
 
 export interface RouteListProps {

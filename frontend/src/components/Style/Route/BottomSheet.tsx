@@ -7,6 +7,19 @@ interface BottomSheetProps {
   bsType: string;
   setSelected: React.Dispatch<React.SetStateAction<string>>;
   selected: string;
+  route?: string;
+  onEdit?: () => void; // 추가
+  onDelete?: () => void; // 추가
+}
+
+interface BottomSheetProps {
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  bsType: string;
+  setSelected: React.Dispatch<React.SetStateAction<string>>;
+  selected: string;
+  route?: string;
+  onEdit?: () => void; // 추가
+  onDelete?: () => void; // 추가
 }
 
 function BottomSheet(props: BottomSheetProps) {
@@ -21,15 +34,18 @@ function BottomSheet(props: BottomSheetProps) {
     }, 280);
   };
 
-  const settingContent = ['공개 여부', '수정', '삭제'];
+  const settingContent =
+    props.route === '일정' ? ['수정', '삭제'] : ['공개 여부', '수정', '삭제'];
+
   const sortingType = ['최신순', '좋아요순', '등록순'];
+
   const BottomSheetMain = () => {
     switch (props.bsType) {
       case '설정':
         return (
           <R.BottomSheetMain>
             {settingContent.map((ele) => (
-              <R.SettingBox>
+              <R.SettingBox key={ele}>
                 <R.SettingIconBox>
                   <Icon
                     name={
@@ -41,7 +57,16 @@ function BottomSheet(props: BottomSheetProps) {
                     }
                     size={20}
                   />
-                  <R.SettingTextBox isDelete={ele === '삭제'}>
+                  <R.SettingTextBox
+                    isDelete={ele === '삭제'}
+                    onClick={() => {
+                      if (ele === '수정' && props.onEdit) {
+                        props.onEdit(); // 수정 핸들러 호출
+                      } else if (ele === '삭제' && props.onDelete) {
+                        props.onDelete(); // 삭제 핸들러 호출
+                      }
+                    }}
+                  >
                     {ele}
                   </R.SettingTextBox>
                 </R.SettingIconBox>
@@ -65,6 +90,7 @@ function BottomSheet(props: BottomSheetProps) {
           <R.BottomSheetMain>
             {sortingType.map((ele) => (
               <R.SortingTyepBox
+                key={ele}
                 onClick={() => {
                   props.setSelected(ele);
                 }}
