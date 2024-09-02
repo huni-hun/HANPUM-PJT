@@ -41,6 +41,7 @@ function RouteDetailPage() {
   const [attractions, setAttractions] = useState<AttractionsProps[]>([]);
   const [linePath, setLinePath] = useState<MapLinePathProps[]>([]);
   const [se, setSe] = useState<LineStartEndProps[]>([]);
+  const [marker, setMarker] = useState<LineStartEndProps[]>([]);
   const [bsType, setBsType] = useState<string>('설정');
   const [reviewType, setReviewType] = useState<string>('최신순');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -91,6 +92,7 @@ function RouteDetailPage() {
   }, []);
 
   useEffect(() => {
+    setMarker([]);
     getRouteDayDetail(routeid as string, selectedDay).then((result) => {
       if (result.status === 200) {
         let arr: DaysOfRouteProps[] = [];
@@ -121,6 +123,11 @@ function RouteDetailPage() {
             };
             setSe((pre) => [...pre, seData]);
           }
+          let markerData: LineStartEndProps = {
+            x: ele.lat,
+            y: ele.lon,
+          };
+          setMarker((pre) => [...pre, markerData]);
         });
         arr.sort((a: any, b: any) => a.routePoint - b.routePoint);
         setDayOfRoute(arr);
@@ -303,6 +310,7 @@ function RouteDetailPage() {
           </R.RouteInfoContainer>
           <R.RouteDetailInfoContainer>
             <RouteDetailInfo
+              marker={marker}
               deleteHandler={(name: string) => {}}
               setSelectedIdx={setSelectedIdx}
               reviews={reviews}

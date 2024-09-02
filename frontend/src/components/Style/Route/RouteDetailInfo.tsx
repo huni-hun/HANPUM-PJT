@@ -38,6 +38,7 @@ interface RouteDetailInfoProps {
   clickAttryBtn?: () => void;
   setSelectedIdx: React.Dispatch<React.SetStateAction<number>>;
   deleteHandler: (name: string) => void;
+  marker: any[];
 }
 
 function RouteDetailInfo(props: RouteDetailInfoProps) {
@@ -121,6 +122,7 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
                 linePath={props.linePath}
                 latitude={props.longitude}
                 longitude={props.latitude}
+                marker={props.marker}
               />
             </R.MapBox>
             <R.DetailHeader>
@@ -237,6 +239,7 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
                 linePath={props.linePath}
                 latitude={props.longitude}
                 longitude={props.latitude}
+                marker={props.marker}
               />
             </R.MapBox>
             <R.DetailHeader>

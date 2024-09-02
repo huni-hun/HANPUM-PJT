@@ -15,6 +15,8 @@ import {
   RouteDetailProps,
   RouteReviewProps,
   WayPointReqDto,
+  LineStartEndProps,
+  MapLinePathProps,
 } from '@/models/route';
 import {
   getRouteDayAttraction,
@@ -25,7 +27,7 @@ import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
 import Header from '@/components/common/Header/Header';
 import Icon from '@/components/common/Icon/Icon';
 import SearchPlacePage from './SearchPlacePage';
-import { GetDistance } from '@/api/route/POST';
+import { GetDistance, GetLineData } from '@/api/route/POST';
 import { RetouchRoute } from '@/api/route/PUT';
 
 function RouteDetailRetouchPage() {
@@ -42,7 +44,7 @@ function RouteDetailRetouchPage() {
   const [latitude, setLatitude] = useState<number>(0);
   const [longitude, setLongitude] = useState<number>(0);
   const [attractions, setAttractions] = useState<AttractionsProps[]>([]);
-  const [linePath, setLinePath] = useState([]);
+  const [linePath, setLinePath] = useState<MapLinePathProps[]>([]);
   const [bsType, setBsType] = useState<string>('설정');
   const [reviewType, setReviewType] = useState<string>('최신순');
   const [open, setIsopen] = useState<boolean>(false);
@@ -57,7 +59,9 @@ function RouteDetailRetouchPage() {
   >([]);
   const [selectedIdx, setSelectedIdx] = useState<number>(-1);
   const [pointType, setPointType] = useState<string>('wp');
-
+  const [mapLines, setMapLines] = useState<any[]>([]);
+  const [se, setSe] = useState<LineStartEndProps[]>([]);
+  const [marker, setMarker] = useState<LineStartEndProps[]>([]);
   const [reviews, setReviews] = useState<RouteReviewProps[]>([]);
   useEffect(() => {
     if (dayData.length === 0) {
@@ -244,6 +248,7 @@ function RouteDetailRetouchPage() {
 
   useEffect(() => {
     let arr: DaysOfRouteProps[] = [];
+    let lines: MapLinePathProps[] = [];
     if (dateDetail.length > 0) {
       if (dateDetail[selectedDay - 1].wayPointReqDtoList.length > 0) {
         wayPoints.map((ele: WayPointReqDto, idx: number) => {
@@ -257,14 +262,61 @@ function RouteDetailRetouchPage() {
             longitude: ele.lon,
           };
           arr.push(data);
-        });
+          if (ele.type === '경유지') {
+            let line: MapLinePathProps = {
+              name: ele.name,
+              x: ele.lat,
+              y: ele.lon,
+            };
 
+            lines.push(line);
+          } else {
+            let seData: LineStartEndProps = {
+              x: ele.lat,
+              y: ele.lon,
+            };
+            setSe((pre) => [...pre, seData]);
+          }
+          let markerData: LineStartEndProps = {
+            x: ele.lat,
+            y: ele.lon,
+          };
+          setMarker((pre) => [...pre, markerData]);
+        });
+        setLinePath(lines);
         setWayPoints(dateDetail[selectedDay - 1].wayPointReqDtoList);
       }
     }
 
     setDayOfRoute(arr);
   }, [wayPoints]);
+
+  useEffect(() => {
+    if (linePath.length > 0) {
+      const mapLines: any[] = [];
+      GetLineData(linePath, se[0], se[1])
+        .then((res) => {
+          if (res.status === 200 && res.data.status === 'SUCCESS') {
+            res.data.data.map((ele: any) => {
+              ele.vertexes.map((vertex: any, index: number) => {
+                if (index % 2 === 0) {
+                  mapLines.push(
+                    new window.kakao.maps.LatLng(
+                      ele.vertexes[index + 1],
+                      ele.vertexes[index],
+                    ),
+                  );
+                }
+              });
+            });
+            setMapLines(mapLines);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [linePath]);
 
   const deleteAttracHandler = (i: string) => {
     let newAttacR: AttractionReqDto[] = [];
@@ -344,6 +396,13 @@ function RouteDetailRetouchPage() {
       setAddRoute(route);
     }
   }, [dateDetail]);
+
+  useEffect(() => {
+    if (dayOfRoute.length > 0) {
+      setLatitude(dayOfRoute[0].latitude);
+      setLongitude(dayOfRoute[0].longitude);
+    }
+  }, [dayOfRoute]);
 
   const clickWayBtn = () => {
     setPointType('wp');
@@ -468,13 +527,14 @@ function RouteDetailRetouchPage() {
           </R.RouteInfoContainer>
           <R.RouteDetailInfoContainer>
             <RouteDetailInfo
+              marker={marker}
               deleteHandler={deleteAttracHandler}
               setSelectedIdx={setSelectedIdx}
               dayOfRoute={dayOfRoute}
               reviews={reviews}
               setDayOfRoute={setDayOfRoute}
               setIsOpen={setIsopen}
-              linePath={[]}
+              linePath={mapLines}
               selected={selected}
               selectedDay={selectedDay}
               latitude={latitude}
