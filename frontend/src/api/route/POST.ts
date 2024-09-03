@@ -59,8 +59,6 @@ export const GetDistance = async (
     {
       headers: {
         'Content-Type': 'application/json',
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiQ09NTU9OIiwic3ViIjoiaGFucHVtMSIsImlhdCI6MTcyNTM2NjUwMywiZXhwIjoxNzI1NDM4NTAzfQ.XZ9sLmBZrDD5jFqpDvoOi_vcl_Dye5jR6nZ1UcWQ6gk',
       },
     },
   );
@@ -120,8 +118,6 @@ export const GetLineData = async (
     {
       headers: {
         'Content-Type': 'application/json',
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiQ09NTU9OIiwic3ViIjoiaGFucHVtMSIsImlhdCI6MTcyNTM2NjUwMywiZXhwIjoxNzI1NDM4NTAzfQ.XZ9sLmBZrDD5jFqpDvoOi_vcl_Dye5jR6nZ1UcWQ6gk',
       },
     },
   );
@@ -145,8 +141,6 @@ export const SetRouteReview = async (
     {
       headers: {
         'Content-Type': 'application/json',
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiQ09NTU9OIiwic3ViIjoiaGFucHVtMSIsImlhdCI6MTcyNTM2NjUwMywiZXhwIjoxNzI1NDM4NTAzfQ.XZ9sLmBZrDD5jFqpDvoOi_vcl_Dye5jR6nZ1UcWQ6gk',
       },
     },
   );
