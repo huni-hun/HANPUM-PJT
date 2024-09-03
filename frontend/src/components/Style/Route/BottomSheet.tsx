@@ -8,23 +8,10 @@ interface BottomSheetProps {
   bsType: string;
   setSelected: React.Dispatch<React.SetStateAction<string>>;
   selected: string;
-
   route?: string;
   onEdit?: () => void; // 추가
   onDelete?: () => void; // 추가
-}
-
-interface BottomSheetProps {
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  bsType: string;
-  setSelected: React.Dispatch<React.SetStateAction<string>>;
-  selected: string;
-  route?: string;
-  onEdit?: () => void; // 추가
-  onDelete?: () => void; // 추가
-
-  id: number;
-
+  id?: number;
 }
 
 function BottomSheet(props: BottomSheetProps) {
@@ -52,17 +39,16 @@ function BottomSheet(props: BottomSheetProps) {
         return (
           <R.BottomSheetMain>
             {settingContent.map((ele) => (
-
-              <R.SettingBox key={ele}>
-
               <R.SettingBox
+                key={ele}
                 onClick={() => {
-                  if (ele === '수정') {
-                    navigate(`/route/detail/retouch/${props.id}`);
+                  if (ele === '수정' && props.onEdit) {
+                    props.onEdit(); // 수정 핸들러 호출
+                  } else if (ele === '삭제' && props.onDelete) {
+                    props.onDelete(); // 삭제 핸들러 호출
                   }
                 }}
               >
-
                 <R.SettingIconBox>
                   <Icon
                     name={
@@ -74,16 +60,7 @@ function BottomSheet(props: BottomSheetProps) {
                     }
                     size={20}
                   />
-                  <R.SettingTextBox
-                    isDelete={ele === '삭제'}
-                    onClick={() => {
-                      if (ele === '수정' && props.onEdit) {
-                        props.onEdit(); // 수정 핸들러 호출
-                      } else if (ele === '삭제' && props.onDelete) {
-                        props.onDelete(); // 삭제 핸들러 호출
-                      }
-                    }}
-                  >
+                  <R.SettingTextBox isDelete={ele === '삭제'}>
                     {ele}
                   </R.SettingTextBox>
                 </R.SettingIconBox>
