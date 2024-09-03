@@ -46,3 +46,13 @@ export interface MeetPageAble {
   size: number;
   sort: string;
 }
+
+export interface CreateMeetRequestDto {
+  multipartFile: File;
+  title: string;
+  description: string;
+  recruitmentCount: number;
+  recruitmentPeriod: string;
+  courseId: number;
+  startDate: string;
+}

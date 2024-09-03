@@ -1,6 +1,6 @@
 import React from 'react';
 import { MeetModalProps } from '@/models/meet';
-import * as M from './MeetModal.styled';
+import * as M from '../Style/Meet/MeetModal.styled';
 import modalWarningImg from '../../assets/icons/modal_warning.svg';
 import BaseButton from '../common/BaseButton';
 import { colors } from '@/styles/colorPalette';

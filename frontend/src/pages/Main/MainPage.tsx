@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-
 import BottomTab from '@components/common/BottomTab/BottomTab';
 import Schedule from '@components/Main/Schedule';
 import Text from '@components/common/Text';

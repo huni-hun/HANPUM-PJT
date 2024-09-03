@@ -1,120 +1,140 @@
-import { useState } from 'react';
-import Button from '../../components/common/Button/Button';
+import { ChangeEvent, useState } from 'react';
 import Icon from '../../components/common/Icon/Icon';
 import * as M from '../../components/Style/Meet/MeetAddMain.styled';
 import Input from '../../components/common/Input/Input';
 import Header from '@/components/common/Header/Header';
-import { colors } from '@/styles/colorPalette';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ToggleSlider from '@/components/common/ToggleSlider/ToggleSlider';
-import ArrowIcon from '../../assets/icons/Arrow.svg';
+import { CreateMeetRequestDto } from '@/models/meet';
+import Text from '@/components/common/Text';
+import BaseButton from '@/components/common/BaseButton';
 
 function MeetAddMainPage() {
-  const navigator = useNavigate();
+  const navigate = useNavigate();
 
-  const [imgBoxClick, setImgBoxClick] = useState<boolean>(false);
-  const [imgReady, setImgReady] = useState<boolean>(false);
-  const [explanationBoxClick, setExplanationBoxClick] =
-    useState<boolean>(false);
-  const [imgSrc, setImgSrc] = useState<string>('');
-  const [explanationReady, setExplanationReady] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [typeBoxClick, setTypeBoxClick] = useState<boolean>(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-  const [meetTitle, setMeetTitle] = useState<string>('');
-  const [meetExplane, setMeetExplane] = useState<string>('');
+  const [meetRequest, setMeetRequest] = useState<Partial<CreateMeetRequestDto>>(
+    {},
+  );
+
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setPreviewImage(imageUrl);
+
+      setMeetRequest((prevValue) => ({
+        ...prevValue,
+        multipartFile: file,
+      }));
+    }
+  };
+
+  console.log(meetRequest);
+
+  const handleInfoChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.currentTarget;
+
+    setMeetRequest((prevValue) => ({
+      ...prevValue,
+      [name]: value,
+    }));
+  };
+
+  const handleRecruitmentCountChange = (value: number) => {
+    setMeetRequest((prev) => ({
+      ...prev,
+      recruitmentCount: value,
+    }));
+  };
 
   return (
     <MainPageContainer>
-      <Header purpose="title" title="모임 생성" clickBack={() => {}} />
+      <Header
+        purpose="title"
+        title="모임 생성"
+        isborder={true}
+        clickBack={() => {
+          navigate(-1);
+        }}
+      />
       <M.MainContainer>
-        <M.OverFlow>
-          <M.ImgCardOpen>
-            <M.ImgCardTitle>배경 사진을 선택해주세요.</M.ImgCardTitle>
-            <M.ImgContainer>
-              <M.ImgBox
-                onClick={() => {
-                  document.getElementById('Img')?.click();
-                }}
-              >
-                {imgSrc === '' ? (
-                  <Icon name="IconCameraGrey" size={80} />
-                ) : (
-                  <M.Img src={imgSrc} />
-                )}
-                <M.FileSelect
-                  id="Img"
-                  onChange={(e) => {
-                    if (e.target.files) {
-                      const file = e.target.files[0];
-                      const reader = new FileReader();
-                      reader.readAsDataURL(file);
+        <div className="form">
+          <div className="container">
+            <Text $typography="t12" $bold>
+              모임 이미지
+            </Text>
+            <div className="img-box">
+              {previewImage ? (
+                <img src={previewImage} alt="프로필 이미지 미리보기" />
+              ) : (
+                <Icon name="IconCameraGrey" width={52} height={38} />
+              )}
 
-                      reader.onload = () => {
-                        if (reader.result !== null) {
-                          setImgSrc(reader.result?.toString());
-                        }
-                      };
-
-                      setImgReady(true);
-                    }
-                  }}
-                  accept="image/*"
-                  type="file"
-                />
-              </M.ImgBox>
-            </M.ImgContainer>
-          </M.ImgCardOpen>
-
-          <M.ExplanationCardOpen>
-            <M.ExplanationCardTitle>모임 이름</M.ExplanationCardTitle>
-            <Input
-              value={meetTitle}
-              width={78}
-              style={{
-                border: '0.2rem solid #d9d9d9',
-                marginTop: '1rem',
-                marginBottom: '1rem',
-              }}
-              onChange={(e) => {
-                setMeetTitle(e.target.value);
-              }}
-            />
-            <M.ExplanationCardTitle style={{ marginTop: '1rem' }}>
-              모임 설명
-            </M.ExplanationCardTitle>
-            <M.ExplanationRoute
-              value={meetExplane}
-              onChange={(e) => {
-                setMeetExplane(e.target.value);
-                if (meetTitle !== '') {
-                  setExplanationReady(true);
-                }
-              }}
-            />
-            <M.ToggleSliderBox>
-              <ToggleSlider
-                title="모집인원"
-                unit="인"
-                min={3}
-                max={15}
-                value={0}
-                onChange={(value) => console.log(`소요일차: ${value}일`)}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
               />
-            </M.ToggleSliderBox>
-          </M.ExplanationCardOpen>
-          <M.SelectEctInfoBox>
-            <M.DeadLineBox>
-              <span>모집 마감일</span>
-              <img src={ArrowIcon} alt="" />
-            </M.DeadLineBox>
-            <M.ScheduleBox>
-              <span>일정</span>
-              <img src={ArrowIcon} alt="" />
-            </M.ScheduleBox>
-          </M.SelectEctInfoBox>
-        </M.OverFlow>
+            </div>
+          </div>
+
+          <div className="container">
+            <Text $typography="t12" $bold>
+              모임 이름
+            </Text>
+            <Input
+              placeholder="김동산"
+              name="title"
+              value={meetRequest?.title}
+              onChange={handleInfoChange}
+            />
+          </div>
+
+          <div className="container">
+            <Text $typography="t12" $bold>
+              모임 내용
+            </Text>
+            <textarea
+              placeholder="내용을 작성해 주세요."
+              name="description"
+              value={meetRequest?.description}
+              onChange={handleInfoChange}
+            />
+          </div>
+          <M.ToggleSliderBox>
+            <ToggleSlider
+              title="모집인원"
+              unit="인"
+              min={0}
+              max={15}
+              value={meetRequest?.recruitmentCount || 0}
+              onChange={handleRecruitmentCountChange}
+            />
+          </M.ToggleSliderBox>
+        </div>
+
+        <div className="category-container">
+          <Text $bold={true} $typography="t12">
+            모집 마감일
+          </Text>
+          <Icon name="IconArrowRight" />
+        </div>
+
+        <div className="category-container">
+          <Text $bold={true} $typography="t12">
+            일정
+          </Text>
+          <Icon name="IconArrowRight" />
+        </div>
+
+        <div className="btn-box">
+          <BaseButton size="large">모임 생성하기</BaseButton>
+        </div>
       </M.MainContainer>
     </MainPageContainer>
   );
