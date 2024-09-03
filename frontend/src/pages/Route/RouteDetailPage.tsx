@@ -76,7 +76,7 @@ function RouteDetailPage() {
               totalDuration: ele.total_duration,
             };
             setDayData((pre) => [...pre, data]);
-            num += Number(ele.total_distance.split('k')[0]);
+            num += ele.total_distance;
           });
           let type: string[] = [];
           result.data.data.course.courseTypes.map((ele: string) => {
@@ -111,21 +111,21 @@ function RouteDetailPage() {
           if (ele.type === '경유지') {
             let line: MapLinePathProps = {
               name: ele.name,
-              x: ele.lat,
-              y: ele.lon,
+              x: ele.lon,
+              y: ele.lat,
             };
 
             lines.push(line);
           } else {
             let seData: LineStartEndProps = {
-              x: ele.lat,
-              y: ele.lon,
+              x: ele.lon,
+              y: ele.lat,
             };
             setSe((pre) => [...pre, seData]);
           }
           let markerData: LineStartEndProps = {
-            x: ele.lat,
-            y: ele.lon,
+            x: ele.lon,
+            y: ele.lat,
           };
           setMarker((pre) => [...pre, markerData]);
         });
@@ -133,8 +133,8 @@ function RouteDetailPage() {
         setDayOfRoute(arr);
         setLinePath(lines);
 
-        setLatitude(arr[0].latitude);
-        setLongitude(arr[0].longitude);
+        setLatitude(arr[0].longitude);
+        setLongitude(arr[0].latitude);
       }
     });
 
@@ -363,6 +363,9 @@ function RouteDetailPage() {
           setSelected={setReviewType}
           bsType={bsType}
           setIsOpen={setIsOpen}
+          onEdit={() => {
+            navigate(`/route/detail/retouch/${routeid}`);
+          }}
         />
       )}
       {isModalOpen && (
