@@ -23,6 +23,11 @@ import InfoBadge from '@/components/common/Badge/InfoBadge';
 import RouteBadge from '@/components/common/Badge/RouteBadge';
 import StarBadge from '@/components/common/Badge/StarBadge';
 import Flex from '@/components/common/Flex';
+import { useQuery } from 'react-query';
+import { getMyScheduleData } from '@/api/schedule/GET';
+import { STATUS } from '@/constants';
+import { toast } from 'react-toastify';
+import { AxiosError } from 'axios';
 
 function MainPage() {
   const navigator = useNavigate();
@@ -30,6 +35,26 @@ function MainPage() {
   const clickMoreBtn = (keyword: string) => {
     navigator('/route/list/more', { state: { keyword: keyword } });
   };
+
+  // const { data: mySchedule } = useQuery(
+  //   'geMySchedule', // Query Key
+  //   () =>
+  //     getMyScheduleData(
+  //       'eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiQ09NTU9OIiwic3ViIjoidGVzdDEyMzQ1IiwiaWF0IjoxNzI1MjczNTMwLCJleHAiOjE3MjUzNDU1MzB9.YDLFmQfLa7nAPNK0cAq2mXVEe6gKzqbEJAM2CZcJ0k8',
+  //     ),
+  //   {
+  //     onSuccess: (res) => {
+  //       console.log('res ::', res.data);
+  //       if (res.status === STATUS.success) {
+  //       } else if (res.status === STATUS.error) {
+  //         toast.error(res.message);
+  //       }
+  //     },
+  //     onError: (error: AxiosError) => {
+  //       toast.error(error.message);
+  //     },
+  //   },
+  // );
 
   return (
     <MainPageContainer>
