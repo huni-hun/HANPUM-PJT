@@ -5,6 +5,7 @@ import backend.hanpum.domain.course.entity.CourseType;
 import backend.hanpum.domain.course.repository.CourseTypeRepository;
 import backend.hanpum.domain.group.dto.requestDto.ApplyPostReqDto;
 import backend.hanpum.domain.group.dto.requestDto.GroupPostReqDto;
+import backend.hanpum.domain.group.dto.requestDto.GroupUpdateReqDto;
 import backend.hanpum.domain.group.dto.responseDto.*;
 import backend.hanpum.domain.group.entity.Group;
 import backend.hanpum.domain.group.entity.GroupMember;
@@ -86,6 +87,29 @@ public class GroupServiceImpl implements GroupService {
         scheduleService.createGroupSchedule(memberId, groupPostReqDto.getSchedulePostReqDto());
 
         return GroupPostResDto.builder().groupId(group.getGroupId()).build();
+    }
+
+    @Override
+    @Transactional
+    public void updateGroup(Long memberId, Long groupId, MultipartFile multipartFile, GroupUpdateReqDto groupUpdateReqDto) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
+        if(member.getGroupMember().getGroup() != group) throw new GroupPermissionException();
+        if(member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
+
+        group.updateGroupInfo(
+                groupUpdateReqDto.getTitle(),
+                groupUpdateReqDto.getDescription(),
+                groupUpdateReqDto.getRecruitmentCount(),
+                groupUpdateReqDto.getRecruitmentPeriod()
+        );
+
+        if(!multipartFile.isEmpty()) {
+            String currentImage = group.getGroupImg();
+            String updateImage = s3ImageService.uploadImage(multipartFile);
+            group.updateGroupImg(updateImage);
+            s3ImageService.deleteImage(currentImage);
+        }
     }
 
     @Override

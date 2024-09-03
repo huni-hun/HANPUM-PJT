@@ -66,4 +66,11 @@ public class Group {
     public void updateGroupImg(String groupImg){
         this.groupImg = groupImg;
     }
+
+    public void updateGroupInfo(String title, String description, int recruitmentCount, Date recruitmentPeriod){
+        this.title = title;
+        this.description = description;
+        this.recruitmentCount = recruitmentCount;
+        this.recruitmentPeriod = recruitmentPeriod;
+    }
 }

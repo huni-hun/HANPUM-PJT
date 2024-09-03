@@ -18,7 +18,7 @@ export interface FeedProps {
   /** feed에 userImg + userName이 있을 때 */
   isUserContainer?: boolean;
 
-  /** 모임 */
+  /** 모임 tab*/
   meetRouter?: boolean;
   meetDday?: number;
   memberCount?: number;
@@ -37,10 +37,11 @@ export interface FeedInfoProps {
   arrivalsPlace?: string;
   startDate?: string;
   endDate?: string;
-  currentDistance?: number;
+  totalDuration?: number;
   totalDistance: number;
   dayData: { dayNum: number }[];
   percentage?: number;
+  rate?: number;
 }
 
 export interface RouteListProps {
@@ -56,6 +57,8 @@ export interface RouteListProps {
   writeDate: string;
   start: string;
   end: string;
+  totalDistance: number;
+  totalDays: number;
 }
 
 export interface RouteDetailProps {
@@ -66,6 +69,7 @@ export interface RouteDetailProps {
   routeComment: number;
   start: string;
   end: string;
+  img: string;
 }
 
 export interface RouteDetailDayProps {
@@ -92,6 +96,7 @@ export interface AttractionsProps {
   address: string;
   latitude: number;
   longitude: number;
+  img: string;
 }
 
 export interface RouteReviewProps {
@@ -109,39 +114,67 @@ export interface searchPlaceProps {
   longitude: number;
   img?: string;
 }
-
-export interface WayPointListProps {
-  type: string;
-  name: string;
-  address: string;
-  latitude: number;
-  longitude: number;
-  point: number;
-  distance: number;
-  duration: number;
-  calorie: number;
-}
-
-export interface AttractionsAddProps {
-  address: string;
-  latitude: number;
-  longitude: number;
+export interface AttractionsAddCardProps {
+  keyword: string;
   name: string;
   img: string;
 }
 
-export interface DateRouteDetailProps {
-  date: number;
-  wayPointList: WayPointListProps[];
-  attractionsList: AttractionsAddProps[];
+export interface WayPointReqDto {
+  type: string;
+  name: string;
+  address: string;
+  lat: number;
+  lon: number;
+  pointNumber: string;
+  distance: string;
+  duration: string;
+  calorie: string;
+}
+
+export interface AttractionReqDto {
+  address: string;
+  lat: number;
+  lon: number;
+  name: string;
+  img: string;
+  type: string;
+}
+
+export interface CourseDayReqDto {
+  dayNumber: number;
+  wayPointReqDtoList: WayPointReqDto[];
+  attractionReqDtoList: AttractionReqDto[];
 }
 
 export interface AddRouteProps {
-  memberId: number;
-  routeName: string;
-  routeContent: string;
+  courseName: string;
+  content: string;
   openState: boolean;
   writeState: boolean;
-  routeType: string[];
-  dateOfRoute: DateRouteDetailProps[];
+  courseTypeList: string[];
+  multipartFile: Blob | string;
+  courseDayReqDtoList: CourseDayReqDto[];
+}
+
+export interface RetouchRouteProps {
+  courseId: number;
+  courseName: string;
+  content: string;
+  openState: boolean;
+  writeState: boolean;
+  courseTypeList: string[];
+  multipartFile: Blob | string;
+  courseDayReqDtoList: CourseDayReqDto[];
+}
+
+export interface MapLinePathProps {
+  name: string;
+  x: number;
+  y: number;
+}
+
+export interface LineStartEndProps {
+  x: number;
+  y: number;
 }

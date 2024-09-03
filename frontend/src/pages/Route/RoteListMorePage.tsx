@@ -30,6 +30,8 @@ function RouteListMorePage() {
           writeDate: ele.writeDate,
           start: ele.startPoint,
           end: ele.endPoint,
+          totalDistance: Math.round(ele.totalDistance),
+          totalDays: ele.totalDays,
         };
 
         setArr((pre) => [...pre, data]);

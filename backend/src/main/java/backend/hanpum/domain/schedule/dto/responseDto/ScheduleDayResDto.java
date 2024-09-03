@@ -21,7 +21,13 @@ public class ScheduleDayResDto {
     @Setter
     List<AttractionResDto> attractionList;
 
-    public ScheduleDayResDto(Long scheduleDayId, String date, boolean visit, boolean running, String totalDistance, String totalDuration, String totalCalories) {
+    public ScheduleDayResDto(Long scheduleDayId,
+                             String date,
+                             boolean visit,
+                             boolean running,
+                             String totalDistance,
+                             String totalDuration,
+                             String totalCalories) {
         this.scheduleDayId = scheduleDayId;
         this.date = date;
         this.visit = visit;

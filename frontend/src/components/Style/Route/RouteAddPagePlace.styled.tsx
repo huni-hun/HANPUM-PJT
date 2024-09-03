@@ -137,6 +137,6 @@ export const AddBtnContainer = styled.div`
   width: 100%;
   height: 30%;
   display: flex;
-  justify-content: space-between;
+  justify-content: end;
   align-items: end;
 `;

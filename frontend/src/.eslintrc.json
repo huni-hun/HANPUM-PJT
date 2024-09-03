@@ -5,7 +5,9 @@
     "prettier/prettier": [
       "error",
       {
-        "endOfLine": "auto"
+        "singleQuote": true,
+        "trailingComma": "all",
+        "semi": true
       }
     ]
   }

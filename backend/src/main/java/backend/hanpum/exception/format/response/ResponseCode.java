@@ -14,6 +14,7 @@ public enum ResponseCode {
     /* 일정 */
     SCHEDULE_CREATED(HttpStatus.OK, "일정이 성공적으로 생성되었습니다."),
     GROUP_SCHEDULE_CREATED(HttpStatus.OK, "모임 일정이 성공적으로 생성되었습니다."),
+    SCHEDULE_DETAIL_FETCHED(HttpStatus.OK, "일정 상세 정보가 성공적으로 조회되었습니다."),
     RUNNING_SCHEDULE_FETCHED(HttpStatus.OK, "진행중인 일정이 성공적으로 조회되었습니다."),
     SCHEDULE_LIST_FETCHED(HttpStatus.OK, "일정 정보가 성공적으로 조회되었습니다."),
     GROUP_SCHEDULE_LIST_FETCHED(HttpStatus.OK, "모임 일정 정보가 성공적으로 조회되었습니다."),
@@ -33,6 +34,7 @@ public enum ResponseCode {
     COURSE_DELETE_SUCCESS(HttpStatus.OK, "경로 삭제가 성공적으로 완료되었습니다."),
     COURSE_DETAIL_FETCHED(HttpStatus.OK, "경로 상세정보가 성공적으로 조회되었습니다."),
     COURSE_DAY_FETCHED(HttpStatus.OK, "경로 일차 정보가 성공적으로 조회되었습니다."),
+    COURSE_DAY_ATTRACTION_FETCHED(HttpStatus.OK, "경로 일차 관광지 정보가 성공적으로 조회되었습니다."),
     ADD_INTEREST_COURSE_SUCCESS(HttpStatus.OK, "관심 경로 추가가 성공적으로 완료되었습니다."),
     DELETE_INTEREST_COURSE_SUCCESS(HttpStatus.OK, "관심 경로 삭제가 성공적으로 완료되었습니다."),
     COURSE_REVIEWS_FETCHED(HttpStatus.OK, "경로 리뷰 조회가 성공적으로 완료되었습니다."),
@@ -45,6 +47,7 @@ public enum ResponseCode {
 
     /* 모임 */
     GROUP_CREATED_SUCCESS(HttpStatus.OK, "모임이 성공적으로 생성되었습니다."),
+    GROUP_UPDATE_SUCCESS(HttpStatus.OK, "모임이 성공적으로 수정되었습니다."),
     GROUP_DELETE_SUCCESS(HttpStatus.OK, "모임이 성공적으로 삭제되었습니다."),
     GROUP_LIST_FETCHED(HttpStatus.OK, "모임 리스트가 성공적으로 조회되었습니다."),
     GROUP_MEMBER_JOIN_FETCHED(HttpStatus.OK, "회원 참여 모임이 성공적으로 조회되었습니다."),
@@ -83,6 +86,7 @@ public enum ResponseCode {
     MEMBER_LIKE_GROUP_LIST_FETCHED(HttpStatus.OK, "관심 모임 리스트가 성공적으로 조회되었습니다."),
     MEMBER_LIKE_COURSE_LIST_FETCHED(HttpStatus.OK, "관심 경로 리스트가 성공적으로 조회되었습니다."),
     MEMBER_MADE_COURSE_LIST_FETCHED(HttpStatus.OK, "내가 만든 경로 리스트가 성공적으로 조회되었습니다."),
+    MEMBER_USED_COURSE_LIST_FETCHED(HttpStatus.OK, "내가 사용한 경로 리스트가 성공적으로 조회되었습니다."),
     MEMBER_DELETE_SUCCESS(HttpStatus.OK, "회원탈퇴가 성공적으로 완료되었습니다."),
     ;
 

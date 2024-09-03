@@ -19,6 +19,9 @@ public interface ScheduleService {
     // 모임 일정 가져오기
     GroupScheduleResDto getGroupScheduleList(Long memberId);
 
+    // 일정 상세 조회
+    ScheduleDetailResDto getScheduleDetail(Long memberId, Long scheduleId);
+
     // 일차별 일정 조회
     ScheduleDayResDto getMyScheduleDay(Long memberId, Long ScheduleId, int day);
 
@@ -44,5 +47,5 @@ public interface ScheduleService {
     Long setArriveScheduleWayPoint(ScheduleWayPointReqDto scheduleWayPointReqDto);
 
     // 주변 관광지 정보 가져오기
-    List<NearByAttractionResDto> getNearByAttractionList(String OS, int distance, double lat, double lon);
+    List<NearByAttractionResDto> getNearByAttractionList(int distance, double lat, double lon);
 }

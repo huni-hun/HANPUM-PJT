@@ -304,11 +304,9 @@ public class CourseServiceImpl implements CourseService {
                         newAttraction.getType(),
                         newAttraction.getAddress(),
                         newAttraction.getLat(),
-                        newAttraction.getLon());
+                        newAttraction.getLon(),
+                        newAttraction.getImage());
 
-                if(newAttraction.getImage() != null) {
-                    // S3 image update 로직
-                }
             } else {
                 Attraction attraction = Attraction.builder()
                         .courseDay(existDay)
@@ -405,21 +403,51 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public List<AttractionResDto> getCourseDayAttractions(Long courseId, Integer day) {
+        List<Attraction> attractionList = attractionRepository.findByCourseDay_Course_CourseIdAndCourseDay_dayNumber(courseId, day);
+
+        List<AttractionResDto> resDtoList = new ArrayList<>();
+        for(Attraction attraction : attractionList) {
+            resDtoList.add(AttractionResDto.builder()
+                    .dayNumber(attraction.getCourseDay().getDayNumber())
+                    .attractionId(attraction.getAttractionId())
+                    .name(attraction.getName())
+                    .type(attraction.getType())
+                    .address(attraction.getAddress())
+                    .lat(attraction.getLat())
+                    .lon(attraction.getLon())
+                    .img(attraction.getImg())
+                    .build());
+        }
+
+        return resDtoList;
+    }
+
+    @Override
     @Transactional
     public void addInterestCourse(Long courseId, Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
-        InterestCourse interestCourse = InterestCourse.builder()
+        Optional<InterestCourse> interestCourse = interestCourseRepository.findByMember_MemberIdAndCourse_CourseId(memberId, courseId);
+        if(interestCourse.isPresent()) {
+            throw new InterestAlreadyExistsException();
+        }
+
+        InterestCourse newInterest = InterestCourse.builder()
                 .member(member)
                 .course(course)
                 .build();
 
-        interestCourseRepository.save(interestCourse);
+        interestCourseRepository.save(newInterest);
     }
 
     @Override
     @Transactional
     public void deleteInterestCourse(Long courseId, Long memberId) {
+        Optional<InterestCourse> interestCourse = interestCourseRepository.findByMember_MemberIdAndCourse_CourseId(memberId, courseId);
+        if(!interestCourse.isPresent()) {
+            throw new InterestCourseNotFoundException();
+        }
         interestCourseRepository.deleteByMember_MemberIdAndCourse_CourseId(memberId, courseId);
     }
 
@@ -520,10 +548,11 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Transactional
     public void updateCourseUsageHistory(Long courseId, Long memberId, Double achieveRate) {
-        CourseUsageHistory courseUsageHistory = courseUsageHistoryRepository.findByCourse_courseIdAndMember_memberId(courseId, memberId);
+        List<CourseUsageHistory> courseUsageHistoryList = courseRepository.getCourseUsageHistory(courseId, memberId);
 
         Date currentDate = new Date();
-        courseUsageHistory.updateHistoryState(currentDate, false, achieveRate);
+
+        courseUsageHistoryList.get(0).updateHistoryState(currentDate, false, achieveRate);
     }
 
     @Override

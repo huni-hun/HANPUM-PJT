@@ -47,7 +47,7 @@ const RangeCalendar = ({
     const formattedStart = formatDate(start);
     const formattedEnd = formatDate(end);
 
-    //무한렌더링 방지
+    // 무한렌더링 방지
     if (
       formattedStart !== internalRange.startDate ||
       formattedEnd !== internalRange.endDate
@@ -64,6 +64,8 @@ const RangeCalendar = ({
     }
   };
 
+  const today = new Date(); // 오늘 날짜 가져오기
+
   return (
     <CustomCalendarWrapper>
       <Datepicker
@@ -75,6 +77,13 @@ const RangeCalendar = ({
         value={[
           startDate ? new Date(startDate) : undefined,
           endDate ? new Date(endDate) : undefined,
+        ]}
+        min={today} // 오늘 이후 날짜만 선택 가능하도록 설정
+        invalid={[
+          {
+            start: new Date(1900, 0, 1), // 과거의 모든 날짜를 비활성화
+            end: today,
+          },
         ]}
       />
     </CustomCalendarWrapper>

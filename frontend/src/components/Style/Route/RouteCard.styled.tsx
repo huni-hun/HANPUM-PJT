@@ -79,7 +79,7 @@ export const BottomContent = styled.div`
 `;
 
 export const RouteNTitleBox = styled.div`
-  width: 60%;
+  width: 70%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -92,10 +92,13 @@ export const RouteBox = styled.div`
   flex-direction: row;
   align-items: end;
   justify-content: space-between;
+  white-space: nowrap; /* 텍스트가 줄바꿈 없이 한 줄로 유지되도록 설정 */
+  overflow: hidden; /* 부모 요소를 넘는 부분을 숨김 */
+  text-overflow: clip; /* 넘치는 텍스트를 자르기 */
 `;
 
 export const RouteDistanceBox = styled.div`
-  width: 20%;
+  width: 40%;
   height: 80%;
   display: flex;
   align-items: center;
@@ -124,7 +127,7 @@ export const TitleBox = styled.div`
 `;
 
 export const RouteContentBox = styled.div`
-  width: 70%;
+  width: 50%;
   hegiht: 30%;
   display: flex;
   flex-direction: row;

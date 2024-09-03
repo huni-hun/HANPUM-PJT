@@ -63,7 +63,7 @@ function BottomTab() {
       </Bt.BottomTabItem>
       <Bt.BottomTabItem
         onClick={() => {
-          navigator('/setting');
+          navigator('/mypage');
         }}
       >
         <Icon
@@ -72,7 +72,7 @@ function BottomTab() {
           }
           size={20}
         />
-        <Bt.TabText selected={curTab.includes('meet')}>설정</Bt.TabText>
+        <Bt.TabText selected={curTab.includes('meet')}>내 정보</Bt.TabText>
       </Bt.BottomTabItem>
     </Bt.BottomTab>
   );

@@ -38,7 +38,12 @@ import {
   CategoryLayout,
   MeetAddMainPage,
   ConfigPage,
+
+  EditMySchedulePage,
+
   ConfigLayout,
+  RouteDetailRetouchPage,
+
 } from './index'; // index.tsx에서 컴포넌트를 가져옵니다.
 
 // import useIsAuth from '@/hooks/auth/useIsAuth';
@@ -63,6 +68,7 @@ export default function Router() {
             path="/schedule/success"
             element={<SuccessAddSchedulePage />}
           />
+          <Route path="/schedule/edit" element={<EditMySchedulePage />} />
           {/* 경로 */}
           <Route path="/route/list" element={<RouteList />} />
           <Route path="/route/detail/:routeid" element={<RouteDetailPage />} />
@@ -71,6 +77,10 @@ export default function Router() {
           <Route path="route/add/complete" element={<RouteAddCompletePage />} />
           <Route path="route/list/more" element={<RoteListMorePage />} />
           <Route path="route/list/search" element={<RouteListSearchPage />} />
+          <Route
+            path="/route/detail/retouch/:routeid"
+            element={<RouteDetailRetouchPage />}
+          />
           {/* 모임 */}
           <Route path="/meet/list" element={<MeetList />} />
           <Route path="/meet/:id" element={<MeetDetailPage />} />
