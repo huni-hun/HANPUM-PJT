@@ -11,12 +11,12 @@ export const SchduleContainer = styled.div`
   width: 100%;
   height: 60vh;
   margin-top: 2rem;
-
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
+
 export const DateWrap = styled.div<{ $isExpanded?: boolean }>`
   height: ${({ $isExpanded }) => ($isExpanded ? '120vw' : '20vw')};
   width: 96%;
@@ -133,4 +133,22 @@ export const ScheduleMainContainer = styled.div`
   align-items: center;
   padding: 8rem 0 0 0;
   box-sizing: border-box;
+`;
+
+export const NextBtn = styled.div`
+  width: 95%;
+  display: flex;
+  justify-content: right;
+`;
+
+/** 일정 수정 달력 wrap */
+export const DatePickerEditWrap = styled.div`
+  height: 120vw;
+  width: 97%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
+  margin-bottom: 9rem;
 `;
