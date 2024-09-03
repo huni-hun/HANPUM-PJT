@@ -77,9 +77,9 @@ export async function GetGroupList(requestDto: MeetRequestDto) {
   const { page, size, sort } = pageable;
 
   const params: any = {
-    'pageable.page': page,
-    'pageable.size': size,
-    'pageable.sort': sort,
+    page: page,
+    size: size,
+    sort: sort,
   };
 
   if (startPoint) {
