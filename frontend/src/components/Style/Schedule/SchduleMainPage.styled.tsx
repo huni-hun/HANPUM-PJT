@@ -7,7 +7,7 @@ interface ProgressProps {
 
 export const Container = styled.div`
   width: 100%;
-  height: 100vh;
+  /* height: 100vh; */
   .grayBox {
     height: 35.8rem;
     background-color: ${colors.grey1};
@@ -16,7 +16,7 @@ export const Container = styled.div`
 
 export const Main = styled.div`
   width: 100vw;
-  height: 93vh;
+  height: 100%;
   display: flex;
   flex-direction: row;
   overflow-y: auto;
@@ -284,4 +284,10 @@ export const Hr = styled.div`
   height: 0.1rem;
   background-color: #d9d9d9;
   margin-bottom: 2.5rem;
+`;
+
+export const NoData = styled.div`
+  /* height: 30vh; */
+  padding: 2rem 1rem;
+  font-size: 1.5rem;
 `;

@@ -47,6 +47,7 @@ export const Overflow = styled.div`
   width: 100%;
   height: 100%;
   overflow-y: auto;
+  box-sizing: border-box;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -200,6 +201,7 @@ export const RouteDateBox = styled.div`
   flex-direction: column;
   justify-content: space-around;
   position: relative;
+  padding-bottom: 2rem;
 `;
 
 export const StartDateBox = styled.div`
@@ -216,6 +218,7 @@ export const EndDateBox = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  /* padding-bottom: 2rem; */
 `;
 
 export const DateBox = styled.div`
