@@ -70,6 +70,7 @@ export const MainContainer = styled.div`
   padding: 16px 16px 0px 16px;
   box-sizing: border-box;
   overflow-y: hidden;
+  overflow-x: hidden; /* 수평 스크롤 숨김 */
   padding-bottom: 10vh;
 `;
 

@@ -248,6 +248,26 @@ const Header = ({
           </Flex>
         );
 
+      case 'route-retouch':
+        return (
+          <Flex $align="end" $justify="center">
+            <div style={{ position: 'absolute', left: 16 }} onClick={clickBack}>
+              <Text $typography="t16" color={'red'}>
+                취소
+              </Text>
+            </div>
+
+            <div
+              style={{ position: 'absolute', right: 16 }}
+              onClick={clickOption}
+            >
+              <Text $typography="t16" color={'main'}>
+                완료
+              </Text>
+            </div>
+          </Flex>
+        );
+
       case 'main':
         return (
           <Flex $justify="space-between" $align="center">

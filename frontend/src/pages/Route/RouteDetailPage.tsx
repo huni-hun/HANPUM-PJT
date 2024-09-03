@@ -23,6 +23,7 @@ import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
 import BottomSheet from '@/components/Style/Route/BottomSheet';
 import ReviewModal from '@/components/Style/Route/ReviewModal';
 import { GetLineData } from '@/api/route/POST';
+import { RouteDelete } from '@/api/route/Delete';
 
 function RouteDetailPage() {
   const { routeid } = useParams();
@@ -206,6 +207,16 @@ function RouteDetailPage() {
     });
   }, []);
 
+  const deleteHandler = () => {
+    RouteDelete(routeid as string)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return loading ? (
     <R.Container>
       <Header
@@ -366,10 +377,15 @@ function RouteDetailPage() {
           onEdit={() => {
             navigate(`/route/detail/retouch/${routeid}`);
           }}
+          onDelete={deleteHandler}
         />
       )}
       {isModalOpen && (
-        <ReviewModal isVisible={isModalOpen} setIsOpen={setIsModalOpen} />
+        <ReviewModal
+          routeid={routeid as string}
+          isVisible={isModalOpen}
+          setIsOpen={setIsModalOpen}
+        />
       )}
     </R.Container>
   ) : null;

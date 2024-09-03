@@ -59,6 +59,8 @@ export const GetDistance = async (
     {
       headers: {
         'Content-Type': 'application/json',
+        Authorization:
+          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiQ09NTU9OIiwic3ViIjoiaGFucHVtMSIsImlhdCI6MTcyNTM2NjUwMywiZXhwIjoxNzI1NDM4NTAzfQ.XZ9sLmBZrDD5jFqpDvoOi_vcl_Dye5jR6nZ1UcWQ6gk',
       },
     },
   );
@@ -115,6 +117,31 @@ export const GetLineData = async (
       },
       ...data,
     ],
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization:
+          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiQ09NTU9OIiwic3ViIjoiaGFucHVtMSIsImlhdCI6MTcyNTM2NjUwMywiZXhwIjoxNzI1NDM4NTAzfQ.XZ9sLmBZrDD5jFqpDvoOi_vcl_Dye5jR6nZ1UcWQ6gk',
+      },
+    },
+  );
+
+  return response;
+};
+
+export const SetRouteReview = async (
+  id: string,
+  content: string,
+  score: number,
+  reviewId: number,
+) => {
+  const response = api.post(
+    `/api/course/${id}/reviews`,
+    {
+      content: content,
+      score: score,
+      reviewId: reviewId,
+    },
     {
       headers: {
         'Content-Type': 'application/json',
