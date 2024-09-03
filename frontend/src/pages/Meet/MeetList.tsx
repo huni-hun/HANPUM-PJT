@@ -68,7 +68,6 @@ function MeetList() {
           page: pageParam,
         },
       };
-      // console.log(updatedRequestDto);
       return GetGroupList(updatedRequestDto);
     },
     {
