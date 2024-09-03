@@ -46,6 +46,10 @@ export { ReactComponent as IconRouteAdd } from './RouteAddIcon.svg';
 export { ReactComponent as IconArrowBlack } from './ArrowBlack.svg';
 export { ReactComponent as IconHeaderPlus } from './HeaderPlus.svg';
 
+// main
+export { ReactComponent as IconAddSchedule } from './add_scheduleButton.svg';
+export { ReactComponent as IconStar } from './star.svg';
+
 // 진행중인 일정
 export { ReactComponent as IconSun } from './sun.svg';
 export { ReactComponent as IconInprogress } from './inprogress.svg';

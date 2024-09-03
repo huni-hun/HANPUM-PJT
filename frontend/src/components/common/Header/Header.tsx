@@ -3,7 +3,7 @@ import * as S from './Header.styled';
 import Icon from '../Icon/Icon';
 import Flex from '../Flex';
 import Text from '../Text';
-import api from '@/api';
+import logo from '../../../assets/img/logo.png';
 
 interface HeaderProps {
   purpose: string;
@@ -250,7 +250,12 @@ const Header = ({
 
       case 'main':
         return (
-          <Flex $justify="end">
+          <Flex $justify="space-between" $align="center">
+            <img
+              src={logo}
+              alt="logo"
+              style={{ width: '4.4rem', height: '3.7rem' }}
+            />
             <Icon
               name="IconUser"
               onClick={() => onClickHandler('mypage')}
