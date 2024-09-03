@@ -7,8 +7,22 @@
       {
         "singleQuote": true,
         "trailingComma": "all",
-        "semi": true
+        "semi": true,
+        "endOfLine": "lf"
       }
     ]
   }
 }
+
+// {
+//   "extends": ["react-app", "react-app/jest", "plugin:prettier/recommended"],
+//   "plugins": ["prettier"],
+//   "rules": {
+//     "prettier/prettier": [
+//       "error",
+//       {
+//         "endOfLine": "auto"
+//       }
+//     ]
+//   }
+// }
