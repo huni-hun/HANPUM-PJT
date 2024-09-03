@@ -1,6 +1,7 @@
 package backend.hanpum.domain.course.entity;
 
 import backend.hanpum.domain.member.entity.Member;
+import backend.hanpum.domain.schedule.entity.Schedule;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -69,6 +70,10 @@ public class Course {
     @Builder.Default
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CourseType> courseTypes = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Schedule> schedules = new ArrayList<>();
 
     public void updateCourse(String courseName, String content, boolean openState, boolean writeSTate, String startPoint, String endPoint, Integer totalDays) {
         this.courseName = courseName;

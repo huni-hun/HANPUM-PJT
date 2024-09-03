@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CourseDayResDto {
     Integer dayNumber;
-    String total_distance;
+    Double  total_distance;
     String total_duration;
     String total_calorie;
 }
