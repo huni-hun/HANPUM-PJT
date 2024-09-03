@@ -120,7 +120,6 @@ export const RouteCardContainer = styled.div`
 
 export const RouteTypeHeader = styled.div`
   width: 100vw;
-  height: 3 vh;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -131,7 +130,6 @@ export const TypeTitle = styled.p`
   font-size: 2rem;
   font-weight: bold;
   padding-left: 2rem;
-  margin-bottom: 1.6rem;
 `;
 
 export const MoreButton = styled.div`
