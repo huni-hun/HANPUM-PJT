@@ -12,7 +12,7 @@ interface HeaderProps {
   depart?: string;
   back?: boolean;
   isShadow?: boolean;
-  isBorder?: boolean;
+  isborder?: boolean;
   searchValue?: string;
   clickBack: () => void;
   complete?: () => void;
@@ -33,7 +33,7 @@ const Header = ({
   complete,
   focus,
   clickOption,
-  isBorder = false,
+  isborder = false,
   isShadow = false,
   changeEven,
   keyDownEven,
@@ -92,6 +92,29 @@ const Header = ({
             </Text>
           </Flex>
         );
+
+      case 'meet':
+        return (
+          <Flex $justify="end" $gap={16}>
+            <Icon
+              name="IconFilter"
+              onClick={() => onClickHandler('meet/filter')}
+              size={20}
+            />
+            <Icon
+              name="IconHeaderPlus"
+              // onClick={() => onClickHandler('mypage')}
+              onClick={() => {}}
+              size={20}
+            />
+            <Icon
+              name="IconUser"
+              onClick={() => onClickHandler('mypage')}
+              size={20}
+            />
+          </Flex>
+        );
+
       case 'root':
         return (
           <Flex $align="center" $justify="center">
@@ -240,7 +263,7 @@ const Header = ({
 
   return (
     <>
-      <S.HeaderWrapper isShadow={isShadow} isBorder={isBorder}>
+      <S.HeaderWrapper isShadow={isShadow} isborder={isborder}>
         {back && (
           <Icon
             name="IconBackArrow"

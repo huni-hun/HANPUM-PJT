@@ -61,11 +61,20 @@ export { ReactComponent as IconHeartInGrey } from './heart_in_grey.svg';
 export { ReactComponent as IconGreyLeftArrow } from './grey_left_arrow.svg';
 export { ReactComponent as IconMemberGrey } from './member_grey.svg';
 export { ReactComponent as IconHeartGrey } from './heart_grey.svg';
+export { ReactComponent as IconFilter } from './filter.svg';
+export { ReactComponent as IconDownArrow } from './grey_down_arrow.svg';
 
 // 모임 디테일
 export { ReactComponent as IconHeartGreyFill } from './heart_grey_fill.svg';
 export { ReactComponent as IconSquareGreyFill } from './square_grey_fill.svg';
 export { ReactComponent as IconFlagBold } from './icon_flag_bold.svg';
+
+// 모임 정렬
+export { ReactComponent as IconSortModalCheck } from './sortmodal_check.svg';
+export { ReactComponent as IconSortModalClose } from './sortmodal_close.svg';
+
+// 모임 필터링
+export { ReactComponent as IconRevert } from './filter_revert.svg';
 
 // 회원 가입 페이지
 export { ReactComponent as IconCheck } from './check.svg';
@@ -83,6 +92,7 @@ export { ReactComponent as IconInterestList } from './interestList.svg';
 export { ReactComponent as IconMyRoot } from './myRoot.svg';
 export { ReactComponent as IconMyRooteClose } from './myRootClose.svg';
 export { ReactComponent as IconHeartWhiteFill } from './heart_white_fill.svg';
+export { ReactComponent as IconHeartWhiteBorder } from './heart_white_border.svg';
 export { ReactComponent as IconLock } from './lock.svg';
 export { ReactComponent as IconDelete } from './delete.svg';
 export { ReactComponent as IconRightArrowGrey } from './rightArrow_grey.svg';

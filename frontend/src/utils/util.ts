@@ -126,3 +126,27 @@ export function returnConfigTitle(param: ConfigType): string {
       return '';
   }
 }
+
+export function startDateEndDateStringFormat(
+  startDate: string,
+  endDate: string,
+) {
+  const formatDateString = (dateStr: string) => {
+    return `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(6, 8)}`;
+  };
+
+  const start = new Date(formatDateString(startDate));
+  const end = new Date(formatDateString(endDate));
+
+  const formatDate = (date: Date) => {
+    const year = String(date.getFullYear()).slice(-2);
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}.${month}.${day}`;
+  };
+
+  const startStr = formatDate(start);
+  const endStr = formatDate(end);
+
+  return `${startStr} - ${endStr}`;
+}

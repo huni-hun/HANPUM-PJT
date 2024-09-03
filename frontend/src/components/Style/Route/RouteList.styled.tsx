@@ -2,10 +2,16 @@ import styled from 'styled-components';
 
 export const RouteListContainer = styled.div`
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   box-sizing: border-box;
-  overflow: scroll;
+  /* overflow: scroll; */
   background-color: #ffffff;
+  .small-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 0;
+    justify-content: space-between;
+  }
 `;
 
 export const RouteListHeader = styled.div`
@@ -57,12 +63,14 @@ export const IconBox = styled.div`
 `;
 
 export const MainContainer = styled.div`
-  width: 100vw;
-  height: auto;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
-  padding-bottom: 8vh;
+  padding: 16px 16px 0px 16px;
+  box-sizing: border-box;
+  overflow-y: hidden;
+  padding-bottom: 10vh;
 `;
 
 export const ButtonContainer = styled.div`
@@ -123,6 +131,7 @@ export const TypeTitle = styled.p`
   font-size: 2rem;
   font-weight: bold;
   padding-left: 2rem;
+  margin-bottom: 1.6rem;
 `;
 
 export const MoreButton = styled.div`

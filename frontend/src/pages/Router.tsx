@@ -38,12 +38,9 @@ import {
   CategoryLayout,
   MeetAddMainPage,
   ConfigPage,
-
   EditMySchedulePage,
-
   ConfigLayout,
   RouteDetailRetouchPage,
-
 } from './index'; // index.tsx에서 컴포넌트를 가져옵니다.
 
 // import useIsAuth from '@/hooks/auth/useIsAuth';
