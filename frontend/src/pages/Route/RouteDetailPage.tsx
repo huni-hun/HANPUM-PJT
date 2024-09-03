@@ -23,6 +23,7 @@ import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
 import BottomSheet from '@/components/Style/Route/BottomSheet';
 import ReviewModal from '@/components/Style/Route/ReviewModal';
 import { GetLineData } from '@/api/route/POST';
+import { RouteDelete } from '@/api/route/Delete';
 
 function RouteDetailPage() {
   const { routeid } = useParams();
@@ -76,7 +77,7 @@ function RouteDetailPage() {
               totalDuration: ele.total_duration,
             };
             setDayData((pre) => [...pre, data]);
-            num += Number(ele.total_distance.split('k')[0]);
+            num += ele.total_distance;
           });
           let type: string[] = [];
           result.data.data.course.courseTypes.map((ele: string) => {
@@ -111,21 +112,21 @@ function RouteDetailPage() {
           if (ele.type === '경유지') {
             let line: MapLinePathProps = {
               name: ele.name,
-              x: ele.lat,
-              y: ele.lon,
+              x: ele.lon,
+              y: ele.lat,
             };
 
             lines.push(line);
           } else {
             let seData: LineStartEndProps = {
-              x: ele.lat,
-              y: ele.lon,
+              x: ele.lon,
+              y: ele.lat,
             };
             setSe((pre) => [...pre, seData]);
           }
           let markerData: LineStartEndProps = {
-            x: ele.lat,
-            y: ele.lon,
+            x: ele.lon,
+            y: ele.lat,
           };
           setMarker((pre) => [...pre, markerData]);
         });
@@ -133,8 +134,8 @@ function RouteDetailPage() {
         setDayOfRoute(arr);
         setLinePath(lines);
 
-        setLatitude(arr[0].latitude);
-        setLongitude(arr[0].longitude);
+        setLatitude(arr[0].longitude);
+        setLongitude(arr[0].latitude);
       }
     });
 
@@ -205,6 +206,16 @@ function RouteDetailPage() {
       setReviewLoading(true);
     });
   }, []);
+
+  const deleteHandler = () => {
+    RouteDelete(routeid as string)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return loading ? (
     <R.Container>
@@ -363,10 +374,18 @@ function RouteDetailPage() {
           setSelected={setReviewType}
           bsType={bsType}
           setIsOpen={setIsOpen}
+          onEdit={() => {
+            navigate(`/route/detail/retouch/${routeid}`);
+          }}
+          onDelete={deleteHandler}
         />
       )}
       {isModalOpen && (
-        <ReviewModal isVisible={isModalOpen} setIsOpen={setIsModalOpen} />
+        <ReviewModal
+          routeid={routeid as string}
+          isVisible={isModalOpen}
+          setIsOpen={setIsModalOpen}
+        />
       )}
     </R.Container>
   ) : null;

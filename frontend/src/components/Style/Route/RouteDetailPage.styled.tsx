@@ -39,6 +39,7 @@ export const Main = styled.div`
   display: flex;
   flex-direction: row;
   overflow-y: auto;
+  overflow-x: hidden; /* 수평 스크롤 숨김 */
 `;
 
 export const Overflow = styled.div`
@@ -50,6 +51,7 @@ export const Overflow = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+  overflow-x: hidden; /* 수평 스크롤 숨김 */
 `;
 
 export const RouteInfoContainer = styled.div`
@@ -506,6 +508,7 @@ export const PlaceCardCotainer = styled.div`
   box-shadow: 0px 4px 4px 0 rgba(0, 0, 0, 0.25);
   margin-bottom: 0.8rem;
   position: relative;
+  flex-shrink: 0;
 `;
 
 export const PlaceCardDeleteIcon = styled.div`
