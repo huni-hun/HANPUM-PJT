@@ -135,12 +135,12 @@ pipeline {
                     if (env.BUILD_TARGET == 'BACKEND') {
                         imageName = "${DOCKER_HUB_ID}/${DOCKER_HUB_REPOSITORY}-backend"
                         sh "docker pull ${imageName}:latest"
-                        sh "docker run -d --rm --network hanpum --name hanpum-backend -p 8080:8080 ${imageName}:latest"
+                        sh "docker run -d --rm --network hanpum --name hanpum-backend -p 8080:8080 -e TZ=Asia/Seoul ${imageName}:latest"
                         sh "docker rmi ${imageName}:${env.BUILD_NUMBER}"
                     } else if (env.BUILD_TARGET == 'FRONTEND') {
                         imageName = "${DOCKER_HUB_ID}/${DOCKER_HUB_REPOSITORY}-frontend"
                         sh "docker pull ${imageName}:latest"
-                        sh "docker run -d --rm --network hanpum --name hanpum-frontend -p 3000:3000 ${imageName}:latest"
+                        sh "docker run -d --rm --network hanpum --name hanpum-frontend -p 3000:3000 -e TZ=Asia/Seoul ${imageName}:latest"
                         sh "docker rmi ${imageName}:${env.BUILD_NUMBER}"
                     }
                 }
