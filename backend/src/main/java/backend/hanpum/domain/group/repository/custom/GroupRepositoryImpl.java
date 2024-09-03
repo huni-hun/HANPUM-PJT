@@ -169,6 +169,7 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
         return Optional.ofNullable(query
                 .select(Projections.constructor(
                         GroupDetailGetResDto.class,
+                        course.courseId,              // 경로 번호
                         group.title,                  // 모임 이름
                         group.groupImg,               // 모임 이미지
                         group.description,            // 모집글
@@ -195,7 +196,7 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                 .leftJoin(schedule.course, course)
                 .where(group.groupId.eq(groupId))
                 .where(groupMember.joinType.ne(JoinType.APPLY))
-                .groupBy(group.groupId, group.title, group.groupImg, group.description, group.recruitmentStart, group.recruitmentPeriod,
+                .groupBy(group.groupId, course.courseId, group.title, group.groupImg, group.description, group.recruitmentStart, group.recruitmentPeriod,
                         course.startPoint, course.endPoint, course.totalDays, schedule.startDate, schedule.endDate)
                 .fetchOne());
     }
