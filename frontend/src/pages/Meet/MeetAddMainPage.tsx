@@ -107,11 +107,11 @@ function MeetAddMainPage() {
           <M.SelectEctInfoBox>
             <M.DeadLineBox>
               <span>모집 마감일</span>
-              <img src={ArrowIcon} />
+              <img src={ArrowIcon} alt="" />
             </M.DeadLineBox>
             <M.ScheduleBox>
               <span>일정</span>
-              <img src={ArrowIcon} />
+              <img src={ArrowIcon} alt="" />
             </M.ScheduleBox>
           </M.SelectEctInfoBox>
         </M.OverFlow>
