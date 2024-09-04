@@ -180,6 +180,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .from(scheduleWayPoint)
                 .leftJoin(scheduleWayPoint.waypoint, waypoint)
                 .where(scheduleWayPoint.scheduleDay.id.eq(scheduleDayId))
+                .orderBy(scheduleWayPoint.waypoint.pointNumber.asc())
                 .fetch();
     }
 

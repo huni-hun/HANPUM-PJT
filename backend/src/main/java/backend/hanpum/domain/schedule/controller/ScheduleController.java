@@ -125,10 +125,11 @@ public class ScheduleController {
     }
 
     @Operation(summary = "경유지 방문처리", description = "현재 위치가 다음 경유지에 일정 수준 이상 가까워지면 방문처리")
-    @PostMapping("/arrive")
+    @PutMapping("/arrive")
     public ResponseEntity<?> setArriveScheduleWayPoint(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                        @RequestBody ScheduleWayPointReqDto scheduleWayPointReqDto) {
-        Long scheduleDayId = scheduleService.setArriveScheduleWayPoint(scheduleWayPointReqDto);
+        Long memberId = userDetails.getMember().getMemberId();
+        Long scheduleDayId = scheduleService.setArriveScheduleWayPoint(memberId, scheduleWayPointReqDto);
         return response.success(ResponseCode.SCHEDULE_WAY_POINT_STATE_CHANGED, scheduleDayId);
     }
 

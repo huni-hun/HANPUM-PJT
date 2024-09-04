@@ -384,12 +384,24 @@ public class ScheduleServiceImpl implements ScheduleService {
         return result;
     }
 
+    @Transactional
     @Override
-    public Long setArriveScheduleWayPoint(ScheduleWayPointReqDto scheduleWayPointReqDto) {
+    public Long setArriveScheduleWayPoint(Long memberId, ScheduleWayPointReqDto scheduleWayPointReqDto) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         Long scheduleWayPointId = scheduleWayPointReqDto.getScheduleWayPointId();
+        ScheduleWayPoint scheduleWayPoint = scheduleWayPointRepository.findById(scheduleWayPointId).orElseThrow(ScheduleWayPointNotFoundException::new);
+        Schedule schedule = scheduleWayPoint.getScheduleDay().getSchedule();
+
+        if (schedule.getType().equals("private") && !schedule.getMember().equals(member)) {
+            throw new MemberInfoInvalidException();
+        } else if (schedule.getType().equals("group")) {
+            Long groupId = member.getGroupMember().getGroup().getGroupId();
+            if (!schedule.getGroup().getGroupId().equals(groupId) || member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) {
+                throw new GroupPermissionException();
+            }
+        }
 
         // 현재 WayPoint 방문처리
-        ScheduleWayPoint scheduleWayPoint = scheduleWayPointRepository.findById(scheduleWayPointId).orElseThrow(ScheduleWayPointNotFoundException::new);
         scheduleWayPoint.updateVisit(2);
 
         ScheduleDay scheduleDay = scheduleWayPoint.getScheduleDay();
@@ -556,7 +568,6 @@ public class ScheduleServiceImpl implements ScheduleService {
                 }
             }
         }
-
         return true;
     }
 
