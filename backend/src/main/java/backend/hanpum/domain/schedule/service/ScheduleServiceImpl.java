@@ -432,6 +432,14 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // 저장
         schedule.modifyDate(startDate, endDate);
+
+        List<ScheduleDay> scheduleDayList = schedule.getScheduleDayList();
+        for (int i = 0; i < scheduleDayList.size(); i++) {
+            String date = calculateDate(startDate, i);
+            scheduleDayList.get(i).modifyDate(date);
+            System.out.println(date);
+        }
+
         return scheduleId;
     }
 

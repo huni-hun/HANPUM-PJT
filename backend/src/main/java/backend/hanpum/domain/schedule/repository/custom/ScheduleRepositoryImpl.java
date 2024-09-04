@@ -113,9 +113,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                                 scheduleDay.date,
                                 scheduleDay.visit,
                                 scheduleDay.running,
-                                scheduleDay.courseDay.totalDistance,
-                                scheduleDay.courseDay.totalDuration,
-                                scheduleDay.courseDay.totalCalorie
+                                scheduleDay.courseDay.totalDistance
                         ))
                 .from(scheduleDay)
                 .leftJoin(scheduleDay.courseDay, courseDay)
@@ -145,9 +143,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                                 scheduleDay.date,
                                 scheduleDay.visit,
                                 scheduleDay.running,
-                                scheduleDay.courseDay.totalDistance,
-                                scheduleDay.courseDay.totalDuration,
-                                scheduleDay.courseDay.totalCalorie
+                                scheduleDay.courseDay.totalDistance
                         ))
                 .from(scheduleDay)
                 .leftJoin(scheduleDay.courseDay, courseDay)

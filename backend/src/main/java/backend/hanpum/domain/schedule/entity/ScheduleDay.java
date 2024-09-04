@@ -42,4 +42,8 @@ public class ScheduleDay {
     public void runAndStop(){
         this.running = !this.running;
     }
+
+    public void modifyDate(String date){
+        this.date = date;
+    }
 }
