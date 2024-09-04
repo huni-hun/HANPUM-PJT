@@ -6,28 +6,18 @@ export const PutRunState = async (scheduleDayId: number, token: string) => {
     scheduleDayId,
   };
 
-  const response = await api.put('/api/schedule/run', data, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await api.put('/api/schedule/run', data);
 
   return response;
 };
 
 /** 일정 - 전체 일정 시작, 종료*/
-export const PutStartDate = async (scheduleDayId: number, token: string) => {
+export const PutStartDate = async (scheduleDayId: number) => {
   const data = {
     scheduleDayId,
   };
 
-  const response = await api.put('/api/schedule/start', data, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await api.put('/api/schedule/start', data);
 
   return response;
 };

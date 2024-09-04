@@ -48,14 +48,12 @@ function AddSchedulePage() {
 
   const postAddSchedule = async () => {
     try {
-      const token = '';
-
       const startDate = dates.startDate;
 
       // startDate를 "YYYYMMDD" 형식으로 변환
       const formattedDate = startDate.replace(/-/g, '');
 
-      const response = await PostMineSchedule(2, formattedDate, token);
+      const response = await PostMineSchedule(2, formattedDate);
 
       if (response && response.data.status === 'SUCCESS') {
         setPostSchedule(response.data);
