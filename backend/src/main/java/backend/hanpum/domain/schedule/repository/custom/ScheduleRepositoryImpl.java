@@ -35,6 +35,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         return Optional.ofNullable(query.select(
                         Projections.constructor(ScheduleResDto.class,
                                 schedule.id,
+                                schedule.course.content,
                                 schedule.course.backgroundImg,
                                 schedule.course.courseName,
                                 schedule.type,
@@ -57,6 +58,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         return Optional.ofNullable(query.select(
                         Projections.constructor(ScheduleResDto.class,
                                 schedule.id,
+                                schedule.course.content,
                                 schedule.course.backgroundImg,
                                 schedule.course.courseName,
                                 schedule.type,
@@ -101,6 +103,35 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         }
 
         return Optional.ofNullable(scheduleDetailResDto);
+    }
+
+    @Override
+    public Optional<GroupScheduleResDto> getGroupSchedule(Long memberId, Long groupId, Long scheduleId, Long courseId) {
+        GroupScheduleResDto groupScheduleResDto = query.select(Projections.constructor(GroupScheduleResDto.class,
+                        schedule.id,
+                        schedule.course.content,
+                        schedule.course.backgroundImg,
+                        schedule.course.courseName,
+                        schedule.type,
+                        schedule.course.startPoint,
+                        schedule.course.endPoint,
+                        schedule.startDate,
+                        schedule.endDate,
+                        schedule.state,
+                        schedule.course.totalDistance
+                )).from(schedule)
+                .where(schedule.id.eq(scheduleId)
+                        .and(schedule.group.groupId.eq(groupId)).and(schedule.type.eq("group")))
+                .fetchOne();
+
+        if (groupScheduleResDto != null) {
+            List<ScheduleDayResDto> scheduleDayResDtoList = getScheduleDayResDtoList(memberId, scheduleId).orElseThrow(ScheduleDayNotFoundException::new);
+            groupScheduleResDto.setScheduleDayResDtoList(scheduleDayResDtoList);
+            List<CourseTypes> courseTypes = getCourseTypes(courseId);
+            groupScheduleResDto.setCourseTypes(courseTypes);
+        }
+
+        return Optional.ofNullable(groupScheduleResDto);
     }
 
 
@@ -148,8 +179,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         ))
                 .from(scheduleDay)
                 .leftJoin(scheduleDay.courseDay, courseDay)
-                .where(scheduleDay.schedule.id.eq(scheduleId)
-                        .and(scheduleDay.schedule.member.memberId.eq(memberId)))
+                .where(scheduleDay.schedule.id.eq(scheduleId))
                 .orderBy(scheduleDay.courseDay.dayNumber.asc())
                 .fetch();
 
@@ -166,6 +196,14 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         }
 
         return Optional.ofNullable(scheduleDays);
+    }
+
+    private BooleanExpression checkPrivateOrGroup(Long memberId, Long groupId) {
+        if (memberId == null) {
+            return scheduleDay.schedule.member.memberId.eq(memberId);
+        } else {
+            return scheduleDay.schedule.group.groupId.eq(groupId);
+        }
     }
 
     private List<ScheduleWayPointResDto> getScheduleWayPointResDtoList(Long scheduleDayId) {

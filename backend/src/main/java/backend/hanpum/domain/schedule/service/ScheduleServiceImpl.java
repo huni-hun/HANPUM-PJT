@@ -193,22 +193,15 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new GroupMemberNotFoundException();
         }
         Long groupId = member.getGroupMember().getGroup().getGroupId();
+        Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
+        Schedule schedule = group.getSchedule();
 
-        ScheduleResDto scheduleResDto = scheduleRepository.getGroupScheduleByMemberId(memberId).orElseThrow(GroupScheduleNotFoundException::new);
+        Long courseId = schedule.getCourse().getCourseId();
+
+        GroupScheduleResDto groupScheduleResDto = scheduleRepository.getGroupSchedule(memberId, groupId, schedule.getId(), courseId).orElseThrow(GroupScheduleNotFoundException::new);
         GroupMemberListGetResDto groupMemberListGetResDto = groupService.getGroupMemberList(memberId, groupId);
+        groupScheduleResDto.setGroupMemberResDtoList(groupMemberListGetResDto.getGroupMemberResList());
 
-        GroupScheduleResDto groupScheduleResDto = GroupScheduleResDto.builder()
-                .scheduleId(scheduleResDto.getScheduleId())
-                .backgroundImg(scheduleResDto.getBackgroundImg())
-                .title(scheduleResDto.getTitle())
-                .type(scheduleResDto.getType())
-                .startPoint(scheduleResDto.getStartPoint())
-                .endPoint(scheduleResDto.getEndPoint())
-                .startDate(scheduleResDto.getStartDate())
-                .endDate(scheduleResDto.getEndDate())
-                .state(scheduleResDto.getState())
-                .groupMemberResDtoList(groupMemberListGetResDto.getGroupMemberResList())
-                .build();
 
         return groupScheduleResDto;
     }
@@ -427,7 +420,8 @@ public class ScheduleServiceImpl implements ScheduleService {
             cnt++;
         }
 
-        if(cnt == scheduleWayPointList.size()) {
+        // 만약 당일 경유지를 모두 방문완료했다면 당일일정 종료 처리
+        if (cnt == scheduleWayPointList.size()) {
             scheduleDay.visitState();
         }
 
