@@ -8,6 +8,11 @@ import Flex from '@/components/common/Flex';
 import FixedBottomButton from '../common/FixedBottomButton';
 import { isInitAtom } from '@/atoms/isAuthEnticatedAtom';
 import { useSetRecoilState } from 'recoil';
+import { useQuery } from 'react-query';
+import { GetUser } from '@/api/mypage/GET';
+import { STATUS } from '@/constants';
+import { toast } from 'react-toastify';
+import { AxiosError } from 'axios';
 
 function SuccessFindLayout({
   loginId,
@@ -21,44 +26,41 @@ function SuccessFindLayout({
   const navigate = useNavigate();
 
   const setInit = useSetRecoilState(isInitAtom);
+
+  const name = sessionStorage.getItem('name');
+
   return (
     <SuccessFindPageContainer>
-      <div className="text-container">
-        <img src={successImg} alt="성공 체크" />
-
-        {param === 'id' && (
-          <Flex direction="column" $align="center" $gap="8px">
-            <Text $typography="t20" $bold={true} color="main">
-              아이디 조회 완료!
-            </Text>
-            <Text $typography="t16" color="grey2">
-              회원님의 아이디는
-            </Text>
-
-            <Flex
-              $justify="center"
-              style={{ marginTop: '9px' }}
-              $align="end"
-              $gap={3}
-            >
-              <Text $typography="t20" $bold={true} color="main">
-                {loginId}
-              </Text>
-              <Text $typography="t12" $bold={true} color="black">
-                입니다.
-              </Text>
-            </Flex>
-          </Flex>
-        )}
-
-        {param === 'pw' && (
+      {param === 'pw' && (
+        <div className="text-container">
+          <img src={successImg} alt="성공 체크" />
           <Flex direction="column" $align="center" $gap="8px">
             <Text $typography="t20" $bold={true} color="main">
               비밀번호 변경 완료!
             </Text>
           </Flex>
-        )}
-      </div>
+        </div>
+      )}
+
+      {param === 'id' && (
+        <div className="text-container-id">
+          <Text $typography="t20" $bold={true}>
+            아이디 확인
+          </Text>
+          <p>
+            {name}님의 아이디는
+            <Text
+              $typography="t16"
+              $bold={true}
+              color="main"
+              style={{ margin: '0 4px' }}
+            >
+              {loginId}
+            </Text>
+            입니다.
+          </p>
+        </div>
+      )}
 
       <FixedBottomButton
         size="large"
@@ -68,6 +70,7 @@ function SuccessFindLayout({
           setStep(0);
           setInit(false);
           navigate(-1);
+          sessionStorage.removeItem('name');
         }}
         disabled={false}
       />
@@ -89,6 +92,16 @@ const SuccessFindPageContainer = styled.div`
 
     img {
       margin-bottom: 3rem;
+    }
+  }
+
+  .text-container-id {
+    padding: 16px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    p {
+      font-size: 1.6rem;
     }
   }
 `;

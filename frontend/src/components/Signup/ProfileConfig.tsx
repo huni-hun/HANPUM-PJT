@@ -1,12 +1,3 @@
-import Icon from '../common/Icon/Icon';
-import Text from '../common/Text';
-import * as S from '../Style/Signup/ProfileConfig.styled';
-import TextField from '../common/TextField/TextField';
-import BaseButton from '../common/BaseButton';
-import { useAlert } from '@/hooks/global/useAlert';
-import Calender from './Calender';
-import Cookies from 'js-cookie';
-import { SignupRequestValues, UserSignupFormValues } from '@/models/signup';
 import {
   ChangeEvent,
   Dispatch,
@@ -14,16 +5,28 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { dateFormat, telnumberFormat } from '@/utils/util';
+import Cookies from 'js-cookie';
+
+import * as S from '../Style/Signup/ProfileConfig.styled';
+import Icon from '@common/Icon/Icon';
+import Text from '@common/Text';
+import TextField from '@common/TextField/TextField';
+import BaseButton from '@common/BaseButton';
+import { useAlert } from '@hooks/global/useAlert';
+import Calender from './Calender';
+import { SignupRequestValues, UserSignupFormValues } from '@models/signup';
+import { dateFormat, telnumberFormat } from '@utils/util';
 import { useMutation } from 'react-query';
 import { CheckNickname, KaKaoLogin, SignUp } from '@/api/signup/POST';
 import { toast } from 'react-toastify';
-import { genderList, STATUS } from '@/constants';
+import { genderList, STATUS } from '@constants';
 import { AxiosError } from 'axios';
-import FixedBottomButton from '../common/FixedBottomButton';
-import Flex from '../common/Flex';
-import Message from '../common/Message';
-import Spacing from '../common/Spacing';
+import FixedBottomButton from '@common/FixedBottomButton';
+import Flex from '@common/Flex';
+import Message from '@common/Message';
+import Spacing from '@common/Spacing';
+import { useSetRecoilState } from 'recoil';
+import { signupStepAtom } from '@/atoms/signupStepAtom';
 
 function ProfileConfig({
   pagenation,
@@ -38,11 +41,11 @@ function ProfileConfig({
 }) {
   const { open } = useAlert();
 
+  const setStep = useSetRecoilState(signupStepAtom);
+
   const [dirty, setDirty] = useState<
     Partial<Record<keyof UserSignupFormValues, boolean>>
   >({});
-
-  // console.log('dirty :::', dirty);
 
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
@@ -72,8 +75,6 @@ function ProfileConfig({
       [name]: value,
     }));
   };
-
-  // console.log('formValues :::', formValues);
 
   // gender
   const handleClickGender = (value: string) => {
@@ -111,7 +112,6 @@ function ProfileConfig({
     open({
       purpose: 'calender',
       onButtonClick: (cancel?: boolean) => {
-        // console.log(cancel);
         if (cancel) {
           console.log('취소');
           setFormValues((prev) => ({
@@ -188,6 +188,10 @@ function ProfileConfig({
       }
       if (res.status === STATUS.error) {
         toast.error(res.message);
+        setStep((prev) => ({
+          ...prev,
+          currStep: 1,
+        }));
       }
     },
     onError: (error: AxiosError) => {
@@ -211,8 +215,6 @@ function ProfileConfig({
       toast.error(error.message);
     },
   });
-
-  console.log(formValues);
 
   const submitLocal = () => {
     const signupReq: SignupRequestValues = {

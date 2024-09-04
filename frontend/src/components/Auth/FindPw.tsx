@@ -85,6 +85,7 @@ function FindPwComponent({
           toast.success(res.message);
           setCheckInputcodeMessage(null);
           setSendAuthCode(true);
+          setTime(0);
         }
         if (res.status === STATUS.error) {
           toast.error(res.message);
@@ -227,6 +228,7 @@ function FindPwComponent({
                         loginId: findPwReq.loginId,
                         email: findPwReq.email,
                       });
+                      setTime(300);
                     }
                   }}
                 >
