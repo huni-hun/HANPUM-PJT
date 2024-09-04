@@ -6,6 +6,7 @@ import backend.hanpum.domain.schedule.dto.responseDto.*;
 import backend.hanpum.domain.schedule.service.ScheduleService;
 import backend.hanpum.exception.format.code.ApiResponse;
 import backend.hanpum.exception.format.response.ResponseCode;
+import com.amazonaws.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -124,20 +125,29 @@ public class ScheduleController {
     }
 
     @Operation(summary = "경유지 방문처리", description = "현재 위치가 다음 경유지에 일정 수준 이상 가까워지면 방문처리")
-    @PostMapping("/arrive")
+    @PutMapping("/arrive")
     public ResponseEntity<?> setArriveScheduleWayPoint(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                        @RequestBody ScheduleWayPointReqDto scheduleWayPointReqDto) {
-        Long scheduleDayId = scheduleService.setArriveScheduleWayPoint(scheduleWayPointReqDto);
+        Long memberId = userDetails.getMember().getMemberId();
+        Long scheduleDayId = scheduleService.setArriveScheduleWayPoint(memberId, scheduleWayPointReqDto);
         return response.success(ResponseCode.SCHEDULE_WAY_POINT_STATE_CHANGED, scheduleDayId);
     }
 
     @Operation(summary = "주변 관광지 정보 가져오기", description = "주변 관광지 정보 가져오기")
     @GetMapping("/nearby")
-    public ResponseEntity<?> getNearByAttractionList(@RequestParam int distance,
-                                                     @RequestParam double lat,
+    public ResponseEntity<?> getNearByAttractionList(@RequestParam double lat,
                                                      @RequestParam double lon) {
-        List<NearByAttractionResDto> result = scheduleService.getNearByAttractionList(distance, lat, lon);
+        List<NearByAttractionResDto> result = scheduleService.getNearByAttractionList(lat, lon);
         return response.success(ResponseCode.NEARBY_ATTRACTION_LIST_FETCHED, result);
+    }
+
+    @Operation(summary = "일정 날짜 수정", description = "생성된 일정의 날짜를 수정")
+    @PutMapping("/modify")
+    public ResponseEntity<?> updateScheduleDate(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                @RequestBody ScheduleUpdateReqDto scheduleUpdateReqDto) {
+        Long memberId = userDetails.getMember().getMemberId();
+        Long scheduleId = scheduleService.updateScheduleDate(memberId, scheduleUpdateReqDto);
+        return response.success(ResponseCode.SCHEDULE_DATE_STATE_CHANGED, scheduleId);
     }
 
 }

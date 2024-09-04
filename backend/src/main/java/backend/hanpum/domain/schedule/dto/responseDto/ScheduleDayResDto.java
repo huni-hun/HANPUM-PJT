@@ -13,9 +13,8 @@ public class ScheduleDayResDto {
     String date;
     boolean visit;
     boolean running;
-    String totalDistance;
-    String totalDuration;
-    String totalCalories;
+    Double totalDistance;
+
     @Setter
     List<ScheduleWayPointResDto> scheduleWayPointList;
     @Setter
@@ -25,16 +24,12 @@ public class ScheduleDayResDto {
                              String date,
                              boolean visit,
                              boolean running,
-                             String totalDistance,
-                             String totalDuration,
-                             String totalCalories) {
+                             Double totalDistance) {
         this.scheduleDayId = scheduleDayId;
         this.date = date;
         this.visit = visit;
         this.running = running;
         this.totalDistance = totalDistance;
-        this.totalDuration = totalDuration;
-        this.totalCalories = totalCalories;
     }
 
 }

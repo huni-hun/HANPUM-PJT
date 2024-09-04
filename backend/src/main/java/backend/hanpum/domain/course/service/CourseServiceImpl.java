@@ -101,7 +101,7 @@ public class CourseServiceImpl implements CourseService {
                 .flatMap(courseDayReqDto -> courseDayReqDto.getWayPointReqDtoList().stream().reduce((first, second) -> second))
                 .map(WayPointReqDto::getAddress)
                 .orElse("Unknown"));
-        
+
         Date currentDate = new Date();
         Course course = Course.builder()
                 .courseName(makeCourseReqDto.getCourseName())
@@ -116,7 +116,7 @@ public class CourseServiceImpl implements CourseService {
                 .member(member)
                 .build();
 
-        if(multipartFile != null) {
+        if (multipartFile != null) {
             course.updateBackgroundImg(s3ImageService.uploadImage(multipartFile));
         }
         courseRepository.save(course);
@@ -135,9 +135,9 @@ public class CourseServiceImpl implements CourseService {
             Double totalDuration = 0.0;
             Double totalCalorie = 0.0;
             for (WayPointReqDto waypointReqDto : courseDayReqDto.getWayPointReqDtoList()) {
-                        totalDistance += Double.parseDouble(waypointReqDto.getDistance());
-                        totalDuration += Double.parseDouble(waypointReqDto.getDuration());
-                        totalCalorie += Double.parseDouble(waypointReqDto.getCalorie());
+                totalDistance += Double.parseDouble(waypointReqDto.getDistance());
+                totalDuration += Double.parseDouble(waypointReqDto.getDuration());
+                totalCalorie += Double.parseDouble(waypointReqDto.getCalorie());
             }
 
             CourseDay courseDay = CourseDay.builder()
@@ -214,7 +214,7 @@ public class CourseServiceImpl implements CourseService {
                 editCourseReqDto.getCourseDayReqDtoList().size()
         );
 
-        if(multipartFile != null) {
+        if (multipartFile != null) {
             String currentImage = course.getBackgroundImg();
             String updateImage = s3ImageService.uploadImage(multipartFile);
             course.updateBackgroundImg(updateImage);
@@ -227,13 +227,13 @@ public class CourseServiceImpl implements CourseService {
                 .collect(Collectors.toList());
         List<String> newCourseTypeNameList = editCourseReqDto.getCourseTypeList();
         for (int i = 0; i < existCourseTypeNameList.size(); i++) {
-            if(!newCourseTypeNameList.contains(existCourseTypeNameList.get(i))) {
+            if (!newCourseTypeNameList.contains(existCourseTypeNameList.get(i))) {
                 courseTypeRepository.delete(courseTypeList.get(i));
             }
         }
 
         for (int i = 0; i < newCourseTypeNameList.size(); i++) {
-            if(!existCourseTypeNameList.contains(newCourseTypeNameList.get(i))) {
+            if (!existCourseTypeNameList.contains(newCourseTypeNameList.get(i))) {
                 CourseType courseType = CourseType.builder()
                         .course(course)
                         .typeName(CourseTypes.valueOf(newCourseTypeNameList.get(i)))
@@ -277,7 +277,7 @@ public class CourseServiceImpl implements CourseService {
         }
 
         for (CourseDay courseDay : course.getCourseDays()) {
-            if(existDayNumbers.contains(courseDay.getDayNumber())) {
+            if (existDayNumbers.contains(courseDay.getDayNumber())) {
                 courseDayRepository.delete(courseDay);
             }
         }
@@ -324,7 +324,7 @@ public class CourseServiceImpl implements CourseService {
         }
 
         for (Attraction attraction : existDay.getAttractions()) {
-            if(existAttractionName.contains(attraction.getName())) {
+            if (existAttractionName.contains(attraction.getName())) {
                 attractionRepository.delete(attraction);
             }
         }
@@ -371,7 +371,7 @@ public class CourseServiceImpl implements CourseService {
         }
 
         for (Waypoint waypoint : existDay.getWaypoints()) {
-            if(existPointNumber.contains(waypoint.getPointNumber())) {
+            if (existPointNumber.contains(waypoint.getPointNumber())) {
                 waypointRepository.delete(waypoint);
             }
         }
@@ -407,7 +407,7 @@ public class CourseServiceImpl implements CourseService {
         List<Attraction> attractionList = attractionRepository.findByCourseDay_Course_CourseIdAndCourseDay_dayNumber(courseId, day);
 
         List<AttractionResDto> resDtoList = new ArrayList<>();
-        for(Attraction attraction : attractionList) {
+        for (Attraction attraction : attractionList) {
             resDtoList.add(AttractionResDto.builder()
                     .dayNumber(attraction.getCourseDay().getDayNumber())
                     .attractionId(attraction.getAttractionId())
@@ -429,7 +429,7 @@ public class CourseServiceImpl implements CourseService {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
         Optional<InterestCourse> interestCourse = interestCourseRepository.findByMember_MemberIdAndCourse_CourseId(memberId, courseId);
-        if(interestCourse.isPresent()) {
+        if (interestCourse.isPresent()) {
             throw new InterestAlreadyExistsException();
         }
 
@@ -445,7 +445,7 @@ public class CourseServiceImpl implements CourseService {
     @Transactional
     public void deleteInterestCourse(Long courseId, Long memberId) {
         Optional<InterestCourse> interestCourse = interestCourseRepository.findByMember_MemberIdAndCourse_CourseId(memberId, courseId);
-        if(!interestCourse.isPresent()) {
+        if (!interestCourse.isPresent()) {
             throw new InterestCourseNotFoundException();
         }
         interestCourseRepository.deleteByMember_MemberIdAndCourse_CourseId(memberId, courseId);
@@ -457,10 +457,10 @@ public class CourseServiceImpl implements CourseService {
         List<CourseReviewResDto> courseReviewResDtoList = new ArrayList<>();
         List<Review> ReviewList = reviewRepository.findByCourse_CourseId(courseId, pageable);
 
-        if(ReviewList.isEmpty()) {
+        if (ReviewList.isEmpty()) {
             throw new CourseReviewsNotFoundException();
         } else {
-            for(Review review : ReviewList) {
+            for (Review review : ReviewList) {
                 CourseReviewResDto courseReviewResDto = CourseReviewResDto.builder()
                         .reviewId(review.getReviewId())
                         .courseId(review.getCourse().getCourseId())
@@ -481,7 +481,7 @@ public class CourseServiceImpl implements CourseService {
     @Transactional
     public void writeCourseReview(Long courseId, Long memberId, String content, Double score) {
         Review review = reviewRepository.findByCourse_CourseIdAndMember_MemberId(courseId, memberId);
-        if(review != null) {
+        if (review != null) {
             throw new ReviewAlreadyExistsException();
         }
 
@@ -490,13 +490,13 @@ public class CourseServiceImpl implements CourseService {
 
         Date currentDate = new Date();
         review = Review.builder()
-            .content(content)
-            .score(score)
-            .writeDate(currentDate)
-            .likeCount(0)
-            .member(member)
-            .course(course)
-            .build();
+                .content(content)
+                .score(score)
+                .writeDate(currentDate)
+                .likeCount(0)
+                .member(member)
+                .course(course)
+                .build();
 
         reviewRepository.save(review);
     }
@@ -649,7 +649,7 @@ public class CourseServiceImpl implements CourseService {
 
         List<SearchWaypointResDto> result = new ArrayList<>();
         JsonNode documents = root.path("documents");
-        for(JsonNode document : documents) {
+        for (JsonNode document : documents) {
             result.add(SearchWaypointResDto.builder()
                     .placeName(document.path("place_name").asText())
                     .address(document.path("address_name").asText())
@@ -735,9 +735,9 @@ public class CourseServiceImpl implements CourseService {
         List<InterestCourse> interestCourseList = interestCourseRepository.findByMember_MemberId(memberId);
         List<CourseResDto> courseResDtoList = new ArrayList<>();
 
-        for(InterestCourse interestCourse : interestCourseList) {
+        for (InterestCourse interestCourse : interestCourseList) {
             Course course = interestCourse.getCourse();
-            if(!course.isOpenState()) continue;
+            if (!course.isOpenState()) continue;
 
             List<Review> reviews = reviewRepository.findByCourse(course);
             double scoreAvg = reviews.stream()
@@ -754,10 +754,10 @@ public class CourseServiceImpl implements CourseService {
                     .endPoint(course.getEndPoint())
                     .totalDistance(course.getTotalDistance())
                     .memberId(course.getMember().getMemberId())
-                            .scoreAvg(scoreAvg)
-                            .totalDays(course.getTotalDays())
-                            .build()
-                    );
+                    .scoreAvg(scoreAvg)
+                    .totalDays(course.getTotalDays())
+                    .build()
+            );
         }
 
 
@@ -769,7 +769,7 @@ public class CourseServiceImpl implements CourseService {
         List<Course> courseList = courseRepository.findByMember_MemberId(memberId);
         List<CourseResDto> courseResDtoList = new ArrayList<>();
 
-        for(Course course : courseList) {
+        for (Course course : courseList) {
             List<Review> reviews = reviewRepository.findByCourse(course);
             double scoreAvg = reviews.stream()
                     .mapToDouble(Review::getScore)
@@ -809,7 +809,7 @@ public class CourseServiceImpl implements CourseService {
         // 달성률
         int rate = getScheduleGoalRate(scheduleDayResDtoList);
 
-        for(CourseUsageHistory courseUsageHistory : courseUsageHistoryList) {
+        for (CourseUsageHistory courseUsageHistory : courseUsageHistoryList) {
             Course course = courseUsageHistory.getCourse();
             usedCourseResDtoList.add(UsedCourseResDto.builder()
                     .courseUsedId(courseUsageHistory.getCourseUsageHistoryId())
@@ -842,11 +842,12 @@ public class CourseServiceImpl implements CourseService {
             int wayPointSize = scheduleWayPointResDtoList.size();
             int wayPointCount = 0;
             for (ScheduleWayPointResDto scheduleWayPointResDto : scheduleWayPointResDtoList) {
-                if (scheduleWayPointResDto.getState() == 0) {
+                if (scheduleWayPointResDto.getState() == 0 || scheduleWayPointResDto.getState() == 1) {
                     wayPointCount++;
                 }
             }
-            rate = dayRate * (wayPointCount / wayPointSize);
+            rate = dayRate - (dayRate * wayPointCount / wayPointSize);
+
             return rate;
         }
 
@@ -863,7 +864,7 @@ public class CourseServiceImpl implements CourseService {
                         wayPointCount++;
                     }
                 }
-                rate += dayRate * (wayPointCount / wayPointSize);
+                rate = dayRate - (dayRate * wayPointCount / wayPointSize);
             }
         }
 

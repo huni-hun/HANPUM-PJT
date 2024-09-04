@@ -26,6 +26,7 @@ import backend.hanpum.domain.schedule.repository.ScheduleWayPointRepository;
 import backend.hanpum.domain.weather.service.WeatherService;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.auth.MemberInfoInvalidException;
+import backend.hanpum.exception.exception.auth.MemberNotFoundException;
 import backend.hanpum.exception.exception.common.JsonBadMappingException;
 import backend.hanpum.exception.exception.common.UriBadSyntaxException;
 import backend.hanpum.exception.exception.course.CourseNotFoundException;
@@ -77,6 +78,15 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        String startDate = schedulePostReqDto.getStartDate();
+
+        int daySize = course.getTotalDays();
+        String endDate = calculateDate(startDate, daySize - 1);     // ex) 10일부터 4박5일이면 14일
+
+        // 기존 일정의 날짜와 겹치면 던짐
+        if (!checkScheduleOverlap(memberId, startDate, endDate, null)) {
+            throw new BadScheduleDateSettingException();
+        }
 
         // 개인 일정 3개 이상 못만들게
         Long myScheduleCnt = scheduleRepository.checkMyScheduleCnt(memberId).orElseThrow(ScheduleNotFoundException::new);
@@ -84,9 +94,6 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new CreateCountExceededException();
         }
 
-        String startDate = schedulePostReqDto.getStartDate();
-        int daySize = course.getTotalDays();
-        String endDate = calculateDate(startDate, daySize - 1);     // ex) 10일부터 4박5일이면 14일
         Schedule schedule = Schedule.builder()
                 .type("private")
                 .startDate(startDate)
@@ -186,22 +193,15 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new GroupMemberNotFoundException();
         }
         Long groupId = member.getGroupMember().getGroup().getGroupId();
+        Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
+        Schedule schedule = group.getSchedule();
 
-        ScheduleResDto scheduleResDto = scheduleRepository.getGroupScheduleByMemberId(memberId).orElseThrow(GroupScheduleNotFoundException::new);
+        Long courseId = schedule.getCourse().getCourseId();
+
+        GroupScheduleResDto groupScheduleResDto = scheduleRepository.getGroupSchedule(memberId, groupId, schedule.getId(), courseId).orElseThrow(GroupScheduleNotFoundException::new);
         GroupMemberListGetResDto groupMemberListGetResDto = groupService.getGroupMemberList(memberId, groupId);
+        groupScheduleResDto.setGroupMemberResDtoList(groupMemberListGetResDto.getGroupMemberResList());
 
-        GroupScheduleResDto groupScheduleResDto = GroupScheduleResDto.builder()
-                .scheduleId(scheduleResDto.getScheduleId())
-                .backgroundImg(scheduleResDto.getBackgroundImg())
-                .title(scheduleResDto.getTitle())
-                .type(scheduleResDto.getType())
-                .startPoint(scheduleResDto.getStartPoint())
-                .endPoint(scheduleResDto.getEndPoint())
-                .startDate(scheduleResDto.getStartDate())
-                .endDate(scheduleResDto.getEndDate())
-                .state(scheduleResDto.getState())
-                .groupMemberResDtoList(groupMemberListGetResDto.getGroupMemberResList())
-                .build();
 
         return groupScheduleResDto;
     }
@@ -356,7 +356,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // 달성률
         int rate = courseService.getScheduleGoalRate(scheduleDayResDtoList);
-
+        
         // 해시태그
         List<CourseTypes> courseTypes = scheduleRepository.getCourseTypes(courseId);
 
@@ -377,12 +377,24 @@ public class ScheduleServiceImpl implements ScheduleService {
         return result;
     }
 
+    @Transactional
     @Override
-    public Long setArriveScheduleWayPoint(ScheduleWayPointReqDto scheduleWayPointReqDto) {
+    public Long setArriveScheduleWayPoint(Long memberId, ScheduleWayPointReqDto scheduleWayPointReqDto) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         Long scheduleWayPointId = scheduleWayPointReqDto.getScheduleWayPointId();
+        ScheduleWayPoint scheduleWayPoint = scheduleWayPointRepository.findById(scheduleWayPointId).orElseThrow(ScheduleWayPointNotFoundException::new);
+        Schedule schedule = scheduleWayPoint.getScheduleDay().getSchedule();
+
+        if (schedule.getType().equals("private") && !schedule.getMember().equals(member)) {
+            throw new MemberInfoInvalidException();
+        } else if (schedule.getType().equals("group")) {
+            Long groupId = member.getGroupMember().getGroup().getGroupId();
+            if (!schedule.getGroup().getGroupId().equals(groupId) || member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) {
+                throw new GroupPermissionException();
+            }
+        }
 
         // 현재 WayPoint 방문처리
-        ScheduleWayPoint scheduleWayPoint = scheduleWayPointRepository.findById(scheduleWayPointId).orElseThrow(ScheduleWayPointNotFoundException::new);
         scheduleWayPoint.updateVisit(2);
 
         ScheduleDay scheduleDay = scheduleWayPoint.getScheduleDay();
@@ -397,18 +409,66 @@ public class ScheduleServiceImpl implements ScheduleService {
         int currentPointNumber = Integer.parseInt(currentPoint);
 
         // 다음 WayPoint 결정
-        for (ScheduleWayPoint wayPoint : scheduleWayPointList) {
+        int cnt = 0;
+        for (int i = 0; i < scheduleWayPointList.size(); i++) {
+            ScheduleWayPoint wayPoint = scheduleWayPointList.get(i);
             int pointIndex = Integer.parseInt(wayPoint.getWaypoint().getPointNumber());
             if (pointIndex == currentPointNumber + 1) { // 다음 WayPoint 찾기
                 wayPoint.updateVisit(1); // 다음 WayPoint 상태를 '진행 중'으로 업데이트
                 break;
             }
+            cnt++;
         }
+
+        // 만약 당일 경유지를 모두 방문완료했다면 당일일정 종료 처리
+        if (cnt == scheduleWayPointList.size()) {
+            scheduleDay.visitState();
+        }
+
         return scheduleDayId;
     }
 
+    @Transactional
     @Override
-    public List<NearByAttractionResDto> getNearByAttractionList(int distance, double lat, double lon) {
+    public Long updateScheduleDate(Long memberId, ScheduleUpdateReqDto scheduleUpdateReqDto) {
+        Long scheduleId = scheduleUpdateReqDto.getScheduleId();
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(ScheduleNotFoundException::new);
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+
+        // 권한 확인
+        if (schedule.getType().equals("private") && !schedule.getMember().equals(member)) {
+            throw new MemberInfoInvalidException();
+        } else if (schedule.getType().equals("group")) {
+            Long groupId = member.getGroupMember().getGroup().getGroupId();
+            if (!schedule.getGroup().getGroupId().equals(groupId) || member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) {
+                throw new GroupPermissionException();
+            }
+        }
+
+        // 시작일, 종료일 확인
+        String startDate = scheduleUpdateReqDto.getStartDate();
+        int daySize = schedule.getCourse().getTotalDays();
+        String endDate = calculateDate(startDate, daySize - 1);
+
+        // 기존 일정과 겹치면 던짐
+        if (!checkScheduleOverlap(memberId, startDate, endDate, scheduleId)) {
+            throw new BadScheduleDateSettingException();
+        }
+
+        // 저장
+        schedule.modifyDate(startDate, endDate);
+
+        List<ScheduleDay> scheduleDayList = schedule.getScheduleDayList();
+        for (int i = 0; i < scheduleDayList.size(); i++) {
+            String date = calculateDate(startDate, i);
+            scheduleDayList.get(i).modifyDate(date);
+        }
+
+        return scheduleId;
+    }
+
+    @Override
+    public List<NearByAttractionResDto> getNearByAttractionList(double lat, double lon) {
         String url = new StringBuilder("https://apis.data.go.kr/B551011/KorService1/locationBasedList1")
                 .append("?numOfRows=10")
                 .append("&pageNo=1")
@@ -418,7 +478,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .append("&arrange=O")
                 .append("&mapX=").append(lon)
                 .append("&mapY=").append(lat)
-                .append("&radius=").append(distance)
+                .append("&radius=5000")
                 .append("&contentTypeId=12")
                 .append("&serviceKey=").append(serviceKey)
                 .toString();
@@ -468,6 +528,49 @@ public class ScheduleServiceImpl implements ScheduleService {
         } catch (Exception e) {
             throw new JsonBadMappingException();
         }
+    }
+
+    private boolean checkScheduleOverlap(Long memberId, String startDate, String endDate, Long updateScheduleId) {
+        List<Schedule> allSchedule = scheduleRepository.findAllScheduleByMemberId(memberId);
+        if (allSchedule.isEmpty()) {
+            return true;
+        }
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        LocalDate newStartDate = LocalDate.parse(startDate, dateTimeFormatter);
+        LocalDate newEndDate = LocalDate.parse(endDate, dateTimeFormatter);
+
+        // 그냥 생성일 때
+        if (updateScheduleId == null) {
+
+            for (Schedule schedule : allSchedule) {
+                LocalDate existingStartDate = LocalDate.parse(schedule.getStartDate(), dateTimeFormatter);
+                LocalDate existingEndDate = LocalDate.parse(schedule.getEndDate(), dateTimeFormatter);
+
+                // 일정 겹치는지 확인
+                if (!(newEndDate.isBefore(existingStartDate) || newStartDate.isAfter(existingEndDate))) {
+                    return false;
+                }
+            }
+
+        }
+        // 기존 일정을 update할때
+        else {
+            for (int i = 0; i < allSchedule.size(); i++) {
+                Schedule schedule = allSchedule.get(i);
+                if (schedule.getId().equals(updateScheduleId)) {
+                    continue;
+                }
+                LocalDate existingStartDate = LocalDate.parse(schedule.getStartDate(), dateTimeFormatter);
+                LocalDate existingEndDate = LocalDate.parse(schedule.getEndDate(), dateTimeFormatter);
+
+                // 일정 겹치는지 확인
+                if (!(newEndDate.isBefore(existingStartDate) || newStartDate.isAfter(existingEndDate))) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 }

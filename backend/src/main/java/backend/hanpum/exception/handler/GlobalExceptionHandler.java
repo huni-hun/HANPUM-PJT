@@ -171,6 +171,13 @@ public class GlobalExceptionHandler {
         return response.error(e.getErrorCode());
     }
 
+    @ExceptionHandler(BadScheduleDateSettingException.class)
+    protected ResponseEntity<?> handle(BadScheduleDateSettingException e) {
+        log.error("BadScheduleDateSettingException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
     /* 날씨 */
     @ExceptionHandler(WeatherParsingException.class)
     protected ResponseEntity<?> handle(WeatherParsingException e) {
