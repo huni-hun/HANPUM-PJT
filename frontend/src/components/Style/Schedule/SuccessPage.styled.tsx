@@ -23,3 +23,5 @@ export const SuccessWrap = styled.p`
     margin: 3rem 0rem 1rem 0rem;
   }
 `;
+
+export const BtnWrap = styled.div``;

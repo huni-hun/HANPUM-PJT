@@ -111,6 +111,7 @@ export const RouteNameInfo = styled.div`
   flex-direction: column;
   /* border-bottom: 0.1rem solid #d9d9d9; */
   padding: 1.4rem 0 1rem 0;
+  position: relative;
 `;
 
 export const RouteNameInfoContainer = styled.div`
@@ -234,6 +235,9 @@ export const DateBox = styled.div`
 export const DateText = styled.p`
   font-size: 1.2rem;
   color: #c9c9c9;
+  span {
+    color: #787878;
+  }
 `;
 
 export const RouteDateTilteBox = styled.div`
@@ -324,7 +328,7 @@ export const DistanceNumBox = styled.div`
 `;
 
 export const PlaceBox = styled.div`
-  width: 50%;
+  width: 80%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -360,6 +364,9 @@ export const DistanceText = styled.p`
 export const Distance = styled.p`
   font-size: 1rem;
   color: #c9c9c9;
+  span {
+    color: #787878;
+  }
 `;
 
 export const ContentSelecContainer = styled.div`
@@ -808,4 +815,31 @@ export const AddBtnContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: 2rem;
+`;
+
+/** 효령 - Feed.tsx */
+
+export const TagsWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 60%;
+  align-items: center;
+  height: 3.5vh;
+  position: absolute;
+  bottom: 2rem;
+  box-sizing: border-box;
+`;
+
+export const Tags = styled.div`
+  border: ${colors.main} 1px solid;
+  color: ${colors.main};
+  font-weight: 600;
+  padding: 0.1rem 1rem;
+  height: 100%;
+  font-size: 1.2rem;
+  text-align: center;
+  border-radius: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;

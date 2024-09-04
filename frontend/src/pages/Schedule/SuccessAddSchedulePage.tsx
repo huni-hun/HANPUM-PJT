@@ -8,9 +8,16 @@ import Header from '@/components/common/Header/Header';
 import { useNavigate } from 'react-router-dom';
 import successImg from '../../assets/img/successSchedule.png';
 import BaseButton from '@/components/common/BaseButton';
+import Button from '@/components/common/Button/Button';
+import { colors } from '@/styles/colorPalette';
 
 function SuccessAddSchedulePage() {
   const navigate = useNavigate();
+
+  const clickBtn = () => {
+    navigate(`/schedule/main`);
+  };
+
   return (
     <A.SuccessContainer>
       <Header
@@ -23,10 +30,19 @@ function SuccessAddSchedulePage() {
           <span>나의 일정이</span>
           <span>등록되었어요!</span>
         </A.SuccessWrap>
-
-        <BaseButton size="large" style={{}}>
-          시작하기
-        </BaseButton>
+        <A.BtnWrap>
+          <Button
+            width={70}
+            height={5}
+            fc="ffffff"
+            bc={colors.main}
+            radius={0.7}
+            fontSize={1.6}
+            children="시작하기"
+            color="#ffffff"
+            onClick={clickBtn}
+          />
+        </A.BtnWrap>
       </S.SchduleContainer>
     </A.SuccessContainer>
   );

@@ -48,6 +48,11 @@ const FeedContainer = ({
         <R.RouteNameInfoContainer>
           <R.RouteName>{routeData?.routeName || ''}</R.RouteName>
           <R.RouteInfo>{routeData?.routeContent || ''}</R.RouteInfo>
+          <R.TagsWrap>
+            {routeData?.routeTypes?.map((type, index) => (
+              <R.Tags key={index}>{type}</R.Tags>
+            )) || ''}
+          </R.TagsWrap>
         </R.RouteNameInfoContainer>
       </R.RouteNameInfo>
 

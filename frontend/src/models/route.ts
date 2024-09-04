@@ -7,9 +7,11 @@ export interface FeedProps {
     routeContent?: string;
     routeScore?: number;
     routeComment?: string;
+    routeTypes?: string[];
     /** badge */
     startDate?: string;
     endDate?: string;
+
     /** 모임 props */
     memberCount?: number;
     totalMember?: number;
