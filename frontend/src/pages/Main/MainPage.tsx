@@ -47,8 +47,8 @@ function MainPage() {
     ...meetFilterInfo,
     pageable: {
       page: 0,
-      size: 1,
-      sort: 'likeCount, desc',
+      size: 5,
+      sort: 'likeCount, asc',
     },
   });
 
@@ -99,7 +99,10 @@ function MainPage() {
     () => GetGroupList(requestDto),
   );
 
-  // console.log(groupListData?.data.groupResDtoList[0]);
+  console.log(
+    '지금 보이는 것의 id는 ',
+    groupListData?.data.groupResDtoList[0].groupId,
+  );
 
   // 모임 관심 등록 토글
   const { mutate: addMeetInterestToggle } = useMutation(addInterestMeetToggle, {
@@ -107,7 +110,9 @@ function MainPage() {
       if (res.status === STATUS.success) {
         console.log(res);
         toast.success(res.message);
-        queryClient.invalidateQueries({ queryKey: ['getGroupList'] });
+        queryClient.invalidateQueries({
+          queryKey: ['getGroupList', requestDto.pageable.sort],
+        });
       }
       if (res.status === STATUS.error) {
         toast.error(res.message);
@@ -128,6 +133,7 @@ function MainPage() {
 
   const clickAddMeetInterest = (groupId: number) => {
     addMeetInterestToggle(groupId);
+    // console.log(`${groupId} 눌림`);
   };
 
   return (
@@ -235,7 +241,7 @@ function MainPage() {
                 <img src={tempImg} alt="" />
                 <DateBadge
                   style={{ top: '16px', left: '20px' }}
-                  totalDays={6}
+                  totalDays={meet.totalDays}
                 />
 
                 {/* 좋아요 아이콘 */}
@@ -276,21 +282,21 @@ function MainPage() {
                     zIndex: 3,
                   }}
                 >
-                  무더위 사냥
+                  {meet.title}
                 </Text>
 
                 <InfoBadge
                   style={{ bottom: '20px', right: '20px' }}
-                  recruitmentCount={10}
-                  recruitedCount={6}
-                  likeCount={13}
+                  recruitmentCount={meet.recruitmentCount}
+                  recruitedCount={meet.recruitedCount}
+                  likeCount={meet.likeCount}
                 />
 
                 <RouteBadge
                   style={{ bottom: '20px', left: '20px' }}
-                  startPoint={'인천'}
-                  endPoint={'당진'}
-                  totalDistance={76}
+                  startPoint={meet.startDate}
+                  endPoint={meet.endPoint}
+                  totalDistance={meet.totalDistance}
                 />
 
                 <div className="black-bg" />
