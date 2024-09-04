@@ -133,10 +133,9 @@ public class ScheduleController {
 
     @Operation(summary = "주변 관광지 정보 가져오기", description = "주변 관광지 정보 가져오기")
     @GetMapping("/nearby")
-    public ResponseEntity<?> getNearByAttractionList(@RequestParam int distance,
-                                                     @RequestParam double lat,
+    public ResponseEntity<?> getNearByAttractionList(@RequestParam double lat,
                                                      @RequestParam double lon) {
-        List<NearByAttractionResDto> result = scheduleService.getNearByAttractionList(distance, lat, lon);
+        List<NearByAttractionResDto> result = scheduleService.getNearByAttractionList(lat, lon);
         return response.success(ResponseCode.NEARBY_ATTRACTION_LIST_FETCHED, result);
     }
 
