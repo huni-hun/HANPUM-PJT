@@ -80,9 +80,7 @@ function DetailMineSchedulePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = '';
-
-        const response = await getMyScheduleDetailData(scheduleId, token);
+        const response = await getMyScheduleDetailData(scheduleId);
 
         if (response && response.status === 'SUCCESS') {
           setMyScheduleListData(response.data);
