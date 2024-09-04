@@ -5,6 +5,7 @@ import backend.hanpum.domain.course.enums.CourseTypes;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.domain.schedule.dto.responseDto.*;
+import backend.hanpum.domain.schedule.entity.Schedule;
 import backend.hanpum.exception.exception.auth.MemberNotFoundException;
 import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
 import com.querydsl.core.types.Projections;
@@ -206,6 +207,17 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .fetch();
         return courseTypes;
     }
+
+    @Override
+    public List<Schedule> findAllScheduleByMemberId(Long memberId) {
+        List<Schedule> result = query
+                .select(schedule)
+                .from(schedule)
+                .where(memberCondition(memberId))
+                .fetch();
+        return result;
+    }
+
 
     /* case 2 */
 //    @Override

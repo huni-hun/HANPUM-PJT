@@ -78,6 +78,15 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        String startDate = schedulePostReqDto.getStartDate();
+
+        int daySize = course.getTotalDays();
+        String endDate = calculateDate(startDate, daySize - 1);     // ex) 10일부터 4박5일이면 14일
+
+        // 기존 일정의 날짜와 겹치면 던짐
+        if (!checkScheduleOverlap(memberId, startDate, endDate, null)) {
+            throw new BadScheduleDateSettingException();
+        }
 
         // 개인 일정 3개 이상 못만들게
         Long myScheduleCnt = scheduleRepository.checkMyScheduleCnt(memberId).orElseThrow(ScheduleNotFoundException::new);
@@ -85,9 +94,6 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new CreateCountExceededException();
         }
 
-        String startDate = schedulePostReqDto.getStartDate();
-        int daySize = course.getTotalDays();
-        String endDate = calculateDate(startDate, daySize - 1);     // ex) 10일부터 4박5일이면 14일
         Schedule schedule = Schedule.builder()
                 .type("private")
                 .startDate(startDate)
@@ -430,6 +436,11 @@ public class ScheduleServiceImpl implements ScheduleService {
         int daySize = schedule.getCourse().getTotalDays();
         String endDate = calculateDate(startDate, daySize - 1);
 
+        // 기존 일정과 겹치면 던짐
+        if (!checkScheduleOverlap(memberId, startDate, endDate, scheduleId)) {
+            throw new BadScheduleDateSettingException();
+        }
+
         // 저장
         schedule.modifyDate(startDate, endDate);
 
@@ -437,7 +448,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         for (int i = 0; i < scheduleDayList.size(); i++) {
             String date = calculateDate(startDate, i);
             scheduleDayList.get(i).modifyDate(date);
-            System.out.println(date);
         }
 
         return scheduleId;
@@ -504,6 +514,50 @@ public class ScheduleServiceImpl implements ScheduleService {
         } catch (Exception e) {
             throw new JsonBadMappingException();
         }
+    }
+
+    private boolean checkScheduleOverlap(Long memberId, String startDate, String endDate, Long updateScheduleId) {
+        List<Schedule> allSchedule = scheduleRepository.findAllScheduleByMemberId(memberId);
+        if (allSchedule.isEmpty()) {
+            return true;
+        }
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        LocalDate newStartDate = LocalDate.parse(startDate, dateTimeFormatter);
+        LocalDate newEndDate = LocalDate.parse(endDate, dateTimeFormatter);
+
+        // 그냥 생성일 때
+        if (updateScheduleId == null) {
+
+            for (Schedule schedule : allSchedule) {
+                LocalDate existingStartDate = LocalDate.parse(schedule.getStartDate(), dateTimeFormatter);
+                LocalDate existingEndDate = LocalDate.parse(schedule.getEndDate(), dateTimeFormatter);
+
+                // 일정 겹치는지 확인
+                if (!(newEndDate.isBefore(existingStartDate) || newStartDate.isAfter(existingEndDate))) {
+                    return false;
+                }
+            }
+
+        }
+        // 기존 일정을 update할때
+        else {
+            for (int i = 0; i < allSchedule.size(); i++) {
+                Schedule schedule = allSchedule.get(i);
+                if (schedule.getId().equals(updateScheduleId)) {
+                    continue;
+                }
+                LocalDate existingStartDate = LocalDate.parse(schedule.getStartDate(), dateTimeFormatter);
+                LocalDate existingEndDate = LocalDate.parse(schedule.getEndDate(), dateTimeFormatter);
+
+                // 일정 겹치는지 확인
+                if (!(newEndDate.isBefore(existingStartDate) || newStartDate.isAfter(existingEndDate))) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
 }

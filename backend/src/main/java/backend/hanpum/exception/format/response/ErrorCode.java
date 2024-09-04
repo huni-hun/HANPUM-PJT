@@ -26,6 +26,7 @@ public enum ErrorCode {
     NEARBY_ATTRACTION_NOT_FOUND(HttpStatus.NOT_FOUND, "거리 조건에 맞는 관광지 정보가 없습니다."),
     BAD_SCHEDULE_STATE_UPDATE_REQUEST(HttpStatus.BAD_REQUEST, "올바르지 않은 일정 상태 전환 요청입니다."),
     CREATE_COUNT_EXCEEDED(HttpStatus.BAD_REQUEST, "개인 일정 생성 횟수 제한을 초과하였습니다."),
+    BAD_SCHEDULE_DATE_SETTING(HttpStatus.BAD_REQUEST, "요청 일정이 기존 일정과 중복됩니다."),
 
     /* 날씨 */
     WEATHER_PARSING_EXCEPTION(HttpStatus.BAD_REQUEST, "날씨 정보를 불러오는 중 에러가 발생했습니다."),
