@@ -46,6 +46,9 @@ public interface ScheduleService {
     // 경유지 도착
     Long setArriveScheduleWayPoint(ScheduleWayPointReqDto scheduleWayPointReqDto);
 
+    // 일정 날짜 수정
+    Long updateScheduleDate(Long memberId, ScheduleUpdateReqDto scheduleUpdateReqDto);
+
     // 주변 관광지 정보 가져오기
     List<NearByAttractionResDto> getNearByAttractionList(double lat, double lon);
 }

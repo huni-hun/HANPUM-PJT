@@ -26,6 +26,7 @@ import backend.hanpum.domain.schedule.repository.ScheduleWayPointRepository;
 import backend.hanpum.domain.weather.service.WeatherService;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.auth.MemberInfoInvalidException;
+import backend.hanpum.exception.exception.auth.MemberNotFoundException;
 import backend.hanpum.exception.exception.common.JsonBadMappingException;
 import backend.hanpum.exception.exception.common.UriBadSyntaxException;
 import backend.hanpum.exception.exception.course.CourseNotFoundException;
@@ -405,6 +406,33 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
         }
         return scheduleDayId;
+    }
+
+    @Transactional
+    @Override
+    public Long updateScheduleDate(Long memberId, ScheduleUpdateReqDto scheduleUpdateReqDto) {
+        Long scheduleId = scheduleUpdateReqDto.getScheduleId();
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(ScheduleNotFoundException::new);
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+
+        // 권한 확인
+        if (schedule.getType().equals("private") && !schedule.getMember().equals(member)) {
+            throw new MemberInfoInvalidException();
+        } else if (schedule.getType().equals("group")) {
+            Long groupId = member.getGroupMember().getGroup().getGroupId();
+            if (!schedule.getGroup().getGroupId().equals(groupId) || member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) {
+                throw new GroupPermissionException();
+            }
+        }
+
+        // 시작일, 종료일 확인
+        String startDate = scheduleUpdateReqDto.getStartDate();
+        int daySize = schedule.getCourse().getTotalDays();
+        String endDate = calculateDate(startDate, daySize - 1);
+
+        // 저장
+        schedule.modifyDate(startDate, endDate);
+        return scheduleId;
     }
 
     @Override

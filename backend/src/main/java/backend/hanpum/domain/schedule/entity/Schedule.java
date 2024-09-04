@@ -57,4 +57,9 @@ public class Schedule {
         }
         this.state = state;
     }
+
+    public void modifyDate(String startDate, String endDate) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 }
