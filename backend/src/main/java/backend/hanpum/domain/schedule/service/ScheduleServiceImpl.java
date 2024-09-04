@@ -357,6 +357,11 @@ public class ScheduleServiceImpl implements ScheduleService {
         // 달성률
         int rate = courseService.getScheduleGoalRate(scheduleDayResDtoList);
 
+        // 만약 달성률 100이면 일정 종료
+        if (rate == 100) {
+            schedule.updateState(2);
+        }
+
         // 해시태그
         List<CourseTypes> courseTypes = scheduleRepository.getCourseTypes(courseId);
 
