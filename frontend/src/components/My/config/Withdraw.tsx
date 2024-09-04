@@ -10,9 +10,11 @@ import { useAlert } from '@/hooks/global/useAlert';
 import { WithdrawMembership } from '@/api/mypage/Delete';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function Withdraw() {
   const { data } = useQuery('getUser', GetUser);
+  const navigate = useNavigate();
   // console.log(data);
 
   const [agree, setAgree] = useState(true);
@@ -23,6 +25,7 @@ function Withdraw() {
     onSuccess: (res) => {
       if (res.status === STATUS.success) {
         toast.success(res.message);
+        navigate('/login');
       }
       if (res.status === STATUS.error) {
         toast.error(res.message);

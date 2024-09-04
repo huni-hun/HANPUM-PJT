@@ -34,6 +34,7 @@ import { GetGroupList } from '@/api/meet/GET';
 import { meetFilterInfoAtom } from '@/atoms/meetFilterAtom';
 import { addInterestMeetToggle } from '@/api/meet/POST';
 import { deleteInterestRoute } from '@/api/route/Delete';
+import { GetUser } from '@/api/mypage/GET';
 
 function MainPage() {
   const navigator = useNavigate();
@@ -56,6 +57,19 @@ function MainPage() {
     navigator('/route/list/more', { state: { keyword: keyword } });
   };
 
+  const { data: userInfo } = useQuery('getUser', GetUser, {
+    onSuccess: (res) => {
+      // console.log('res ::', res.data);
+      if (res.status === STATUS.success) {
+      } else if (res.status === STATUS.error) {
+        toast.error(res.message);
+      }
+    },
+    onError: (error: AxiosError) => {
+      toast.error(error.message);
+    },
+  });
+
   // 내 일정
   const { data: mySchedule } = useQuery('getMySchedule', getMySchedule);
 
@@ -63,6 +77,8 @@ function MainPage() {
   const { data: routeList } = useQuery(['getRouteList', type], () =>
     getMainRouteList(type),
   );
+
+  // console.log('userInfo ::', userInfo.data.nickname);
 
   // 경로 관심 등록
   const { mutate: addRouteInterest } = useMutation(addInterestRoute, {
@@ -99,10 +115,10 @@ function MainPage() {
     () => GetGroupList(requestDto),
   );
 
-  console.log(
-    '지금 보이는 것의 id는 ',
-    groupListData?.data.groupResDtoList[0].groupId,
-  );
+  // console.log(
+  //   '지금 보이는 것의 id는 ',
+  //   groupListData?.data.groupResDtoList[0].groupId,
+  // );
 
   // 모임 관심 등록 토글
   const { mutate: addMeetInterestToggle } = useMutation(addInterestMeetToggle, {
@@ -150,19 +166,22 @@ function MainPage() {
         <div className="spacing" />
 
         {/* 경로 추천 */}
-        {routeList && (
-          <div className="route-container">
-            <Flex $justify="space-between" $align="center">
-              <Text $typography="t20" $bold={true}>
-                동동님을 위한 추천코스
-              </Text>
 
-              <Flex $align="center" style={{ width: 'auto' }}>
-                <Text $typography="t10">더 보기</Text>
-                <Icon name="IconLeftBlackArrow" width={6} height={4} />
-              </Flex>
+        <div className="route-container">
+          <Flex $justify="space-between" $align="center">
+            {userInfo && (
+              <Text $typography="t20" $bold={true}>
+                {userInfo.data.nickname}님을 위한 추천코스
+              </Text>
+            )}
+
+            <Flex $align="center" style={{ width: 'auto' }}>
+              <Text $typography="t10">더 보기</Text>
+              <Icon name="IconLeftBlackArrow" width={6} height={4} />
             </Flex>
-            {routeList.data.courseListMap[type].map((course: Root) => (
+          </Flex>
+          {routeList &&
+            routeList?.data.courseListMap[type].map((course: Root) => (
               <div className="main-smallCard" key={course.courseId}>
                 <img src={tempImg} alt="그룹 이미지" />
                 <DateBadge
@@ -217,8 +236,7 @@ function MainPage() {
                 <div className="black-bg" />
               </div>
             ))}
-          </div>
-        )}
+        </div>
 
         <div className="spacing" />
 
