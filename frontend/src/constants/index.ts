@@ -107,19 +107,19 @@ export const genderList: LabelValue[] = [
 export const sortList: LabelValue[] = [
   {
     label: '최신 순',
-    value: 'latest, desc',
+    value: 'latest,desc',
   },
   {
     label: '인기가 많은 순',
-    value: 'likeCount, desc',
+    value: 'likeCount,desc',
   },
   {
     label: '경로 길이 짧은 순',
-    value: 'totalDistance, desc',
+    value: 'totalDistance,desc',
   },
   {
     label: '경로 길이 긴 순',
-    value: 'totalDistance, asc',
+    value: 'totalDistance,asc',
   },
   {
     label: '설정 안함',

@@ -47,8 +47,8 @@ function MainPage() {
     ...meetFilterInfo,
     pageable: {
       page: 0,
-      size: 5,
-      sort: 'likeCount, asc',
+      size: 1,
+      sort: 'likeCount,desc',
     },
   });
 
