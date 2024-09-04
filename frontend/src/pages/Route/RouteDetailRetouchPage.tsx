@@ -54,6 +54,7 @@ function RouteDetailRetouchPage() {
   const [wayPoints, setWayPoints] = useState<WayPointReqDto[]>([]);
   const [attractionsr, setAttractionsr] = useState<AttractionReqDto[]>([]);
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
+  const [loadAll, setLoadAll] = useState<boolean>(false);
   const [attractionsCard, setAttractionsCard] = useState<
     AttractionsAddCardProps[]
   >([]);
@@ -77,6 +78,7 @@ function RouteDetailRetouchPage() {
             start: result.data.data.course.startPoint,
             end: result.data.data.course.endPoint,
             img: result.data.data.course.backgroundImg,
+            writeState: result.data.data.course.writeState,
           };
           setRouteData(rd);
           result.data.data.courseDays.map((ele: any) => {
@@ -246,6 +248,8 @@ function RouteDetailRetouchPage() {
   }, [selectedIdx]);
 
   useEffect(() => {
+    setSe([]);
+    setMarker([]);
     let arr: DaysOfRouteProps[] = [];
     let lines: MapLinePathProps[] = [];
     if (dateDetail.length > 0) {
@@ -277,21 +281,22 @@ function RouteDetailRetouchPage() {
             setSe((pre) => [...pre, seData]);
           }
           let markerData: LineStartEndProps = {
-            x: ele.lon,
-            y: ele.lat,
+            x: ele.lat,
+            y: ele.lon,
           };
           setMarker((pre) => [...pre, markerData]);
         });
         setLinePath(lines);
         setWayPoints(dateDetail[selectedDay - 1].wayPointReqDtoList);
       }
+      setLoadAll(true);
     }
 
     setDayOfRoute(arr);
   }, [wayPoints]);
 
   useEffect(() => {
-    if (linePath.length > 0) {
+    if (linePath.length > 0 && loadAll) {
       const mapLines: any[] = [];
       GetLineData(linePath, se[0], se[1])
         .then((res) => {
@@ -438,7 +443,6 @@ function RouteDetailRetouchPage() {
     <R.Container>
       <Header
         purpose="route-retouch"
-        back={true}
         clickBack={() => {
           navigate(-1);
         }}

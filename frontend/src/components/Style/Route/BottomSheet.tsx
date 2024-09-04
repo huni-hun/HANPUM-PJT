@@ -12,6 +12,7 @@ interface BottomSheetProps {
   onEdit?: () => void; // 추가
   onDelete?: () => void; // 추가
   id?: number;
+  writeState?: boolean;
 }
 
 function BottomSheet(props: BottomSheetProps) {
@@ -42,7 +43,7 @@ function BottomSheet(props: BottomSheetProps) {
               <R.SettingBox
                 key={ele}
                 onClick={() => {
-                  if (ele === '수정' && props.onEdit) {
+                  if (ele === '수정' && props.onEdit && props.writeState) {
                     props.onEdit(); // 수정 핸들러 호출
                   } else if (ele === '삭제' && props.onDelete) {
                     props.onDelete(); // 삭제 핸들러 호출
