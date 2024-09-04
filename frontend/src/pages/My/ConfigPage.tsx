@@ -1,14 +1,36 @@
+import { Logout } from '@/api/signup/POST';
 import Flex from '@/components/common/Flex';
 import Header from '@/components/common/Header/Header';
 import Text from '@/components/common/Text';
 import ConfigItem from '@/components/My/config/ConfigItem';
+import { STATUS } from '@/constants';
 import { useAlert } from '@/hooks/global/useAlert';
 import { colors } from '@/styles/colorPalette';
+import { AxiosError } from 'axios';
+import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
 
 function ConfigPage() {
   const navigate = useNavigate();
+
+  const { mutate: logout } = useMutation(Logout, {
+    onSuccess: (res) => {
+      if (res.status === STATUS.success) {
+        toast.success(res.message);
+        localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
+        navigate('/login');
+      }
+      if (res.status === STATUS.error) {
+        toast.error(res.message);
+      }
+    },
+    onError: (error: AxiosError) => {
+      toast.error(error.message);
+    },
+  });
 
   return (
     <ConfigPageContainer>
@@ -49,6 +71,9 @@ function ConfigPage() {
           </Text>
           <ConfigItem label="비밀번호 변경" url="/config/:pw" />
           <ConfigItem label="회원탈퇴" url="/config/:withdraw" />
+          <Text $typography="t16" onClick={() => logout()}>
+            로그아웃
+          </Text>
         </Flex>
       </div>
     </ConfigPageContainer>
