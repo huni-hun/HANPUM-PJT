@@ -72,8 +72,8 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional(readOnly = true)
-    public CourseListMapResDto getCourseList(CourseTypes targetCourse, Double maxDistance, Integer maxDays, List<CourseTypes> selectedTypes, String keyword, Pageable pageable) {
-        CourseListMapResDto courseListMapResDto = courseRepository.getCourseList(targetCourse, maxDistance, maxDays, selectedTypes, keyword, pageable).orElseThrow(CourseListNotFoundException::new);
+    public CourseListMapResDto getCourseList(CourseTypes targetCourse, Double maxDistance, Integer maxDays, List<CourseTypes> selectedTypes, String keyword, Pageable pageable, Long memberId) {
+        CourseListMapResDto courseListMapResDto = courseRepository.getCourseList(targetCourse, maxDistance, maxDays, selectedTypes, keyword, pageable, memberId).orElseThrow(CourseListNotFoundException::new);
 
         return courseListMapResDto;
     }

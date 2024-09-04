@@ -30,13 +30,19 @@ public class CourseController {
 
     @Operation(summary = "경로 목록 조회", description = "경로 목록 조회 API")
     @GetMapping()
-    public ResponseEntity<?> getCourseList(@RequestParam(required = false) CourseTypes targetCourse,
+    public ResponseEntity<?> getCourseList(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                           @RequestParam(required = false) CourseTypes targetCourse,
                                            @RequestParam(required = false) Double maxDistance,
                                            @RequestParam(required = false) Integer maxDays,
                                            @RequestParam(required = false) List<CourseTypes> selectedTypes,
                                            @RequestParam(required = false) String keyword,
                                            Pageable pageable) {
-        CourseListMapResDto courseListMapResDto = courseService.getCourseList(targetCourse, maxDistance, maxDays, selectedTypes, keyword, pageable);
+        Long memberId = null;
+        if(userDetails != null) {
+            memberId = userDetails.getMember().getMemberId();
+        }
+
+        CourseListMapResDto courseListMapResDto = courseService.getCourseList(targetCourse, maxDistance, maxDays, selectedTypes, keyword, pageable, memberId);
         return response.success(ResponseCode.COURSE_LIST_FETCHED, courseListMapResDto);
     }
 
