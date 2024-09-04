@@ -14,22 +14,8 @@ import styled from 'styled-components';
 function MyPage() {
   const navigate = useNavigate();
 
-  const { data } = useQuery(
-    'getUser', // Query Key
-    GetUser,
-    {
-      onSuccess: (res) => {
-        // console.log('res ::', res.data);
-        if (res.status === STATUS.success) {
-        } else if (res.status === STATUS.error) {
-          toast.error(res.message);
-        }
-      },
-      onError: (error: AxiosError) => {
-        toast.error(error.message);
-      },
-    },
-  );
+  const { data } = useQuery('getUser', GetUser);
+
   return (
     <MyPageContainer>
       <Header
