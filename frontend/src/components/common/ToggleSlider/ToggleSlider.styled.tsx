@@ -2,7 +2,7 @@ import { colors } from '@/styles/colorPalette';
 import styled from 'styled-components';
 
 export const SliderBox = styled.div`
-  width: 85%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

@@ -1,9 +1,6 @@
 import { Slider } from '@mui/material';
 import * as R from './ToggleSlider.styled';
-import { useState } from 'react';
 import { colors } from '@/styles/colorPalette';
-import { useRecoilValue } from 'recoil';
-import { meetFilterInfoAtom } from '@/atoms/meetFilterAtom';
 
 interface ToggleSliderProps {
   title: string;
@@ -22,9 +19,6 @@ function ToggleSlider({
   value,
   onChange,
 }: ToggleSliderProps) {
-  // console.log(sliderValue);
-  // const meetInfo = useRecoilValue(meetFilterInfoAtom);
-
   const handleSliderChange = (event: Event, newValue: number | number[]) => {
     if (typeof newValue === 'number') {
       if (onChange) {

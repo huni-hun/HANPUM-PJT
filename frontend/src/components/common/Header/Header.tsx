@@ -11,8 +11,8 @@ interface HeaderProps {
   arrive?: string;
   depart?: string;
   back?: boolean;
-  isShadow?: boolean;
-  isborder?: boolean;
+  $isShadow?: boolean;
+  $isborder?: boolean;
   searchValue?: string;
   clickBack: () => void;
   complete?: () => void;
@@ -33,8 +33,8 @@ const Header = ({
   complete,
   focus,
   clickOption,
-  isborder = false,
-  isShadow = false,
+  $isborder = false,
+  $isShadow = false,
   changeEven,
   keyDownEven,
   searchValue,
@@ -288,7 +288,7 @@ const Header = ({
 
   return (
     <>
-      <S.HeaderWrapper isShadow={isShadow} isborder={isborder}>
+      <S.HeaderWrapper $isShadow={$isShadow} $isborder={$isborder}>
         {back && (
           <Icon
             name="IconBackArrow"

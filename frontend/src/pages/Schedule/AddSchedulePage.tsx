@@ -100,7 +100,7 @@ function AddSchedulePage() {
         purpose="title"
         title="일정을 등록해주세요"
         clickBack={() => navigate(-1)}
-        isShadow
+        $isShadow
       />
       {/* <S.Container> */}
       <S.SchduleContainer>

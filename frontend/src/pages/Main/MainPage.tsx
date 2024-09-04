@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-
 import BottomTab from '@components/common/BottomTab/BottomTab';
 import Schedule from '@components/Main/Schedule';
 import Text from '@components/common/Text';
@@ -7,9 +6,9 @@ import Course from '@components/Main/Course';
 import Meet from '@components/Main/Meet';
 import Header from '@/components/common/Header/Header';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { signupStepAtom } from '@/atoms/signupStepAtom';
 import { encodeToken, startDateEndDateStringFormat } from '@/utils/util';
 import { colors } from '@/styles/colorPalette';
@@ -23,246 +22,287 @@ import InfoBadge from '@/components/common/Badge/InfoBadge';
 import RouteBadge from '@/components/common/Badge/RouteBadge';
 import StarBadge from '@/components/common/Badge/StarBadge';
 import Flex from '@/components/common/Flex';
-import { useQuery } from 'react-query';
-import { getMyScheduleData } from '@/api/schedule/GET';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { getMySchedule, getMyScheduleData } from '@/api/schedule/GET';
 import { STATUS } from '@/constants';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
+import { addInterestRoute, getMainRouteList } from '@/api/route/GET';
+import { Root } from '@/models/root';
+import { MeetInfo, MeetPageAble, MeetRequestDto } from '@/models/meet';
+import { GetGroupList } from '@/api/meet/GET';
+import { meetFilterInfoAtom } from '@/atoms/meetFilterAtom';
+import { addInterestMeetToggle } from '@/api/meet/POST';
+import { deleteInterestRoute } from '@/api/route/Delete';
 
 function MainPage() {
   const navigator = useNavigate();
+  const type = '초보자';
+
+  const meetFilterInfo = useRecoilValue(meetFilterInfoAtom);
+
+  const queryClient = useQueryClient();
+
+  const [requestDto, setRequestDto] = useState<MeetRequestDto>({
+    ...meetFilterInfo,
+    pageable: {
+      page: 0,
+      size: 1,
+      sort: 'likeCount,desc',
+    },
+  });
 
   const clickMoreBtn = (keyword: string) => {
     navigator('/route/list/more', { state: { keyword: keyword } });
   };
 
-  // const { data: mySchedule } = useQuery(
-  //   'geMySchedule', // Query Key
-  //   () =>
-  //     getMyScheduleData(
-  //       'eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiQ09NTU9OIiwic3ViIjoidGVzdDEyMzQ1IiwiaWF0IjoxNzI1MjczNTMwLCJleHAiOjE3MjUzNDU1MzB9.YDLFmQfLa7nAPNK0cAq2mXVEe6gKzqbEJAM2CZcJ0k8',
-  //     ),
-  //   {
-  //     onSuccess: (res) => {
-  //       console.log('res ::', res.data);
-  //       if (res.status === STATUS.success) {
-  //       } else if (res.status === STATUS.error) {
-  //         toast.error(res.message);
-  //       }
-  //     },
-  //     onError: (error: AxiosError) => {
-  //       toast.error(error.message);
-  //     },
-  //   },
-  // );
+  // 내 일정
+  const { data: mySchedule } = useQuery('getMySchedule', getMySchedule);
+
+  // 경로(초보자 코스)
+  const { data: routeList } = useQuery(['getRouteList', type], () =>
+    getMainRouteList(type),
+  );
+
+  // 경로 관심 등록
+  const { mutate: addRouteInterest } = useMutation(addInterestRoute, {
+    onSuccess: (res) => {
+      if (res.status === STATUS.success) {
+        toast.success(res.message);
+      }
+      if (res.status === STATUS.error) {
+        toast.error(res.message);
+      }
+    },
+    onError: (error: AxiosError) => {
+      toast.error(error.message);
+    },
+  });
+
+  const { mutate: deleteRouteInterest } = useMutation(deleteInterestRoute, {
+    onSuccess: (res) => {
+      if (res.status === STATUS.success) {
+        toast.success(res.message);
+      }
+      if (res.status === STATUS.error) {
+        toast.error(res.message);
+      }
+    },
+    onError: (error: AxiosError) => {
+      toast.error(error.message);
+    },
+  });
+
+  // 모임(인기순 1개)
+  const { data: groupListData } = useQuery(
+    ['getGroupList', requestDto.pageable.sort],
+    () => GetGroupList(requestDto),
+  );
+
+  console.log(
+    '지금 보이는 것의 id는 ',
+    groupListData?.data.groupResDtoList[0].groupId,
+  );
+
+  // 모임 관심 등록 토글
+  const { mutate: addMeetInterestToggle } = useMutation(addInterestMeetToggle, {
+    onSuccess: (res) => {
+      if (res.status === STATUS.success) {
+        console.log(res);
+        toast.success(res.message);
+        queryClient.invalidateQueries({
+          queryKey: ['getGroupList', requestDto.pageable.sort],
+        });
+      }
+      if (res.status === STATUS.error) {
+        toast.error(res.message);
+      }
+    },
+    onError: (error: AxiosError) => {
+      toast.error(error.message);
+    },
+  });
+
+  const clickAddRouteInterest = (course_id: number) => {
+    addRouteInterest(course_id);
+  };
+
+  const clickDeleteRouteInterest = (course_id: number) => {
+    deleteRouteInterest(course_id);
+  };
+
+  const clickAddMeetInterest = (groupId: number) => {
+    addMeetInterestToggle(groupId);
+    // console.log(`${groupId} 눌림`);
+  };
 
   return (
     <MainPageContainer>
-      <Header purpose="main" isborder={true} clickBack={() => {}} />
+      <Header purpose="main" $isborder={true} clickBack={() => {}} />
       <div className="container">
-        <NotHaveSchedule />
-        {/* <Schedule /> */}
-        <div className="spacing" />
-
-        <div className="route-container">
-          <Flex $justify="space-between" $align="center">
-            <Text $typography="t20" $bold={true}>
-              동동님을 위한 추천코스
-            </Text>
-
-            <Flex $align="center" style={{ width: 'auto' }}>
-              <Text $typography="t10">더 보기</Text>
-              <Icon name="IconLeftBlackArrow" width={6} height={4} />
-            </Flex>
-          </Flex>
-          <div className="main-smallCard">
-            <img src={tempImg} alt="그룹 이미지" />
-            <DateBadge totalDays={3} style={{ top: '12px', left: '12px' }} />
-            <Icon
-              name="IconHeartWhiteBorder"
-              size={20}
-              style={{
-                position: 'absolute',
-                top: '14px',
-                right: '12px',
-                zIndex: '3',
-              }}
-            />
-
-            <StarBadge
-              style={{
-                position: 'absolute',
-                bottom: '50px',
-                left: '12px',
-                zIndex: '3',
-              }}
-            />
-
-            <Text
-              as="div"
-              $typography="t14"
-              $bold={true}
-              color="white"
-              style={{
-                position: 'absolute',
-                left: '12px',
-                bottom: '28px',
-                zIndex: '3',
-              }}
-            >
-              무더위사냥
-            </Text>
-
-            <RouteBadge
-              startPoint={'인천'}
-              endPoint={'당진'}
-              totalDistance={23.5}
-              style={{
-                left: '12px',
-                bottom: '12px',
-              }}
-            />
-            <div className="black-bg" />
-          </div>
-
-          <div className="main-smallCard">
-            <img src={tempImg} alt="그룹 이미지" />
-            <DateBadge totalDays={3} style={{ top: '12px', left: '12px' }} />
-            <Icon
-              name="IconHeartWhiteBorder"
-              size={20}
-              style={{
-                position: 'absolute',
-                top: '14px',
-                right: '12px',
-                zIndex: '3',
-              }}
-            />
-
-            <StarBadge
-              style={{
-                position: 'absolute',
-                bottom: '50px',
-                left: '12px',
-                zIndex: '3',
-              }}
-            />
-
-            <Text
-              as="div"
-              $typography="t14"
-              $bold={true}
-              color="white"
-              style={{
-                position: 'absolute',
-                left: '12px',
-                bottom: '28px',
-                zIndex: '3',
-              }}
-            >
-              무더위사냥
-            </Text>
-
-            <RouteBadge
-              startPoint={'인천'}
-              endPoint={'당진'}
-              totalDistance={23.5}
-              style={{
-                left: '12px',
-                bottom: '12px',
-              }}
-            />
-            <div className="black-bg" />
-          </div>
-        </div>
-
-        <div className="spacing" />
-
-        <div className="meet-container">
-          <Flex $justify="space-between" $align="center">
-            <Text $typography="t20" $bold={true}>
-              한품 PICK 모임 추천
-            </Text>
-
-            <Flex $align="center" style={{ width: 'auto' }}>
-              <Text $typography="t10">더 보기</Text>
-              <Icon name="IconLeftBlackArrow" width={6} height={4} />
-            </Flex>
-          </Flex>
-          <div className="main-longCard">
-            <img src={tempImg} alt="" />
-            <DateBadge style={{ top: '16px', left: '20px' }} totalDays={6} />
-            {/* {data.like ? (
-            <Icon
-              name="IconHeartWhiteFill"
-              size={20}
-              style={{
-                position: 'absolute',
-                top: '18px',
-                right: '20px',
-                zIndex: '3',
-              }}
-            />
+        {mySchedule &&
+          (mySchedule.message === '조회된 일정이 없습니다.' ? (
+            <NotHaveSchedule />
           ) : (
-            <Icon
-              name="IconHeartWhiteBorder"
-              size={20}
-              style={{
-                position: 'absolute',
-                top: '18px',
-                right: '20px',
-                zIndex: '3',
-              }}
-            />
-          )} */}
-            <Icon
-              name="IconHeartWhiteBorder"
-              size={20}
-              style={{
-                position: 'absolute',
-                top: '18px',
-                right: '20px',
-                zIndex: '3',
-              }}
-            />
+            <Schedule />
+          ))}
 
-            <StarBadge
-              style={{
-                position: 'absolute',
-                bottom: '57px',
-                left: '20px',
-                zIndex: '3',
-              }}
-            />
+        <div className="spacing" />
 
-            <Text
-              $typography="t14"
-              color="white"
-              $bold={true}
-              style={{
-                position: 'absolute',
-                bottom: '34px',
-                left: '20px',
-                zIndex: 3,
-              }}
-            >
-              무더위 사냥
-            </Text>
-            <InfoBadge
-              style={{ bottom: '20px', right: '20px' }}
-              recruitmentCount={10}
-              recruitedCount={6}
-              likeCount={13}
-            />
-            <RouteBadge
-              style={{ bottom: '20px', left: '20px' }}
-              startPoint={'인천'}
-              endPoint={'당진'}
-              totalDistance={76}
-            />
-            <div className="black-bg" />
+        {/* 경로 추천 */}
+        {routeList && (
+          <div className="route-container">
+            <Flex $justify="space-between" $align="center">
+              <Text $typography="t20" $bold={true}>
+                동동님을 위한 추천코스
+              </Text>
+
+              <Flex $align="center" style={{ width: 'auto' }}>
+                <Text $typography="t10">더 보기</Text>
+                <Icon name="IconLeftBlackArrow" width={6} height={4} />
+              </Flex>
+            </Flex>
+            {routeList.data.courseListMap[type].map((course: Root) => (
+              <div className="main-smallCard" key={course.courseId}>
+                <img src={tempImg} alt="그룹 이미지" />
+                <DateBadge
+                  totalDays={3}
+                  style={{ top: '12px', left: '12px' }}
+                />
+                <Icon
+                  name="IconModiHeartFill"
+                  size={20}
+                  style={{
+                    position: 'absolute',
+                    top: '14px',
+                    right: '12px',
+                    zIndex: '3',
+                  }}
+                />
+
+                <StarBadge
+                  scoreAvg={course.scoreAvg}
+                  style={{
+                    position: 'absolute',
+                    bottom: '50px',
+                    left: '12px',
+                    zIndex: '3',
+                  }}
+                />
+
+                <Text
+                  as="div"
+                  $typography="t14"
+                  $bold={true}
+                  color="white"
+                  style={{
+                    position: 'absolute',
+                    left: '12px',
+                    bottom: '28px',
+                    zIndex: '3',
+                  }}
+                >
+                  {course.courseName}
+                </Text>
+
+                <RouteBadge
+                  startPoint={course.startPoint}
+                  endPoint={course.endPoint}
+                  totalDistance={course.totalDistance}
+                  style={{
+                    left: '12px',
+                    bottom: '12px',
+                  }}
+                />
+                <div className="black-bg" />
+              </div>
+            ))}
           </div>
-        </div>
+        )}
+
+        <div className="spacing" />
+
+        {/* 모임 추천 */}
+        {groupListData &&
+          groupListData.data.groupResDtoList.map((meet: MeetInfo) => (
+            <div className="meet-container" key={meet.groupId}>
+              <Flex $justify="space-between" $align="center">
+                <Text $typography="t20" $bold={true}>
+                  한품 PICK 모임 추천
+                </Text>
+
+                <Flex $align="center" style={{ width: 'auto' }}>
+                  <Text $typography="t10">더 보기</Text>
+                  <Icon name="IconLeftBlackArrow" width={6} height={4} />
+                </Flex>
+              </Flex>
+
+              <div className="main-longCard">
+                <img src={tempImg} alt="" />
+                <DateBadge
+                  style={{ top: '16px', left: '20px' }}
+                  totalDays={meet.totalDays}
+                />
+
+                {/* 좋아요 아이콘 */}
+                {meet.like ? (
+                  <Icon
+                    onClick={() => clickAddMeetInterest(meet.groupId)}
+                    name="IconModiHeartFill"
+                    size={20}
+                    style={{
+                      position: 'absolute',
+                      top: '18px',
+                      right: '20px',
+                      zIndex: '3',
+                    }}
+                  />
+                ) : (
+                  <Icon
+                    onClick={() => clickAddMeetInterest(meet.groupId)}
+                    name="IconModiHeartNonFill"
+                    size={20}
+                    style={{
+                      position: 'absolute',
+                      top: '18px',
+                      right: '20px',
+                      zIndex: '3',
+                    }}
+                  />
+                )}
+
+                <Text
+                  $typography="t14"
+                  color="white"
+                  $bold={true}
+                  style={{
+                    position: 'absolute',
+                    bottom: '34px',
+                    left: '20px',
+                    zIndex: 3,
+                  }}
+                >
+                  {meet.title}
+                </Text>
+
+                <InfoBadge
+                  style={{ bottom: '20px', right: '20px' }}
+                  recruitmentCount={meet.recruitmentCount}
+                  recruitedCount={meet.recruitedCount}
+                  likeCount={meet.likeCount}
+                />
+
+                <RouteBadge
+                  style={{ bottom: '20px', left: '20px' }}
+                  startPoint={meet.startDate}
+                  endPoint={meet.endPoint}
+                  totalDistance={meet.totalDistance}
+                />
+
+                <div className="black-bg" />
+              </div>
+            </div>
+          ))}
         <BottomTab />
       </div>
     </MainPageContainer>

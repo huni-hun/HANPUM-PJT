@@ -1,3 +1,4 @@
+import { colors } from '@/styles/colorPalette';
 import styled from 'styled-components';
 
 export const Container = styled.div`
@@ -22,14 +23,6 @@ export const HeaderButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-export const MainContainer = styled.div`
-  width: 100vw;
-  height: 80vh;
-  display: flex;
-  flex-direction: row;
-  overflow-y: auto;
 `;
 
 export const OverFlow = styled.div`
@@ -123,9 +116,7 @@ export const ToggleSliderBox = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 80vw;
-  margin: auto;
-  padding: 3rem 0 0 0;
+  width: 100%;
 `;
 
 export const SelectEctInfoBox = styled.div`
@@ -149,4 +140,70 @@ export const ScheduleBox = styled.div`
   padding: 2rem;
   font-size: 1.6rem;
   font-weight: 700;
+`;
+
+export const MainContainer = styled.div`
+  width: 100vw;
+  background-color: ${colors.white};
+  display: flex;
+  flex-direction: column;
+  .form {
+    padding: 18px 24px 24px 33px;
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid ${colors.grey1};
+    gap: 24px;
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      .img-box {
+        width: 100%;
+        height: 16rem;
+        background-color: ${colors.grey1};
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        input {
+          width: 100%;
+          height: 100%;
+          opacity: 0;
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: 1;
+        }
+      }
+      textarea {
+        height: 10.8rem;
+        width: 100%;
+        border-radius: 12px;
+        border: 1px solid ${colors.grey2};
+        padding: 16px 12px;
+        box-sizing: border-box;
+        outline-color: ${colors.main};
+        font-size: 1.2rem;
+      }
+    }
+  }
+
+  .category-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 24px;
+    border-bottom: 1px solid ${colors.grey1};
+    background-color: ${colors.white};
+  }
+
+  .btn-box {
+    margin: 49px auto 20px;
+  }
 `;

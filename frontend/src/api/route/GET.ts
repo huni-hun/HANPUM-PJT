@@ -1,4 +1,3 @@
-import { types } from 'util';
 import api from '../index';
 
 export async function getRouteList(type: string) {
@@ -51,4 +50,19 @@ export async function getRouteReview(id: string) {
   const response = await api.get(`/api/course/${id}/reviews`);
 
   return response;
+}
+
+// 메인에서 두개 짜리 임시 - 채운
+export async function getMainRouteList(type: string) {
+  const { data } = await api.get(
+    `/api/course?targetCourse=${type}&size=2&page=0&sort=popularity,DESC`,
+  );
+
+  return data;
+}
+
+export async function addInterestRoute(course_id: number) {
+  const { data } = await api.get(`/api/course/${course_id}/like`);
+
+  return data;
 }

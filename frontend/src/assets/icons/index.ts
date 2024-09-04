@@ -67,6 +67,7 @@ export { ReactComponent as IconMemberGrey } from './member_grey.svg';
 export { ReactComponent as IconHeartGrey } from './heart_grey.svg';
 export { ReactComponent as IconFilter } from './filter.svg';
 export { ReactComponent as IconDownArrow } from './grey_down_arrow.svg';
+export { ReactComponent as IconArrowRight } from './arrowRight.svg';
 
 // 모임 디테일
 export { ReactComponent as IconHeartGreyFill } from './heart_grey_fill.svg';
@@ -100,3 +101,7 @@ export { ReactComponent as IconHeartWhiteBorder } from './heart_white_border.svg
 export { ReactComponent as IconLock } from './lock.svg';
 export { ReactComponent as IconDelete } from './delete.svg';
 export { ReactComponent as IconRightArrowGrey } from './rightArrow_grey.svg';
+
+// 하트 최종
+export { ReactComponent as IconModiHeartFill } from './lastModiHeart_fill.svg';
+export { ReactComponent as IconModiHeartNonFill } from './lastModiHeart_nonFill.svg';

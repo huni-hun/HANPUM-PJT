@@ -351,7 +351,8 @@ function ScheduleMainPage() {
       <Header
         purpose="user"
         clickBack={() => navigate(-1)}
-        isborder={true}
+        $isShadow
+        $isborder={true}
         plusBtnclick={() => navigate('/schedule/addSchedule')}
       />
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { MeetMemberListProps } from '@/models/meet';
-import * as M from './MemberList.styled';
+import * as M from '../Style/Meet/MemberList.styled';
 
 const MemberList = ({ memberInfo, onClick }: MeetMemberListProps) => {
   return (

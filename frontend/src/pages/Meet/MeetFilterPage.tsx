@@ -73,7 +73,7 @@ function MeetFilterPage() {
       <Header
         purpose="title"
         title="필터"
-        isborder={true}
+        $isborder={true}
         clickBack={() => navigate(-1)}
       />
 
