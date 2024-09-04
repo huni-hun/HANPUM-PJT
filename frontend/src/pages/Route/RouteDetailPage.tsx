@@ -67,6 +67,7 @@ function RouteDetailPage() {
             start: result.data.data.course.startPoint,
             end: result.data.data.course.endPoint,
             img: result.data.data.course.backgroundImg,
+            writeState: result.data.data.course.writeState,
           };
           setRouteData(rd);
           result.data.data.courseDays.map((ele: any) => {
@@ -113,21 +114,21 @@ function RouteDetailPage() {
           if (ele.type === '경유지') {
             let line: MapLinePathProps = {
               name: ele.name,
-              x: ele.lon,
-              y: ele.lat,
+              x: ele.lat,
+              y: ele.lon,
             };
 
             lines.push(line);
           } else {
             let seData: LineStartEndProps = {
-              x: ele.lon,
-              y: ele.lat,
+              x: ele.lat,
+              y: ele.lon,
             };
             setSe((pre) => [...pre, seData]);
           }
           let markerData: LineStartEndProps = {
-            x: ele.lon,
-            y: ele.lat,
+            x: ele.lat,
+            y: ele.lon,
           };
           setMarker((pre) => [...pre, markerData]);
         });
@@ -135,8 +136,8 @@ function RouteDetailPage() {
         setDayOfRoute(arr);
         setLinePath(lines);
 
-        setLatitude(arr[0].longitude);
-        setLongitude(arr[0].latitude);
+        setLatitude(arr[0].latitude);
+        setLongitude(arr[0].longitude);
       }
     });
 
@@ -198,6 +199,8 @@ function RouteDetailPage() {
             content: ele.content,
             score: ele.score,
             writeDate: ele.writeDate,
+            like: ele.like,
+            memberNickname: ele.memberNickname,
           };
           arr.push(data);
         });
@@ -379,6 +382,7 @@ function RouteDetailPage() {
             navigate(`/route/detail/retouch/${routeid}`);
           }}
           onDelete={deleteHandler}
+          writeState={routeData.writeState}
         />
       )}
       {isModalOpen && (

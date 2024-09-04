@@ -59,6 +59,7 @@ export interface RouteListProps {
   end: string;
   totalDistance: number;
   totalDays: number;
+  interestFlag: boolean;
 }
 
 export interface RouteDetailProps {
@@ -70,6 +71,7 @@ export interface RouteDetailProps {
   start: string;
   end: string;
   img: string;
+  writeState: boolean;
 }
 
 export interface RouteDetailDayProps {
@@ -105,6 +107,8 @@ export interface RouteReviewProps {
   content: string;
   score: number;
   writeDate: string;
+  like: number;
+  memberNickname: string;
 }
 
 export interface searchPlaceProps {

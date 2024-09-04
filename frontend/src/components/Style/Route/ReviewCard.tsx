@@ -14,7 +14,7 @@ function ReviewCard(ele: RouteReviewProps) {
         <R.ReviewTextcontainer>
           <R.ReviewTextBox>
             <R.ReviewNameBox>
-              <R.ReviewName>박뚱이</R.ReviewName>
+              <R.ReviewName>{ele.memberNickname}</R.ReviewName>
               <Icon name="IconGrenStar" size={15} />
               <R.ReviewRate>{ele.score}</R.ReviewRate>
             </R.ReviewNameBox>
@@ -28,7 +28,7 @@ function ReviewCard(ele: RouteReviewProps) {
         </R.ReviewTextcontainer>
         <R.HeartBox>
           <Icon name="IconHeartGrey" size={15} />
-          <R.HeartText>11</R.HeartText>
+          <R.HeartText>{ele.like}</R.HeartText>
         </R.HeartBox>
       </R.ReviewCard>
     </R.ReviewCardBox>

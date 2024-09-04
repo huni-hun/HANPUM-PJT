@@ -78,6 +78,7 @@ function RouteDetailRetouchPage() {
             start: result.data.data.course.startPoint,
             end: result.data.data.course.endPoint,
             img: result.data.data.course.backgroundImg,
+            writeState: result.data.data.course.writeState,
           };
           setRouteData(rd);
           result.data.data.courseDays.map((ele: any) => {
@@ -267,22 +268,21 @@ function RouteDetailRetouchPage() {
           if (ele.type === '경유지') {
             let line: MapLinePathProps = {
               name: ele.name,
-              x: ele.lon,
-              y: ele.lat,
+              x: ele.lat,
+              y: ele.lon,
             };
 
             lines.push(line);
           } else {
-            console.log(ele.name);
             let seData: LineStartEndProps = {
-              x: ele.lon,
-              y: ele.lat,
+              x: ele.lat,
+              y: ele.lon,
             };
             setSe((pre) => [...pre, seData]);
           }
           let markerData: LineStartEndProps = {
-            x: ele.lon,
-            y: ele.lat,
+            x: ele.lat,
+            y: ele.lon,
           };
           setMarker((pre) => [...pre, markerData]);
         });
@@ -298,7 +298,6 @@ function RouteDetailRetouchPage() {
   useEffect(() => {
     if (linePath.length > 0 && loadAll) {
       const mapLines: any[] = [];
-      console.log(se);
       GetLineData(linePath, se[0], se[1])
         .then((res) => {
           if (res.status === 200 && res.data.status === 'SUCCESS') {
@@ -357,10 +356,10 @@ function RouteDetailRetouchPage() {
 
   useEffect(() => {
     if (wayPoints.length >= 2) {
-      let startlat = wayPoints[wayPoints.length - 2].lon;
-      let startlon = wayPoints[wayPoints.length - 2].lat;
-      let endlat = wayPoints[wayPoints.length - 1].lon;
-      let endlon = wayPoints[wayPoints.length - 1].lat;
+      let startlat = wayPoints[wayPoints.length - 2].lat;
+      let startlon = wayPoints[wayPoints.length - 2].lon;
+      let endlat = wayPoints[wayPoints.length - 1].lat;
+      let endlon = wayPoints[wayPoints.length - 1].lon;
 
       GetDistance(startlat, startlon, endlat, endlon)
         .then((res) => {

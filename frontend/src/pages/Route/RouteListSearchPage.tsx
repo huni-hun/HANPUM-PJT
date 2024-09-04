@@ -60,6 +60,7 @@ function RouteListSearchPage() {
               end: ele.endPoint,
               totalDistance: Math.round(ele.totalDistance),
               totalDays: ele.totalDays,
+              interestFlag: ele.interestFlag,
             };
             setSearchResult((pre) => [...pre, data]);
           });

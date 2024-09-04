@@ -16,7 +16,7 @@ api.interceptors.request.use((config) => {
     if (localToken != null) {
       const tokenObj = decodeToken(JSON.parse(localToken));
 
-      console.log(tokenObj);
+      // console.log(tokenObj);
 
       if (tokenObj) {
         const { accessToken } = tokenObj;
@@ -25,7 +25,7 @@ api.interceptors.request.use((config) => {
     } else if (settionToken != null) {
       const tokenObj = decodeToken(JSON.parse(settionToken));
 
-      console.log(tokenObj);
+      // console.log(tokenObj);
 
       if (tokenObj) {
         const { accessToken } = tokenObj;

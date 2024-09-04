@@ -75,7 +75,7 @@ export const MainContainer = styled.div`
 `;
 
 export const ButtonContainer = styled.div`
-  width: 100vw;
+  width: 94vw;
   height: 10rem;
   display: flex;
   justify-content: center;
@@ -83,7 +83,7 @@ export const ButtonContainer = styled.div`
 `;
 
 export const RouteAddBtn = styled.div`
-  width: 80vw;
+  width: 30.3rem;
   height: 7.5rem;
   display: flex;
   flex-direction: row;
@@ -159,7 +159,7 @@ export const OverFlow = styled.div`
   flex-direction: row;
   align-items: center;
   height: 100%;
-  width: 100%;
+  width: 94vw;
   overflow-x: auto;
   &::-webkit-scrollbar {
     display: none;

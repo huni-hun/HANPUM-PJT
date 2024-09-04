@@ -40,6 +40,7 @@ function Interest() {
       end: '대전',
       totalDistance: 76,
       totalDays: 6,
+      interestFlag: false,
     },
     {
       routeName: '대전에서 서울까지',
@@ -56,6 +57,7 @@ function Interest() {
       end: '대전',
       totalDistance: 76,
       totalDays: 6,
+      interestFlag: false,
     },
   ];
 

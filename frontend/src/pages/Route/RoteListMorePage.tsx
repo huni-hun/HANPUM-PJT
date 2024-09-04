@@ -32,6 +32,7 @@ function RouteListMorePage() {
           end: ele.endPoint,
           totalDistance: Math.round(ele.totalDistance),
           totalDays: ele.totalDays,
+          interestFlag: ele.interestFlag,
         };
 
         setArr((pre) => [...pre, data]);
