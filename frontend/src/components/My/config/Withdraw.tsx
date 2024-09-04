@@ -86,7 +86,11 @@ function Withdraw() {
           </div>
 
           <div className="agree-box">
-            <Text $typography="t14" color="grey2">
+            <Text
+              $typography="t14"
+              color={!agree ? 'main' : 'grey2'}
+              $bold={!agree}
+            >
               안내사항을 확인하였으며, 이에 동의 합니다.
             </Text>
             <div
@@ -100,6 +104,7 @@ function Withdraw() {
               size="large"
               disabled={agree}
               onClick={handleClickAlert}
+              style={{ marginTop: '16px auto 0' }}
             >
               탈퇴하기
             </BaseButton>

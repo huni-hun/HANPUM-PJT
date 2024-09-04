@@ -92,7 +92,7 @@ function ChangePw() {
       onSuccess: (res) => {
         if (res.status === STATUS.success) {
           toast.success(res.message);
-          navigate('/myprofile');
+          navigate('/config');
         }
         if (res.status === STATUS.error) {
           toast.error(res.message);

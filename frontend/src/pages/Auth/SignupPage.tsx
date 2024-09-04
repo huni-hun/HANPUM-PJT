@@ -1,16 +1,16 @@
-import { signupStepAtom } from '@/atoms/signupStepAtom';
-import Header from '@/components/common/Header/Header';
-import Finish from '@/components/Signup/Finish';
-import ProfileConfig from '@/components/Signup/ProfileConfig';
-import Terms from '@/components/Signup/Terms';
-import UserInfo from '@/components/Signup/UserInfo';
-
-import { UserSignupFormValues } from '@/models/signup';
-import { colors } from '@/styles/colorPalette';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
+
+import { signupStepAtom } from '@atoms/signupStepAtom';
+import Header from '@components/common/Header/Header';
+import Finish from '@components/Signup/Finish';
+import ProfileConfig from '@components/Signup/ProfileConfig';
+import Terms from '@components/Signup/Terms';
+import UserInfo from '@components/Signup/UserInfo';
+import { UserSignupFormValues } from '@models/signup';
+import { colors } from '@styles/colorPalette';
 
 const SignupPage = () => {
   const [step, setStep] = useRecoilState(signupStepAtom);
@@ -23,7 +23,6 @@ const SignupPage = () => {
     multipartFile: '',
     birthDate: '',
     nickname: '',
-    // phoneNumber: '',
   });
 
   // pagenation 현재, 이전, 다음 style 분기 함수

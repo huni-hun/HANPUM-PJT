@@ -1,13 +1,3 @@
-import * as S from '../Style/Signup/UserInfo.styled';
-import TextField from '../common/TextField/TextField';
-import BaseButton from '../common/BaseButton';
-import Flex from '../common/Flex';
-import Icon from '../common/Icon/Icon';
-import Spacing from '../common/Spacing';
-import FixedBottomButton from '../common/FixedBottomButton';
-
-import { CertificationEmail, CheckEmail, CheckId } from '@/api/signup/POST';
-import { SignupRequestValues, UserSignupFormValues } from '@/models/signup';
 import {
   ChangeEvent,
   Dispatch,
@@ -18,14 +8,20 @@ import {
 } from 'react';
 import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
-import { STATUS } from '@/constants';
 import { AxiosError } from 'axios';
-import Message from '../common/Message';
 
-// type InfoValues = Pick<
-//   SignupRequestValues,
-//   'loginId' | 'password' | 'email' | 'checkPassword' | 'inputAuthCode'
-// >;
+import * as S from '../Style/Signup/UserInfo.styled';
+import { STATUS } from '@constants';
+import Message from '@common/Message';
+import TextField from '@common/TextField/TextField';
+import BaseButton from '@common/BaseButton';
+import Flex from '@common/Flex';
+import Icon from '@common/Icon/Icon';
+import Spacing from '@common/Spacing';
+import FixedBottomButton from '@common/FixedBottomButton';
+
+import { CertificationEmail, CheckEmail, CheckId } from '@api/signup/POST';
+import { SignupRequestValues, UserSignupFormValues } from '@models/signup';
 
 function UserInfo({
   clickNext,
@@ -129,7 +125,6 @@ function UserInfo({
       errors.inputAuthCode = checkInputCodeMessage;
     }
 
-    // console.log(errors);
     return errors;
   }, [
     formValues,
@@ -143,9 +138,7 @@ function UserInfo({
   // 아이디 중복확인
   const { mutate: checkId } = useMutation(CheckId, {
     onSuccess: (res) => {
-      // console.log(res);
       if (res.status === STATUS.success) {
-        // console.log('성공');
         toast.success(res.message);
         setCheckIdErrorMessage(null);
         setFormValues((prev) => ({
@@ -154,7 +147,6 @@ function UserInfo({
         }));
       }
       if (res.status === STATUS.error) {
-        // console.log('실패');
         toast.error(res.message);
         setCheckIdErrorMessage(res.message);
         setFormValues((prev) => ({
@@ -180,6 +172,7 @@ function UserInfo({
             ...prev,
             sendEmail: true,
           }));
+          setTime(300);
         }
         if (res.status === STATUS.error) {
           toast.error(res.message);
@@ -209,6 +202,7 @@ function UserInfo({
             ...prev,
             sendAuthCode: true,
           }));
+          setTime(0);
         }
         if (res.status === STATUS.error) {
           toast.error(res.message);
@@ -251,7 +245,6 @@ function UserInfo({
     return <div>...메일 전송중</div>;
   }
 
-  // console.log(formValues);
   return (
     <S.UserInfoContainer>
       {pagenation()}

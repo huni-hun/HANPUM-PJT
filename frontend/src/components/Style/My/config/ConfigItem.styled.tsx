@@ -36,13 +36,11 @@ export const WithdrawContainer = styled.div`
   }
 
   .agree-box {
-    /* width: 30rem; */
-    padding: 0 30px;
     height: 2.4rem;
-    margin: 10rem auto 0;
+    margin-top: 10rem;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     gap: 8px;
     .agree {
       width: 2rem;

@@ -35,11 +35,12 @@ function FindPage() {
   const { mutate: findId } = useMutation(
     ({ name, email }: { name: string; email: string }) => FindId(name, email),
     {
-      onSuccess: (res) => {
+      onSuccess: (res, variables) => {
         if (res.status === STATUS.success) {
           toast.success(res.message);
           setLoginId(res.data.loginId);
           setStep(1);
+          sessionStorage.setItem('name', variables.name);
         }
         if (res.status === STATUS.error) {
           toast.error(res.message);
@@ -112,5 +113,6 @@ export default FindPage;
 
 const FindPageContainer = styled.div`
   background-color: ${colors.white};
+  height: 100%;
   /* height: 100vh; */
 `;

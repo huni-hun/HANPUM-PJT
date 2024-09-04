@@ -106,7 +106,7 @@ function FindIdComponent({
       <FixedBottomButton
         size="large"
         full={false}
-        label={'다음'}
+        label="다음"
         onClick={() => {
           findId({
             name: findIdReq.name,
