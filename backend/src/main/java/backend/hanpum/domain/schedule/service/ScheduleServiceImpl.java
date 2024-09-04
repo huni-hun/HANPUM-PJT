@@ -416,13 +416,21 @@ public class ScheduleServiceImpl implements ScheduleService {
         int currentPointNumber = Integer.parseInt(currentPoint);
 
         // 다음 WayPoint 결정
-        for (ScheduleWayPoint wayPoint : scheduleWayPointList) {
+        int cnt = 0;
+        for (int i = 0; i < scheduleWayPointList.size(); i++) {
+            ScheduleWayPoint wayPoint = scheduleWayPointList.get(i);
             int pointIndex = Integer.parseInt(wayPoint.getWaypoint().getPointNumber());
             if (pointIndex == currentPointNumber + 1) { // 다음 WayPoint 찾기
                 wayPoint.updateVisit(1); // 다음 WayPoint 상태를 '진행 중'으로 업데이트
                 break;
             }
+            cnt++;
         }
+
+        if(cnt == scheduleWayPointList.size()) {
+            scheduleDay.visitState();
+        }
+
         return scheduleDayId;
     }
 
