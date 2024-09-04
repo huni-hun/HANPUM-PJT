@@ -5,6 +5,8 @@ export interface WeatherProps {
   logcation?: string;
   nowTime?: string;
   nowWeather: string;
+  precipitation?: string;
+  nowTemperature?: string;
 }
 
 /** 모임일정 - 모임멤버 */
@@ -31,6 +33,7 @@ export interface SchduleCardProps {
   state?: number;
   content?: string;
   totalDistance?: number;
+  courseTypes?: string[];
   onClick?: () => void;
 }
 
