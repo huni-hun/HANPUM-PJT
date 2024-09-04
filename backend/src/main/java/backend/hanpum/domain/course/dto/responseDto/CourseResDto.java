@@ -29,6 +29,7 @@ public class CourseResDto {
     Double scoreAvg;
     Integer commentCnt;
     Integer totalDays;
+    boolean interestFlag;
 
     public CourseResDto(Long courseId, String courseName, String backgroundImg,
                         Date writeDate, String startPoint, String endPoint, Double totalDistance, Long memberId, Double scoreAvg, Integer totalDays) {
@@ -96,5 +97,8 @@ public class CourseResDto {
 
     public void setCourseTypes(List<CourseTypes> courseTypes) {
         this.courseTypes = courseTypes;
+    }
+    public void setInterestFlag(boolean interestFlag) {
+        this.interestFlag = interestFlag;
     }
 }

@@ -3,6 +3,7 @@ package backend.hanpum.domain.course.repository.custom;
 import backend.hanpum.domain.course.dto.responseDto.*;
 import backend.hanpum.domain.course.entity.*;
 import backend.hanpum.domain.course.enums.CourseTypes;
+import backend.hanpum.domain.course.repository.InterestCourseRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -20,10 +21,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CourseRepositoryImpl implements CourseRepositoryCustom {
 
+    private final InterestCourseRepository interestCourseRepository;
     private final JPAQueryFactory query;
 
     @Override
-    public Optional<CourseListMapResDto> getCourseList(CourseTypes targetCourse, Double maxDistance, Integer maxDays, List<CourseTypes> selectedTypes, String keyword, Pageable pageable) {
+    public Optional<CourseListMapResDto> getCourseList(CourseTypes targetCourse, Double maxDistance, Integer maxDays, List<CourseTypes> selectedTypes, String keyword, Pageable pageable, Long memberId) {
         QCourse qCourse = QCourse.course;
         QReview qReview = QReview.review;
         QCourseType qCourseType = QCourseType.courseType;
@@ -91,6 +93,13 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .groupBy(qCourse.courseId)
                 .fetch();
+
+        if(memberId != null) {
+            for (CourseResDto courseResDto : courseList) {
+                if(interestCourseRepository.findByMember_MemberIdAndCourse_CourseId(memberId, courseResDto.getCourseId()).isPresent())
+                    courseResDto.setInterestFlag(true);
+            }
+        }
 
         CourseListMapResDto courseListMapResDto = new CourseListMapResDto();
         Map<String, List<CourseResDto>> courseListMap = new HashMap<>();
