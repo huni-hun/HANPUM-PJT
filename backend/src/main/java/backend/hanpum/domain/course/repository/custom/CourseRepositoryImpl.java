@@ -146,7 +146,8 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
                         qCourse.totalDistance,
                         qCourse.member.memberId,
                         avgScore.as("scoreAvg"),
-                        reviewCount.as("commentCnt")))
+                        reviewCount.as("commentCnt"),
+                        qCourse.totalDays))
                 .from(qCourse)
                 .leftJoin(qReview).on(qCourse.courseId.eq(qReview.course.courseId))
                 .where(qCourse.courseId.eq(courseId))
