@@ -59,6 +59,8 @@ export const GetDistance = async (
     {
       headers: {
         'Content-Type': 'application/json',
+        Authorization:
+          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiQ09NTU9OIiwic3ViIjoia3l3NTQyNSIsImlhdCI6MTcyNTQ1MjI1NiwiZXhwIjoxNzI1NTI0MjU2fQ.lyUExRL4cUU5wAqtgvfsSJvGjo_O7GBjDI4rxVvtouE',
       },
     },
   );
@@ -82,7 +84,7 @@ export const AddRoute = async (data: AddRouteProps) => {
     headers: {
       'Content-Type': 'multipart/form-data',
       Authorization:
-        'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiQ09NTU9OIiwic3ViIjoiaGFucHVtMSIsImlhdCI6MTcyNTM2NjUwMywiZXhwIjoxNzI1NDM4NTAzfQ.XZ9sLmBZrDD5jFqpDvoOi_vcl_Dye5jR6nZ1UcWQ6gk',
+        'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiQ09NTU9OIiwic3ViIjoia3l3NTQyNSIsImlhdCI6MTcyNTQ1MjI1NiwiZXhwIjoxNzI1NTI0MjU2fQ.lyUExRL4cUU5wAqtgvfsSJvGjo_O7GBjDI4rxVvtouE',
     },
   });
 
@@ -101,7 +103,6 @@ export const GetLineData = async (
     avoid: ['toll', 'motorway', 'uturn', 'ferries'],
     car_types: 7,
   };
-
   const response = api.post(
     '/api/course/search/multiWaypoint',
     [
@@ -118,6 +119,8 @@ export const GetLineData = async (
     {
       headers: {
         'Content-Type': 'application/json',
+        Authorization:
+          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiQ09NTU9OIiwic3ViIjoia3l3NTQyNSIsImlhdCI6MTcyNTQ1MjI1NiwiZXhwIjoxNzI1NTI0MjU2fQ.lyUExRL4cUU5wAqtgvfsSJvGjo_O7GBjDI4rxVvtouE',
       },
     },
   );

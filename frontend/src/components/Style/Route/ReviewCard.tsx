@@ -23,7 +23,7 @@ function ReviewCard(ele: RouteReviewProps) {
             </R.ReviewDetailBox>
           </R.ReviewTextBox>
           <R.ReviewDateBox>
-            <R.ReviewDate>2024.08.07</R.ReviewDate>
+            <R.ReviewDate>{ele.writeDate}</R.ReviewDate>
           </R.ReviewDateBox>
         </R.ReviewTextcontainer>
         <R.HeartBox>

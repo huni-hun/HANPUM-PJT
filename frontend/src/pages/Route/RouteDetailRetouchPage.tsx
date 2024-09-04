@@ -54,6 +54,7 @@ function RouteDetailRetouchPage() {
   const [wayPoints, setWayPoints] = useState<WayPointReqDto[]>([]);
   const [attractionsr, setAttractionsr] = useState<AttractionReqDto[]>([]);
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
+  const [loadAll, setLoadAll] = useState<boolean>(false);
   const [attractionsCard, setAttractionsCard] = useState<
     AttractionsAddCardProps[]
   >([]);
@@ -246,6 +247,8 @@ function RouteDetailRetouchPage() {
   }, [selectedIdx]);
 
   useEffect(() => {
+    setSe([]);
+    setMarker([]);
     let arr: DaysOfRouteProps[] = [];
     let lines: MapLinePathProps[] = [];
     if (dateDetail.length > 0) {
@@ -264,15 +267,16 @@ function RouteDetailRetouchPage() {
           if (ele.type === '경유지') {
             let line: MapLinePathProps = {
               name: ele.name,
-              x: ele.lat,
-              y: ele.lon,
+              x: ele.lon,
+              y: ele.lat,
             };
 
             lines.push(line);
           } else {
+            console.log(ele.name);
             let seData: LineStartEndProps = {
-              x: ele.lat,
-              y: ele.lon,
+              x: ele.lon,
+              y: ele.lat,
             };
             setSe((pre) => [...pre, seData]);
           }
@@ -285,14 +289,16 @@ function RouteDetailRetouchPage() {
         setLinePath(lines);
         setWayPoints(dateDetail[selectedDay - 1].wayPointReqDtoList);
       }
+      setLoadAll(true);
     }
 
     setDayOfRoute(arr);
   }, [wayPoints]);
 
   useEffect(() => {
-    if (linePath.length > 0) {
+    if (linePath.length > 0 && loadAll) {
       const mapLines: any[] = [];
+      console.log(se);
       GetLineData(linePath, se[0], se[1])
         .then((res) => {
           if (res.status === 200 && res.data.status === 'SUCCESS') {
@@ -351,10 +357,10 @@ function RouteDetailRetouchPage() {
 
   useEffect(() => {
     if (wayPoints.length >= 2) {
-      let startlat = wayPoints[wayPoints.length - 2].lat;
-      let startlon = wayPoints[wayPoints.length - 2].lon;
-      let endlat = wayPoints[wayPoints.length - 1].lat;
-      let endlon = wayPoints[wayPoints.length - 1].lon;
+      let startlat = wayPoints[wayPoints.length - 2].lon;
+      let startlon = wayPoints[wayPoints.length - 2].lat;
+      let endlat = wayPoints[wayPoints.length - 1].lon;
+      let endlon = wayPoints[wayPoints.length - 1].lat;
 
       GetDistance(startlat, startlon, endlat, endlon)
         .then((res) => {
@@ -438,7 +444,6 @@ function RouteDetailRetouchPage() {
     <R.Container>
       <Header
         purpose="route-retouch"
-        back={true}
         clickBack={() => {
           navigate(-1);
         }}

@@ -18,7 +18,9 @@ interface MapProps {
 
 function Map(props: MapProps) {
   const [isMapLoaded, setIsMapLoaded] = useState<boolean>(false);
-  const [kakaoMap, setKakaoMap] = useState<any>(null); // 스크립트 로드 상태 관리
+  const [kakaoMap, setKakaoMap] = useState<any>(null);
+  const [polyLine, setPolyLine] = useState<any>(null);
+  const [markers, setMarkers] = useState<any[]>([]); // 마커 배열을 상태로 관리
 
   const setMap = () => {
     const mapScript = document.createElement('script');
@@ -28,7 +30,7 @@ function Map(props: MapProps) {
 
     const onLoadKakaoMap = () => {
       window.kakao.maps.load(() => {
-        setIsMapLoaded(true); // 스크립트가 로드되면 상태 업데이트
+        setIsMapLoaded(true);
       });
     };
 
@@ -50,56 +52,63 @@ function Map(props: MapProps) {
       };
 
       const map = new window.kakao.maps.Map(mapContainer, mapOptions);
-      setKakaoMap(map); // 맵 객체를 상태로
+      setKakaoMap(map);
     }
   }, [isMapLoaded, props.latitude, props.longitude]);
 
   useEffect(() => {
-    if (props.linePath !== undefined) {
-      if (kakaoMap && props.linePath.length > 0) {
-        const polyLine = new window.kakao.maps.Polyline({
-          path: props.linePath, // 전달받은 linePath 사용
+    if (props.linePath !== undefined && kakaoMap) {
+      if (props.linePath.length > 0) {
+        if (polyLine) {
+          polyLine.setMap(null);
+        }
+
+        const newPolyLine = new window.kakao.maps.Polyline({
+          path: props.linePath,
           strokeWeight: 7,
           strokeColor: colors.main,
           strokeOpacity: 0.7,
           strokeStyle: 'solid',
         });
-        polyLine.setMap(kakaoMap); // Polyline을 지도에 추가
+
+        newPolyLine.setMap(kakaoMap);
+        setPolyLine(newPolyLine);
+
         const bounds = new window.kakao.maps.LatLngBounds();
         props.linePath.forEach((line) => {
-          bounds.extend(line); // 각 LatLng 객체를 bounds에 추가
+          bounds.extend(line);
         });
-
-        // 지도의 범위를 해당 경계 영역으로 설정
         kakaoMap.setBounds(bounds);
       }
     }
   }, [kakaoMap, props.linePath]);
 
   useEffect(() => {
-    if (props.marker !== undefined) {
-      if (props.marker.length > 0 && kakaoMap) {
-        props.marker.map((mar) => {
-          const imgSrc = markersrc;
-          const imgSize = new window.kakao.maps.Size(32, 32);
-          const imgOption = { offset: new window.kakao.maps.Point(10, 10) };
-          const markerImg = new window.kakao.maps.MarkerImage(
-            imgSrc,
-            imgSize,
-            imgOption,
-          );
-          const markerPosition = new window.kakao.maps.LatLng(mar.y, mar.x);
-          const kakaoMarker = new window.kakao.maps.Marker({
-            position: markerPosition,
-            image: markerImg,
-          });
-          // const bounds = new window.kakao.maps.LatLngBounds();
-          kakaoMarker.setMap(kakaoMap); // Marker를 지도에 추가
+    if (props.marker !== undefined && kakaoMap) {
+      // 기존 마커 제거
+      markers.forEach((marker) => marker.setMap(null));
 
-          // 지도의 범위를 해당 경계 영역으로 설정
-          // kakaoMap.setBounds(bounds);
+      const newMarkers = props.marker.map((mar) => {
+        const imgSrc = markersrc;
+        const imgSize = new window.kakao.maps.Size(32, 32);
+        const imgOption = { offset: new window.kakao.maps.Point(10, 10) };
+        const markerImg = new window.kakao.maps.MarkerImage(
+          imgSrc,
+          imgSize,
+          imgOption,
+        );
+        const markerPosition = new window.kakao.maps.LatLng(mar.y, mar.x);
+
+        const kakaoMarker = new window.kakao.maps.Marker({
+          position: markerPosition,
+          image: markerImg,
         });
-      }
+
+        kakaoMarker.setMap(kakaoMap);
+        return kakaoMarker;
+      });
+
+      setMarkers(newMarkers); // 새로운 마커 배열을 상태로 저장
     }
   }, [kakaoMap, props.marker]);
 

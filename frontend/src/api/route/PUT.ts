@@ -20,7 +20,7 @@ export const RetouchRoute = async (data: RetouchRouteProps) => {
     headers: {
       'Content-Type': 'multipart/form-data',
       Authorization:
-        'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiQ09NTU9OIiwic3ViIjoiaGFucHVtMSIsImlhdCI6MTcyNTM2NjUwMywiZXhwIjoxNzI1NDM4NTAzfQ.XZ9sLmBZrDD5jFqpDvoOi_vcl_Dye5jR6nZ1UcWQ6gk',
+        'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiQ09NTU9OIiwic3ViIjoia3l3NTQyNSIsImlhdCI6MTcyNTQ1MjI1NiwiZXhwIjoxNzI1NTI0MjU2fQ.lyUExRL4cUU5wAqtgvfsSJvGjo_O7GBjDI4rxVvtouE',
     },
   });
 

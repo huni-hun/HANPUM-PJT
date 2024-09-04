@@ -120,7 +120,7 @@ export const RouteCardContainer = styled.div`
 `;
 
 export const RouteTypeHeader = styled.div`
-  width: 100vw;
+  width: 94vw;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -148,7 +148,7 @@ export const MoreText = styled.p`
 `;
 
 export const CardContainer = styled.div`
-  width: 100vw;
+  width: 94vw;
   height: 20rem;
   display: flex;
   flex-direction: row;

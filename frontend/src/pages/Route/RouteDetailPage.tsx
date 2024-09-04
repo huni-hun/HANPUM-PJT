@@ -93,6 +93,7 @@ function RouteDetailPage() {
   }, []);
 
   useEffect(() => {
+    setSe([]);
     setMarker([]);
     getRouteDayDetail(routeid as string, selectedDay).then((result) => {
       if (result.status === 200) {
