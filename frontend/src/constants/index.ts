@@ -31,6 +31,7 @@ export const APPLY = [
 export const STATUS = {
   success: 'SUCCESS',
   error: 'ERROR',
+  fail: 'FAIL',
 };
 
 export const ANNOUNCEMENT = [

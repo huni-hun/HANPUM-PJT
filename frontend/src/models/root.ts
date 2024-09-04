@@ -13,4 +13,6 @@ export interface Root {
   courseTypes: null;
   scoreAvg: number;
   commentCnt: number;
+  totalDays: null;
+  like: boolean;
 }

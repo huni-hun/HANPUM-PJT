@@ -363,7 +363,7 @@ function ScheduleMainPage() {
       <Header
         purpose="user"
         clickBack={() => navigate(-1)}
-        isShadow
+        $isShadow
         plusBtnclick={() => navigate('/schedule/addSchedule')}
       />
 

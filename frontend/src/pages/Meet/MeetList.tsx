@@ -135,7 +135,7 @@ function MeetList() {
     <R.RouteListContainer>
       <Header
         purpose="meet"
-        isborder={true}
+        $isborder={true}
         back={false}
         clickBack={() => {}}
       />

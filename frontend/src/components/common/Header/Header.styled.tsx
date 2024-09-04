@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import { colors } from '@styles/colorPalette';
 
 interface HeaderWrapperProps {
-  isShadow?: boolean;
-  isborder?: boolean;
+  $isShadow?: boolean;
+  $isborder?: boolean;
 }
 
 export const HeaderWrapper = styled.div<HeaderWrapperProps>`
@@ -16,9 +16,10 @@ export const HeaderWrapper = styled.div<HeaderWrapperProps>`
   position: sticky;
   top: 0;
   z-index: 10;
-  border-bottom: ${({ isborder }) => (isborder ? '1px solid #D9D9D9' : 'none')};
-  box-shadow: ${({ isShadow }) =>
-    isShadow ? '0px 4px 6px rgba(0, 0, 0, 0.1)' : 'none'};
+  border-bottom: ${({ $isborder }) =>
+    $isborder ? '1px solid #D9D9D9' : 'none'};
+  box-shadow: ${({ $isShadow }) =>
+    $isShadow ? '0px 4px 6px rgba(0, 0, 0, 0.1)' : 'none'};
 
   .back-arrow {
     position: absolute;

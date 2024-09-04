@@ -71,6 +71,7 @@ export const GetMeetDetailList = async (groupId: number, token: string) => {
 //   return data;
 // }
 
+// 모임 리스트 조회 - 채운
 export async function GetGroupList(requestDto: MeetRequestDto) {
   const { startPoint, endPoint, maxTotalDays, maxRecruitmentCount, pageable } =
     requestDto;

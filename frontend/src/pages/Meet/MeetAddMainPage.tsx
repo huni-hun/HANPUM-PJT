@@ -57,7 +57,7 @@ function MeetAddMainPage() {
       <Header
         purpose="title"
         title="모임 생성"
-        isborder={true}
+        $isborder={true}
         clickBack={() => {
           navigate(-1);
         }}

@@ -101,3 +101,7 @@ export { ReactComponent as IconHeartWhiteBorder } from './heart_white_border.svg
 export { ReactComponent as IconLock } from './lock.svg';
 export { ReactComponent as IconDelete } from './delete.svg';
 export { ReactComponent as IconRightArrowGrey } from './rightArrow_grey.svg';
+
+// 하트 최종
+export { ReactComponent as IconModiHeartFill } from './lastModiHeart_fill.svg';
+export { ReactComponent as IconModiHeartNonFill } from './lastModiHeart_nonFill.svg';

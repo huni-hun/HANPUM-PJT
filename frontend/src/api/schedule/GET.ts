@@ -112,3 +112,10 @@ export async function getWeather(lat: number, lon: number, token: string) {
 
   return response.data;
 }
+
+// 내 일정 조회 - 채운
+export async function getMySchedule() {
+  const { data } = await api.get('/api/schedule');
+
+  return data;
+}

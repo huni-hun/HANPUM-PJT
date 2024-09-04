@@ -1,35 +1,35 @@
 // index.tsx
-import LoginPage from '../pages/Auth/LoginPage';
-import MainPage from '../pages/Main/MainPage';
+import LoginPage from '@pages/Auth/LoginPage';
+import MainPage from '@pages/Main/MainPage';
 
 /** 일정 */
-import ScheduleMainPage from '../pages/Schedule/ScheduleMainPage';
-import AddSchedulePage from '../pages/Schedule/AddSchedulePage';
-import DetailMineSchedulePage from '../pages/Schedule/DetailMineSchedulePage';
-import SuccessAddSchedulePage from './Schedule/SuccessAddSchedulePage';
-import EditMySchedulePage from './Schedule/EditMySchedulePage';
+import ScheduleMainPage from '@pages/Schedule/ScheduleMainPage';
+import AddSchedulePage from '@pages/Schedule/AddSchedulePage';
+import DetailMineSchedulePage from '@pages/Schedule/DetailMineSchedulePage';
+import SuccessAddSchedulePage from '@pages/Schedule/SuccessAddSchedulePage';
+import EditMySchedulePage from '@pages/Schedule/EditMySchedulePage';
 
 /** 경로 */
-import RouteList from '../pages/Route/RouteList';
-import RouteAddPlacePage from '../pages/Route/RouteAddPlacePage';
-import RouteAddMainPage from '../pages/Route/RouteAddMainPage';
-import RouteAddDetailPage from './Route/RouteAddDetailPage';
-import RouteDetailPage from './Route/RouteDetailPage';
-import SearchPlacePage from './Route/SearchPlacePage';
-import RouteAddCompletePage from './Route/RouteAddCompletePage';
-import RoteListMorePage from './Route/RoteListMorePage';
-import RouteListSearchPage from './Route/RouteListSearchPage';
-import RouteDetailRetouchPage from './Route/RouteDetailRetouchPage';
+import RouteList from '@pages/Route/RouteList';
+import RouteAddPlacePage from '@pages/Route/RouteAddPlacePage';
+import RouteAddMainPage from '@pages/Route/RouteAddMainPage';
+import RouteAddDetailPage from '@pages/Route/RouteAddDetailPage';
+import RouteDetailPage from '@pages/Route/RouteDetailPage';
+import SearchPlacePage from '@pages/Route/SearchPlacePage';
+import RouteAddCompletePage from '@pages/Route/RouteAddCompletePage';
+import RoteListMorePage from '@pages/Route/RoteListMorePage';
+import RouteListSearchPage from '@pages/Route/RouteListSearchPage';
+import RouteDetailRetouchPage from '@pages/Route/RouteDetailRetouchPage';
 
 /** 모임 */
-import MeetList from '../pages/Meet/MeetList';
-import MeetDetailPage from '../pages/Meet/MeetDetailPage';
-import MeetFilterPage from '../pages/Meet/MeetFilterPage';
-import RequestManageList from '../pages/Meet/RequestManageList';
-import MemberManageList from '../pages/Meet/MemberManageList';
-import MeetRequest from '../pages/Meet/MeetRequest';
-import MeetAcceptPage from '../pages/Meet/MeetAcceptPage';
-import MeetAddMainPage from '../pages/Meet/MeetAddMainPage';
+import MeetList from '@pages/Meet/MeetList';
+import MeetDetailPage from '@pages/Meet/MeetDetailPage';
+import MeetFilterPage from '@pages/Meet/MeetFilterPage';
+import RequestManageList from '@pages/Meet/RequestManageList';
+import MemberManageList from '@pages/Meet/MemberManageList';
+import MeetRequest from '@pages/Meet/MeetRequest';
+import MeetAcceptPage from '@pages/Meet/MeetAcceptPage';
+import MeetAddMainPage from '@pages/Meet/MeetAddMainPage';
 
 /** 커뮤니티 */
 
@@ -43,6 +43,7 @@ import MyProfilePage from '@pages/My/MyProfilePage';
 import CategoryLayout from '@/components/My/edit/CategoryLayout';
 import ConfigPage from '@pages/My/ConfigPage';
 import ConfigLayout from '@components/My/config/ConfigLayout';
+import ConfigDetailPage from '@pages/My/ConfigDetailPage';
 
 export {
   LoginPage,
@@ -85,4 +86,5 @@ export {
   CategoryLayout,
   ConfigPage,
   ConfigLayout,
+  ConfigDetailPage,
 };
