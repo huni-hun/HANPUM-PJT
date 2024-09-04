@@ -33,11 +33,13 @@ public class WeatherServiceImpl implements WeatherService {
     @Override
     public List<WeatherResDto> getDayWeather(double lat, double lon) {
         LocalDateTime now = LocalDateTime.now();
-        String baseDate = now.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         LocationInfo locationInfo = weatherConverter.convert(lat, lon);
         int nx = locationInfo.getNx();
         int ny = locationInfo.getNy();
-        String baseTime = determineBaseTime(now);
+
+        LocalDateTime baseDateTime = determineSecondClosestBaseTime(now);
+        String baseDate = baseDateTime.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String baseTime = baseDateTime.format(DateTimeFormatter.ofPattern("HHmm"));
 
         // URL 생성
         String url = new StringBuilder("http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst")
@@ -54,42 +56,37 @@ public class WeatherServiceImpl implements WeatherService {
         try {
             URI uri = new URI(url);
             ResponseEntity<String> response = restTemplate.getForEntity(uri, String.class);
-            return parseDayWeatherResponse(response.getBody());
+            return parseDayWeatherResponse(response.getBody(), now);
         } catch (Exception e) {
             throw new WeatherParsingException(e.getMessage());
         }
     }
 
-    // 가장 가까운 Base Time을 찾고 필요한 경우 이전 날짜로 조정
-    private String determineBaseTime(LocalDateTime now) {
+    private LocalDateTime determineSecondClosestBaseTime(LocalDateTime now) {
         List<String> baseTimes = List.of("0200", "0500", "0800", "1100", "1400", "1700", "2000", "2300");
         String currentTime = now.format(DateTimeFormatter.ofPattern("HHmm"));
-        String baseTime = baseTimes.stream()
+
+        List<String> pastBaseTimes = baseTimes.stream()
                 .filter(time -> time.compareTo(currentTime) <= 0)
-                .max(String::compareTo)
-                .orElse(baseTimes.get(baseTimes.size() - 1));
+                .sorted((a, b) -> b.compareTo(a))
+                .toList();
 
-        LocalDateTime baseDateTime = now.withHour(Integer.parseInt(baseTime.substring(0, 2)))
-                .withMinute(Integer.parseInt(baseTime.substring(2)))
-                .plusMinutes(10);
-
-        if (now.isBefore(baseDateTime)) {
-            int index = baseTimes.indexOf(baseTime);
-            if (index == 0) {
-                // 가장 첫 번째 base time인 경우, 전날의 마지막 base time으로 설정
-                now = now.minusDays(1);
-                baseTime = baseTimes.get(baseTimes.size() - 1);
-            } else {
-                baseTime = baseTimes.get(index - 1);
-            }
+        if (pastBaseTimes.size() >= 2) {
+            return now.withHour(Integer.parseInt(pastBaseTimes.get(1).substring(0, 2)))
+                    .withMinute(Integer.parseInt(pastBaseTimes.get(1).substring(2, 4)))
+                    .withSecond(0).withNano(0);
+        } else if (pastBaseTimes.size() == 1) {
+            return now.withHour(Integer.parseInt(pastBaseTimes.get(0).substring(0, 2)))
+                    .withMinute(Integer.parseInt(pastBaseTimes.get(0).substring(2, 4)))
+                    .withSecond(0).withNano(0);
+        } else {
+            return now.minusDays(1).withHour(23).withMinute(0).withSecond(0).withNano(0);
         }
-
-        return baseTime;
     }
 
-    private List<WeatherResDto> parseDayWeatherResponse(String responseBody) {
+    private List<WeatherResDto> parseDayWeatherResponse(String responseBody, LocalDateTime now) {
         ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, WeatherResDto> weatherMap = new TreeMap<>(); // TreeMap을 사용하여 자동 정렬
+        Map<String, WeatherResDto> weatherMap = new TreeMap<>();
 
         try {
             JsonNode rootNode = objectMapper.readTree(responseBody);
@@ -98,6 +95,13 @@ public class WeatherServiceImpl implements WeatherService {
             for (JsonNode item : itemsNode) {
                 String fcstDate = item.path("fcstDate").asText();
                 String fcstTime = item.path("fcstTime").asText();
+
+                // 현재 시각 이후의 데이터만 처리
+                LocalDateTime fcstDateTime = LocalDateTime.parse(fcstDate + fcstTime, DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
+                if (fcstDateTime.isBefore(now) || fcstDateTime.isEqual(now)) {
+                    continue;
+                }
+
                 String category = item.path("category").asText();
                 String fcstValue = item.path("fcstValue").asText();
                 String dateTimeKey = fcstDate + fcstTime;

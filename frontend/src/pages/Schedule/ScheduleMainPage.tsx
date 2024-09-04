@@ -200,7 +200,6 @@ function ScheduleMainPage() {
   const location = useLocation();
   const navigator = useNavigate();
   const data = { ...location };
-
   const [runningData, setRunningData] = useState<RunningScheduleProps[]>([]);
 
   /** 진행중 */
@@ -214,7 +213,7 @@ function ScheduleMainPage() {
         if (response && response.status === 'SUCCESS') {
           setRunningScheduleData(response.data);
         } else {
-          setError('데이터 가져오기 실패');
+          console.error(error);
         }
       } catch (error: unknown) {
         // unknown으로 지정
@@ -240,7 +239,7 @@ function ScheduleMainPage() {
         if (response && response.status === 'SUCCESS') {
           setMyScheduleListData(response.data);
         } else {
-          setError('데이터 가져오기 실패');
+          console.error(error);
         }
       } catch (error) {
         console.error('Fetch Error:', error);
@@ -264,11 +263,10 @@ function ScheduleMainPage() {
           if (response && response.status === 'SUCCESS') {
             setWeatherData(response.data);
           } else {
-            setError('데이터 가져오기 실패');
+            console.error(error);
           }
         } catch (error) {
           console.error('Fetch Error:', error);
-          setError('데이터 가져오기 실패');
         } finally {
           setLoading(false);
         }
@@ -302,26 +300,16 @@ function ScheduleMainPage() {
     }
   }, []);
 
-  if (error) return <div>{error}</div>;
-
-  if (
-    !runningScheduleData ||
-    !runningScheduleData.scheduleDayResDtoList ||
-    runningScheduleData.scheduleDayResDtoList.length === 0
-  ) {
-    return <div>데이터가 없습니다.</div>;
-  }
-
-  const firstDayData = runningScheduleData.scheduleDayResDtoList[0];
+  const firstDayData = runningScheduleData?.scheduleDayResDtoList[0];
 
   const departuresPlace =
-    firstDayData.scheduleWayPointList?.find((point) => point.type === '출발지')
+    firstDayData?.scheduleWayPointList?.find((point) => point.type === '출발지')
       ?.address || '';
   const arrivalsPlace =
-    firstDayData.scheduleWayPointList?.find((point) => point.type === '도착지')
+    firstDayData?.scheduleWayPointList?.find((point) => point.type === '도착지')
       ?.address || '';
 
-  const dayData = runningScheduleData.scheduleDayResDtoList.map(
+  const dayData = runningScheduleData?.scheduleDayResDtoList.map(
     (day, index) => ({
       dayNum: index + 1,
     }),
@@ -333,9 +321,9 @@ function ScheduleMainPage() {
     arrivalsPlace,
     startDate: '-',
     endDate: '-',
-    totalDuration: parseFloat(firstDayData.totalDuration || '0'),
-    totalDistance: parseFloat(firstDayData.totalDistance || '0'),
-    dayData: dayData,
+    totalDuration: parseFloat(firstDayData?.totalDuration || '0'),
+    totalDistance: parseFloat(firstDayData?.totalDistance || '0'),
+    dayData: dayData || [],
     percentage: undefined,
     rate: undefined,
   };
@@ -364,6 +352,7 @@ function ScheduleMainPage() {
         purpose="user"
         clickBack={() => navigate(-1)}
         $isShadow
+        $isborder={true}
         plusBtnclick={() => navigate('/schedule/addSchedule')}
       />
 
@@ -465,7 +454,9 @@ function ScheduleMainPage() {
                   </R.RouteDetailInfoContainer>
                 </>
               ) : (
-                <>일정이 없습니다.</>
+                <>
+                  <S.NoData>일정이 없습니다.</S.NoData>
+                </>
               )}
             </>
           </S.Overflow>
@@ -477,8 +468,8 @@ function ScheduleMainPage() {
         <S.Main>
           <S.Overflow>
             {myScheduleListData &&
-              Array.isArray(myScheduleListData) &&
-              myScheduleListData.length > 0 &&
+            Array.isArray(myScheduleListData) &&
+            myScheduleListData.length > 0 ? (
               myScheduleListData.map((data: SchduleCardProps) => {
                 const tripDay = calculateTripDay(
                   data.startDate || '',
@@ -504,7 +495,10 @@ function ScheduleMainPage() {
                     onClick={() => clickCard(data.scheduleId, dDay)}
                   />
                 );
-              })}
+              })
+            ) : (
+              <S.NoData>일정이 없습니다.</S.NoData>
+            )}
           </S.Overflow>
         </S.Main>
       )}

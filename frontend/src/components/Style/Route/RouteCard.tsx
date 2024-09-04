@@ -12,7 +12,7 @@ function RouteCard(props: RouteListProps) {
       onClick={() => {
         navigator(`/route/detail/${props.routeId}`);
       }}
-      img={test}
+      img={props.img === 'testurl' ? test : props.img}
     >
       <C.TopContent>
         <C.ContentContainer>

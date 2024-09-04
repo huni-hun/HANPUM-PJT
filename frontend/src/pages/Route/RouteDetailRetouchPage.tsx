@@ -87,7 +87,7 @@ function RouteDetailRetouchPage() {
               totalDuration: ele.total_duration,
             };
             setDayData((pre) => [...pre, data]);
-            num += Number(ele.total_distance.split('k')[0]);
+            num += ele.total_distance;
           });
           let type: string[] = [];
           result.data.data.course.courseTypes.map((ele: string) => {
@@ -163,13 +163,12 @@ function RouteDetailRetouchPage() {
               });
               setDayOfRoute(arr);
               copyDetail[idx].wayPointReqDtoList = wayPoints;
-
+              setSelectedDay(idx + 1);
               // wayPoints가 존재할 때에만 latitude와 longitude를 설정
             }
           });
-          setSelectedDay(idx + 1);
         }
-        if (ele.wayPointReqDtoList.length < 1) {
+        if (ele.attractionReqDtoList.length < 1) {
           let attArr: AttractionsProps[] = [];
           getRouteDayAttraction(routeid as string, ele.dayNumber).then(
             (result) => {
@@ -208,7 +207,6 @@ function RouteDetailRetouchPage() {
 
   useEffect(() => {
     let arr: DaysOfRouteProps[] = [];
-
     if (dateDetail.length > 0) {
       dateDetail[selectedDay - 1].wayPointReqDtoList.map(
         (ele: WayPointReqDto, idx: number) => {
@@ -221,6 +219,7 @@ function RouteDetailRetouchPage() {
             latitude: ele.lat,
             longitude: ele.lon,
           };
+
           arr.push(data);
         },
       );
@@ -278,8 +277,8 @@ function RouteDetailRetouchPage() {
             setSe((pre) => [...pre, seData]);
           }
           let markerData: LineStartEndProps = {
-            x: ele.lat,
-            y: ele.lon,
+            x: ele.lon,
+            y: ele.lat,
           };
           setMarker((pre) => [...pre, markerData]);
         });
@@ -357,30 +356,34 @@ function RouteDetailRetouchPage() {
       let endlat = wayPoints[wayPoints.length - 1].lat;
       let endlon = wayPoints[wayPoints.length - 1].lon;
 
-      GetDistance(startlat, startlon, endlat, endlon).then((res) => {
-        if (res.status === 200 && res.data.status === 'SUCCESS') {
-          let dist = Number(res.data.data[0].distance) / 1000;
-          let cal = 3.5 * 70 * (dist / 4);
-          let duration = dist / 4;
+      GetDistance(startlat, startlon, endlat, endlon)
+        .then((res) => {
+          if (res.status === 200 && res.data.status === 'SUCCESS') {
+            let dist = Number(res.data.data[0].distance) / 1000;
+            let cal = 3.5 * 70 * (dist / 4);
+            let duration = dist / 4;
 
-          let curWay = [...wayPoints];
-          curWay[curWay.length - 2].distance = `${dist}`;
-          curWay[curWay.length - 2].calorie = `${cal}`;
-          curWay[curWay.length - 2].duration = `${duration}`;
+            let curWay = [...wayPoints];
+            curWay[curWay.length - 2].distance = `${dist}`;
+            curWay[curWay.length - 2].calorie = `${cal}`;
+            curWay[curWay.length - 2].duration = `${duration}`;
 
-          curWay.map((ele: WayPointReqDto, idx: number) => {
-            if (idx === 0) {
-              ele.type = '출발지';
-            } else if (idx === curWay.length - 1) {
-              ele.type = '도착지';
-            } else {
-              ele.type = '경유지';
-            }
-          });
+            curWay.map((ele: WayPointReqDto, idx: number) => {
+              if (idx === 0) {
+                ele.type = '출발지';
+              } else if (idx === curWay.length - 1) {
+                ele.type = '도착지';
+              } else {
+                ele.type = '경유지';
+              }
+            });
 
-          setWayPoints(curWay);
-        }
-      });
+            setWayPoints(curWay);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
 
       let route: RetouchRouteProps = {
         courseId: Number(routeid),
@@ -394,6 +397,9 @@ function RouteDetailRetouchPage() {
       };
 
       setAddRoute(route);
+    }
+    if (dateDetail.length > 0) {
+      setWayPoints(dateDetail[dateDetail.length - 1].wayPointReqDtoList);
     }
   }, [dateDetail]);
 
@@ -431,7 +437,7 @@ function RouteDetailRetouchPage() {
   ) : loading && open ? (
     <R.Container>
       <Header
-        purpose="route-detail"
+        purpose="route-retouch"
         back={true}
         clickBack={() => {
           navigate(-1);

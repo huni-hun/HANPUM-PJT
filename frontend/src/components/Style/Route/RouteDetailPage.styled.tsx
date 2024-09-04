@@ -39,6 +39,7 @@ export const Main = styled.div`
   display: flex;
   flex-direction: row;
   overflow-y: auto;
+  overflow-x: hidden; /* 수평 스크롤 숨김 */
 `;
 
 export const Overflow = styled.div`
@@ -47,9 +48,11 @@ export const Overflow = styled.div`
   width: 100%;
   height: 100%;
   overflow-y: auto;
+  box-sizing: border-box;
   &::-webkit-scrollbar {
     display: none;
   }
+  overflow-x: hidden; /* 수평 스크롤 숨김 */
 `;
 
 export const RouteInfoContainer = styled.div`
@@ -200,6 +203,7 @@ export const RouteDateBox = styled.div`
   flex-direction: column;
   justify-content: space-around;
   position: relative;
+  padding-bottom: 2rem;
 `;
 
 export const StartDateBox = styled.div`
@@ -216,6 +220,7 @@ export const EndDateBox = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  /* padding-bottom: 2rem; */
 `;
 
 export const DateBox = styled.div`
@@ -506,6 +511,7 @@ export const PlaceCardCotainer = styled.div`
   box-shadow: 0px 4px 4px 0 rgba(0, 0, 0, 0.25);
   margin-bottom: 0.8rem;
   position: relative;
+  flex-shrink: 0;
 `;
 
 export const PlaceCardDeleteIcon = styled.div`

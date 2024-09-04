@@ -5,3 +5,13 @@ export async function deleteInterestRoute(course_id: number) {
 
   return data;
 }
+
+export const RouteDelete = (id: string) => {
+  const response = api.delete(`/api/course/${id}`, {
+    headers: {
+      Accept: '*/*',
+    },
+  });
+
+  return response;
+};

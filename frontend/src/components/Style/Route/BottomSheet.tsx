@@ -60,7 +60,14 @@ function BottomSheet(props: BottomSheetProps) {
                     }
                     size={20}
                   />
-                  <R.SettingTextBox isDelete={ele === '삭제'}>
+                  <R.SettingTextBox
+                    onClick={() => {
+                      if (props.onDelete) {
+                        props.onDelete();
+                      }
+                    }}
+                    isDelete={ele === '삭제'}
+                  >
                     {ele}
                   </R.SettingTextBox>
                 </R.SettingIconBox>

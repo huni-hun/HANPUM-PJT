@@ -143,7 +143,7 @@ public class CourseServiceImpl implements CourseService {
             CourseDay courseDay = CourseDay.builder()
                     .course(course)
                     .dayNumber(courseDayReqDto.getDayNumber())
-                    .totalDistance(String.format("%.1f", totalDistance))
+                    .totalDistance(totalDistance)
                     .totalDuration(String.format("%.1f", totalDuration))
                     .totalCalorie(String.format("%.1f", totalCalorie))
                     .build();
@@ -267,7 +267,7 @@ public class CourseServiceImpl implements CourseService {
                 CourseDay newDay = CourseDay.builder()
                         .dayNumber(newCourseDay.getDayNumber())
                         .course(course)
-                        .totalDistance(String.format("%.1f", totalDistance))
+                        .totalDistance(totalDistance)
                         .totalDuration(String.format("%.1f", totalDuration))
                         .totalCalorie(String.format("%.1f", totalCalorie))
                         .build();
@@ -287,7 +287,7 @@ public class CourseServiceImpl implements CourseService {
 
     private void updateCourseDay(CourseDay existDay, CourseDayReqDto newDay, Double totalCalorie, Double totalDuration, Double totalDistance) {
         // CourseDay 정보 업데이트
-        existDay.updateCourseDayTotal(String.format("%.1f", totalCalorie), String.format("%.1f", totalDuration), String.format("%.1f", totalDistance));
+        existDay.updateCourseDayTotal(String.format("%.1f", totalCalorie), String.format("%.1f", totalDuration), totalDistance);
 
         // Attraction 업데이트
         Set<String> existAttractionName = existDay.getAttractions().stream()

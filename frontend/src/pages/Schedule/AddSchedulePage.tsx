@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import * as S from '../../components/Style/Schedule/AddSchdulePage.styled';
-
+import * as R from '../../components/Style/Route/RouteAddDetailPage.styled';
 import Header from '@/components/common/Header/Header';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,6 +10,9 @@ import RangeCalendar from '../../components/common/Calendar/RangeCalendar';
 import { PostMineSchedule } from '@/api/schedule/POST';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
+import BottomTab from '@/components/common/BottomTab/BottomTab';
+import Button from '@/components/common/Button/Button';
+import { colors } from '@/styles/colorPalette';
 
 interface ScheduleData {
   courseId: number;
@@ -43,8 +46,7 @@ function AddSchedulePage() {
     });
   };
 
-  const handlerExpanded = async () => {
-    setIsExpanded((prevState) => !prevState);
+  const postAddSchedule = async () => {
     try {
       const token = '';
 
@@ -57,16 +59,17 @@ function AddSchedulePage() {
 
       if (response && response.data.status === 'SUCCESS') {
         setPostSchedule(response.data);
+        navigate('/schedule/success');
       } else if (response && response.data.status === 'ERROR') {
         toast.error(response.data.message);
         setError('일정 생성에 실패했습니다.');
       }
     } catch (error) {
-      console.error('생성 실패', error);
+      toast.error('일정 생성에 실패했습니다.');
     }
   };
 
-  const handlerMapExpanded = () => {
+  const handlerExpanded = () => {
     setIsExpanded((prevState) => !prevState);
   };
 
@@ -99,7 +102,6 @@ function AddSchedulePage() {
         clickBack={() => navigate(-1)}
         $isShadow
       />
-
       {/* <S.Container> */}
       <S.SchduleContainer>
         {/* 일정 선택 박스 */}
@@ -115,14 +117,19 @@ function AddSchedulePage() {
                   onDateChange={handleDateChange}
                 />
               </S.DatePicker>
-
-              <BaseButton
-                size="small"
-                style={{ margin: '1.5rem 0 0 22rem' }}
-                onClick={handlerExpanded}
-              >
-                다음
-              </BaseButton>
+              <S.NextBtn>
+                <Button
+                  width={20}
+                  height={5}
+                  fc="ffffff"
+                  bc={colors.main}
+                  radius={0.7}
+                  fontSize={1.6}
+                  children="다음"
+                  color="#ffffff"
+                  onClick={handlerExpanded}
+                />
+              </S.NextBtn>
             </div>
           ) : (
             <>
@@ -138,8 +145,7 @@ function AddSchedulePage() {
             </>
           )}
         </S.DateWrap>
-
-        <S.RouteWrap $isExpanded={isExpanded} onClick={handlerMapExpanded}>
+        <S.RouteWrap $isExpanded={isExpanded} onClick={handlerExpanded}>
           {/* 경로선택 박스 */}
           <S.RouteTop>
             <S.H3>경로</S.H3>
@@ -168,6 +174,21 @@ function AddSchedulePage() {
         </S.RouteWrap>
       </S.SchduleContainer>
       {/* </S.Container> */}
+      <R.BottomContainer>
+        <R.ButtonBox>
+          <Button
+            width={30}
+            height={6}
+            fc="ffffff"
+            bc={colors.main}
+            radius={0.7}
+            fontSize={1.6}
+            children="일정 생성"
+            color="#ffffff"
+            onClick={postAddSchedule}
+          />
+        </R.ButtonBox>
+      </R.BottomContainer>
     </ScheduleMainPageContainer>
   );
 }

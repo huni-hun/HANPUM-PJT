@@ -4,15 +4,29 @@ import Rating from '@mui/material/Rating';
 import { useState } from 'react';
 import Button from '@/components/common/Button/Button';
 import { colors } from '@/styles/colorPalette';
+import { SetRouteReview } from '@/api/route/POST';
 
 interface ReviewModalProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isVisible: boolean;
+  routeid: string;
 }
 
 function ReviewModal(props: ReviewModalProps) {
   const [rating, setRating] = useState<number>(0);
   const [review, setReview] = useState<string>('');
+
+  const reviewAddHandler = () => {
+    SetRouteReview(props.routeid, review, rating, 0)
+      .then((res) => {
+        if (res.status === 200 && res.data.status === 'SUCCESS') {
+          props.setIsOpen(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <R.Container
@@ -73,7 +87,9 @@ function ReviewModal(props: ReviewModalProps) {
             fontSize={1.6}
             children="작성완료"
             color="#ffffff"
-            onClick={() => {}}
+            onClick={() => {
+              reviewAddHandler();
+            }}
           />
         </R.BtnBox>
       </R.ModalCard>

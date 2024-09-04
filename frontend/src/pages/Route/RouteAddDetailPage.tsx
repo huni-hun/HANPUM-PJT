@@ -92,10 +92,10 @@ function RouteAddDetailPage() {
 
   useEffect(() => {
     if (wayPoints.length >= 2) {
-      let startlat = wayPoints[wayPoints.length - 2].lat;
-      let startlon = wayPoints[wayPoints.length - 2].lon;
-      let endlat = wayPoints[wayPoints.length - 1].lat;
-      let endlon = wayPoints[wayPoints.length - 1].lon;
+      let startlat = wayPoints[wayPoints.length - 2].lon;
+      let startlon = wayPoints[wayPoints.length - 2].lat;
+      let endlat = wayPoints[wayPoints.length - 1].lon;
+      let endlon = wayPoints[wayPoints.length - 1].lat;
 
       GetDistance(startlat, startlon, endlat, endlon).then((res) => {
         if (res.status === 200 && res.data.status === 'SUCCESS') {
@@ -117,7 +117,6 @@ function RouteAddDetailPage() {
               ele.type = '경유지';
             }
           });
-
           setWayPoints(curWay);
         }
       });

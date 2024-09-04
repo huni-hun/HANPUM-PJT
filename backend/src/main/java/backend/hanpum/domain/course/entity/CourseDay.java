@@ -28,7 +28,7 @@ public class CourseDay {
     private Course course;
 
     @Column(name = "total_distance", length = 10)
-    private String totalDistance;
+    private Double totalDistance;
 
     @Column(name = "total_duration", length = 10)
     private String totalDuration;
@@ -47,7 +47,7 @@ public class CourseDay {
     @OneToMany(mappedBy = "courseDay", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ScheduleDay> scheduleDayList = new ArrayList<>();
 
-    public void updateCourseDayTotal(String totalCalorie, String totalDuration, String totalDistance) {
+    public void updateCourseDayTotal(String totalCalorie, String totalDuration, Double totalDistance) {
         this.totalCalorie = totalCalorie;
         this.totalDistance = totalDistance;
         this.totalDuration = totalDuration;

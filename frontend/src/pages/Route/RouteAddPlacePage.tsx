@@ -40,8 +40,8 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
       type: '경유지',
       name: props.selectedPlace.placeName,
       address: props.selectedPlace.address,
-      lat: props.selectedPlace.latitude,
-      lon: props.selectedPlace.longitude,
+      lat: props.selectedPlace.longitude,
+      lon: props.selectedPlace.latitude,
       pointNumber: `${props.wayPoints.length + 1}`,
       distance: '0',
       duration: '0',
@@ -70,8 +70,8 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
     let attraction: AttractionReqDto = {
       name: props.selectedPlace.placeName,
       address: props.selectedPlace.address,
-      lat: props.selectedPlace.latitude,
-      lon: props.selectedPlace.longitude,
+      lat: props.selectedPlace.longitude,
+      lon: props.selectedPlace.latitude,
       img: props.selectedPlace.img as string,
       type: '관광지',
     };

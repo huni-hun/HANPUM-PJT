@@ -14,6 +14,7 @@ import java.util.List;
 public class GroupDetailGetResDto {
     private String readerProfileImg; // 모임장 이미지
     private String readerName; // 모임장 이름
+    private Long courseId; // 코스 번호
     private String title; // 모임 이름
     private String groupImg; // 모임 이미지
     private String description; // 모집글
@@ -32,10 +33,11 @@ public class GroupDetailGetResDto {
     private boolean isLike; // 좋아요 눌렀는지 안눌렀는지
     private GroupJoinStatus groupJoinStatus; // 조회한 멤버 상태
 
-    public GroupDetailGetResDto(String title, String groupImg,
+    public GroupDetailGetResDto(Long courseId, String title, String groupImg,
                                 String description, Date recruitmentStart, Date recruitmentPeriod,
                                 Long recruitedCount, int recruitmentCount, int likeCount, String startPoint, String endPoint,
                                 Integer totalDays, String startDate, String endDate, boolean isLike) {
+        this.courseId = courseId;
         this.title = title;
         this.groupImg = groupImg;
         this.description = description;
