@@ -19,6 +19,8 @@ function MyProfilePage() {
 
   const { data } = useQuery('getUser', GetUser);
 
+  console.log(data);
+
   const { mutate: changeProfileImg } = useMutation(ChangeProfileImg, {
     onSuccess: (res) => {
       if (res.status === STATUS.success) {

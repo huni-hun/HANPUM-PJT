@@ -8,6 +8,10 @@ import styled from 'styled-components';
 
 function MeetLongCard({ data }: { data: MeetInfo }) {
   console.log(data);
+
+  if (!data) {
+    return null;
+  }
   return (
     <MeetLongCardContainer>
       <img src={data.groupImg} alt="" />
