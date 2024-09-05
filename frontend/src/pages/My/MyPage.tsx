@@ -16,6 +16,8 @@ function MyPage() {
 
   const { data } = useQuery('getUser', GetUser);
 
+  console.log(data);
+
   return (
     <MyPageContainer>
       <Header

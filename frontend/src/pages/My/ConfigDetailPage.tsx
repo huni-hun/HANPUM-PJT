@@ -26,10 +26,10 @@ function ConfigDetailPage() {
     return [];
   };
 
-  console.log(paramCategory, id);
+  // console.log(paramCategory, id);
 
   const filteredData = configInfoList().filter((item) => item.id === id);
-  console.log(filteredData);
+  // console.log(filteredData);
 
   const renderAnnouncement = () =>
     filteredData.map((announcement) => (
