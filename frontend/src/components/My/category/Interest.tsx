@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import * as S from '../../Style/My/category/Interest.styled';
 import { useQuery } from 'react-query';
-import { GetInterestMeetList } from '@/api/mypage/GET';
+import { GetInterestMeetList, GetInterestRouteList } from '@/api/mypage/GET';
 import { STATUS } from '@/constants';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
@@ -61,9 +61,26 @@ function Interest() {
     },
   ];
 
-  const { data: meet } = useQuery(
+  const { data: interestMeet } = useQuery(
     'getInterestMeet', // Query Key
     GetInterestMeetList,
+    {
+      onSuccess: (res) => {
+        // console.log('res ::', res.data);
+        if (res.status === STATUS.success) {
+        } else if (res.status === STATUS.error) {
+          toast.error(res.message);
+        }
+      },
+      onError: (error: AxiosError) => {
+        toast.error(error.message);
+      },
+    },
+  );
+
+  const { data: interesRoot } = useQuery(
+    'getInterestMeet', // Query Key
+    GetInterestRouteList,
     {
       onSuccess: (res) => {
         console.log('res ::', res.data);
@@ -97,11 +114,12 @@ function Interest() {
 
       {/*  경로 */}
       {tab === '경로' &&
-        (root.length === 0 ? (
+        interesRoot &&
+        (interesRoot.data.groupResDtoList.length === 0 ? (
           <NoHave category="root" />
         ) : (
           <div className="card-container">
-            {root.map((item) => (
+            {interesRoot.data.groupResDtoList.map((item: any) => (
               <CardLong
                 key={item.routeId}
                 hasHeart={true}
@@ -116,15 +134,16 @@ function Interest() {
 
       {/*  모임 */}
       {tab === '모임' &&
-        meet &&
-        (meet.data.groupResDtoList.length === 0 ? (
+        interestMeet &&
+        (interestMeet.data.groupResDtoList.length === 0 ? (
           <NoHave category="meet" />
-        ) : // <div className="card-container">
-        //   {meet.map((item, index) => (
-        //     <CardLong key={index} item={item} />
-        //   ))}
-        // </div>
-        null)}
+        ) : (
+          <div className="card-container">
+            {interestMeet.data.groupResDtoList.map((item: any) => (
+              <CardLong key={item.id} item={item} />
+            ))}
+          </div>
+        ))}
     </S.InterestContainer>
   );
 }
