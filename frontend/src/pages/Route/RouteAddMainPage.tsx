@@ -6,6 +6,7 @@ import Input from '../../components/common/Input/Input';
 import Header from '@/components/common/Header/Header';
 import { colors } from '@/styles/colorPalette';
 import { useNavigate } from 'react-router-dom';
+import useImageCompression from '@/hooks/global/useImageCompression';
 
 function RouteAddMainPage() {
   const navigator = useNavigate();
@@ -45,6 +46,7 @@ function RouteAddMainPage() {
     '서해랑길코스',
   ];
   const [typeChecked, setTypeChecked] = useState<string[]>([]);
+  const { compressImage, compressedImage } = useImageCompression();
 
   return (
     <R.Container>
@@ -54,6 +56,7 @@ function RouteAddMainPage() {
         clickBack={() => {
           navigator(-1);
         }}
+        $isGrey={true}
       />
       <R.MainContainer>
         <R.OverFlow>
@@ -87,11 +90,14 @@ function RouteAddMainPage() {
                   )}
                   <R.FileSelect
                     id="Img"
-                    onChange={(e) => {
+                    onChange={async (e) => {
                       if (e.target.files) {
                         const file = e.target.files[0];
-                        const reader = URL.createObjectURL(file);
-                        setImgData(file);
+                        const compressedFile =
+                          (await compressImage(file)) ?? file;
+
+                        const reader = URL.createObjectURL(compressedFile);
+                        setImgData(compressedFile);
                         setImgSrc(reader);
 
                         setImgReady(true);
