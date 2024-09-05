@@ -27,6 +27,7 @@ import Message from '@common/Message';
 import Spacing from '@common/Spacing';
 import { useSetRecoilState } from 'recoil';
 import { signupStepAtom } from '@/atoms/signupStepAtom';
+import useImageCompression from '@/hooks/global/useImageCompression';
 
 function ProfileConfig({
   pagenation,
@@ -40,6 +41,7 @@ function ProfileConfig({
   clickNext: () => void;
 }) {
   const { open } = useAlert();
+  const { compressImage, compressedImage } = useImageCompression();
 
   const setStep = useSetRecoilState(signupStepAtom);
 
@@ -54,15 +56,26 @@ function ProfileConfig({
   >(null);
 
   // 프로필 이미지
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
+      console.log(
+        '압축 전 ::',
+        `${file.size}바이트`,
+        (file.size / 1024 / 1024).toFixed(2),
+      );
+      const compressedFile = (await compressImage(file)) ?? file;
+      console.log(
+        '압축 후 ::',
+        `${compressedFile.size}바이트`,
+        (compressedFile.size / 1024 / 1024).toFixed(2),
+      );
+      const imageUrl = URL.createObjectURL(compressedFile || file);
       setPreviewImage(imageUrl);
 
       setFormValues((prevValue) => ({
         ...prevValue,
-        multipartFile: file,
+        multipartFile: compressedFile || file,
       }));
     }
   };

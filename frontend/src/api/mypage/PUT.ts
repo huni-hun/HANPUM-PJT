@@ -48,10 +48,10 @@ export async function ChangeProfileImg(img: Blob) {
 
 // 비밀번호 재설정
 export async function ChangePassword(email: string, password: string) {
-  const hashedPassword = CryptoJS.SHA256(password).toString();
+  // const hashedPassword = CryptoJS.SHA256(password).toString();
   const { data } = await api.put('/api/auth/reset-password', {
     email,
-    password: hashedPassword,
+    password,
   });
   return data;
 }

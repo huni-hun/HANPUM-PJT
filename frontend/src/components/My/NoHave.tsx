@@ -3,8 +3,10 @@ import Text from '../common/Text';
 import Flex from '../common/Flex';
 import BaseButton from '../common/BaseButton';
 import * as S from '../Style/My/NoHave.styled';
+import { useNavigate } from 'react-router-dom';
 
 function NoHave({ category }: { category: string }) {
+  const navigate = useNavigate();
   return (
     <S.NoHaveContainer>
       <img src={noImage} alt="" />
@@ -32,7 +34,13 @@ function NoHave({ category }: { category: string }) {
       <BaseButton
         size="large"
         style={{ margin: '36px auto 0' }}
-        onClick={() => {}}
+        onClick={() => {
+          {
+            category === 'root'
+              ? navigate('/route/list')
+              : navigate('/meet/list');
+          }
+        }}
       >
         {category === 'root' ? '추천 경로 둘러보기' : '모임 둘러보기'}
       </BaseButton>
