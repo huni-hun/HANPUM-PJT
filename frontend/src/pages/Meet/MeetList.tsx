@@ -8,7 +8,7 @@ import Text from '@/components/common/Text';
 import Flex from '@/components/common/Flex';
 import { useInfiniteQuery, useQuery } from 'react-query';
 import { GetGroupList, GetMyMeet } from '@/api/meet/GET';
-import { STATUS } from '@/constants';
+import { sortList, STATUS } from '@/constants';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 import MeetLongCard from '@/components/Meet/MeetLongCard';
@@ -34,8 +34,6 @@ function MeetList() {
     },
   });
 
-  // console.log(requestDto);
-
   const navigator = useNavigate();
 
   // 내 모임
@@ -51,22 +49,6 @@ function MeetList() {
       toast.error(error.message);
     },
   });
-
-  // const myMeet = [
-  //   {endDate: 20240120;
-  //     endPoint: '의정부';
-  //     groupId: 1;
-  //     groupImg: string;
-  //     like: boolean;
-  //     likeCount: number;
-  //     startDate: string;
-  //     startPoint: string;
-  //     title: string;
-  //     totalDays: number;
-  //     totalDistance: number;
-  //     recruitedCount: number;
-  //     recruitmentCount: number;}
-  // ];
 
   // 모임 리스트 (무한 스크롤)
   const {
@@ -137,7 +119,9 @@ function MeetList() {
   };
 
   const clickSort = (stateValue: string) => {
-    if (stateValue === 'nothing') return;
+    if (stateValue === 'nothing') {
+      setOpenSort(false);
+    }
     setRequestDto((prev) => ({
       ...prev,
       pageable: {
@@ -159,17 +143,27 @@ function MeetList() {
 
       <R.MainContainer>
         <Flex direction="column">
-          <Text $typography="t20" $bold={true} style={{ paddingLeft: '8px' }}>
-            내 모임
-          </Text>
-          {myMeet && <MeetLongCard data={myMeet.data} />}
+          {myMeet && myMeet.data && (
+            <>
+              <Text
+                $typography="t20"
+                $bold={true}
+                style={{ paddingLeft: '8px' }}
+              >
+                내 모임
+              </Text>
+              <MeetLongCard data={myMeet.data} />
+            </>
+          )}
           <Flex
             $align="center"
             $gap={3}
             style={{ paddingLeft: '8px', marginBottom: '16px' }}
           >
             <Text $typography="t10" color="grey2" onClick={handleToggleOpen}>
-              최신순
+              {sortList.filter(
+                (val) => val.value === requestDto.pageable.sort,
+              )[0]?.label || '최신순'}
             </Text>
             <Icon name="IconDownArrow" />
           </Flex>
