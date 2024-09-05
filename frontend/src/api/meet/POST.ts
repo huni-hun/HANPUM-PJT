@@ -14,13 +14,27 @@ export const PostMeetLike = async (groupId: number) => {
   return response.data;
 };
 
-/** 모임 그룹 생성 - 장효령이 한 거 */
-export const PostGroup = async () => {
-  const response = await api.post(`/api/group`);
-
+/** 모임 생성  */
+export const PostGroup = async (
+  multipartFile: string,
+  groupPostReqDto: {
+    title: string;
+    description: string;
+    recruitmentCount: number;
+    recruitmentPeriod: string;
+    schedulePostReqDto: {
+      courseId: number;
+      startDate: string;
+    };
+  },
+) => {
+  const params = {
+    multipartFile,
+    groupPostReqDto,
+  };
+  const response = await api.post(`/api/group`, params);
   return response.data;
 };
-
 // 모임 관심 등록 - 채운
 export async function addInterestMeetToggle(groupId: number) {
   const { data } = await api.post(`/api/group/${groupId}/like`);

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import * as S from '../../components/Style/Schedule/AddSchdulePage.styled';
 import * as R from '../../components/Style/Route/RouteAddDetailPage.styled';
 import Header from '@/components/common/Header/Header';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import Calendar from '../../components/common/Calendar/RangeCalendar';
 import BaseButton from '@/components/common/BaseButton';
@@ -20,12 +20,14 @@ interface ScheduleData {
   startDate: string;
 }
 
-function AddSchedulePage() {
+function MeetAddSchedulePage() {
   const navigate = useNavigate();
   const BtnClick = () => {};
   const [error, setError] = useState<string | null>(null);
   const [postSchedule, setPostSchedule] = useState<ScheduleData | null>(null);
-
+  /** coursId add.main에서 가져오기 */
+  const location = useLocation();
+  const { courseId, startDate, recruitmentPeriod } = location.state || {};
   /** 날짜 선택 시 vh 늘어나면서 data picker,map 활성화 */
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -45,25 +47,22 @@ function AddSchedulePage() {
       endDate: range.endDate || '',
     });
   };
-
-  const postAddSchedule = async () => {
-    try {
-      const startDate = dates.startDate;
-
-      // startDate를 "YYYYMMDD" 형식으로 변환
-      const formattedDate = startDate.replace(/-/g, '');
-
-      const response = await PostMineSchedule(2, formattedDate);
-
-      if (response && response.data.status === 'SUCCESS') {
-        setPostSchedule(response.data);
-        navigate('/schedule/success');
-      } else if (response && response.data.status === 'ERROR') {
-        toast.error(response.data.message);
-        setError('일정 생성에 실패했습니다.');
-      }
-    } catch (error) {
-      toast.error('일정 생성에 실패했습니다.');
+  const postMeetSchedule = (
+    courseId: number,
+    startDate: string,
+    endDate: string,
+  ) => {
+    if (startDate !== '') {
+      navigate(`/meet/addMain`, {
+        state: {
+          courseId,
+          startDate,
+          endDate,
+          recruitmentPeriod,
+        },
+      });
+    } else {
+      toast.error('날짜를 선택해주세요!');
     }
   };
 
@@ -180,10 +179,12 @@ function AddSchedulePage() {
             fc="ffffff"
             bc={colors.main}
             radius={0.7}
-            fontSize={1.6}
-            children="일정 생성"
+            fontSize={1.8}
+            children="등록"
             color="#ffffff"
-            onClick={postAddSchedule}
+            onClick={() =>
+              postMeetSchedule(courseId, dates.startDate, dates.endDate)
+            }
           />
         </R.ButtonBox>
       </R.BottomContainer>
@@ -191,7 +192,7 @@ function AddSchedulePage() {
   );
 }
 
-export default AddSchedulePage;
+export default MeetAddSchedulePage;
 
 const ScheduleMainPageContainer = styled.div`
   width: 100%;

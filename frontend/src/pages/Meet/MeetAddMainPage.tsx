@@ -1,55 +1,136 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import Icon from '../../components/common/Icon/Icon';
 import * as M from '../../components/Style/Meet/MeetAddMain.styled';
 import Input from '../../components/common/Input/Input';
 import Header from '@/components/common/Header/Header';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ToggleSlider from '@/components/common/ToggleSlider/ToggleSlider';
 import { CreateMeetRequestDto } from '@/models/meet';
 import Text from '@/components/common/Text';
 import BaseButton from '@/components/common/BaseButton';
+import { PostGroup } from '@/api/meet/POST';
+import { toast } from 'react-toastify';
 
 function MeetAddMainPage() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-
   const [meetRequest, setMeetRequest] = useState<Partial<CreateMeetRequestDto>>(
     {},
   );
 
+  const { courseId, startDate, endDate, recruitmentPeriod } =
+    location.state || {};
+
+  useEffect(() => {
+    const savedMeetRequest = localStorage.getItem('meetRequest');
+    if (savedMeetRequest) {
+      setMeetRequest(JSON.parse(savedMeetRequest));
+    }
+
+    const savedImage = localStorage.getItem('previewImage');
+    if (savedImage) {
+      setPreviewImage(savedImage);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('meetRequest', JSON.stringify(meetRequest));
+  }, [meetRequest]);
+
+  useEffect(() => {
+    if (location.state) {
+      setMeetRequest((prevState) => ({
+        ...prevState,
+        ...location.state,
+      }));
+    }
+  }, [location.state]);
+
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setPreviewImage(imageUrl);
+      const reader = new FileReader();
 
-      setMeetRequest((prevValue) => ({
-        ...prevValue,
-        multipartFile: file,
-      }));
+      reader.onloadend = () => {
+        if (reader.result) {
+          const imageUrl = reader.result as string;
+          setPreviewImage(imageUrl);
+          localStorage.setItem('previewImage', imageUrl);
+          setMeetRequest((prevValue) => ({
+            ...prevValue,
+            multipartFile: file,
+          }));
+        }
+      };
+
+      reader.readAsDataURL(file);
     }
   };
-
-  console.log(meetRequest);
 
   const handleInfoChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const { name, value } = e.currentTarget;
-
-    setMeetRequest((prevValue) => ({
-      ...prevValue,
-      [name]: value,
-    }));
+    setMeetRequest({
+      ...meetRequest,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const handleRecruitmentCountChange = (value: number) => {
-    setMeetRequest((prev) => ({
-      ...prev,
-      recruitmentCount: value,
-    }));
+  const handleRecruitmentCountChange = (count: number) => {
+    setMeetRequest({
+      ...meetRequest,
+      recruitmentCount: count,
+    });
+  };
+
+  const clickAddSchdule = () => {
+    navigate('/meet/addMain/addSchedule', {
+      state: {
+        courseId,
+        startDate,
+        recruitmentPeriod,
+      },
+    });
+  };
+
+  const clickAddDeadline = () => {
+    navigate('/meet/addMain/AddDeadline', {
+      state: {
+        courseId,
+        startDate,
+        recruitmentPeriod,
+      },
+    });
+  };
+
+  const handleCreateGroup = async () => {
+    try {
+      const multipartFile = previewImage;
+      const groupPostReqDto = {
+        title: meetRequest.title || '',
+        description: meetRequest.description || '',
+        recruitmentCount: meetRequest.recruitmentCount || 0,
+        recruitmentPeriod: recruitmentPeriod || '',
+        schedulePostReqDto: {
+          courseId: courseId || 0,
+          startDate: startDate || '',
+        },
+      };
+
+      const response = await PostGroup(multipartFile || '', groupPostReqDto);
+
+      if (response && response.status === 'SUCCESS') {
+        toast.success('모임 생성이 완료되었습니다!');
+        navigate('/schedule/success');
+      } else {
+        toast.error('모임 생성에 실패했습니다.');
+      }
+    } catch (error) {
+      toast.error('모임 생성 중 오류가 발생했습니다.');
+    }
   };
 
   return (
@@ -90,7 +171,7 @@ function MeetAddMainPage() {
             <Input
               placeholder="김동산"
               name="title"
-              value={meetRequest?.title}
+              value={meetRequest?.title || ''}
               onChange={handleInfoChange}
             />
           </div>
@@ -102,7 +183,7 @@ function MeetAddMainPage() {
             <textarea
               placeholder="내용을 작성해 주세요."
               name="description"
-              value={meetRequest?.description}
+              value={meetRequest?.description || ''}
               onChange={handleInfoChange}
             />
           </div>
@@ -118,22 +199,32 @@ function MeetAddMainPage() {
           </M.ToggleSliderBox>
         </div>
 
-        <div className="category-container">
+        <div className="category-container" onClick={clickAddDeadline}>
           <Text $bold={true} $typography="t12">
             모집 마감일
           </Text>
-          <Icon name="IconArrowRight" />
+          <M.ScheduleTextWrap>
+            <M.ScheduleText>{recruitmentPeriod}</M.ScheduleText>
+            <Icon name="IconArrowRight" />
+          </M.ScheduleTextWrap>
         </div>
 
-        <div className="category-container">
+        <div className="category-container" onClick={clickAddSchdule}>
           <Text $bold={true} $typography="t12">
             일정
           </Text>
-          <Icon name="IconArrowRight" />
+          <M.ScheduleTextWrap>
+            <M.ScheduleText>
+              {startDate} - {endDate}
+            </M.ScheduleText>
+            <Icon name="IconArrowRight" />
+          </M.ScheduleTextWrap>
         </div>
 
         <div className="btn-box">
-          <BaseButton size="large">모임 생성하기</BaseButton>
+          <BaseButton size="large" onClick={handleCreateGroup}>
+            모임 생성하기
+          </BaseButton>
         </div>
       </M.MainContainer>
     </MainPageContainer>
@@ -141,6 +232,7 @@ function MeetAddMainPage() {
 }
 
 export default MeetAddMainPage;
+
 const MainPageContainer = styled.div`
   width: 100%;
   height: 100%;

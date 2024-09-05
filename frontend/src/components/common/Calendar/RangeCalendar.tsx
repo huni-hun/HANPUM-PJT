@@ -19,6 +19,7 @@ interface RangeCalendarProps {
   startDate: string | null;
   endDate: string | null;
   onDateChange: (range: Range) => void;
+  isPickDate?: boolean;
 }
 
 const formatDate = (date: Date | null): string | null => {
@@ -33,6 +34,7 @@ const RangeCalendar = ({
   startDate,
   endDate,
   onDateChange,
+  isPickDate,
 }: RangeCalendarProps) => {
   const [internalRange, setInternalRange] = useState<Range>({
     startDate,
@@ -41,13 +43,21 @@ const RangeCalendar = ({
 
   const handleChange = (event: any) => {
     const { value } = event;
-    const start = value && value[0] ? new Date(value[0]) : null;
-    const end = value && value[1] ? new Date(value[1]) : null;
+    let start: Date | null = null;
+    let end: Date | null = null;
+
+    if (isPickDate) {
+      start = value ? new Date(value) : null;
+      end = null;
+    } else {
+      start = value && value[0] ? new Date(value[0]) : null;
+      end = value && value[1] ? new Date(value[1]) : null;
+    }
 
     const formattedStart = formatDate(start);
     const formattedEnd = formatDate(end);
 
-    // 무한렌더링 방지
+    // Prevent unnecessary state updates
     if (
       formattedStart !== internalRange.startDate ||
       formattedEnd !== internalRange.endDate
@@ -64,24 +74,28 @@ const RangeCalendar = ({
     }
   };
 
-  const today = new Date(); // 오늘 날짜 가져오기
+  const today = new Date();
 
   return (
     <CustomCalendarWrapper>
       <Datepicker
         display="inline"
-        select="range"
+        select={isPickDate ? 'date' : 'range'}
         touchUi={true}
         controls={['calendar']}
         onChange={handleChange}
-        value={[
-          startDate ? new Date(startDate) : undefined,
-          endDate ? new Date(endDate) : undefined,
-        ]}
-        min={today} // 오늘 이후 날짜만 선택 가능하도록 설정
+        value={
+          isPickDate
+            ? [startDate ? new Date(startDate) : undefined]
+            : [
+                startDate ? new Date(startDate) : undefined,
+                endDate ? new Date(endDate) : undefined,
+              ]
+        }
+        min={today}
         invalid={[
           {
-            start: new Date(1900, 0, 1), // 과거의 모든 날짜를 비활성화
+            start: new Date(1900, 0, 1),
             end: today,
           },
         ]}
