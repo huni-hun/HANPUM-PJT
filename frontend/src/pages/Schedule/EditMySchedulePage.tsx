@@ -18,13 +18,21 @@ import BottomTab from '@/components/common/BottomTab/BottomTab';
 import RangeCalendar from '@/components/common/Calendar/RangeCalendar';
 import Button from '@/components/common/Button/Button';
 import { colors } from '@/styles/colorPalette';
+import { PutSchedule } from '@/api/schedule/PUT';
+import { toast } from 'react-toastify';
+
+interface ScheduleData {
+  courseId: number;
+  title: string;
+  startDate: string;
+}
 
 function EditMySchedulePage() {
   const BtnClick = () => {};
   const navigate = useNavigate();
   /** 스케줄 아이디, dday 넘겨받기 */
   const location = useLocation();
-  const { scheduleId, dDay } = location.state || {};
+  const { scheduleId } = location.state || {};
   /** 헤더 설정 열기 */
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [bsType, setBsType] = useState<string>('설정');
@@ -37,21 +45,28 @@ function EditMySchedulePage() {
   });
   /** 날짜 선택 시 vh 늘어나면서 data picker,map 활성화 */
   const [isExpanded, setIsExpanded] = useState(false);
+  const [putSchedule, setPutSchedule] = useState<ScheduleData | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  /** 바텀탭 - 수정 클릭시 */
-  const handleEdit = () => {
-    // navigate('/scheduleEdit');
-  };
+  const postAddSchedule = async () => {
+    try {
+      const startDate = dates.startDate;
 
-  /** 바텀탭 - 삭제 클릭시 */
-  const handleDelete = () => {
-    setIsDeleteModalOpen(true);
-  };
+      // startDate를 "YYYYMMDD" 형식으로 변환
+      const formattedDate = startDate.replace(/-/g, '');
 
-  /** 모달 끄는 함수 */
-  const delteModalClose = () => {
-    setIsDeleteModalOpen(false);
-    setIsOpen(false);
+      const response = await PutSchedule(scheduleId, formattedDate);
+
+      if (response && response.data.status === 'SUCCESS') {
+        setPutSchedule(response.data);
+        navigate('/schedule/main');
+      } else if (response && response.data.status === 'ERROR') {
+        toast.error(response.data.message);
+        setError('일정 생성에 실패했습니다.');
+      }
+    } catch (error) {
+      toast.error('일정 생성에 실패했습니다.');
+    }
   };
 
   /** feed 더미 데이터 */
@@ -102,6 +117,8 @@ function EditMySchedulePage() {
     event.stopPropagation();
   };
 
+  console.log(scheduleId, '??');
+
   /** 임시 데이터 */
   const dummyData = {
     date: [
@@ -118,7 +135,7 @@ function EditMySchedulePage() {
     <ScheduleMainPageContainer>
       <Header
         purpose="route-detail"
-        title={dDay}
+        // title={dDay}
         back={true}
         clickBack={() => navigate(-1)}
         clickOption={() => {
@@ -163,7 +180,7 @@ function EditMySchedulePage() {
                     fontSize={1.6}
                     children="변경"
                     color="#ffffff"
-                    onClick={handlerExpanded}
+                    onClick={postAddSchedule}
                   />
                 </S.NextBtn>
               </div>

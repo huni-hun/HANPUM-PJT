@@ -52,6 +52,16 @@ export async function getRouteReview(id: string) {
   return response;
 }
 
+export async function setRouteLike(id: string) {
+  const response = await api.get(`/api/course/${id}/like`, {
+    headers: {
+      Accept: '*/*',
+    },
+  });
+
+  return response;
+}
+
 // 메인에서 두개 짜리 임시 - 채운
 export async function getMainRouteList(type: string) {
   const { data } = await api.get(

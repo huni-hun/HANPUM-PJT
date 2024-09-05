@@ -77,6 +77,7 @@ export const SchduleTypeContainer = styled.div`
   background-color: #fff;
   position: fixed;
   width: 100%;
+  z-index: 999;
 `;
 
 export const SchduleTypeBox = styled.div`
@@ -188,12 +189,11 @@ export const WeatherContainer = styled.div`
 export const WeatherWrap = styled.div`
   background-color: #7787ab;
   border-radius: 1.5rem;
-  width: 100%;
+  /* width: 100%; */
   height: 22vh;
   display: flex;
   flex-direction: column;
   padding: 1.7rem;
-  box-sizing: border-box;
 
   p {
   }
@@ -212,15 +212,33 @@ export const WeatherContentWrap = styled.div`
   display: flex;
   box-sizing: border-box;
   overflow-x: scroll;
+  height: 100%;
+  justify-content: space-between;
+  flex-shrink: 0;
 `;
 
 export const WeatherContent = styled.div`
   display: flex;
+  flex-shrink: 0;
   flex-direction: column;
+  gap: 0.3rem;
   border: 1px solid red;
   box-sizing: border-box;
+  margin-right: 2rem;
+  width: 7rem;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 500;
 
   p {
+    width: 100%;
+  }
+  img {
+    width: 100%;
+    height: 8vh;
   }
 `;
 
@@ -290,4 +308,19 @@ export const NoData = styled.div`
   /* height: 30vh; */
   padding: 2rem 1rem;
   font-size: 1.5rem;
+`;
+
+export const Precipitation = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  height: 2vh;
+  border: 1px solid red;
+  .precipitation {
+    width: 3vw;
+  }
+  img {
+    width: 2vw;
+  }
 `;
