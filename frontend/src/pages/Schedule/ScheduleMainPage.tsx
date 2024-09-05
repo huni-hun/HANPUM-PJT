@@ -240,7 +240,7 @@ function ScheduleMainPage() {
     const fetchData = async () => {
       try {
         const response = await getRunningScheduleData();
-
+        console.log(response);
         if (response && response.status === 'SUCCESS') {
           setRunningScheduleData(response.data);
         } else {
@@ -302,9 +302,10 @@ function ScheduleMainPage() {
     fetchData();
 
     if (routeDayData.length === 0) {
+      /*경로 상세 정보 가져오기 */
+      /*이 정보 안가져 오면 총 몇일인지 알 수 없어서 가져와야 됩니다.*/
       getRouteDetail('1' as string).then((result) => {
         if (result.data.status !== 'ERROR' && result.status === 200) {
-          let num = 0;
           let rd: RouteDetailProps = {
             routeName: result.data.data.course.courseName,
             routeContent: result.data.data.course.content,
@@ -325,14 +326,7 @@ function ScheduleMainPage() {
               totalDuration: ele.total_duration,
             };
             setRouteDayData((pre) => [...pre, data]);
-            num += ele.total_distance;
           });
-          let type: string[] = [];
-          result.data.data.course.courseTypes.map((ele: string) => {
-            type.push(ele);
-          });
-          setRouteType(type);
-          setTotalDistance(num);
         }
 
         setLoading(true);
@@ -341,8 +335,10 @@ function ScheduleMainPage() {
   }, []);
 
   useEffect(() => {
+    /* 맵에 마커, 선 초기화 */
     setSe([]);
     setMarker([]);
+    /*경로 일차별 경유지 정보 가져오기 */
     getRouteDayDetail('1' as string, selectedDay).then((result) => {
       if (result.status === 200) {
         let arr: DaysOfRouteProps[] = [];
@@ -358,6 +354,7 @@ function ScheduleMainPage() {
             longitude: ele.lon,
           };
           arr.push(data);
+          /* 다중 경유지 정보, 시작점, 도착점 저장 */
           if (ele.type === '경유지') {
             let line: MapLinePathProps = {
               name: ele.name,
@@ -382,7 +379,7 @@ function ScheduleMainPage() {
         arr.sort((a: any, b: any) => a.routePoint - b.routePoint);
         setDayOfRoute(arr);
         setLinePath(lines);
-
+        /* 지도 중심점 잡기 */
         setLatitude(arr[0].latitude);
         setLongitude(arr[0].longitude);
       }
@@ -392,6 +389,7 @@ function ScheduleMainPage() {
   useEffect(() => {
     if (linePath.length > 0) {
       const mapLines: any[] = [];
+      /* 다중 경유지 경로 가져오기 */
       GetLineData(linePath, se[0], se[1])
         .then((res) => {
           if (res.status === 200 && res.data.status === 'SUCCESS') {
