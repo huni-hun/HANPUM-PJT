@@ -18,7 +18,7 @@ export const SchduleContainer = styled.div`
 `;
 
 export const DateWrap = styled.div<{ $isExpanded?: boolean }>`
-  height: ${({ $isExpanded }) => ($isExpanded ? '120vw' : '20vw')};
+  height: ${({ $isExpanded }) => ($isExpanded ? '120vw' : '24vw')};
   width: 96%;
   background-color: #fff;
   border-radius: 2rem;
@@ -50,7 +50,7 @@ export const DatePicker = styled.div`
 `;
 
 export const RouteWrap = styled.div<{ $isExpanded: boolean }>`
-  height: ${({ $isExpanded }) => ($isExpanded ? '30vw' : '100vw')};
+  height: ${({ $isExpanded }) => ($isExpanded ? '24vw' : '100vw')};
   width: 96%;
   background-color: #fff;
   border-radius: 2rem;

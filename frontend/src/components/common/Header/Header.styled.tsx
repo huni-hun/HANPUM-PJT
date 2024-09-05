@@ -4,6 +4,7 @@ import { colors } from '@styles/colorPalette';
 interface HeaderWrapperProps {
   $isShadow?: boolean;
   $isborder?: boolean;
+  $isGrey?: boolean;
 }
 
 export const HeaderWrapper = styled.div<HeaderWrapperProps>`
@@ -12,7 +13,7 @@ export const HeaderWrapper = styled.div<HeaderWrapperProps>`
   align-items: center;
   gap: 2rem;
   padding: 0 2rem;
-  background-color: ${colors.white};
+  background-color: ${({ $isGrey }) => ($isGrey ? '' : colors.white)};
   position: sticky;
   top: 0;
   z-index: 10;

@@ -3,7 +3,7 @@ import * as R from '@/components/Style/Route/RouteListSearchPage.styled';
 import { colors } from '@/styles/colorPalette';
 import Button from '@/components/common/Button/Button';
 import { Slider } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   getRouteSearchList,
   getRouteSearchListWithProps,
@@ -24,10 +24,9 @@ function RouteListSearchPage() {
 
   const searchHandler = () => {
     if (dateValue > 0 || sliderValue > 0 || selectType.length > 0) {
-      let distance = `&maxDistance=${sliderValue}`;
-      let days = `&maxDays=${dateValue}`;
+      let distance = sliderValue > 0 ? `&maxDistance=${sliderValue}` : '';
+      let days = dateValue > 0 ? `&maxDays=${dateValue}` : '';
       let types = `&selectedTypes=${selectType.join(',')}`;
-
       const response = getRouteSearchListWithProps(
         keyword,
         distance,
@@ -37,6 +36,26 @@ function RouteListSearchPage() {
 
       response.then((res) => {
         if (res.status === 200) {
+          res.data.data.courseListMap.searchResult.map((ele: any) => {
+            let data: RouteListProps = {
+              routeName: ele.courseName,
+              routeContent: ele.content,
+              routeScore: ele.scoreAvg,
+              routeComment: ele.commentCnt,
+              routeId: ele.courseId,
+              img: ele.backgroundImg,
+              writeState: ele.writeState,
+              openState: ele.openState,
+              memberId: ele.memberId,
+              writeDate: ele.writeDate,
+              start: ele.startPoint,
+              end: ele.endPoint,
+              totalDistance: Math.round(ele.totalDistance),
+              totalDays: ele.totalDays,
+              interestFlag: ele.interestFlag,
+            };
+            setSearchResult((pre) => [...pre, data]);
+          });
           setSearchSucess(true);
         }
       });
@@ -92,6 +111,13 @@ function RouteListSearchPage() {
     '서해랑길코스',
     '힐링',
   ];
+
+  useEffect(() => {
+    if (!searchSucess) {
+      setKeyword('');
+      setSearchResult([]);
+    }
+  }, [searchSucess]);
 
   return searchSucess ? (
     <RouteListSearchResult

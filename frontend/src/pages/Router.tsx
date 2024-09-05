@@ -42,6 +42,8 @@ import {
   ConfigLayout,
   RouteDetailRetouchPage,
   ConfigDetailPage,
+  MeetAddSchedulePage,
+  MeetAddDeadLinePage,
 } from './index'; // index.tsx에서 컴포넌트를 가져옵니다.
 
 // import useIsAuth from '@/hooks/auth/useIsAuth';
@@ -90,6 +92,15 @@ export default function Router() {
           <Route path="/meet/request" element={<MeetRequest />} />
           <Route path="/meet/accept" element={<MeetAcceptPage />} />
           <Route path="/meet/addMain" element={<MeetAddMainPage />} />
+
+          <Route
+            path="/meet/addMain/addSchedule"
+            element={<MeetAddSchedulePage />}
+          />
+          <Route
+            path="/meet/addMain/AddDeadline"
+            element={<MeetAddDeadLinePage />}
+          />
 
           {/* <Route path="*" element={<Navigate to="/" />} /> */}
 
