@@ -29,7 +29,7 @@ function RequestManageList() {
       try {
         const response = await GetMeetApplyList(10);
         if (response && response.status === 'SUCCESS') {
-          setListData(response.data.groupMemberResList || []);
+          setListData(response.data.groupApplyResList || []);
         } else {
           console.error('error');
         }
@@ -43,16 +43,15 @@ function RequestManageList() {
     fetchData();
   }, []);
 
+  const clickMember = (memberId: number) => {
+    navigate('/meet/accept', { state: { memberId } });
+  };
+
   return (
     <MainPageContainer>
-      <Header
-        purpose="result"
-        title="모임 신청 관리"
-        clickBack={() => navigate(-1)}
-      />
-      {listData && (
-        <MemberList memberInfo={listData} onClick={(id) => console.log(id)} />
-      )}
+      <Header purpose="result" title="모임 신청 관리" clickBack={() => {}} />
+
+      <MemberList memberInfo={listData} onClick={clickMember} />
     </MainPageContainer>
   );
 }

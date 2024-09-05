@@ -18,7 +18,15 @@ export const ProfileBox = styled.div`
   box-sizing: border-box;
 `;
 
-export const Img = styled.div``;
+export const Img = styled.div`
+  border: #787878 1px solid;
+  border-radius: 50%;
+  box-sizing: border-box;
+  img {
+    width: 20vw;
+    border-radius: 50%;
+  }
+`;
 
 export const Name = styled.div`
   font-size: 1.7rem;

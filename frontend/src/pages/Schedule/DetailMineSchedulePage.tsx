@@ -196,7 +196,8 @@ function DetailMineSchedulePage() {
       )}
       {isDeleteModalOpen && (
         <MeetModal
-          onClick={delteModalClose}
+          onCancel={delteModalClose}
+          onConfirm={() => {}}
           title="삭제하시겠어요?"
           content={'삭제하면 복구가 어렵습니다.'}
         />

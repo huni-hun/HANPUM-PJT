@@ -6,7 +6,8 @@
 export interface MeetModalProps {
   title?: string;
   content?: string;
-  onClick?: () => void;
+  onConfirm: () => void;
+  onCancel: () => void;
 }
 export interface MemberInfo {
   memberId?: number;
@@ -18,7 +19,19 @@ export interface MemberInfo {
 
 export interface MemberListProps {
   memberInfo: MemberInfo[];
-  onClick?: (name: string) => void;
+  onClick?: (memberId: number) => void;
+}
+
+export interface MemberDetailDataProps {
+  applyPost: string | null;
+  birthDate: string;
+  gender: 'MAN' | 'WOMAN';
+  groupMemberId: number;
+  joinType: string;
+  memberId: number;
+  name: string;
+  nickname: string;
+  profilePicture: string;
 }
 
 export interface MeetInfo {

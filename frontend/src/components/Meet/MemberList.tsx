@@ -5,10 +5,10 @@ import * as M from '../Style/Meet/MemberList.styled';
 const MemberList = ({ memberInfo = [], onClick }: MemberListProps) => {
   return (
     <M.ListContainer>
-      {memberInfo?.map((member, index) => (
+      {memberInfo.map((member, index) => (
         <M.ListItem
           key={index}
-          onClick={() => onClick && onClick(String(member.memberId ?? ''))}
+          onClick={() => onClick && onClick(member.memberId ?? 0)}
         >
           <M.MemberImg>
             <img src={member.profilePicture} alt={`${member.nickname}`} />
