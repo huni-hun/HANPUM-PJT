@@ -53,6 +53,9 @@ function RouteListSearchResult(props: RouteListSearchResultProps) {
             score={ele.routeScore}
             review={ele.routeComment}
             img={ele.img}
+            interestFlag={ele.interestFlag}
+            totalDays={ele.totalDays}
+            routeId={String(ele.routeId)}
           />
         ))}
       </R.MainContainer>

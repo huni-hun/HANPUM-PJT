@@ -37,7 +37,7 @@ export const ContentBox = styled.div`
 `;
 
 export const Img = styled.img`
-  width: 25%;
+  width: 9rem;
   height: 100%;
   border-radius: 1.2rem;
 `;
