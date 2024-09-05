@@ -2,6 +2,7 @@ import Flex from '@/components/common/Flex';
 import Header from '@/components/common/Header/Header';
 import Text from '@/components/common/Text';
 import TextLineBreaks from '@/components/common/TextLineBreaks';
+import TermsText from '@/components/My/config/TermsText';
 import { ANNOUNCEMENT, POLICY } from '@/constants';
 import { colors } from '@/styles/colorPalette';
 import { returnConfigTitle } from '@/utils/util';
@@ -25,7 +26,38 @@ function ConfigDetailPage() {
     return [];
   };
 
+  // console.log(paramCategory, id);
+
   const filteredData = configInfoList().filter((item) => item.id === id);
+  // console.log(filteredData);
+
+  const renderAnnouncement = () =>
+    filteredData.map((announcement) => (
+      <Flex key={announcement.id} direction="column">
+        <Text $typography="t20" $bold={true}>
+          {announcement.title}
+        </Text>
+        <Text
+          $typography="t12"
+          color="grey2"
+          style={{ margin: '6px 0px 28px' }}
+        >
+          {announcement.date}
+        </Text>
+        <p>
+          <TextLineBreaks>{announcement.desc || ''}</TextLineBreaks>
+        </p>
+      </Flex>
+    ));
+
+  const renderPolicy = () => {
+    if (id === '01') {
+      return <TermsText />;
+    }
+    if (id === '02') {
+      return <div>개인정보</div>;
+    }
+  };
 
   return (
     <ConfigDetailPageContainer>
@@ -38,23 +70,8 @@ function ConfigDetailPage() {
       />
 
       <div className="container">
-        {filteredData.map((category) => (
-          <Flex key={category.id} direction="column">
-            <Text $typography="t20" $bold={true}>
-              {category.title}
-            </Text>
-            <Text
-              $typography="t12"
-              color="grey2"
-              style={{ margin: '6px 0px 28px' }}
-            >
-              {category.date}
-            </Text>
-            <p>
-              <TextLineBreaks>{category.desc}</TextLineBreaks>
-            </p>
-          </Flex>
-        ))}
+        {paramCategory === 'announcement' && renderAnnouncement()}
+        {paramCategory === 'policy' && renderPolicy()}
       </div>
     </ConfigDetailPageContainer>
   );
@@ -69,6 +86,7 @@ const ConfigDetailPageContainer = styled.div`
 
   .container {
     padding: 20px 29px 20px 24px;
+    background-color: ${colors.white};
     p {
       font-size: 1.4rem;
     }

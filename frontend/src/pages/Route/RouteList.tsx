@@ -12,6 +12,8 @@ import CardLong from '@/components/common/CardLong/CardLong';
 
 function RouteList() {
   const [arr, setArr] = useState<RouteListProps[]>([]);
+  const [arrC, setArrC] = useState<RouteListProps[]>([]);
+  const [arrD, setArrD] = useState<RouteListProps[]>([]);
   const [morePageOpen, setMoreOpenPage] = useState<boolean>(false);
   const navigator = useNavigate();
 
@@ -35,9 +37,62 @@ function RouteList() {
             end: ele.endPoint,
             totalDistance: Math.round(ele.totalDistance),
             totalDays: ele.totalDays,
+            interestFlag: ele.interestFlag,
           };
 
           setArr((pre) => [...pre, data]);
+        });
+      }
+    });
+
+    getRouteList('초보자').then((result) => {
+      if (result.status === 200) {
+        result.data.data.courseListMap['초보자'].map((ele: any) => {
+          let data: RouteListProps = {
+            routeName: ele.courseName,
+            routeContent: ele.content,
+            routeScore: ele.scoreAvg,
+            routeComment: ele.commentCnt,
+            routeId: ele.courseId,
+            img: ele.backgroundImg,
+            writeState: ele.writeState,
+            openState: ele.openState,
+            memberId: ele.memberId,
+            writeDate: ele.writeDate,
+            start: ele.startPoint,
+            end: ele.endPoint,
+            totalDistance: Math.round(ele.totalDistance),
+            totalDays: ele.totalDays,
+            interestFlag: ele.interestFlag,
+          };
+
+          setArrC((pre) => [...pre, data]);
+        });
+      }
+    });
+
+    getRouteList('숙련자').then((result) => {
+      if (result.status === 200) {
+        result.data.data.courseListMap['숙련자'].map((ele: any) => {
+          let data: RouteListProps = {
+            routeName: ele.courseName,
+            routeContent: ele.content,
+            routeScore: ele.scoreAvg,
+            routeComment: ele.commentCnt,
+            routeId: ele.courseId,
+            img: ele.backgroundImg,
+            writeState: ele.writeState,
+            openState: ele.openState,
+            memberId: ele.memberId,
+            writeDate: ele.writeDate,
+            start: ele.startPoint,
+            end: ele.endPoint,
+            totalDistance: Math.round(ele.totalDistance),
+            totalDays: ele.totalDays,
+            interestFlag: ele.interestFlag,
+          };
+
+          setArrD((pre) => [...pre, data]);
         });
       }
     });
@@ -76,16 +131,9 @@ function RouteList() {
           <R.CardContainer>
             <R.BlankBox />
             <R.OverFlow>
-              {arr.length > 0 && (
-                <CardLong
-                  key={arr[0].routeId}
-                  hasHeart={true}
-                  item={arr[0]}
-                  onClickCard={() =>
-                    navigator(`/route/detail/${arr[0].routeId}`)
-                  }
-                />
-              )}
+              {arr.map((ele) => (
+                <RouteCard {...ele} key={ele.routeId} />
+              ))}
             </R.OverFlow>
             <R.BlankBox />
           </R.CardContainer>
@@ -113,11 +161,11 @@ function RouteList() {
         </R.RouteCardContainer>
         <R.RouteCardContainer>
           <R.RouteTypeHeader>
-            <R.TypeTitle>지금 가장 인기 있는 코스</R.TypeTitle>
+            <R.TypeTitle>초보자를 위한 코스</R.TypeTitle>
             <R.MoreButton>
               <R.MoreText
                 onClick={() => {
-                  clickMoreBtn('해안길');
+                  clickMoreBtn('초보자');
                 }}
               >
                 더보기
@@ -128,7 +176,7 @@ function RouteList() {
           <R.CardContainer>
             <R.BlankBox />
             <R.OverFlow>
-              {arr.map((ele) => (
+              {arrC.map((ele) => (
                 <RouteCard {...ele} />
               ))}
             </R.OverFlow>
@@ -136,11 +184,11 @@ function RouteList() {
         </R.RouteCardContainer>
         <R.RouteCardContainer>
           <R.RouteTypeHeader>
-            <R.TypeTitle>지금 가장 인기 있는 코스</R.TypeTitle>
+            <R.TypeTitle>숙련자를 위한 코스</R.TypeTitle>
             <R.MoreButton>
               <R.MoreText
                 onClick={() => {
-                  clickMoreBtn('해안길');
+                  clickMoreBtn('숙련자');
                 }}
               >
                 더보기
@@ -151,7 +199,7 @@ function RouteList() {
           <R.CardContainer>
             <R.BlankBox />
             <R.OverFlow>
-              {arr.map((ele) => (
+              {arrD.map((ele) => (
                 <RouteCard {...ele} />
               ))}
             </R.OverFlow>

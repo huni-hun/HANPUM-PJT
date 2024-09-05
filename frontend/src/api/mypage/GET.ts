@@ -27,3 +27,10 @@ export async function GetSelfRouteList() {
 
   return data;
 }
+
+// 내가 사용한 경로 리스트 조회 TODO
+export async function GetUseRouteList() {
+  const { data } = await api.get('/api/member/use-course');
+
+  return data;
+}

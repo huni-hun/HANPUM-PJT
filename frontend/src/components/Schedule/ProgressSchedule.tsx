@@ -31,7 +31,9 @@ const ProgressSchedule = ({
           </R.PlaceBox>
           <R.DistanceBox>
             <R.DistanceText>총 이동거리</R.DistanceText>
-            <R.Distance>{totalDistance}km</R.Distance>
+            <R.Distance>
+              <span className="bold-text">{totalDistance}km</span>
+            </R.Distance>
           </R.DistanceBox>
         </R.StartDateBox>
       </R.RouteDateBox>

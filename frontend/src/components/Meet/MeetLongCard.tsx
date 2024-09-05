@@ -7,6 +7,7 @@ import Text from '../common/Text';
 import styled from 'styled-components';
 
 function MeetLongCard({ data }: { data: MeetInfo }) {
+  console.log(data);
   return (
     <MeetLongCardContainer>
       <img src={data.groupImg} alt="" />

@@ -42,6 +42,7 @@ function MeetList() {
   const { data: myMeet } = useQuery('getmyMeet', GetMyMeet, {
     onSuccess: (res) => {
       if (res.status === STATUS.success) {
+        console.log(res);
       } else if (res.status === STATUS.error) {
         toast.error(res.message);
       }
@@ -50,6 +51,22 @@ function MeetList() {
       toast.error(error.message);
     },
   });
+
+  // const myMeet = [
+  //   {endDate: 20240120;
+  //     endPoint: '의정부';
+  //     groupId: 1;
+  //     groupImg: string;
+  //     like: boolean;
+  //     likeCount: number;
+  //     startDate: string;
+  //     startPoint: string;
+  //     title: string;
+  //     totalDays: number;
+  //     totalDistance: number;
+  //     recruitedCount: number;
+  //     recruitmentCount: number;}
+  // ];
 
   // 모임 리스트 (무한 스크롤)
   const {

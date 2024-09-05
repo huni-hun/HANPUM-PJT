@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 public class ScheduleResDto {
     Long scheduleId;
+    String content;
     String backgroundImg;
     String title;
     String type;

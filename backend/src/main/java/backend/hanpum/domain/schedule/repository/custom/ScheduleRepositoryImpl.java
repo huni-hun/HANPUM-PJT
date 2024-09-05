@@ -5,6 +5,7 @@ import backend.hanpum.domain.course.enums.CourseTypes;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.domain.schedule.dto.responseDto.*;
+import backend.hanpum.domain.schedule.entity.Schedule;
 import backend.hanpum.exception.exception.auth.MemberNotFoundException;
 import backend.hanpum.exception.exception.schedule.ScheduleDayNotFoundException;
 import com.querydsl.core.types.Projections;
@@ -34,6 +35,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         return Optional.ofNullable(query.select(
                         Projections.constructor(ScheduleResDto.class,
                                 schedule.id,
+                                schedule.course.content,
                                 schedule.course.backgroundImg,
                                 schedule.course.courseName,
                                 schedule.type,
@@ -56,6 +58,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         return Optional.ofNullable(query.select(
                         Projections.constructor(ScheduleResDto.class,
                                 schedule.id,
+                                schedule.course.content,
                                 schedule.course.backgroundImg,
                                 schedule.course.courseName,
                                 schedule.type,
@@ -102,6 +105,35 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         return Optional.ofNullable(scheduleDetailResDto);
     }
 
+    @Override
+    public Optional<GroupScheduleResDto> getGroupSchedule(Long memberId, Long groupId, Long scheduleId, Long courseId) {
+        GroupScheduleResDto groupScheduleResDto = query.select(Projections.constructor(GroupScheduleResDto.class,
+                        schedule.id,
+                        schedule.course.content,
+                        schedule.course.backgroundImg,
+                        schedule.course.courseName,
+                        schedule.type,
+                        schedule.course.startPoint,
+                        schedule.course.endPoint,
+                        schedule.startDate,
+                        schedule.endDate,
+                        schedule.state,
+                        schedule.course.totalDistance
+                )).from(schedule)
+                .where(schedule.id.eq(scheduleId)
+                        .and(schedule.group.groupId.eq(groupId)).and(schedule.type.eq("group")))
+                .fetchOne();
+
+        if (groupScheduleResDto != null) {
+            List<ScheduleDayResDto> scheduleDayResDtoList = getScheduleDayResDtoList(memberId, scheduleId).orElseThrow(ScheduleDayNotFoundException::new);
+            groupScheduleResDto.setScheduleDayResDtoList(scheduleDayResDtoList);
+            List<CourseTypes> courseTypes = getCourseTypes(courseId);
+            groupScheduleResDto.setCourseTypes(courseTypes);
+        }
+
+        return Optional.ofNullable(groupScheduleResDto);
+    }
+
 
     /* case 1 */
     @Override
@@ -113,9 +145,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                                 scheduleDay.date,
                                 scheduleDay.visit,
                                 scheduleDay.running,
-                                scheduleDay.courseDay.totalDistance,
-                                scheduleDay.courseDay.totalDuration,
-                                scheduleDay.courseDay.totalCalorie
+                                scheduleDay.courseDay.totalDistance
                         ))
                 .from(scheduleDay)
                 .leftJoin(scheduleDay.courseDay, courseDay)
@@ -145,14 +175,11 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                                 scheduleDay.date,
                                 scheduleDay.visit,
                                 scheduleDay.running,
-                                scheduleDay.courseDay.totalDistance,
-                                scheduleDay.courseDay.totalDuration,
-                                scheduleDay.courseDay.totalCalorie
+                                scheduleDay.courseDay.totalDistance
                         ))
                 .from(scheduleDay)
                 .leftJoin(scheduleDay.courseDay, courseDay)
-                .where(scheduleDay.schedule.id.eq(scheduleId)
-                        .and(scheduleDay.schedule.member.memberId.eq(memberId)))
+                .where(scheduleDay.schedule.id.eq(scheduleId))
                 .orderBy(scheduleDay.courseDay.dayNumber.asc())
                 .fetch();
 
@@ -171,6 +198,14 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         return Optional.ofNullable(scheduleDays);
     }
 
+    private BooleanExpression checkPrivateOrGroup(Long memberId, Long groupId) {
+        if (memberId == null) {
+            return scheduleDay.schedule.member.memberId.eq(memberId);
+        } else {
+            return scheduleDay.schedule.group.groupId.eq(groupId);
+        }
+    }
+
     private List<ScheduleWayPointResDto> getScheduleWayPointResDtoList(Long scheduleDayId) {
         return query.select(Projections.constructor(ScheduleWayPointResDto.class,
                         scheduleWayPoint.id,
@@ -183,6 +218,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .from(scheduleWayPoint)
                 .leftJoin(scheduleWayPoint.waypoint, waypoint)
                 .where(scheduleWayPoint.scheduleDay.id.eq(scheduleDayId))
+                .orderBy(scheduleWayPoint.waypoint.pointNumber.asc())
                 .fetch();
     }
 
@@ -210,6 +246,17 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .fetch();
         return courseTypes;
     }
+
+    @Override
+    public List<Schedule> findAllScheduleByMemberId(Long memberId) {
+        List<Schedule> result = query
+                .select(schedule)
+                .from(schedule)
+                .where(memberCondition(memberId))
+                .fetch();
+        return result;
+    }
+
 
     /* case 2 */
 //    @Override

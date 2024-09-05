@@ -1,3 +1,4 @@
+import { Config } from '@/models/config';
 import { LabelValue, Term } from '@/models/signup';
 
 export const DEFAULT_SIZE = 20;
@@ -34,7 +35,7 @@ export const STATUS = {
   fail: 'FAIL',
 };
 
-export const ANNOUNCEMENT = [
+export const ANNOUNCEMENT: Config[] = [
   {
     id: '01',
     title: '한품 정식 출시 안내',
@@ -55,18 +56,14 @@ export const ANNOUNCEMENT = [
   },
 ];
 
-export const POLICY = [
+export const POLICY: Config[] = [
   {
     id: '01',
     title: '한품 서비스 이용약관',
-    date: '2023.08.18 12 : 34',
-    desc: '이용약관 ~~',
   },
   {
     id: '02',
     title: '개인정보 처리 방침',
-    date: '2023.08.18 13 : 34',
-    desc: '개인정보 ~~',
   },
 ];
 

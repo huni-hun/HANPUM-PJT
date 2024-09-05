@@ -32,6 +32,7 @@ import {
   RouteDetailProps,
 } from '@/models/route';
 import {
+  getGroupScheduleData,
   getMyScheduleData,
   getRunningScheduleData,
   getWeather,
@@ -50,6 +51,10 @@ function ScheduleMainPage() {
   /** 내일정 */
   const [myScheduleListData, setMyScheduleListData] =
     useState<SchduleCardProps | null>(null);
+  /** 내일정 */
+  const [meetListData, setMeetListData] = useState<RunningScheduleProps | null>(
+    null,
+  );
   const [error, setError] = useState<string | null>(null);
   /** 위치 가져오기*/
   const [lat, setLat] = useState<number | null>(null);
@@ -142,6 +147,17 @@ function ScheduleMainPage() {
     routeUserImg: memberImg,
     routeName: runningScheduleData?.title,
     routeContent: runningScheduleData?.content,
+    routeTypes: runningScheduleData?.courseTypes || [],
+  };
+
+  console.log(runningScheduleData?.courseTypes, '왜 ');
+
+  const meetFeedData = {
+    routeFeedImg: meetListData?.backgroundImg || goyuMY,
+    routeUserImg: memberImg,
+    routeName: meetListData?.title,
+    routeContent: meetListData?.content,
+    routeTypes: meetListData?.courseTypes || [],
   };
 
   /** feed 더미 데이터 */
@@ -206,9 +222,7 @@ function ScheduleMainPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = '';
-
-        const response = await getRunningScheduleData(token);
+        const response = await getRunningScheduleData();
 
         if (response && response.status === 'SUCCESS') {
           setRunningScheduleData(response.data);
@@ -216,10 +230,9 @@ function ScheduleMainPage() {
           console.error(error);
         }
       } catch (error: unknown) {
-        // unknown으로 지정
         console.error('Fetch Error:', error);
 
-        toast.error((error as AxiosError).message); // 타입 단언 사용
+        toast.error((error as AxiosError).message);
       } finally {
         setLoading(false);
       }
@@ -232,9 +245,7 @@ function ScheduleMainPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = '';
-
-        const response = await getMyScheduleData(token);
+        const response = await getMyScheduleData();
 
         if (response && response.status === 'SUCCESS') {
           setMyScheduleListData(response.data);
@@ -251,14 +262,35 @@ function ScheduleMainPage() {
     fetchData();
   }, []);
 
+  /** 모임일정 */
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getGroupScheduleData();
+
+        if (response && response.status === 'SUCCESS') {
+          setMeetListData(response.data);
+        } else {
+          console.error(error);
+        }
+      } catch (error: unknown) {
+        console.error('Fetch Error:', error);
+
+        toast.error((error as AxiosError).message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   /** 날씨 */
   useEffect(() => {
     const fetchData = async () => {
       if (lat !== null && lon !== null) {
         try {
-          const token = '';
-
-          const response = await getWeather(lat, lon, token);
+          const response = await getWeather(lat, lon);
 
           if (response && response.status === 'SUCCESS') {
             setWeatherData(response.data);
@@ -351,7 +383,6 @@ function ScheduleMainPage() {
       <Header
         purpose="user"
         clickBack={() => navigate(-1)}
-        $isShadow
         $isborder={true}
         plusBtnclick={() => navigate('/schedule/addSchedule')}
       />
@@ -477,7 +508,6 @@ function ScheduleMainPage() {
                 );
 
                 const dDay = calculateDDay(data.startDate || '');
-
                 const formattedStartDate = formatDate(data.startDate || '');
                 const formattedEndDate = formatDate(data.endDate || '');
 
@@ -511,12 +541,13 @@ function ScheduleMainPage() {
               <Feed routeData={feedData} isUserContainer />
               <FeedInfo
                 feedInfoTitle="모임 일정 정보"
-                departuresPlace={dummyFeedInfoData.departuresPlace}
-                arrivalsPlace={dummyFeedInfoData.arrivalsPlace}
-                startDate={dummyFeedInfoData.startDate}
-                endDate={dummyFeedInfoData.endDate}
-                totalDistance={dummyFeedInfoData.totalDistance}
-                dayData={dummyFeedInfoData.dayData}
+                departuresPlace={feedInfoProps.departuresPlace}
+                arrivalsPlace={feedInfoProps.arrivalsPlace}
+                startDate={formatDate(meetListData?.startDate || '')}
+                endDate={formatDate(meetListData?.endDate || '-')}
+                totalDistance={feedInfoProps.totalDistance}
+                dayData={feedInfoProps.dayData}
+                percentage={feedInfoProps.percentage}
               />
             </R.RouteInfoContainer>
             {/* 지도 및 하위 컴포넌트 container */}

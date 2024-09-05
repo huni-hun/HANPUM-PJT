@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface CourseService {
-    CourseListMapResDto getCourseList(CourseTypes targetCourse, Double maxDistance, Integer maxDays, List<CourseTypes> selectedTypes, String keyword, Pageable pageable);
+    CourseListMapResDto getCourseList(CourseTypes targetCourse, Double maxDistance, Integer maxDays, List<CourseTypes> selectedTypes, String keyword, Pageable pageable, Long memberId);
     void makeCourse(Long memberId, MultipartFile multipartFile, MakeCourseReqDto makeCourseReqDto);
     void editCourse(Long memberId, MultipartFile multipartFile, EditCourseReqDto editCourseReqDto);
     void deleteCourse(Long memberId, Long courseId);

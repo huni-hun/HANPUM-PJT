@@ -1,10 +1,8 @@
 package backend.hanpum.domain.schedule.dto.responseDto;
 
+import backend.hanpum.domain.course.enums.CourseTypes;
 import backend.hanpum.domain.group.dto.responseDto.GroupMemberResDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -14,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class GroupScheduleResDto {
     Long scheduleId;
+    String content;
     String backgroundImg;
     String title;
     String type;
@@ -22,5 +21,38 @@ public class GroupScheduleResDto {
     String startDate;
     String endDate;
     int state;
+    Double totalDistance;
+    @Setter
+    List<CourseTypes> courseTypes;
+    @Setter
+    List<ScheduleDayResDto> scheduleDayResDtoList;
+    @Setter
     List<GroupMemberResDto> groupMemberResDtoList;
+
+    public GroupScheduleResDto (Long scheduleId,
+                                 String content,
+                                 String backgroundImg,
+                                 String title,
+                                 String type,
+                                 String startPoint,
+                                 String endPoint,
+                                 String startDate,
+                                 String endDate,
+                                 int state,
+                                 Double totalDistance
+//                                                     List<CourseTypes> courseTypes
+    ) {
+        this.scheduleId = scheduleId;
+        this.content = content;
+        this.backgroundImg = backgroundImg;
+        this.title = title;
+        this.type = type;
+        this.startPoint = startPoint;
+        this.endPoint = endPoint;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.state = state;
+        this.totalDistance = totalDistance;
+//        this.courseTypes = courseTypes;
+    }
 }

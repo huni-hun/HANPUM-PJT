@@ -6,6 +6,7 @@ import SunIcon from '@/assets/icons/weather_sun.svg';
 import SunCloudsIcon from '@/assets/icons/weather_sun_clouds.svg';
 import RainyIcon from '@/assets/icons/weather_rainy.svg';
 import CloudsIcon from '@/assets/icons/weather_clouds.svg';
+import PrecipitIcon from '@/assets/icons/precipitation.svg';
 
 interface WeatherScheduleProps {
   logcation?: string;
@@ -21,12 +22,15 @@ const WeatherSchedule = ({
   message,
 }: WeatherScheduleProps) => {
   // 현재 시간의 am/pm을 계산하는 함수
-  const formatTime = (timeString: string) => {
-    const [hours, minutes] = timeString.split(':').map(Number);
-    const period = hours >= 12 ? 'PM' : 'AM';
-    const formattedHours = hours % 12 || 12;
-    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-    return `${formattedHours}:${formattedMinutes} ${period}`;
+  const formatTime = (time: string): string => {
+    if (time.length !== 4) return time;
+
+    const hour = parseInt(time.substring(0, 2), 10);
+    const minute = time.substring(2);
+    const period = hour < 12 ? 'AM' : 'PM';
+    const formattedHour = hour % 12 || 12;
+
+    return `${period} ${formattedHour}:${minute}`;
   };
 
   // 날씨 상태에 따른 아이콘 선택
@@ -43,6 +47,10 @@ const WeatherSchedule = ({
     }
   };
 
+  const formatPrecipitation = (precipitation: string): string => {
+    return precipitation.replace(/(?<=\d)mm$/, '');
+  };
+
   return (
     <S.WeatherContainer>
       <S.WeatherWrap>
@@ -56,6 +64,17 @@ const WeatherSchedule = ({
               <p>
                 <img src={getWeatherIcon(data.nowWeather)} />
               </p>
+              <p>
+                <span>{data.nowTemperature}</span>
+              </p>
+              <S.Precipitation>
+                <p className="precipitation">
+                  <img src={PrecipitIcon} />
+                </p>
+                <p>
+                  <p>{formatPrecipitation(data.precipitation || '-')}</p>
+                </p>
+              </S.Precipitation>
             </S.WeatherContent>
           ))}
         </S.WeatherContentWrap>

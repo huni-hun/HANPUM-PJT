@@ -35,7 +35,9 @@ function DetailMineSchedulePage() {
 
   /** 바텀탭 - 수정 클릭시 */
   const handleEdit = () => {
-    navigate('/schedule/edit');
+    navigate(`/schedule/edit`, {
+      state: { scheduleId },
+    });
   };
 
   /** 바텀탭 - 삭제 클릭시 */
@@ -80,9 +82,7 @@ function DetailMineSchedulePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = '';
-
-        const response = await getMyScheduleDetailData(scheduleId, token);
+        const response = await getMyScheduleDetailData(scheduleId);
 
         if (response && response.status === 'SUCCESS') {
           setMyScheduleListData(response.data);
