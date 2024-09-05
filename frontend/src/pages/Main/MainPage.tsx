@@ -27,7 +27,11 @@ import { getMySchedule, getMyScheduleData } from '@/api/schedule/GET';
 import { STATUS } from '@/constants';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
-import { addInterestRoute, getMainRouteList } from '@/api/route/GET';
+import {
+  addInterestRoute,
+  getMainRouteList,
+  getRouteList,
+} from '@/api/route/GET';
 import { Root } from '@/models/root';
 import { MeetInfo, MeetPageAble, MeetRequestDto } from '@/models/meet';
 import { GetGroupList } from '@/api/meet/GET';
@@ -35,6 +39,8 @@ import { meetFilterInfoAtom } from '@/atoms/meetFilterAtom';
 import { addInterestMeetToggle } from '@/api/meet/POST';
 import { deleteInterestRoute } from '@/api/route/Delete';
 import { GetUser } from '@/api/mypage/GET';
+import { RouteListProps } from '@/models/route';
+import RouteCard from '@/components/Style/Route/RouteCard';
 
 function MainPage() {
   const navigator = useNavigate();
@@ -52,6 +58,8 @@ function MainPage() {
       sort: 'likeCount,desc',
     },
   });
+
+  const [routes, setRoutes] = useState<RouteListProps[]>([]);
 
   const clickMoreBtn = (keyword: string) => {
     navigator('/route/list/more', { state: { keyword: keyword } });
@@ -152,6 +160,35 @@ function MainPage() {
     // console.log(`${groupId} 눌림`);
   };
 
+  useEffect(() => {
+    getRouteList('해안길').then((result) => {
+      if (result.status === 200) {
+        result.data.data.courseListMap['해안길'].map((ele: any) => {
+          let data: RouteListProps = {
+            routeName: ele.courseName,
+            routeContent: ele.content,
+            routeScore: ele.scoreAvg,
+            routeComment: ele.commentCnt,
+            routeId: ele.courseId,
+            img: ele.backgroundImg,
+            writeState: ele.writeState,
+            openState: ele.openState,
+            memberId: ele.memberId,
+            writeDate: ele.writeDate,
+            start: ele.startPoint,
+            end: ele.endPoint,
+            totalDistance: Math.round(ele.totalDistance),
+            totalDays: ele.totalDays,
+            interestFlag: ele.interestFlag,
+          };
+          if (routes.length < 2) {
+            setRoutes((pre) => [...pre, data]);
+          }
+        });
+      }
+    });
+  }, []);
+
   return (
     <MainPageContainer>
       <Header purpose="main" $isborder={true} clickBack={() => {}} />
@@ -175,67 +212,22 @@ function MainPage() {
               </Text>
             )}
 
-            <Flex $align="center" style={{ width: 'auto' }}>
+            <Flex
+              $align="center"
+              style={{ width: 'auto' }}
+              onClick={() => {
+                console.log('clic');
+                navigator('/route/list');
+              }}
+            >
               <Text $typography="t10">더 보기</Text>
               <Icon name="IconLeftBlackArrow" width={6} height={4} />
             </Flex>
           </Flex>
-          {routeList &&
-            routeList?.data.courseListMap[type].map((course: Root) => (
-              <div className="main-smallCard" key={course.courseId}>
-                <img src={tempImg} alt="그룹 이미지" />
-                <DateBadge
-                  totalDays={3}
-                  style={{ top: '12px', left: '12px' }}
-                />
-                <Icon
-                  name="IconModiHeartFill"
-                  size={20}
-                  style={{
-                    position: 'absolute',
-                    top: '14px',
-                    right: '12px',
-                    zIndex: '3',
-                  }}
-                />
-
-                <StarBadge
-                  scoreAvg={course.scoreAvg}
-                  style={{
-                    position: 'absolute',
-                    bottom: '50px',
-                    left: '12px',
-                    zIndex: '3',
-                  }}
-                />
-
-                <Text
-                  as="div"
-                  $typography="t14"
-                  $bold={true}
-                  color="white"
-                  style={{
-                    position: 'absolute',
-                    left: '12px',
-                    bottom: '28px',
-                    zIndex: '3',
-                  }}
-                >
-                  {course.courseName}
-                </Text>
-
-                <RouteBadge
-                  startPoint={course.startPoint}
-                  endPoint={course.endPoint}
-                  totalDistance={course.totalDistance}
-                  style={{
-                    left: '12px',
-                    bottom: '12px',
-                  }}
-                />
-                <div className="black-bg" />
-              </div>
-            ))}
+          <Flex>
+            {routes &&
+              routes.map((ele) => <RouteCard {...ele} key={ele.routeId} />)}
+          </Flex>
         </div>
 
         <div className="spacing" />
