@@ -88,6 +88,7 @@ const ConfigPageContainer = styled.div`
   background-color: ${colors.white};
   display: flex;
   flex-direction: column;
+
   .container {
     padding: 20px 24px;
     display: flex;
