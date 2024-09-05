@@ -5,7 +5,7 @@ import modalWarningImg from '../../assets/icons/modal_warning.svg';
 import BaseButton from '../common/BaseButton';
 import { colors } from '@/styles/colorPalette';
 
-const MeetModal = ({ onClick, title, content }: MeetModalProps) => {
+const MeetModal = ({ onConfirm, onCancel, title, content }: MeetModalProps) => {
   return (
     <M.Overlay>
       <M.ModalContainer>
@@ -18,12 +18,12 @@ const MeetModal = ({ onClick, title, content }: MeetModalProps) => {
           <BaseButton
             size="large"
             style={{ backgroundColor: `${colors.grey1}` }}
-            onClick={onClick}
+            onClick={onCancel}
           >
             취소
           </BaseButton>
 
-          <BaseButton size="large" style={{ margin: '' }} onClick={onClick}>
+          <BaseButton size="large" style={{ margin: '' }} onClick={onConfirm}>
             확인
           </BaseButton>
         </M.ButtonContainer>

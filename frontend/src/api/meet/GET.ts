@@ -8,7 +8,7 @@ export const GetMeetApplyList = async (groupId: number) => {
   return response.data;
 };
 
-/** 모임 신청 리스트 조회 */
+/** 모임 인원관리 리스트 조회 */
 export const GetMeetMemberList = async (groupId: number) => {
   const response = await api.get(`/api/group/${groupId}/member-list`);
 

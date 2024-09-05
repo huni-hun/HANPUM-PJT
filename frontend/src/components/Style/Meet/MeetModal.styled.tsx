@@ -15,24 +15,30 @@ export const Overlay = styled.div`
 
 export const ModalContainer = styled.div`
   width: 70vw;
-  height: 60vw;
-  position: relative;
-  top: -20vw;
+  max-width: 500px;
+  height: auto;
+  max-height: 60vh;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -120%);
   background-color: white;
   padding: 2rem;
   border-radius: 2rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   text-align: center;
+  overflow: auto;
 `;
 
 export const IconContainer = styled.div`
   margin-bottom: 3rem;
 
   img {
-    width: 20vw;
-    width: 20vw;
+    width: 15vw;
+    max-width: 100px;
   }
 `;
+
 export const Title = styled.p`
   font-size: 1.8rem;
   margin-bottom: 1rem;
@@ -49,7 +55,6 @@ export const ButtonContainer = styled.div`
   justify-content: space-between;
   gap: 1rem;
 `;
-
 export const CancelButton = styled.button`
   background-color: #ccc;
   border: none;

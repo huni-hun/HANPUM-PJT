@@ -26,9 +26,9 @@ import {
   RouteListSearchPage,
   MeetFilterPage,
   MemberManageList,
-  MeetRequest,
+  MeetManageRequest,
   RequestManageList,
-  MeetAcceptPage,
+  MeetManageAcceptPage,
   SignupPage,
   FindPage,
   MyPage,
@@ -44,6 +44,7 @@ import {
   ConfigDetailPage,
   MeetAddSchedulePage,
   MeetAddDeadLinePage,
+  MemberManageDetail,
 } from './index'; // index.tsx에서 컴포넌트를 가져옵니다.
 import useIsAuth from '@/hooks/auth/useIsAuth';
 import { useEffect } from 'react';
@@ -110,8 +111,8 @@ export default function Router() {
               path="/meet/memberMangeList"
               element={<MemberManageList />}
             />
-            <Route path="/meet/request" element={<MeetRequest />} />
-            <Route path="/meet/accept" element={<MeetAcceptPage />} />
+            <Route path="/meet/request" element={<MeetManageRequest />} />
+            <Route path="/meet/accept" element={<MeetManageAcceptPage />} />
             <Route path="/meet/addMain" element={<MeetAddMainPage />} />
 
             <Route
@@ -122,6 +123,7 @@ export default function Router() {
               path="/meet/addMain/AddDeadline"
               element={<MeetAddDeadLinePage />}
             />
+            <Route path="/meet/memberDetail" element={<MemberManageDetail />} />
 
             {/* 로그인/ 회원가입/ 찾기 */}
             <Route path="/login" element={<LoginPage />} />

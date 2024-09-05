@@ -1,9 +1,8 @@
 import api from '../index';
 
 /** 모임 신청 */
-export const PostMeetApply = async (groupId: number) => {
-  const response = await api.post(`/api/group/${groupId}/apply`);
-
+export const PostMeetApply = async (groupId: number, applyPost: string) => {
+  const response = await api.post(`/api/group/${groupId}/apply`, { applyPost });
   return response.data;
 };
 

@@ -25,13 +25,14 @@ import RouteDetailRetouchPage from '@pages/Route/RouteDetailRetouchPage';
 import MeetList from '@pages/Meet/MeetList';
 import MeetDetailPage from '@pages/Meet/MeetDetailPage';
 import MeetFilterPage from '@pages/Meet/MeetFilterPage';
-import RequestManageList from '@pages/Meet/RequestManageList';
-import MemberManageList from '@pages/Meet/MemberManageList';
-import MeetRequest from '@pages/Meet/MeetRequest';
-import MeetAcceptPage from '@pages/Meet/MeetAcceptPage';
+import MeetManageAcceptPage from '@pages/Meet/MeetManageAcceptPage';
 import MeetAddMainPage from '@pages/Meet/MeetAddMainPage';
 import MeetAddSchedulePage from '@pages/Meet/MeetAddSchedulePage';
 import MeetAddDeadLinePage from '@pages/Meet/MeetAddDeadLinePage';
+import MemberManageDetail from '@pages/Meet/MemberManageDetail';
+import RequestManageList from '@pages/Meet/RequestManageList';
+import MemberManageList from '@pages/Meet/MemberManageList';
+import MeetManageRequest from '@pages/Meet/MeetManageRequest';
 
 /** 커뮤니티 */
 
@@ -74,11 +75,12 @@ export {
   MeetFilterPage,
   RequestManageList,
   MemberManageList,
-  MeetRequest,
-  MeetAcceptPage,
+  MeetManageRequest,
+  MeetManageAcceptPage,
   MeetAddMainPage,
   MeetAddSchedulePage,
   MeetAddDeadLinePage,
+  MemberManageDetail,
 
   /** 마이페이지, 회원관련 */
   SignupPage,
