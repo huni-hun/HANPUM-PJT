@@ -45,83 +45,103 @@ import {
   MeetAddSchedulePage,
   MeetAddDeadLinePage,
 } from './index'; // index.tsx에서 컴포넌트를 가져옵니다.
+import useIsAuth from '@/hooks/auth/useIsAuth';
+import { useEffect } from 'react';
 
 // import useIsAuth from '@/hooks/auth/useIsAuth';
 
 export default function Router() {
+  const isAuth = useIsAuth();
+  console.log(isAuth);
+
   return (
     <BrowserRouter>
       <Routes>
-        <>
-          {/* 기본 경로를 /home으로 리다이렉트 */}
-          <Route path="/" element={<Navigate to="/home" />} />
-          <Route path="/home" element={<MainPage />} />
-          {/* 일정 */}
-          <Route path="/schedule/main" element={<ScheduleMainPage />} />
-          <Route path="/schedule/addSchedule" element={<AddSchedulePage />} />
-          <Route
-            path="/schedule/detail/mine"
-            element={<DetailMineSchedulePage />}
-          />
-          <Route
-            path="/schedule/success"
-            element={<SuccessAddSchedulePage />}
-          />
-          <Route path="/schedule/edit" element={<EditMySchedulePage />} />
-          {/* 경로 */}
-          <Route path="/route/list" element={<RouteList />} />
-          <Route path="/route/detail/:routeid" element={<RouteDetailPage />} />
-          <Route path="/route/addMain" element={<RouteAddMainPage />} />
-          <Route path="/route/addDetail" element={<RouteAddDetailPage />} />
-          <Route path="route/add/complete" element={<RouteAddCompletePage />} />
-          <Route path="route/list/more" element={<RoteListMorePage />} />
-          <Route path="route/list/search" element={<RouteListSearchPage />} />
-          <Route
-            path="/route/detail/retouch/:routeid"
-            element={<RouteDetailRetouchPage />}
-          />
-          {/* 모임 */}
-          <Route path="/meet/list" element={<MeetList />} />
-          <Route path="/meet/:id" element={<MeetDetailPage />} />
-          <Route path="/meet/filter" element={<MeetFilterPage />} />
-          <Route
-            path="/meet/requestManageList"
-            element={<RequestManageList />}
-          />
-          <Route path="/meet/memberMangeList" element={<MemberManageList />} />
-          <Route path="/meet/request" element={<MeetRequest />} />
-          <Route path="/meet/accept" element={<MeetAcceptPage />} />
-          <Route path="/meet/addMain" element={<MeetAddMainPage />} />
+        {!isAuth ? (
+          <>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="*" element={<Navigate to="/login" />} />
+          </>
+        ) : (
+          <>
+            <Route path="/home" element={<MainPage />} />
+            {/* 기본 경로를 /home으로 리다이렉트 */}
+            <Route path="/" element={<Navigate to="/home" />} />
+            <Route path="/home" element={<MainPage />} />
+            {/* 일정 */}
+            <Route path="/schedule/main" element={<ScheduleMainPage />} />
+            <Route path="/schedule/addSchedule" element={<AddSchedulePage />} />
+            <Route
+              path="/schedule/detail/mine"
+              element={<DetailMineSchedulePage />}
+            />
+            <Route
+              path="/schedule/success"
+              element={<SuccessAddSchedulePage />}
+            />
+            <Route path="/schedule/edit" element={<EditMySchedulePage />} />
+            {/* 경로 */}
+            <Route path="/route/list" element={<RouteList />} />
+            <Route
+              path="/route/detail/:routeid"
+              element={<RouteDetailPage />}
+            />
+            <Route path="/route/addMain" element={<RouteAddMainPage />} />
+            <Route path="/route/addDetail" element={<RouteAddDetailPage />} />
+            <Route
+              path="route/add/complete"
+              element={<RouteAddCompletePage />}
+            />
+            <Route path="route/list/more" element={<RoteListMorePage />} />
+            <Route path="route/list/search" element={<RouteListSearchPage />} />
+            <Route
+              path="/route/detail/retouch/:routeid"
+              element={<RouteDetailRetouchPage />}
+            />
+            {/* 모임 */}
+            <Route path="/meet/list" element={<MeetList />} />
+            <Route path="/meet/:id" element={<MeetDetailPage />} />
+            <Route path="/meet/filter" element={<MeetFilterPage />} />
+            <Route
+              path="/meet/requestManageList"
+              element={<RequestManageList />}
+            />
+            <Route
+              path="/meet/memberMangeList"
+              element={<MemberManageList />}
+            />
+            <Route path="/meet/request" element={<MeetRequest />} />
+            <Route path="/meet/accept" element={<MeetAcceptPage />} />
+            <Route path="/meet/addMain" element={<MeetAddMainPage />} />
 
-          <Route
-            path="/meet/addMain/addSchedule"
-            element={<MeetAddSchedulePage />}
-          />
-          <Route
-            path="/meet/addMain/AddDeadline"
-            element={<MeetAddDeadLinePage />}
-          />
+            <Route
+              path="/meet/addMain/addSchedule"
+              element={<MeetAddSchedulePage />}
+            />
+            <Route
+              path="/meet/addMain/AddDeadline"
+              element={<MeetAddDeadLinePage />}
+            />
 
-          {/* <Route path="*" element={<Navigate to="/" />} /> */}
+            {/* 로그인/ 회원가입/ 찾기 */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/find/:account" element={<FindPage />} />
 
-          {/* 로그인/ 회원가입/ 찾기 */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/find/:account" element={<FindPage />} />
-
-          {/* 마이페이지 */}
-          <Route path="/mypage" element={<MyPage />} />
-          <Route path="/mypage/:active" element={<ActivityLayout />} />
-          <Route path="/mypage/review/:course_id" element={<ReviewPage />} />
-          <Route path="/myprofile" element={<MyProfilePage />} />
-          <Route path="/myprofile/:category" element={<CategoryLayout />} />
-          <Route path="/config" element={<ConfigPage />} />
-          <Route path="/config/:category" element={<ConfigLayout />} />
-          <Route
-            path="/config/:category/detail/:id"
-            element={<ConfigDetailPage />}
-          />
-        </>
+            {/* 마이페이지 */}
+            <Route path="/mypage" element={<MyPage />} />
+            <Route path="/mypage/:active" element={<ActivityLayout />} />
+            <Route path="/mypage/review/:course_id" element={<ReviewPage />} />
+            <Route path="/myprofile" element={<MyProfilePage />} />
+            <Route path="/myprofile/:category" element={<CategoryLayout />} />
+            <Route path="/config" element={<ConfigPage />} />
+            <Route path="/config/:category" element={<ConfigLayout />} />
+            <Route
+              path="/config/:category/detail/:id"
+              element={<ConfigDetailPage />}
+            />
+          </>
+        )}
       </Routes>
     </BrowserRouter>
   );

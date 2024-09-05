@@ -10,17 +10,32 @@ import useIsAuth from './hooks/auth/useIsAuth';
 function App() {
   const setAuthEnticate = useSetRecoilState(isAuthEnticatedAtom);
 
-  const temp = useIsAuth();
-
-  useEffect(() => {
-    if (localStorage.getItem('token') != null) {
-      setAuthEnticate(true);
-    } else if (sessionStorage.getItem('token') != null) {
+  const checkAuth = () => {
+    if (
+      localStorage.getItem('token') != null ||
+      sessionStorage.getItem('token') != null
+    ) {
       setAuthEnticate(true);
     } else {
       setAuthEnticate(false);
     }
-  }, []);
+  };
+
+  useEffect(() => {
+    checkAuth();
+
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === 'token') {
+        checkAuth();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [setAuthEnticate]);
 
   // console.log('로그인 되어있는지 ::', temp);
   return (
