@@ -42,10 +42,8 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api/auth/**").permitAll()
+                                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api/auth/**", "/api/course/**").permitAll()
                                 .anyRequest().authenticated()
-                                //.requestMatchers("/api/auth/logout").authenticated()
-                                //.anyRequest().permitAll() // 모든 요청 허용
                 )
                 .oauth2Login(oauth ->
                         oauth.userInfoEndpoint(c -> c.userService(oAuth2UserService))
