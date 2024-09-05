@@ -49,13 +49,17 @@ function MeetAddSchedulePage() {
   };
 
   const postMeetDeadSchdule = (recruitmentPeriod: string) => {
-    navigate(`/meet/addMain`, {
-      state: {
-        courseId,
-        startDate,
-        recruitmentPeriod,
-      },
-    });
+    if (startDate !== '') {
+      navigate(`/meet/addMain`, {
+        state: {
+          courseId,
+          startDate,
+          recruitmentPeriod,
+        },
+      });
+    } else {
+      toast.error('날짜를 선택해주세요!');
+    }
   };
 
   useEffect(() => {

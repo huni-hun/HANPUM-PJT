@@ -70,7 +70,7 @@ function MeetAddSchedulePage() {
     setIsExpanded((prevState) => !prevState);
   };
 
-  /** 임시 데이터 */
+  /** 일정 + 경로 제목 데이터 (선택 후 들어가는 부분), 걍 귀찮아서 더미데이터라고 썼어요 */
   const dummyData = {
     date: [
       { title: '출발일', content: dates.startDate || '-' },
