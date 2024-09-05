@@ -824,7 +824,7 @@ export const TagsWrap = styled.div`
   justify-content: space-between;
   width: 60%;
   align-items: center;
-  height: 3.5vh;
+  height: 2.8rem;
   position: absolute;
   bottom: 2rem;
   box-sizing: border-box;

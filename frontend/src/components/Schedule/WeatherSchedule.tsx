@@ -1,4 +1,3 @@
-/** 오늘의 날씨 컴포넌트 */
 import React from 'react';
 import * as S from '@/components/Style/Schedule/SchduleMainPage.styled';
 import { WeatherProps } from '@/models/schdule';
@@ -22,15 +21,18 @@ const WeatherSchedule = ({
   message,
 }: WeatherScheduleProps) => {
   // 현재 시간의 am/pm을 계산하는 함수
-  const formatTime = (time: string): string => {
-    if (time.length !== 4) return time;
+  const formatTime = (time: string): { period: string; hourMinute: string } => {
+    if (time.length !== 4) return { period: '', hourMinute: time };
 
     const hour = parseInt(time.substring(0, 2), 10);
     const minute = time.substring(2);
     const period = hour < 12 ? 'AM' : 'PM';
     const formattedHour = hour % 12 || 12;
 
-    return `${period} ${formattedHour}:${minute}`;
+    return {
+      period: period,
+      hourMinute: `${formattedHour}:${minute}`,
+    };
   };
 
   // 날씨 상태에 따른 아이콘 선택
@@ -56,27 +58,33 @@ const WeatherSchedule = ({
       <S.WeatherWrap>
         <p className="weather_location">{logcation} 기준</p>
         <S.WeatherContentWrap>
-          {weatherData.map((data, index) => (
-            <S.WeatherContent key={index}>
-              <p>
-                <span>{formatTime(data.nowTime || '')}</span>
-              </p>
-              <p>
-                <img src={getWeatherIcon(data.nowWeather)} />
-              </p>
-              <p>
-                <span>{data.nowTemperature}</span>
-              </p>
-              <S.Precipitation>
-                <p className="precipitation">
-                  <img src={PrecipitIcon} />
+          {weatherData.map((data, index) => {
+            const { period, hourMinute } = formatTime(data.nowTime || '');
+
+            return (
+              <S.WeatherContent key={index}>
+                <p>
+                  <span style={{ fontSize: '1rem' }}>{period}</span>
+                  <span style={{ fontSize: '1.4rem' }}>{hourMinute}</span>
                 </p>
                 <p>
-                  <p>{formatPrecipitation(data.precipitation || '-')}</p>
+                  <img
+                    src={getWeatherIcon(data.nowWeather)}
+                    alt="Weather icon"
+                  />
                 </p>
-              </S.Precipitation>
-            </S.WeatherContent>
-          ))}
+                <p>
+                  <span>{data.nowTemperature}</span>
+                </p>
+                <S.Precipitation>
+                  <p className="precipitation">
+                    <img src={PrecipitIcon} alt="Precipitation icon" />
+                  </p>
+                  <p>{formatPrecipitation(data.precipitation || '-')}</p>
+                </S.Precipitation>
+              </S.WeatherContent>
+            );
+          })}
         </S.WeatherContentWrap>
       </S.WeatherWrap>
       <S.EmergenyNotice>

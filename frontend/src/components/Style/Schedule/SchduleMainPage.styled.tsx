@@ -30,7 +30,7 @@ export const Overflow = styled.div`
   width: 100%;
   height: 100%;
   overflow-y: auto;
-  margin-top: 12vw;
+  margin-top: 13vw;
 
   &::-webkit-scrollbar {
     display: none;
@@ -58,7 +58,6 @@ export const HeaderContent = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0 2rem 2rem 2rem;
-  border: 0.2rem solid red;
 `;
 
 export const HeaderTitle = styled.p`
@@ -105,6 +104,17 @@ export const ScheduleMainContainer = styled.div`
   align-items: center;
   box-sizing: border-box;
   margin-top: 2rem;
+  padding-bottom: 2rem;
+`;
+
+export const ScheduleWeatherContainer = styled.div`
+  width: 100vw;
+  /* height: 75vh; */
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
   padding-bottom: 2rem;
 `;
 
@@ -190,7 +200,7 @@ export const WeatherWrap = styled.div`
   background-color: #7787ab;
   border-radius: 1.5rem;
   /* width: 100%; */
-  height: 22vh;
+  height: 18vh;
   display: flex;
   flex-direction: column;
   padding: 1.7rem;
@@ -212,9 +222,11 @@ export const WeatherContentWrap = styled.div`
   display: flex;
   box-sizing: border-box;
   overflow-x: scroll;
-  height: 100%;
+  overflow-y: hidden;
+  height: 80%;
   justify-content: space-between;
   flex-shrink: 0;
+  margin-top: 1.9rem;
 `;
 
 export const WeatherContent = styled.div`
@@ -222,7 +234,6 @@ export const WeatherContent = styled.div`
   flex-shrink: 0;
   flex-direction: column;
   gap: 0.3rem;
-  border: 1px solid red;
   box-sizing: border-box;
   margin-right: 2rem;
   width: 7rem;
@@ -238,13 +249,13 @@ export const WeatherContent = styled.div`
   }
   img {
     width: 100%;
-    height: 8vh;
+    height: 7vh;
   }
 `;
 
 export const EmergenyNotice = styled.div`
   width: 100%;
-  height: 10vh;
+  height: 7vh;
   background-color: #fbdcdc;
   border-radius: 1.5rem;
   display: flex;
@@ -253,7 +264,7 @@ export const EmergenyNotice = styled.div`
   margin-top: 2rem;
   .weather_img {
     width: 10vw;
-    height: 10vw;
+    height: 9vw;
     margin-left: 2rem;
   }
   p {
@@ -316,7 +327,6 @@ export const Precipitation = styled.div`
   justify-content: center;
   font-size: 1rem;
   height: 2vh;
-  border: 1px solid red;
   .precipitation {
     width: 3vw;
   }
