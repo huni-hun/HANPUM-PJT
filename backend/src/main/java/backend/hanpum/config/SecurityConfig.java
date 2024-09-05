@@ -34,22 +34,21 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable) // 기본 인증 로그인 비활성화
-                .formLogin(AbstractHttpConfigurer::disable) // 기본 login form 비활성화
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionManagement ->
-                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 상태 비저장 세션 정책
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api/auth/kakao-login").permitAll() // Swagger 관련 요청 허용
+                                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api/auth/**").permitAll()
+                                .anyRequest().authenticated()
                                 //.requestMatchers("/api/auth/logout").authenticated()
-                                .anyRequest().permitAll() // 모든 요청 허용
+                                //.anyRequest().permitAll() // 모든 요청 허용
                 )
-                .oauth2Login(oauth -> // OAuth2 로그인 기능에 대한 여러 설정의 진입점
-                        // OAuth2 로그인 성공 이후 사용자 정보를 가져올 때의 설정을 담당
+                .oauth2Login(oauth ->
                         oauth.userInfoEndpoint(c -> c.userService(oAuth2UserService))
-                                // 로그인 성공 시 핸들러
                                 .successHandler(oAuth2SuccessHandler)
                 )
                 .exceptionHandling(exceptionHandling ->
