@@ -27,9 +27,12 @@ import BottomTab from '@/components/common/BottomTab/BottomTab';
 import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
 import {
   AttractionsProps,
+  DaysOfRouteProps,
   FeedInfoProps,
+  LineStartEndProps,
   RouteDetailDayProps,
   RouteDetailProps,
+  RouteReviewProps,
 } from '@/models/route';
 import {
   getGroupScheduleData,
@@ -83,7 +86,13 @@ function ScheduleMainPage() {
   const [bsType, setBsType] = useState<string>('설정');
   const [reviewType, setReviewType] = useState<string>('최신순');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
+  /** 루트 디테일  */
+  const [marker, setMarker] = useState<LineStartEndProps[]>([]);
+  const [selectedIdx, setSelectedIdx] = useState<number>(-1);
+  const [reviews, setReviews] = useState<RouteReviewProps[]>([]);
+  const [dayOfRoute, setDayOfRoute] = useState<DaysOfRouteProps[]>([]);
+  const [mapLines, setMapLines] = useState<any[]>([]);
+  const [routeDayData, setRouteDayData] = useState<RouteDetailDayProps[]>([]);
   /** 내일정 - card 컴포넌트 'n박 n일' 계산 */
   const formatDate = (dateStr: string): string => {
     // Convert "YYYYMMDD" to "YYYY-MM-DD"
@@ -332,6 +341,8 @@ function ScheduleMainPage() {
     }
   }, []);
 
+  /** 지도 및 하위 컴포넌트  */
+
   const firstDayData = runningScheduleData?.scheduleDayResDtoList[0];
 
   const departuresPlace =
@@ -456,32 +467,36 @@ function ScheduleMainPage() {
                   </S.ScheduleMainContainer>
 
                   {/* 날씨 + 날씨 메시지 container */}
-                  <S.ScheduleMainContainer>
+                  <S.ScheduleWeatherContainer>
                     <WeatherSchedule
                       weatherData={weatherData}
                       weatherIcon={Error}
                       message={'warning message'}
                     />
-                  </S.ScheduleMainContainer>
+                  </S.ScheduleWeatherContainer>
 
                   {/* 지도 및 하위 컴포넌트 container */}
                   <R.RouteDetailInfoContainer>
-                    {/* 
-              <RouteDetailInfo
-                linePath={linePath}
-                selected={selected}
-                selectedDay={selectedDay}
-                latitude={latitude}
-                longitude={longitude}
-                dayData={dayData}
-                attractions={attractions}
-                setLoading={setLoading}
-                setSelectedDay={setSelectedDay}
-                setIsOpen={setIsOpen}
-                setBsType={setBsType}
-                reviewType={reviewType}
-              /> 
-              */}
+                    {/* <RouteDetailInfo
+                      marker={marker}
+                      deleteHandler={(name: string) => {}}
+                      setSelectedIdx={setSelectedIdx}
+                      reviews={reviews}
+                      setDayOfRoute={setDayOfRoute}
+                      dayOfRoute={dayOfRoute}
+                      linePath={mapLines}
+                      selected={selected}
+                      selectedDay={selectedDay}
+                      latitude={latitude}
+                      longitude={longitude}
+                      dayData={routeDayData}
+                      attractions={attractions}
+                      setLoading={setLoading}
+                      setSelectedDay={setSelectedDay}
+                      setIsOpen={setIsOpen}
+                      setBsType={setBsType}
+                      reviewType={reviewType}
+                    /> */}
                   </R.RouteDetailInfoContainer>
                 </>
               ) : (
