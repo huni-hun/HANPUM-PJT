@@ -1,18 +1,21 @@
 import React from 'react';
-import { MeetMemberListProps } from '@/models/meet';
+import { MemberListProps } from '@/models/meet';
 import * as M from '../Style/Meet/MemberList.styled';
 
-const MemberList = ({ memberInfo, onClick }: MeetMemberListProps) => {
+const MemberList = ({ memberInfo = [], onClick }: MemberListProps) => {
   return (
     <M.ListContainer>
-      {memberInfo.map((member, index) => (
-        <M.ListItem key={index} onClick={() => onClick && onClick(member.name)}>
+      {memberInfo?.map((member, index) => (
+        <M.ListItem
+          key={index}
+          onClick={() => onClick && onClick(String(member.memberId ?? ''))}
+        >
           <M.MemberImg>
-            <img src={member.img} alt={`${member.name}`} />
+            <img src={member.profilePicture} alt={`${member.nickname}`} />
           </M.MemberImg>
-          <M.MemberName>{member.name}</M.MemberName>
+          <M.MemberName>{member.nickname}</M.MemberName>
         </M.ListItem>
-      ))}
+      )) || <></>}
     </M.ListContainer>
   );
 };
