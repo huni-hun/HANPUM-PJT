@@ -17,6 +17,7 @@ import java.util.List;
 @Builder
 public class ScheduleInProgressResDto {
     Long scheduleId;        // 일정 ID
+    Long courseId;          // 경로 ID
     String title;
     String backgroundImg;
     String content;

@@ -362,6 +362,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         ScheduleInProgressResDto result = ScheduleInProgressResDto.builder()
                 .scheduleId(scheduleId)
+                .courseId(courseId)
                 .title(course.getCourseName())
                 .content(course.getContent())
                 .backgroundImg(course.getBackgroundImg())

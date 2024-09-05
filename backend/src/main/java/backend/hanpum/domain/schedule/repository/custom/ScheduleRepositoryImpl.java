@@ -80,6 +80,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 
         ScheduleDetailResDto scheduleDetailResDto = query.select(Projections.constructor(ScheduleDetailResDto.class,
                         schedule.id,
+                        schedule.course.courseId,
                         schedule.course.content,
                         schedule.course.backgroundImg,
                         schedule.course.courseName,
@@ -109,6 +110,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     public Optional<GroupScheduleResDto> getGroupSchedule(Long memberId, Long groupId, Long scheduleId, Long courseId) {
         GroupScheduleResDto groupScheduleResDto = query.select(Projections.constructor(GroupScheduleResDto.class,
                         schedule.id,
+                        schedule.course.courseId,
                         schedule.course.content,
                         schedule.course.backgroundImg,
                         schedule.course.courseName,

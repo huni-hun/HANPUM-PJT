@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ScheduleDetailResDto {
     Long scheduleId;        // 일정 ID
+    Long courseId;
     String content;         // 경로 설명
     String backgroundImg;   // 경로 이미지
     String title;           // 경로 제목
@@ -30,6 +31,7 @@ public class ScheduleDetailResDto {
 
 
     public ScheduleDetailResDto (Long scheduleId,
+                                                     Long courseId,
                                                      String content,
                                                      String backgroundImg,
                                                      String title,
@@ -43,6 +45,7 @@ public class ScheduleDetailResDto {
 //                                                     List<CourseTypes> courseTypes
     ) {
         this.scheduleId = scheduleId;
+        this.courseId = courseId;
         this.content = content;
         this.backgroundImg = backgroundImg;
         this.title = title;
