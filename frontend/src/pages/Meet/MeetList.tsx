@@ -40,7 +40,7 @@ function MeetList() {
   const { data: myMeet } = useQuery('getmyMeet', GetMyMeet, {
     onSuccess: (res) => {
       if (res.status === STATUS.success) {
-        console.log(res);
+        // console.log(res);
       } else if (res.status === STATUS.error) {
         toast.error(res.message);
       }
