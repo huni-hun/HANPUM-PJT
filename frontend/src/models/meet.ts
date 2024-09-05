@@ -8,9 +8,16 @@ export interface MeetModalProps {
   content?: string;
   onClick?: () => void;
 }
+export interface MemberInfo {
+  memberId?: number;
+  groupMemberId?: number;
+  joinType?: string;
+  profilePicture?: string;
+  nickname?: string;
+}
 
-export interface MeetMemberListProps {
-  memberInfo: { img: string; name: string }[];
+export interface MemberListProps {
+  memberInfo: MemberInfo[];
   onClick?: (name: string) => void;
 }
 

@@ -33,7 +33,7 @@ function MemberManageList() {
         clickBack={() => navigate(-1)}
       />
 
-      <MemberList memberInfo={memberInfo} onClick={() => {}} />
+      {/* <MemberList memberInfo={memberInfo} onClick={() => {}} /> */}
     </MainPageContainer>
   );
 }

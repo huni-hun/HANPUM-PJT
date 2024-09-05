@@ -1,6 +1,6 @@
 /** 모임 - 모임 신청 관리 */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import * as M from '@/components/Style/Meet/MeetFilter.styled';
 
@@ -13,17 +13,35 @@ import { RouteDetailProps } from '@/models/route';
 import FilterTable from '@/components/Meet/FilterTable';
 import MemberList from '@/components/Meet/MemberList';
 import memberImg from '../../assets/img/memberImg.svg';
+import { GetMeetApplyList } from '@/api/meet/GET';
+import { toast } from 'react-toastify';
+import { AxiosError } from 'axios';
+import { MemberInfo, MemberListProps } from '@/models/meet';
 
 function RequestManageList() {
   const navigate = useNavigate();
-  const [routeData, setRouteData] = useState<RouteDetailProps | null>(null);
+  const [listData, setListData] = useState<MemberInfo[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  /** member data */
-  const memberInfo = [
-    { img: memberImg, name: '닉네임' },
-    { img: memberImg, name: '닉네임' },
-    { img: memberImg, name: '닉네임' },
-  ];
+  /** 신청관리 리스트 */
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await GetMeetApplyList(10);
+        if (response && response.status === 'SUCCESS') {
+          setListData(response.data.groupMemberResList || []);
+        } else {
+          console.error('error');
+        }
+      } catch (error) {
+        toast.error('에러');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <MainPageContainer>
@@ -32,7 +50,9 @@ function RequestManageList() {
         title="모임 신청 관리"
         clickBack={() => navigate(-1)}
       />
-      <MemberList memberInfo={memberInfo} onClick={() => {}} />
+      {listData && (
+        <MemberList memberInfo={listData} onClick={(id) => console.log(id)} />
+      )}
     </MainPageContainer>
   );
 }
