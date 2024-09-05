@@ -34,6 +34,7 @@ function SortBox({
             <Flex direction="column" $gap={30} style={{ marginTop: '7px' }}>
               {sortList.map((sortOption) => (
                 <Flex
+                  key={sortOption.label}
                   $justify="space-between"
                   onClick={() => clickSort(sortOption.value)}
                 >

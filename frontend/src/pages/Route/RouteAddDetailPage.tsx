@@ -71,13 +71,13 @@ function RouteAddDetailPage() {
     setAddRoute(route);
   }, []);
 
-  useEffect(() => {
-    console.log(dateDetail);
-  }, [dateDetail]);
+  // useEffect(() => {
+  //   console.log(dateDetail);
+  // }, [dateDetail]);
 
-  useEffect(() => {
-    console.log(addRoute);
-  }, [addRoute]);
+  // useEffect(() => {
+  //   console.log(addRoute);
+  // }, [addRoute]);
 
   useEffect(() => {
     if (dateDetail.length < route.length) {
@@ -168,6 +168,7 @@ function RouteAddDetailPage() {
           navigate(-1);
         }}
         back={true}
+        $isGrey
       />
       <R.MainContainer>
         <R.OverFlow>

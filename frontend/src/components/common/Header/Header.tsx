@@ -13,6 +13,7 @@ interface HeaderProps {
   back?: boolean;
   $isShadow?: boolean;
   $isborder?: boolean;
+  $isGrey?: boolean;
   searchValue?: string;
   clickBack: () => void;
   complete?: () => void;
@@ -39,6 +40,7 @@ const Header = ({
   keyDownEven,
   searchValue,
   plusBtnclick,
+  $isGrey = false,
 }: HeaderProps) => {
   const navigate = useNavigate();
   const onClickHandler = (to: string) => {
@@ -288,7 +290,11 @@ const Header = ({
 
   return (
     <>
-      <S.HeaderWrapper $isShadow={$isShadow} $isborder={$isborder}>
+      <S.HeaderWrapper
+        $isShadow={$isShadow}
+        $isborder={$isborder}
+        $isGrey={$isGrey}
+      >
         {back && (
           <Icon
             name="IconBackArrow"
