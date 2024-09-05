@@ -207,3 +207,12 @@ export const MainContainer = styled.div`
     margin: 49px auto 20px;
   }
 `;
+
+export const ScheduleTextWrap = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export const ScheduleText = styled.span`
+  margin-right: 1rem;
+`;
