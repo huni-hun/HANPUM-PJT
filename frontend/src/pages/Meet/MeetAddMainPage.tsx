@@ -36,10 +36,12 @@ function MeetAddMainPage() {
     }
   }, []);
 
+  /** 로컬 스토리지로 input value + 이미지 저장 */
   useEffect(() => {
     localStorage.setItem('meetRequest', JSON.stringify(meetRequest));
   }, [meetRequest]);
 
+  /** location state로 관리 */
   useEffect(() => {
     if (location.state) {
       setMeetRequest((prevState) => ({
@@ -49,6 +51,7 @@ function MeetAddMainPage() {
     }
   }, [location.state]);
 
+  /** 이미지 핸들링 */
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -70,6 +73,7 @@ function MeetAddMainPage() {
     }
   };
 
+  /** 모임 이름, 내용 input */
   const handleInfoChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -79,6 +83,7 @@ function MeetAddMainPage() {
     });
   };
 
+  /** 모임 인원 toggle 슬라이드 */
   const handleRecruitmentCountChange = (count: number) => {
     setMeetRequest({
       ...meetRequest,
@@ -86,16 +91,7 @@ function MeetAddMainPage() {
     });
   };
 
-  const clickAddSchdule = () => {
-    navigate('/meet/addMain/addSchedule', {
-      state: {
-        courseId,
-        startDate,
-        recruitmentPeriod,
-      },
-    });
-  };
-
+  /** 모집 마감일 페이지로 이동 */
   const clickAddDeadline = () => {
     navigate('/meet/addMain/AddDeadline', {
       state: {
@@ -106,6 +102,18 @@ function MeetAddMainPage() {
     });
   };
 
+  /** 모집 일정 선택 페이지로 이동 */
+  const clickAddSchdule = () => {
+    navigate('/meet/addMain/addSchedule', {
+      state: {
+        courseId,
+        startDate,
+        recruitmentPeriod,
+      },
+    });
+  };
+
+  /** 모임 생성 post api */
   const handleCreateGroup = async () => {
     try {
       const multipartFile = previewImage;
@@ -114,6 +122,7 @@ function MeetAddMainPage() {
         description: meetRequest.description || '',
         recruitmentCount: meetRequest.recruitmentCount || 0,
         recruitmentPeriod: recruitmentPeriod || '',
+        /** 일정쪽 */
         schedulePostReqDto: {
           courseId: courseId || 0,
           startDate: startDate || '',
@@ -214,9 +223,13 @@ function MeetAddMainPage() {
             일정
           </Text>
           <M.ScheduleTextWrap>
-            <M.ScheduleText>
-              {startDate} - {endDate}
-            </M.ScheduleText>
+            {/* 일정에서 날짜를 선택안했을 때 (여기에 조건 추가해서 경로 붙이면 될듯 합니다) */}
+            {startDate !== undefined && (
+              <M.ScheduleText>
+                {startDate} - {endDate}
+              </M.ScheduleText>
+            )}
+
             <Icon name="IconArrowRight" />
           </M.ScheduleTextWrap>
         </div>
