@@ -19,7 +19,7 @@ import { dateFormat, telnumberFormat } from '@utils/util';
 import { useMutation } from 'react-query';
 import { CheckNickname, KaKaoLogin, SignUp } from '@/api/signup/POST';
 import { toast } from 'react-toastify';
-import { genderList, STATUS } from '@constants';
+import { genderList, SIZEMB, STATUS } from '@constants';
 import { AxiosError } from 'axios';
 import FixedBottomButton from '@common/FixedBottomButton';
 import Flex from '@common/Flex';
@@ -59,6 +59,12 @@ function ProfileConfig({
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setPreviewImage(imageUrl);
+
+      // console.log(file.size, SIZEMB);
+
+      if (file.size >= SIZEMB) {
+        console.log('파일커요');
+      }
 
       setFormValues((prevValue) => ({
         ...prevValue,

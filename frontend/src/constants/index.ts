@@ -144,3 +144,5 @@ export const locationArray: string[] = [
   '경북',
   '제주도',
 ];
+
+export const SIZEMB = 10 * 1024 * 1024;
