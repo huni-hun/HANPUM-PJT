@@ -3,12 +3,9 @@ import Header from '@/components/common/Header/Header';
 import Text from '@/components/common/Text';
 import Activity from '@/components/My/Activity';
 import Community from '@/components/My/Community';
-import { STATUS } from '@/constants';
 import { colors } from '@/styles/colorPalette';
-import { AxiosError } from 'axios';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import styled from 'styled-components';
 
 function MyPage() {
@@ -16,7 +13,7 @@ function MyPage() {
 
   const { data } = useQuery('getUser', GetUser);
 
-  console.log(data);
+  // console.log(data);
 
   return (
     <MyPageContainer>
