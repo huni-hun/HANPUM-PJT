@@ -30,6 +30,7 @@ import {
   DaysOfRouteProps,
   FeedInfoProps,
   LineStartEndProps,
+  MapLinePathProps,
   RouteDetailDayProps,
   RouteDetailProps,
   RouteReviewProps,
@@ -42,6 +43,12 @@ import {
 } from '@/api/schedule/GET';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
+import {
+  getRouteDayAttraction,
+  getRouteDayDetail,
+  getRouteDetail,
+} from '@/api/route/GET';
+import { GetLineData } from '@/api/route/POST';
 
 function ScheduleMainPage() {
   const BtnClick = () => {};
@@ -82,7 +89,7 @@ function ScheduleMainPage() {
   const [latitude, setLatitude] = useState<number>(0);
   const [longitude, setLongitude] = useState<number>(0);
   const [attractions, setAttractions] = useState<AttractionsProps[]>([]);
-  const [linePath, setLinePath] = useState([]);
+  const [linePath, setLinePath] = useState<MapLinePathProps[]>([]);
   const [bsType, setBsType] = useState<string>('설정');
   const [reviewType, setReviewType] = useState<string>('최신순');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -93,6 +100,7 @@ function ScheduleMainPage() {
   const [dayOfRoute, setDayOfRoute] = useState<DaysOfRouteProps[]>([]);
   const [mapLines, setMapLines] = useState<any[]>([]);
   const [routeDayData, setRouteDayData] = useState<RouteDetailDayProps[]>([]);
+  const [se, setSe] = useState<LineStartEndProps[]>([]);
   /** 내일정 - card 컴포넌트 'n박 n일' 계산 */
   const formatDate = (dateStr: string): string => {
     // Convert "YYYYMMDD" to "YYYY-MM-DD"
@@ -292,7 +300,121 @@ function ScheduleMainPage() {
     };
 
     fetchData();
+
+    if (routeDayData.length === 0) {
+      getRouteDetail('1' as string).then((result) => {
+        if (result.data.status !== 'ERROR' && result.status === 200) {
+          let num = 0;
+          let rd: RouteDetailProps = {
+            routeName: result.data.data.course.courseName,
+            routeContent: result.data.data.course.content,
+            writeDate: result.data.data.course.writeDate,
+            routeComment: result.data.data.course.commentCnt,
+            routeScore: result.data.data.course.scoreAvg,
+            start: result.data.data.course.startPoint,
+            end: result.data.data.course.endPoint,
+            img: result.data.data.course.backgroundImg,
+            writeState: result.data.data.course.writeState,
+          };
+          setRouteData(rd);
+          result.data.data.courseDays.map((ele: any) => {
+            let data: RouteDetailDayProps = {
+              dayNum: ele.dayNumber,
+              totalDistance: ele.total_distance,
+              totalCalorie: ele.total_calorie,
+              totalDuration: ele.total_duration,
+            };
+            setRouteDayData((pre) => [...pre, data]);
+            num += ele.total_distance;
+          });
+          let type: string[] = [];
+          result.data.data.course.courseTypes.map((ele: string) => {
+            type.push(ele);
+          });
+          setRouteType(type);
+          setTotalDistance(num);
+        }
+
+        setLoading(true);
+      });
+    }
   }, []);
+
+  useEffect(() => {
+    setSe([]);
+    setMarker([]);
+    getRouteDayDetail('1' as string, selectedDay).then((result) => {
+      if (result.status === 200) {
+        let arr: DaysOfRouteProps[] = [];
+        let lines: MapLinePathProps[] = [];
+        result.data.data.wayPoints.map((ele: any) => {
+          let data: DaysOfRouteProps = {
+            routeName: ele.name,
+            routeAddress: ele.address,
+            routeType: ele.type,
+            routeId: ele.waypointId,
+            routePoint: ele.pointNumber,
+            latitude: ele.lat,
+            longitude: ele.lon,
+          };
+          arr.push(data);
+          if (ele.type === '경유지') {
+            let line: MapLinePathProps = {
+              name: ele.name,
+              x: ele.lat,
+              y: ele.lon,
+            };
+
+            lines.push(line);
+          } else {
+            let seData: LineStartEndProps = {
+              x: ele.lat,
+              y: ele.lon,
+            };
+            setSe((pre) => [...pre, seData]);
+          }
+          let markerData: LineStartEndProps = {
+            x: ele.lat,
+            y: ele.lon,
+          };
+          setMarker((pre) => [...pre, markerData]);
+        });
+        arr.sort((a: any, b: any) => a.routePoint - b.routePoint);
+        setDayOfRoute(arr);
+        setLinePath(lines);
+
+        setLatitude(arr[0].latitude);
+        setLongitude(arr[0].longitude);
+      }
+    });
+  }, [selectedDay]);
+
+  useEffect(() => {
+    if (linePath.length > 0) {
+      const mapLines: any[] = [];
+      GetLineData(linePath, se[0], se[1])
+        .then((res) => {
+          if (res.status === 200 && res.data.status === 'SUCCESS') {
+            res.data.data.map((ele: any) => {
+              ele.vertexes.map((vertex: any, index: number) => {
+                if (index % 2 === 0) {
+                  mapLines.push(
+                    new window.kakao.maps.LatLng(
+                      ele.vertexes[index + 1],
+                      ele.vertexes[index],
+                    ),
+                  );
+                }
+              });
+            });
+            setMapLines(mapLines);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [linePath]);
 
   /** 날씨 */
   useEffect(() => {
@@ -477,7 +599,7 @@ function ScheduleMainPage() {
 
                   {/* 지도 및 하위 컴포넌트 container */}
                   <R.RouteDetailInfoContainer>
-                    {/* <RouteDetailInfo
+                    <RouteDetailInfo
                       marker={marker}
                       deleteHandler={(name: string) => {}}
                       setSelectedIdx={setSelectedIdx}
@@ -496,7 +618,7 @@ function ScheduleMainPage() {
                       setIsOpen={setIsOpen}
                       setBsType={setBsType}
                       reviewType={reviewType}
-                    /> */}
+                    />
                   </R.RouteDetailInfoContainer>
                 </>
               ) : (
