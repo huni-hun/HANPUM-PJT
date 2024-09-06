@@ -27,6 +27,7 @@ export const RouteCard = styled.div`
   justify-content: center;
   border-bottom: 0.1rem solid ${colors.grey1};
   margin-bottom: 2.4rem;
+  flex-shrink: 0;
 `;
 
 export const ContentBox = styled.div`

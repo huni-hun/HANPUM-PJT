@@ -132,7 +132,6 @@ function MainPage() {
   const { mutate: addMeetInterestToggle } = useMutation(addInterestMeetToggle, {
     onSuccess: (res) => {
       if (res.status === STATUS.success) {
-        console.log(res);
         toast.success(res.message);
         queryClient.invalidateQueries({
           queryKey: ['getGroupList', requestDto.pageable.sort],

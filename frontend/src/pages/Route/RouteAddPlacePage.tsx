@@ -12,6 +12,7 @@ import {
   searchPlaceProps,
   WayPointReqDto,
 } from '@/models/route';
+import { toast } from 'react-toastify';
 
 interface RouteAddPagePlaceProps {
   selectedPlace: searchPlaceProps;
@@ -36,34 +37,40 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
   const navigator = useNavigate();
 
   const setWayPoint = () => {
-    let way: WayPointReqDto = {
-      type: '경유지',
-      name: props.selectedPlace.placeName,
-      address: props.selectedPlace.address,
-      lat: props.selectedPlace.latitude,
-      lon: props.selectedPlace.longitude,
-      pointNumber: `${props.wayPoints.length + 1}`,
-      distance: '0',
-      duration: '0',
-      calorie: '0',
-    };
+    if (props.wayPoints.length < 10) {
+      let way: WayPointReqDto = {
+        type: '경유지',
+        name: props.selectedPlace.placeName,
+        address: props.selectedPlace.address,
+        lat: props.selectedPlace.latitude,
+        lon: props.selectedPlace.longitude,
+        pointNumber: `${props.wayPoints.length + 1}`,
+        distance: '0',
+        duration: '0',
+        calorie: '0',
+      };
 
-    props.setWayPoints((pre) => {
-      const updatedWayPoints = [...pre, way];
+      props.setWayPoints((pre) => {
+        const updatedWayPoints = [...pre, way];
 
-      let newDateDetail: CourseDayReqDto[] = [...props.dateDetail];
-      newDateDetail.map((ele: CourseDayReqDto) => {
-        if (ele.dayNumber === props.day) {
-          ele.wayPointReqDtoList = updatedWayPoints;
-        }
+        let newDateDetail: CourseDayReqDto[] = [...props.dateDetail];
+        newDateDetail.map((ele: CourseDayReqDto) => {
+          if (ele.dayNumber === props.day) {
+            ele.wayPointReqDtoList = updatedWayPoints;
+          }
+        });
+        props.setDateDetail(newDateDetail);
+
+        return updatedWayPoints;
       });
-      props.setDateDetail(newDateDetail);
 
-      return updatedWayPoints;
-    });
-
-    props.setPageOpen(false);
-    props.setSearchOpen(false);
+      props.setPageOpen(false);
+      props.setSearchOpen(false);
+    } else {
+      toast.error('경유지는 하루에 10개를 초과할 수 없습니다.');
+      props.setPageOpen(false);
+      props.setSearchOpen(false);
+    }
   };
 
   const setAttraction = () => {
