@@ -11,7 +11,7 @@ export const Container = styled.div`
 
 export const MainContainer = styled.div`
   width: 100%;
-  height: auto;
+  flex: 1;
   display: flex;
   flex-direction: column;
   overflow-y: auto;

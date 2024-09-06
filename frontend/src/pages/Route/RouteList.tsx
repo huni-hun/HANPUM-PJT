@@ -19,7 +19,7 @@ function RouteList() {
 
   useEffect(() => {
     const data: RouteListProps[] = [];
-    getRouteList('해안길').then((result) => {
+    getRouteList('해안길', 4).then((result) => {
       if (result.status === 200) {
         result.data.data.courseListMap['해안길'].map((ele: any) => {
           let data: RouteListProps = {
@@ -45,7 +45,7 @@ function RouteList() {
       }
     });
 
-    getRouteList('초보자').then((result) => {
+    getRouteList('초보자', 4).then((result) => {
       if (result.status === 200) {
         result.data.data.courseListMap['초보자'].map((ele: any) => {
           let data: RouteListProps = {
@@ -71,7 +71,7 @@ function RouteList() {
       }
     });
 
-    getRouteList('숙련자').then((result) => {
+    getRouteList('숙련자', 4).then((result) => {
       if (result.status === 200) {
         result.data.data.courseListMap['숙련자'].map((ele: any) => {
           let data: RouteListProps = {

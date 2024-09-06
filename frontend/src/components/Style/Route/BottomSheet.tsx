@@ -2,6 +2,7 @@ import Icon from '@/components/common/Icon/Icon';
 import * as R from '@/components/Style/Route/RouteBottom.styled';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 interface BottomSheetProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -43,10 +44,20 @@ function BottomSheet(props: BottomSheetProps) {
               <R.SettingBox
                 key={ele}
                 onClick={() => {
-                  if (ele === '수정' && props.onEdit && props.writeState) {
-                    props.onEdit(); // 수정 핸들러 호출
+                  if (ele === '수정' && props.onEdit) {
+                    if (props.writeState) {
+                      props.onEdit(); // 수정 핸들러 호출
+                    } else {
+                      props.setIsOpen(false);
+                      toast.error('수정권한이 없습니다.');
+                    }
                   } else if (ele === '삭제' && props.onDelete) {
-                    props.onDelete(); // 삭제 핸들러 호출
+                    if (props.writeState) {
+                      props.onDelete(); // 수정 핸들러 호출
+                    } else {
+                      props.setIsOpen(false);
+                      toast.error('삭제권한이 없습니다.');
+                    }
                   }
                 }}
               >
@@ -62,11 +73,7 @@ function BottomSheet(props: BottomSheetProps) {
                     size={20}
                   />
                   <R.SettingTextBox
-                    onClick={() => {
-                      if (props.onDelete) {
-                        props.onDelete();
-                      }
-                    }}
+                    onClick={() => {}}
                     isDelete={ele === '삭제'}
                   >
                     {ele}

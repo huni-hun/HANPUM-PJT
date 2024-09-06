@@ -161,7 +161,7 @@ function MainPage() {
   };
 
   useEffect(() => {
-    getRouteList('해안길').then((result) => {
+    getRouteList('해안길', 2).then((result) => {
       if (result.status === 200) {
         result.data.data.courseListMap['해안길'].map((ele: any) => {
           let data: RouteListProps = {
