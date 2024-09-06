@@ -1,46 +1,37 @@
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { toast } from 'react-toastify';
+import { AxiosError } from 'axios';
+
 import BottomTab from '@components/common/BottomTab/BottomTab';
 import Schedule from '@components/Main/Schedule';
 import Text from '@components/common/Text';
-import Course from '@components/Main/Course';
-import Meet from '@components/Main/Meet';
-import Header from '@/components/common/Header/Header';
-import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import Cookies from 'js-cookie';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { signupStepAtom } from '@/atoms/signupStepAtom';
-import { encodeToken, startDateEndDateStringFormat } from '@/utils/util';
-import { colors } from '@/styles/colorPalette';
-import * as R from '../../components/Style/Route/RouteList.styled';
+import RouteCard from '@components/Style/Route/RouteCard';
+import Header from '@components/common/Header/Header';
+import { colors } from '@styles/colorPalette';
 import Icon from '@/components/common/Icon/Icon';
-import NotHaveSchedule from '@/components/Main/NotHaveSchedule';
-import MeetLongCard from '@/components/Meet/MeetLongCard';
-import tempImg from '../../assets/img/mountain.jpg';
-import DateBadge from '@/components/common/Badge/DateBadge';
-import InfoBadge from '@/components/common/Badge/InfoBadge';
-import RouteBadge from '@/components/common/Badge/RouteBadge';
-import StarBadge from '@/components/common/Badge/StarBadge';
-import Flex from '@/components/common/Flex';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { getMySchedule, getMyScheduleData } from '@/api/schedule/GET';
-import { STATUS } from '@/constants';
-import { toast } from 'react-toastify';
-import { AxiosError } from 'axios';
+import NotHaveSchedule from '@components/Main/NotHaveSchedule';
+import DateBadge from '@components/common/Badge/DateBadge';
+import InfoBadge from '@components/common/Badge/InfoBadge';
+import RouteBadge from '@components/common/Badge/RouteBadge';
+import Flex from '@components/common/Flex';
+import { getMySchedule } from '@api/schedule/GET';
+import { STATUS } from '@constants';
 import {
   addInterestRoute,
   getMainRouteList,
   getRouteList,
 } from '@/api/route/GET';
-import { Root } from '@/models/root';
-import { MeetInfo, MeetPageAble, MeetRequestDto } from '@/models/meet';
-import { GetGroupList } from '@/api/meet/GET';
-import { meetFilterInfoAtom } from '@/atoms/meetFilterAtom';
-import { addInterestMeetToggle } from '@/api/meet/POST';
-import { deleteInterestRoute } from '@/api/route/Delete';
-import { GetUser } from '@/api/mypage/GET';
-import { RouteListProps } from '@/models/route';
-import RouteCard from '@/components/Style/Route/RouteCard';
+import { MeetInfo, MeetRequestDto } from '@models/meet';
+import { GetGroupList } from '@api/meet/GET';
+import { meetFilterInfoAtom } from '@atoms/meetFilterAtom';
+import { addInterestMeetToggle } from '@api/meet/POST';
+import { deleteInterestRoute } from '@api/route/Delete';
+import { GetUser } from '@api/mypage/GET';
+import { RouteListProps } from '@models/route';
 
 function MainPage() {
   const navigator = useNavigate();
@@ -155,7 +146,8 @@ function MainPage() {
     deleteRouteInterest(course_id);
   };
 
-  const clickAddMeetInterest = (groupId: number) => {
+  const clickAddMeetInterest = (groupId: number, e: React.MouseEvent) => {
+    e.stopPropagation();
     addMeetInterestToggle(groupId);
     // console.log(`${groupId} 눌림`);
   };
@@ -202,8 +194,6 @@ function MainPage() {
 
         <div className="spacing" />
 
-        {/* 경로 추천 */}
-
         <div className="route-container">
           <Flex $justify="space-between" $align="center">
             {userInfo && (
@@ -232,7 +222,6 @@ function MainPage() {
 
         <div className="spacing" />
 
-        {/* 모임 추천 */}
         {groupListData &&
           groupListData.data.groupResDtoList.map((meet: MeetInfo) => (
             <div className="meet-container" key={meet.groupId}>
@@ -247,17 +236,19 @@ function MainPage() {
                 </Flex>
               </Flex>
 
-              <div className="main-longCard">
-                <img src={tempImg} alt="" />
+              <div
+                className="main-longCard"
+                onClick={() => navigator(`/meet/:${meet.groupId}`)}
+              >
+                <img src={meet.groupImg} alt="" />
                 <DateBadge
                   style={{ top: '16px', left: '20px' }}
                   totalDays={meet.totalDays}
                 />
 
-                {/* 좋아요 아이콘 */}
                 {meet.like ? (
                   <Icon
-                    onClick={() => clickAddMeetInterest(meet.groupId)}
+                    onClick={(e) => clickAddMeetInterest(meet.groupId, e)}
                     name="IconModiHeartFill"
                     size={20}
                     style={{
@@ -269,7 +260,7 @@ function MainPage() {
                   />
                 ) : (
                   <Icon
-                    onClick={() => clickAddMeetInterest(meet.groupId)}
+                    onClick={(e) => clickAddMeetInterest(meet.groupId, e)}
                     name="IconModiHeartNonFill"
                     size={20}
                     style={{

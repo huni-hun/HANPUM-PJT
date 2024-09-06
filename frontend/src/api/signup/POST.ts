@@ -105,7 +105,7 @@ export async function Logout() {
   return data;
 }
 
-// 토큰 재발급 TODO
+// 토큰 재발급
 export async function GetRefreshToken() {
   const { data } = await api.post('/api/auth/reissue-token');
   return data;
