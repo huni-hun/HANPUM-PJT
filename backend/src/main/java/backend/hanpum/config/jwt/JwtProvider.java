@@ -28,7 +28,8 @@ public class JwtProvider {
     private static final String BEARER_PREFIX = "Bearer+";
 
     //private static final long ACCESS_TOKEN_TIME = 1000 * 60 * 30L; // 30 분 1000ms(=1s) *60=(1min)*30 =(30min)
-    private static final long ACCESS_TOKEN_TIME = 1000 * 60 * 30* 40L; // 1200 분 1000ms(=1s) *60=(1min)*30 * 40=(1200min)
+    //private static final long ACCESS_TOKEN_TIME = 1000 * 60 * 30* 40L; // 1200 분 1000ms(=1s) *60=(1min)*30 * 40=(1200min)
+    private static final long ACCESS_TOKEN_TIME = 1000 * 30 * 3L; // 1200 분 1000ms(=1s) *60=(1min)*30 * 40=(1200min)
     private static final long REFRESH_TOKEN_TIME = 1000 * 60 * 60 * 24 * 14L; // 14일
 
     private final RedisDao redisDao;
