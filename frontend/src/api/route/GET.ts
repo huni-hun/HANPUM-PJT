@@ -1,8 +1,20 @@
 import api from '../index';
 
-export async function getRouteList(type: string) {
+export async function getRouteList(type: string, size: number) {
   const response = await api.get(
-    `/api/course?targetCourse=${type}&size=10&page=0&sort=popularity,DESC`,
+    `/api/course?targetCourse=${type}&size=${size}&page=0&sort=popularity,DESC`,
+  );
+
+  return response;
+}
+
+export async function getRouteMoreList(
+  type: string,
+  size: number,
+  pageParams: number,
+) {
+  const response = await api.get(
+    `/api/course?targetCourse=${type}&size=${size}&page=${pageParams}&sort=popularity,DESC`,
   );
 
   return response;
@@ -21,9 +33,10 @@ export async function getRouteSearchListWithProps(
   distance: string,
   days: string,
   types: string,
+  page: number,
 ) {
   const response = await api.get(
-    `/api/course?size=10&page=0&sort=popularity,DESC&kwyword=${keyword}${distance}${days}${types}`,
+    `/api/course?size=8&page=${page}&sort=popularity,DESC&kwyword=${keyword}${distance}${days}${types}`,
   );
 
   return response;
