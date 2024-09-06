@@ -52,7 +52,9 @@ function RouteDetailPage() {
   const [reviews, setReviews] = useState<RouteReviewProps[]>([]);
   const [selectedIdx, setSelectedIdx] = useState<number>(-1);
   const [mapLines, setMapLines] = useState<any[]>([]);
-
+  /** 바텀 sheet */
+  const [isOpenSetting, setIsOpenSetting] = useState<boolean>(false); // 경로설정 BottomSheet 열림 상태
+  const [isOpenSorting, setIsOpenSorting] = useState<boolean>(false); // 경로정렬 BottomSheet 열림 상태
   useEffect(() => {
     if (dayData.length === 0) {
       getRouteDetail(routeid as string).then((result) => {
@@ -221,6 +223,38 @@ function RouteDetailPage() {
       });
   };
 
+  const renderBottomSheet = () => {
+    if (isOpenSetting) {
+      return (
+        <BottomSheet
+          id={Number(routeid)}
+          selected={reviewType}
+          setSelected={setReviewType}
+          route={'경로설정'}
+          bsType={'경로설정'}
+          setIsOpen={setIsOpenSetting}
+          onEdit={() => {
+            navigate(`/route/detail/retouch/${routeid}`);
+          }}
+          onDelete={deleteHandler}
+        />
+      );
+    }
+    if (isOpenSorting) {
+      return (
+        <BottomSheet
+          id={Number(routeid)}
+          selected={reviewType}
+          setSelected={setReviewType}
+          route={'경로정렬'}
+          bsType={'경로정렬'}
+          setIsOpen={setIsOpenSorting}
+        />
+      );
+    }
+    return null;
+  };
+
   return loading ? (
     <R.Container>
       <Header
@@ -231,7 +265,7 @@ function RouteDetailPage() {
         }}
         clickOption={() => {
           setIsOpen(true);
-          setBsType('설정');
+          setIsOpenSetting(!isOpenSetting);
         }}
       />
       <R.Main>
@@ -340,7 +374,7 @@ function RouteDetailPage() {
               attractions={attractions}
               setLoading={setLoading}
               setSelectedDay={setSelectedDay}
-              setIsOpen={setIsOpen}
+              setIsOpen={setIsOpenSorting}
               setBsType={setBsType}
               reviewType={reviewType}
             />
@@ -371,20 +405,7 @@ function RouteDetailPage() {
           />
         </R.ButtonBox>
       </R.BottomContainer>
-      {isOpen && (
-        <BottomSheet
-          id={Number(routeid)}
-          selected={reviewType}
-          setSelected={setReviewType}
-          bsType={bsType}
-          setIsOpen={setIsOpen}
-          onEdit={() => {
-            navigate(`/route/detail/retouch/${routeid}`);
-          }}
-          onDelete={deleteHandler}
-          writeState={routeData.writeState}
-        />
-      )}
+      {renderBottomSheet()}
       {isModalOpen && (
         <ReviewModal
           routeid={routeid as string}
