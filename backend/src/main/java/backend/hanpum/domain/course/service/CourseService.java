@@ -31,6 +31,7 @@ public interface CourseService {
     List<AttractionResDto> searchAttractionsByKeyword(String keyword, Integer contentType);
     List<SearchWaypointResDto> searchWaypointByKeyword(String keyword);
     List<MultiWaypointSearchResDto> searchMultiWaypointCourse(List<MultiWaypointSearchReqDto> multiWaypointSearchReqDtoList);
+    List<MultiWaypointSearchResDto> getSearchTmapMultiWaypoint(List<MultiWaypointSearchReqDto> multiWaypointSearchReqDtoList);
     List<CourseResDto> getInterestCourseList(Long memberId);
     List<CourseResDto> getSelfMadeCourseList(Long memberId);
     List<UsedCourseResDto> getUsedCourseList(Long memberId);
