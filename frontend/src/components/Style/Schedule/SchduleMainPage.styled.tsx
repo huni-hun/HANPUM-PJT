@@ -97,7 +97,7 @@ export const ScheduleType = styled.p<{ isSelected: boolean }>`
 
 export const ScheduleMainContainer = styled.div`
   width: 100vw;
-  /* height: 75vh; */
+  height: 75vh;
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
@@ -306,6 +306,8 @@ export const Members = styled.div`
     width: 20vw;
     height: 19vw;
     margin-bottom: 1rem;
+    border: 1px solid #787878;
+    border-radius: 50%;
   }
 `;
 

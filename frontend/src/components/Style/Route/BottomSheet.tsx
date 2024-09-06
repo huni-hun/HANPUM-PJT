@@ -141,6 +141,7 @@ function BottomSheet(props: BottomSheetProps) {
 
   const BottomSheetMain = () => {
     switch (props.bsType) {
+      case '일정':
       case '경로설정':
       case '경로정렬':
       case '모임필터':
@@ -173,7 +174,12 @@ function BottomSheet(props: BottomSheetProps) {
                     onClick={() => {}}
                     isDelete={ele === '삭제'}
                     style={{
-                      color: isSpecial && isSelected ? colors.main : 'inherit',
+                      color:
+                        ele === '삭제'
+                          ? colors.red
+                          : isSpecial && isSelected
+                            ? colors.main
+                            : 'inherit',
                     }}
                   >
                     {ele}

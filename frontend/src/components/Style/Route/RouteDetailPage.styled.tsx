@@ -393,7 +393,7 @@ export const ContentBox = styled.div<{ selected: boolean }>`
 
 export const RouteDetailInfoContainer = styled.div`
   width: 100vw;
-  height: 52vh;
+  height: 100vh;
   background-color: #ffffff;
 `;
 

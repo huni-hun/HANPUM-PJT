@@ -15,6 +15,19 @@ import { RunningScheduleProps, SchduleCardProps } from '@/models/schdule';
 import BottomSheet from '@/components/Style/Route/BottomSheet';
 import MeetModal from '@/components/Meet/MeetModal';
 import { getMyScheduleDetailData } from '@/api/schedule/GET';
+import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
+import {
+  AttractionsProps,
+  DaysOfRouteProps,
+  LineStartEndProps,
+  MapLinePathProps,
+  RouteDetailDayProps,
+  RouteDetailProps,
+  RouteReviewProps,
+} from '@/models/route';
+import { getRouteDayDetail, getRouteDetail } from '@/api/route/GET';
+import { GetLineData } from '@/api/route/POST';
+import BottomTab from '@/components/common/BottomTab/BottomTab';
 
 function DetailMineSchedulePage() {
   const BtnClick = () => {};
@@ -32,6 +45,24 @@ function DetailMineSchedulePage() {
     useState<RunningScheduleProps | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  /** 루트 디테일  */
+  /** 위치 가져오기*/
+  const [routeData, setRouteData] = useState<RouteDetailProps>(null!);
+  const [lat, setLat] = useState<number | null>(null);
+  const [lon, setLon] = useState<number | null>(null);
+  const [marker, setMarker] = useState<LineStartEndProps[]>([]);
+  const [selectedIdx, setSelectedIdx] = useState<number>(-1);
+  const [reviews, setReviews] = useState<RouteReviewProps[]>([]);
+  const [dayOfRoute, setDayOfRoute] = useState<DaysOfRouteProps[]>([]);
+  const [mapLines, setMapLines] = useState<any[]>([]);
+  const [routeDayData, setRouteDayData] = useState<RouteDetailDayProps[]>([]);
+  const [se, setSe] = useState<LineStartEndProps[]>([]);
+  const [latitude, setLatitude] = useState<number>(0);
+  const [longitude, setLongitude] = useState<number>(0);
+  const [attractions, setAttractions] = useState<AttractionsProps[]>([]);
+  const [selected, setSelected] = useState<string>('course');
+  const [selectedDay, setSelectedDay] = useState<number>(1);
+  const [linePath, setLinePath] = useState<MapLinePathProps[]>([]);
 
   /** 바텀탭 - 수정 클릭시 */
   const handleEdit = () => {
@@ -97,6 +128,142 @@ function DetailMineSchedulePage() {
     };
 
     fetchData();
+
+    if (routeDayData.length === 0) {
+      /*경로 상세 정보 가져오기 */
+      /*이 정보 안가져 오면 총 몇일인지 알 수 없어서 가져와야 됩니다.*/
+      getRouteDetail('1' as string).then((result) => {
+        if (result.data.status !== 'ERROR' && result.status === 200) {
+          let rd: RouteDetailProps = {
+            routeName: result.data.data.course.courseName,
+            routeContent: result.data.data.course.content,
+            writeDate: result.data.data.course.writeDate,
+            routeComment: result.data.data.course.commentCnt,
+            routeScore: result.data.data.course.scoreAvg,
+            start: result.data.data.course.startPoint,
+            end: result.data.data.course.endPoint,
+            img: result.data.data.course.backgroundImg,
+            writeState: result.data.data.course.writeState,
+          };
+          setRouteData(rd);
+          result.data.data.courseDays.map((ele: any) => {
+            let data: RouteDetailDayProps = {
+              dayNum: ele.dayNumber,
+              totalDistance: ele.total_distance,
+              totalCalorie: ele.total_calorie,
+              totalDuration: ele.total_duration,
+            };
+            setRouteDayData((pre) => [...pre, data]);
+          });
+        }
+
+        setLoading(true);
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    /* 맵에 마커, 선 초기화 */
+    setSe([]);
+    setMarker([]);
+    /*경로 일차별 경유지 정보 가져오기 */
+    getRouteDayDetail('1' as string, selectedDay).then((result) => {
+      if (result.status === 200) {
+        let arr: DaysOfRouteProps[] = [];
+        let lines: MapLinePathProps[] = [];
+        result.data.data.wayPoints.map((ele: any) => {
+          let data: DaysOfRouteProps = {
+            routeName: ele.name,
+            routeAddress: ele.address,
+            routeType: ele.type,
+            routeId: ele.waypointId,
+            routePoint: ele.pointNumber,
+            latitude: ele.lat,
+            longitude: ele.lon,
+          };
+          arr.push(data);
+          /* 다중 경유지 정보, 시작점, 도착점 저장 */
+          if (ele.type === '경유지') {
+            let line: MapLinePathProps = {
+              name: ele.name,
+              x: ele.lat,
+              y: ele.lon,
+            };
+
+            lines.push(line);
+          } else {
+            let seData: LineStartEndProps = {
+              x: ele.lat,
+              y: ele.lon,
+            };
+            setSe((pre) => [...pre, seData]);
+          }
+          let markerData: LineStartEndProps = {
+            x: ele.lat,
+            y: ele.lon,
+          };
+          setMarker((pre) => [...pre, markerData]);
+        });
+        arr.sort((a: any, b: any) => a.routePoint - b.routePoint);
+        setDayOfRoute(arr);
+        setLinePath(lines);
+        /* 지도 중심점 잡기 */
+        setLatitude(arr[0].latitude);
+        setLongitude(arr[0].longitude);
+      }
+    });
+  }, [selectedDay]);
+
+  useEffect(() => {
+    if (linePath.length > 0) {
+      const mapLines: any[] = [];
+      /* 다중 경유지 경로 가져오기 */
+      GetLineData(linePath, se[0], se[1])
+        .then((res) => {
+          if (res.status === 200 && res.data.status === 'SUCCESS') {
+            res.data.data.map((ele: any) => {
+              ele.vertexes.map((vertex: any, index: number) => {
+                if (index % 2 === 0) {
+                  mapLines.push(
+                    new window.kakao.maps.LatLng(
+                      ele.vertexes[index + 1],
+                      ele.vertexes[index],
+                    ),
+                  );
+                }
+              });
+            });
+            setMapLines(mapLines);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [linePath]);
+
+  useEffect(() => {
+    const geo = window.navigator.geolocation;
+
+    if (geo) {
+      geo.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setLat(latitude);
+          setLon(longitude);
+        },
+        () => {
+          alert('위치 가져오기 실패');
+        },
+        {
+          enableHighAccuracy: true,
+          maximumAge: 30000,
+          timeout: 27000,
+        },
+      );
+    } else {
+      alert('Geolocation is not supported by this browser.');
+    }
   }, []);
 
   /** 내일정 - card 컴포넌트 'n박 n일' 계산 */
@@ -151,7 +318,7 @@ function DetailMineSchedulePage() {
         clickBack={() => navigate(-1)}
         clickOption={() => {
           setIsOpen(true);
-          setBsType('설정');
+          setBsType('일정');
         }}
       />
 
@@ -171,16 +338,26 @@ function DetailMineSchedulePage() {
 
         {/* 지도 및 하위 컴포넌트 container */}
         <R.RouteDetailInfoContainer>
-          {/* <RouteDetailInfo
-          selected={selected}
-          selectedDay={selectedDay}
-          latitude={latitude}
-          longitude={longitude}
-          dayData={dayData}
-          attractions={attractions}
-          setLoading={setLoading}
-          setSelectedDay={setSelectedDay}
-        /> */}
+          <RouteDetailInfo
+            marker={marker}
+            deleteHandler={(name: string) => {}}
+            setSelectedIdx={setSelectedIdx}
+            reviews={reviews}
+            setDayOfRoute={setDayOfRoute}
+            dayOfRoute={dayOfRoute}
+            linePath={mapLines}
+            selected={selected}
+            selectedDay={selectedDay}
+            latitude={latitude}
+            longitude={longitude}
+            dayData={routeDayData}
+            attractions={attractions}
+            setLoading={setLoading}
+            setSelectedDay={setSelectedDay}
+            setIsOpen={setIsOpen}
+            setBsType={setBsType}
+            reviewType={reviewType}
+          />
         </R.RouteDetailInfoContainer>
       </R.Overflow>
       {isOpen && (
@@ -194,6 +371,7 @@ function DetailMineSchedulePage() {
           onDelete={handleDelete}
         />
       )}
+
       {isDeleteModalOpen && (
         <MeetModal
           onCancel={delteModalClose}
@@ -202,6 +380,7 @@ function DetailMineSchedulePage() {
           content={'삭제하면 복구가 어렵습니다.'}
         />
       )}
+      <BottomTab />
     </ScheduleMainPageContainer>
   );
 }

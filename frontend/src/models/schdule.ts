@@ -11,8 +11,11 @@ export interface WeatherProps {
 
 /** 모임일정 - 모임멤버 */
 export interface Member {
-  memberImg: string;
-  memberName: string;
+  groupMemberId: number;
+  joinType: string;
+  memberId: number;
+  profilePicture: string;
+  nickname: string;
 }
 
 export interface MeetMemberProps {
