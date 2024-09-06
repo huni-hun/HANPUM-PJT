@@ -126,9 +126,10 @@ export default function Router() {
             <Route path="/meet/memberDetail" element={<MemberManageDetail />} />
 
             {/* 로그인/ 회원가입/ 찾기 */}
-            <Route path="/login" element={<LoginPage />} />
+            {/* <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
-            <Route path="/find/:account" element={<FindPage />} />
+            <Route path="/find/:account" element={<FindPage />} /> */}
+            <Route path="*" element={<Navigate to="/home" />} />
 
             {/* 마이페이지 */}
             <Route path="/mypage" element={<MyPage />} />

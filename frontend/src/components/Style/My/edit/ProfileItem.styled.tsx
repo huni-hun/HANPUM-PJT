@@ -16,9 +16,6 @@ export const ProfileItemContainer = styled.div`
     padding-left: 1.2rem;
     box-sizing: border-box;
     font-size: 1.6rem;
-  }
-  .no-border {
-    border: none;
     .kakao {
       width: 100%;
       display: flex;
