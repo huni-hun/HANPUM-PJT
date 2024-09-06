@@ -42,22 +42,26 @@ function SearchPlacePage(props: SearchPlacePageProps) {
 
   const getWaypoint = () => {
     if (searchText !== '') {
-      PostSearchPlace(searchText).then((result) => {
-        if (result.status === 200) {
-          let arr: searchPlaceProps[] = [];
-          result.data.data.map((ele: any) => {
-            let data: searchPlaceProps = {
-              placeName: ele.placeName,
-              address: ele.address,
-              latitude: ele.lat,
-              longitude: ele.lon,
-            };
-            arr.push(data);
-          });
+      PostSearchPlace(searchText)
+        .then((result) => {
+          if (result.status === 200) {
+            let arr: searchPlaceProps[] = [];
+            result.data.data.map((ele: any) => {
+              let data: searchPlaceProps = {
+                placeName: ele.placeName,
+                address: ele.address,
+                latitude: ele.lat,
+                longitude: ele.lon,
+              };
+              arr.push(data);
+            });
 
-          setSearchedPlace(arr);
-        }
-      });
+            setSearchedPlace(arr);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     } else {
       setSearchedPlace([]);
     }
@@ -65,23 +69,27 @@ function SearchPlacePage(props: SearchPlacePageProps) {
 
   const getAttractions = () => {
     if (searchText !== '') {
-      PostSearchAttractions(searchText).then((result) => {
-        if (result.status === 200) {
-          let arr: searchPlaceProps[] = [];
-          result.data.data.map((ele: any) => {
-            let data: searchPlaceProps = {
-              placeName: ele.name,
-              address: ele.address,
-              latitude: ele.lat,
-              longitude: ele.lon,
-              img: ele.img,
-            };
-            arr.push(data);
-          });
+      PostSearchAttractions(searchText)
+        .then((result) => {
+          if (result.status === 200) {
+            let arr: searchPlaceProps[] = [];
+            result.data.data.map((ele: any) => {
+              let data: searchPlaceProps = {
+                placeName: ele.name,
+                address: ele.address,
+                latitude: ele.lat,
+                longitude: ele.lon,
+                img: ele.img,
+              };
+              arr.push(data);
+            });
 
-          setSearchedPlace(arr);
-        }
-      });
+            setSearchedPlace(arr);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     } else {
       setSearchedPlace([]);
     }
