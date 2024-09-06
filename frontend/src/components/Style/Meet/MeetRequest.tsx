@@ -1,11 +1,7 @@
 import { colors } from '@/styles/colorPalette';
 import styled from 'styled-components';
 
-export const InfoWrap = styled.div`
-  /* width: 100%; */
-  height: 100vw;
-  box-sizing: border-box;
-`;
+export const InfoWrap = styled.div``;
 
 export const ProfileBox = styled.div`
   width: 100%;
@@ -22,8 +18,11 @@ export const Img = styled.div`
   border: #787878 1px solid;
   border-radius: 50%;
   box-sizing: border-box;
+  width: 20vw;
+  height: 20vw;
   img {
     width: 20vw;
+    height: 20vw;
     border-radius: 50%;
   }
 `;

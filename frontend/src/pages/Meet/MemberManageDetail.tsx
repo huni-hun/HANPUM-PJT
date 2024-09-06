@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { GetMeetMemberDetailList } from '@/api/meet/GET';
 import { MemberDetailDataProps } from '@/models/meet';
 import { toast } from 'react-toastify';
+import memberImg from '../../assets/img/memberImg.svg';
+import BottomSheet from '@/components/Style/Route/BottomSheet';
 
 function MemberManageDetail() {
   const navigate = useNavigate();
@@ -14,6 +16,9 @@ function MemberManageDetail() {
   );
   const [isRejectModalOpen, setIsRejectModalOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [bsType, setBsType] = useState<string>('설정');
+  const [reviewType, setReviewType] = useState<string>('공개 여부');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -77,15 +82,23 @@ function MemberManageDetail() {
   return (
     <MainPageContainer>
       <Header
-        purpose="result"
-        title="모임 신청"
+        purpose="schedule"
+        title="모임 인원관리"
         clickBack={() => navigate(-1)}
+        clickOption={() => {
+          setIsOpen(true);
+          setBsType('모임관리');
+        }}
       />
       <M.InfoWrap>
         <M.ProfileBox>
           <M.Img>
             <img
-              src={dummyMemberData.length > 0 ? dummyMemberData[0].img : ''}
+              src={
+                dummyMemberData.length > 0
+                  ? dummyMemberData[0].img.trim()
+                  : memberImg
+              }
               alt="프로필 이미지"
             />
           </M.Img>
@@ -110,6 +123,15 @@ function MemberManageDetail() {
           </M.InfoInput>
         </M.InfoInputBox>
       </M.InfoWrap>
+      {isOpen && (
+        <BottomSheet
+          selected={reviewType}
+          setSelected={setReviewType}
+          bsType={bsType}
+          setIsOpen={setIsOpen}
+          route="모임관리"
+        />
+      )}
     </MainPageContainer>
   );
 }
@@ -117,7 +139,10 @@ function MemberManageDetail() {
 export default MemberManageDetail;
 
 const MainPageContainer = styled.div`
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
   background-color: #fff;
+  overflow-y: auto;
 `;

@@ -22,6 +22,8 @@ interface HeaderProps {
   changeEven?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   keyDownEven?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   plusBtnclick?: () => void;
+  /** 일정 & 모임 구분 */
+  isSchedule?: boolean;
 }
 
 const Header = ({
@@ -41,6 +43,7 @@ const Header = ({
   searchValue,
   plusBtnclick,
   $isGrey = false,
+  isSchedule,
 }: HeaderProps) => {
   const navigate = useNavigate();
   const onClickHandler = (to: string) => {
@@ -106,7 +109,9 @@ const Header = ({
             <Icon
               name="IconHeaderPlus"
               // onClick={() => onClickHandler('mypage')}
-              onClick={() => {}}
+              onClick={() => {
+                onClickHandler('meet/memberDetail');
+              }}
               size={20}
             />
             <Icon
@@ -284,6 +289,32 @@ const Header = ({
               size={20}
             />
           </Flex>
+        );
+      case 'schedule':
+        return (
+          <>
+            <Flex $align="center" $justify="space-between">
+              <Text as="div">
+                <Icon
+                  name="IconBackArrow"
+                  className="back-arrow"
+                  size={15}
+                  onClick={clickBack}
+                />
+              </Text>
+
+              <Text
+                as="div"
+                $bold={true}
+                $typography="t15"
+                color="black1"
+                textAlign={isSchedule ? 'left' : 'center'}
+              >
+                {title}
+              </Text>
+              <Icon name="IconOption" size={15} onClick={clickOption} />
+            </Flex>
+          </>
         );
     }
   };

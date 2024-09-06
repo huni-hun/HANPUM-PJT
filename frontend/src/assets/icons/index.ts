@@ -68,6 +68,8 @@ export { ReactComponent as IconHeartGrey } from './heart_grey.svg';
 export { ReactComponent as IconFilter } from './filter.svg';
 export { ReactComponent as IconDownArrow } from './grey_down_arrow.svg';
 export { ReactComponent as IconArrowRight } from './arrowRight.svg';
+export { ReactComponent as IconListManage } from './meetManage.svg';
+export { ReactComponent as IconMeetExport } from './meetExport.svg';
 
 // 모임 디테일
 export { ReactComponent as IconHeartGreyFill } from './heart_grey_fill.svg';
