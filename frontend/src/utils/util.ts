@@ -1,5 +1,4 @@
 import { SignupRequestValues } from '@/models/signup';
-import { Token } from '@/models/user';
 import CryptoJS from 'crypto-js';
 
 const secretKey = process.env.REACT_APP_SECRET_KEY;
@@ -20,7 +19,6 @@ export function dateFormat(date: string | undefined) {
 export function telnumberFormat(telnum: string | undefined) {
   if (telnum) {
     telnum = telnum.replace(/\D/g, '');
-    // console.log(telnum);
 
     if (telnum.length <= 3) {
       return telnum;
@@ -38,28 +36,15 @@ export function telnumberFormat(telnum: string | undefined) {
 export function encodeToken(accessToken: string) {
   console.log('인코딩에서', accessToken);
   if (secretKey) {
-    const token = {
-      accessToken: CryptoJS.AES.encrypt(accessToken, secretKey).toString(),
-    };
-
-    // console.log('token ::', token);
-    return token;
+    return CryptoJS.AES.encrypt(accessToken, secretKey).toString();
   }
 }
 
 // 토큰 디코딩
-export function decodeToken(tokenObj: Token) {
+export function decodeToken(decodeToken: string) {
   if (secretKey) {
-    const accesssTokenBytes = CryptoJS.AES.decrypt(
-      tokenObj.accessToken,
-      secretKey,
-    );
-
-    const byteTokenObj = {
-      accessToken: accesssTokenBytes.toString(CryptoJS.enc.Utf8),
-    };
-
-    return byteTokenObj;
+    const accessTokenBytes = CryptoJS.AES.decrypt(decodeToken, secretKey);
+    return accessTokenBytes.toString(CryptoJS.enc.Utf8);
   }
 }
 

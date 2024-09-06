@@ -46,26 +46,24 @@ api.interceptors.request.use(
       console.log('sessionToken ::', sessionToken);
 
       if (localToken != null) {
-        const tokenObj = decodeToken(JSON.parse(localToken));
+        const token = decodeToken(localToken);
         // const tokenObj = localToken;
 
-        console.log(tokenObj);
+        console.log(token);
 
-        if (tokenObj) {
-          const { accessToken } = tokenObj;
-          config.headers.Authorization = `Bearer ${accessToken}`;
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
           // config.headers.Authorization = `Bearer ${tokenObj}`;
         }
       } else if (sessionToken != null) {
-        const tokenObj = decodeToken(JSON.parse(sessionToken));
-
-        console.log(tokenObj);
+        // const tokenObj = decodeToken(JSON.parse(sessionToken));
+        const token = decodeToken(sessionToken);
+        console.log(token);
 
         // const tokenObj = sesstionToken;
 
-        if (tokenObj) {
-          const { accessToken } = tokenObj;
-          config.headers.Authorization = `Bearer ${accessToken}`;
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
           // config.headers.Authorization = `Bearer ${tokenObj}`;
         }
       }
@@ -101,6 +99,7 @@ api.interceptors.response.use(
 
         try {
           const { data } = await GetRefreshToken();
+          console.log('data :: ', data);
           const newToken = data.accessToken;
           console.log('newToken ::', newToken);
 
@@ -126,7 +125,7 @@ api.interceptors.response.use(
 
           console.log('암호화한 new Token ::', encodedTokenObj);
 
-          localStorage.setItem('token', JSON.stringify(encodedTokenObj));
+          localStorage.setItem('token', encodedTokenObj);
           // sessionStorage.setItem('token', JSON.stringify(hashToken));
           api.defaults.headers.common['Authorization'] = `Bearer ${secondPart}`;
 

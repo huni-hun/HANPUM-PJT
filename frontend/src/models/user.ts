@@ -4,7 +4,7 @@ export interface User {
   name: string;
 }
 
-export interface Token {
-  accessToken: string;
-  refreshToken: string;
-}
+// export interface Token {
+//   accessToken: string;
+//   refreshToken: string;
+// }
