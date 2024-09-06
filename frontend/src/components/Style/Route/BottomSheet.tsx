@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Icon from '@/components/common/Icon/Icon';
 import * as R from '@/components/Style/Route/RouteBottom.styled';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { colors } from '@/styles/colorPalette';
 
 interface BottomSheetProps {
@@ -83,9 +84,18 @@ function BottomSheet(props: BottomSheetProps) {
     switch (option) {
       case '수정':
         if (props.onEdit) props.onEdit();
+        else {
+          props.setIsOpen(false);
+          toast.error('수정권한이 없습니다.');
+        }
         break;
       case '삭제':
         if (props.onDelete) props.onDelete();
+        else {
+          props.setIsOpen(false);
+          toast.error('삭제권한이 없습니다.');
+        }
+
         break;
       case '공개 여부':
         break;
@@ -160,6 +170,7 @@ function BottomSheet(props: BottomSheetProps) {
                   </R.SettingIconBox>
 
                   <R.SettingTextBox
+                    onClick={() => {}}
                     isDelete={ele === '삭제'}
                     style={{
                       color: isSpecial && isSelected ? colors.main : 'inherit',

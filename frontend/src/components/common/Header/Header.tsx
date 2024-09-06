@@ -171,7 +171,7 @@ const Header = ({
               <Icon name="IconHeaderPlus" onClick={plusBtnclick} size={14} />
               <Icon
                 name="IconUser"
-                onClick={() => onClickHandler('my')}
+                onClick={() => onClickHandler('mypage')}
                 size={14}
               />
             </Flex>

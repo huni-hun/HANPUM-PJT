@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class GroupScheduleResDto {
     Long scheduleId;
+    Long courseId;
     String content;
     String backgroundImg;
     String title;
@@ -29,20 +30,22 @@ public class GroupScheduleResDto {
     @Setter
     List<GroupMemberResDto> groupMemberResDtoList;
 
-    public GroupScheduleResDto (Long scheduleId,
-                                 String content,
-                                 String backgroundImg,
-                                 String title,
-                                 String type,
-                                 String startPoint,
-                                 String endPoint,
-                                 String startDate,
-                                 String endDate,
-                                 int state,
-                                 Double totalDistance
+    public GroupScheduleResDto(Long scheduleId,
+                               Long courseId,
+                               String content,
+                               String backgroundImg,
+                               String title,
+                               String type,
+                               String startPoint,
+                               String endPoint,
+                               String startDate,
+                               String endDate,
+                               int state,
+                               Double totalDistance
 //                                                     List<CourseTypes> courseTypes
     ) {
         this.scheduleId = scheduleId;
+        this.courseId = courseId;
         this.content = content;
         this.backgroundImg = backgroundImg;
         this.title = title;

@@ -97,29 +97,33 @@ function RouteAddDetailPage() {
       let endlat = wayPoints[wayPoints.length - 1].lon;
       let endlon = wayPoints[wayPoints.length - 1].lat;
 
-      GetDistance(startlat, startlon, endlat, endlon).then((res) => {
-        if (res.status === 200 && res.data.status === 'SUCCESS') {
-          let dist = Number(res.data.data[0].distance) / 1000;
-          let cal = 3.5 * 70 * (dist / 4);
-          let duration = dist / 4;
+      GetDistance(startlat, startlon, endlat, endlon)
+        .then((res) => {
+          if (res.status === 200 && res.data.status === 'SUCCESS') {
+            let dist = Number(res.data.data[0].distance) / 1000;
+            let cal = 3.5 * 70 * (dist / 4);
+            let duration = dist / 4;
 
-          let curWay = [...wayPoints];
-          curWay[curWay.length - 2].distance = `${dist}`;
-          curWay[curWay.length - 2].calorie = `${cal}`;
-          curWay[curWay.length - 2].duration = `${duration}`;
+            let curWay = [...wayPoints];
+            curWay[curWay.length - 2].distance = `${dist}`;
+            curWay[curWay.length - 2].calorie = `${cal}`;
+            curWay[curWay.length - 2].duration = `${duration}`;
 
-          curWay.map((ele: WayPointReqDto, idx: number) => {
-            if (idx === 0) {
-              ele.type = '출발지';
-            } else if (idx === curWay.length - 1) {
-              ele.type = '도착지';
-            } else {
-              ele.type = '경유지';
-            }
-          });
-          setWayPoints(curWay);
-        }
-      });
+            curWay.map((ele: WayPointReqDto, idx: number) => {
+              if (idx === 0) {
+                ele.type = '출발지';
+              } else if (idx === curWay.length - 1) {
+                ele.type = '도착지';
+              } else {
+                ele.type = '경유지';
+              }
+            });
+            setWayPoints(curWay);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
 
       let route: AddRouteProps = {
         courseName: data.routeTitle,

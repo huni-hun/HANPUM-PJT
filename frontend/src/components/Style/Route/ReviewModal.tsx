@@ -5,6 +5,7 @@ import { useState } from 'react';
 import Button from '@/components/common/Button/Button';
 import { colors } from '@/styles/colorPalette';
 import { SetRouteReview } from '@/api/route/POST';
+import { toast } from 'react-toastify';
 
 interface ReviewModalProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,6 +22,11 @@ function ReviewModal(props: ReviewModalProps) {
       .then((res) => {
         if (res.status === 200 && res.data.status === 'SUCCESS') {
           props.setIsOpen(false);
+        } else {
+          if (res.data.message === '이미 리뷰를 작성한 회원입니다.') {
+            props.setIsOpen(false);
+            toast.info('이미 리뷰를 작성하셨습니다.');
+          }
         }
       })
       .catch((err) => {

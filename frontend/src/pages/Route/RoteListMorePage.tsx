@@ -1,10 +1,12 @@
-import { getRouteList } from '@/api/route/GET';
+import { getRouteMoreList } from '@/api/route/GET';
 import Header from '@/components/common/Header/Header';
 import RouteListMoreCard from '@/components/Style/Route/RouteListMoreCard';
 import * as R from '@/components/Style/Route/RouteListMorePage.styled';
-import { RouteListProps } from '@/models/route';
-import { useEffect, useState } from 'react';
+import { AxiosError } from 'axios';
+import { useCallback, useEffect, useRef } from 'react';
+import { useInfiniteQuery } from 'react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function RouteListMorePage() {
   const location = useLocation();
@@ -12,33 +14,67 @@ function RouteListMorePage() {
   const data = { ...location };
   const key = data.state.keyword;
 
-  const [arr, setArr] = useState<RouteListProps[]>([]);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
+  const {
+    data: RouteMoreList,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    refetch,
+  } = useInfiniteQuery(
+    ['RouteList', key],
+    ({ pageParam = 0 }) => {
+      return getRouteMoreList(key, 8, pageParam);
+    },
+    {
+      getNextPageParam: (lastPage, pages) => {
+        // console.log(lastPage.data.data.courseListMap[key]);
+        const exist = lastPage.data.data.courseListMap[key].length >= 8;
+        if (!exist) return undefined;
+        return pages.length;
+      },
+      onError: (error: AxiosError) => {
+        toast.error(error.message);
+      },
+    },
+  );
+
+  // 옵저버 handler(스크롤이다 보니 useCallback 사용)
+  const handleObserver = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const target = entries[0];
+      if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    },
+    [hasNextPage, isFetchingNextPage, fetchNextPage],
+  );
 
   useEffect(() => {
-    getRouteList(key).then((res) => {
-      res.data.data.courseListMap[key].map((ele: any) => {
-        let data: RouteListProps = {
-          routeName: ele.courseName,
-          routeContent: ele.content,
-          routeScore: ele.scoreAvg,
-          routeComment: ele.commentCnt,
-          routeId: ele.courseId,
-          img: ele.backgroundImg,
-          writeState: ele.writeState,
-          openState: ele.openState,
-          memberId: ele.memberId,
-          writeDate: ele.writeDate,
-          start: ele.startPoint,
-          end: ele.endPoint,
-          totalDistance: Math.round(ele.totalDistance),
-          totalDays: ele.totalDays,
-          interestFlag: ele.interestFlag,
-        };
+    if (observerRef.current) observerRef.current.disconnect();
 
-        setArr((pre) => [...pre, data]);
-      });
+    observerRef.current = new IntersectionObserver(handleObserver, {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.7,
     });
-  }, []);
+
+    if (loadMoreRef.current) {
+      observerRef.current.observe(loadMoreRef.current);
+    }
+
+    return () => {
+      if (observerRef.current) observerRef.current.disconnect();
+    };
+  }, [handleObserver, loadMoreRef]);
+
+  useEffect(() => {
+    refetch(); // 해당 값이 바뀔 때 데이터를 다시 가져옴
+  }, [key, refetch]);
+
   return (
     <R.Container>
       <Header
@@ -49,20 +85,23 @@ function RouteListMorePage() {
         }}
       />
       <R.MainContainer>
-        {arr.map((ele: RouteListProps) => (
-          <RouteListMoreCard
-            id={ele.routeId}
-            title={ele.routeName}
-            start={ele.start}
-            end={ele.end}
-            score={ele.routeScore}
-            review={ele.routeComment}
-            img={ele.img}
-            interestFlag={ele.interestFlag}
-            totalDays={ele.totalDays}
-            routeId={String(ele.routeId)}
-          />
-        ))}
+        {RouteMoreList?.pages.map((pages) =>
+          pages.data.data.courseListMap[key].map((ele: any) => (
+            <RouteListMoreCard
+              id={ele.courseId}
+              title={ele.courseName}
+              start={ele.startPoint}
+              end={ele.endPoint}
+              score={ele.scoreAvg}
+              review={ele.commentCnt}
+              img={ele.backgroundImg}
+              interestFlag={ele.interestFlag}
+              totalDays={ele.totalDays}
+              routeId={String(ele.courseId)}
+            />
+          )),
+        )}
+        <div ref={loadMoreRef} style={{ height: '1px' }} />
       </R.MainContainer>
     </R.Container>
   );
