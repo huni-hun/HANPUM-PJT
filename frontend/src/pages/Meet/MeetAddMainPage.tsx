@@ -134,6 +134,8 @@ function MeetAddMainPage() {
       if (response && response.status === 'SUCCESS') {
         toast.success('모임 생성이 완료되었습니다!');
         navigate('/schedule/success');
+        localStorage.removeItem('meetRequest');
+        localStorage.removeItem('previewImage');
       } else {
         toast.error('모임 생성에 실패했습니다.');
       }
@@ -149,6 +151,8 @@ function MeetAddMainPage() {
         title="모임 생성"
         $isborder={true}
         clickBack={() => {
+          localStorage.removeItem('meetRequest');
+          localStorage.removeItem('previewImage');
           navigate(-1);
         }}
       />
@@ -247,7 +251,10 @@ function MeetAddMainPage() {
 export default MeetAddMainPage;
 
 const MainPageContainer = styled.div`
-  width: 100%;
+  width: 100vw;
   height: 100%;
+  display: flex;
+  flex-direction: column;
   background-color: #fff;
+  overflow-y: auto;
 `;

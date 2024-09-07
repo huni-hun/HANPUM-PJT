@@ -33,7 +33,7 @@ export async function getGroupScheduleData() {
 }
 
 /** 일정 - 일자별 일정조회 */
-export async function getDayNumData(id: string, dayNumber: number) {
+export async function getDayNumData(dayNumber: number, id: number) {
   const response = await api.get(`/api/schedule/day/${dayNumber}`, {
     params: {
       scheduleId: id,

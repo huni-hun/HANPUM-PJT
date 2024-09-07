@@ -40,6 +40,7 @@ import {
   RouteReviewProps,
 } from '@/models/route';
 import {
+  getDayNumData,
   getGroupScheduleData,
   getMyScheduleData,
   getNearbyLocData,
@@ -54,6 +55,7 @@ import {
   getRouteDetail,
 } from '@/api/route/GET';
 import { GetLineData } from '@/api/route/POST';
+import { PutScheduleArrive } from '@/api/schedule/PUT';
 
 function ScheduleMainPage() {
   const BtnClick = () => {};
@@ -82,6 +84,7 @@ function ScheduleMainPage() {
   const [lat, setLat] = useState<number | null>(null);
   const [lon, setLon] = useState<number | null>(null);
   const [weatherData, setWeatherData] = useState<WeatherProps[]>([]);
+  const [isLocationReady, setIsLocationReady] = useState(false);
   const [weatherWarning, setWeatherWarning] = useState<{
     weatherIcon: string;
     message: string;
@@ -106,6 +109,8 @@ function ScheduleMainPage() {
   const [bsType, setBsType] = useState<string>('설정');
   const [reviewType, setReviewType] = useState<string>('최신순');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  /** 렌더링 이슈 해결 */
+  const [triggerRender, setTriggerRender] = useState(false);
   /** 루트 디테일  */
   const [marker, setMarker] = useState<LineStartEndProps[]>([]);
   const [selectedIdx, setSelectedIdx] = useState<number>(-1);
@@ -114,6 +119,14 @@ function ScheduleMainPage() {
   const [mapLines, setMapLines] = useState<any[]>([]);
   const [routeDayData, setRouteDayData] = useState<RouteDetailDayProps[]>([]);
   const [se, setSe] = useState<LineStartEndProps[]>([]);
+  /** 코스 아이디 */
+  const [courseId, setCourseId] = useState<number>(0);
+  const [scheduleId, setScheduleId] = useState<number>(0);
+  /** 현재 경유지 -> 다음 경유지 도착  */
+  const [wayPoints, setWayPoints] = useState<DaysOfRouteProps[]>([]);
+  const [currentWaypoint, setCurrentWaypoint] = useState(0); // 현재 경유지 인덱스
+  const DISTANCE_THRESHOLD = 0.01; // 거리 기준 (1km 정도)
+  const [arriveGreen, setArriveGreen] = useState(false);
   /** 내일정 - card 컴포넌트 'n박 n일' 계산 */
   const formatDate = (dateStr: string): string => {
     // Convert "YYYYMMDD" to "YYYY-MM-DD"
@@ -203,6 +216,67 @@ function ScheduleMainPage() {
   const navigator = useNavigate();
   const data = { ...location };
 
+  /** 경유지 도착 시 초록색으로 변경 */
+  const arriveSchedule = async (waypointId: number) => {
+    try {
+      const response = await PutScheduleArrive(waypointId);
+
+      if (response && response.data.status === 'SUCCESS') {
+        setArriveGreen(true);
+      } else if (response && response.data.status === 'ERROR') {
+        toast.error(response.data.message);
+        setError('도착처리 실패했습니다.');
+      }
+    } catch (error) {
+      toast.error('도착처리 실패했습니다.');
+    }
+  };
+
+  // 두 좌표 사이의 거리를 계산하는 함수 (단순 비교용)
+  const calculateDistance = (
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number,
+  ) => {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) *
+        Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
+  // 위치 업데이트 처리 함수
+  const handleLocationUpdate = (latitude: number, longitude: number) => {
+    if (currentWaypoint < wayPoints.length) {
+      const nextWaypoint = wayPoints[currentWaypoint];
+      if (nextWaypoint) {
+        const distance = calculateDistance(
+          latitude,
+          longitude,
+          nextWaypoint.latitude,
+          nextWaypoint.longitude,
+        );
+
+        if (distance < DISTANCE_THRESHOLD) {
+          if (nextWaypoint.routeId !== undefined) {
+            arriveSchedule(nextWaypoint.routeId);
+            console.log(currentWaypoint, nextWaypoint);
+          }
+          setCurrentWaypoint((prev) => prev + 1);
+        }
+      } else {
+        console.error('nextWaypoint is undefined');
+      }
+    }
+  };
+
   useEffect(() => {
     const geo = window.navigator.geolocation;
 
@@ -210,13 +284,14 @@ function ScheduleMainPage() {
       geo.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          // 위도와 경도가 제대로 설정됨
           setLat(latitude);
           setLon(longitude);
+          setIsLocationReady(true);
         },
         (error) => {
           console.error('Error occurred while fetching location:', error);
           alert('위치 가져오기 실패');
+          setIsLocationReady(false);
         },
         {
           enableHighAccuracy: true,
@@ -226,63 +301,13 @@ function ScheduleMainPage() {
       );
     } else {
       alert('지원하지 않는 브라우저입니다.');
+      setIsLocationReady(false);
     }
-  }, []);
+  }, [isLocationReady]);
 
-  console.log(lat, '위도', lon, '경도');
-
-  /** 진행중 */
+  /** 주변 관광지 가져오기 */
   useEffect(() => {
-    if (isSelected === 'Proceeding') {
-      /** 진행중 data */
-      const fetchData = async () => {
-        try {
-          const response = await getRunningScheduleData();
-          if (response && response.status === 'SUCCESS') {
-            setRunningScheduleData(response.data);
-          } else {
-            console.error('Error:', response.error);
-          }
-        } catch (error: unknown) {
-          console.error('Fetch Error:', error);
-          toast.error((error as AxiosError).message);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchData();
-
-      /** waypoint data */
-      if (routeDayData.length === 0) {
-        getRouteDetail('1').then((result) => {
-          if (result.data.status !== 'ERROR' && result.status === 200) {
-            let rd = {
-              routeName: result.data.data.course.courseName,
-              routeContent: result.data.data.course.content,
-              writeDate: result.data.data.course.writeDate,
-              routeComment: result.data.data.course.commentCnt,
-              routeScore: result.data.data.course.scoreAvg,
-              start: result.data.data.course.startPoint,
-              end: result.data.data.course.endPoint,
-              img: result.data.data.course.backgroundImg,
-              writeState: result.data.data.course.writeState,
-            };
-            setRouteData(rd);
-            result.data.data.courseDays.forEach((ele: any) => {
-              let data = {
-                dayNum: ele.dayNumber,
-                totalDistance: ele.total_distance,
-                totalCalorie: ele.total_calorie,
-                totalDuration: ele.total_duration,
-              };
-              setRouteDayData((prev) => [...prev, data]);
-            });
-          }
-          setLoading(true);
-        });
-      }
-
+    if (lat !== null && lon !== null && isLocationReady) {
       const nearByData = async () => {
         try {
           const response = await getNearbyLocData(lat || 0, lon || 0);
@@ -298,10 +323,67 @@ function ScheduleMainPage() {
           setLoading(false);
         }
       };
-
       nearByData();
     }
-  }, [isSelected, routeDayData.length]);
+  }, [isSelected, isLocationReady]);
+
+  /** 진행중 */
+  useEffect(() => {
+    if (isSelected === 'Proceeding') {
+      /** 진행중 data */
+      const fetchData = async () => {
+        try {
+          const response = await getRunningScheduleData();
+          if (response && response.status === 'SUCCESS') {
+            setRunningScheduleData(response.data);
+            setCourseId(response.data.courseId);
+            setScheduleId(response.data.scheduleId);
+          } else {
+            console.error('Error:', response.error);
+          }
+        } catch (error: unknown) {
+          console.error('Fetch Error:', error);
+          toast.error((error as AxiosError).message);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchData();
+    }
+  }, [isSelected, isLocationReady]);
+
+  useEffect(() => {
+    /** waypoint data */
+    if (routeDayData.length === 0) {
+      getRouteDetail(courseId.toString()).then((result) => {
+        if (result.data.status !== 'ERROR' && result.status === 200) {
+          let rd = {
+            routeName: result.data.data.course.courseName,
+            routeContent: result.data.data.course.content,
+            writeDate: result.data.data.course.writeDate,
+            routeComment: result.data.data.course.commentCnt,
+            routeScore: result.data.data.course.scoreAvg,
+            start: result.data.data.course.startPoint,
+            end: result.data.data.course.endPoint,
+            img: result.data.data.course.backgroundImg,
+            writeState: result.data.data.course.writeState,
+          };
+          setRouteData(rd);
+          result.data.data.courseDays.forEach((ele: any) => {
+            let data = {
+              dayNum: ele.dayNumber,
+              totalDistance: ele.total_distance,
+              totalCalorie: ele.total_calorie,
+              totalDuration: ele.total_duration,
+            };
+            setRouteDayData((prev) => [...prev, data]);
+          });
+        }
+        setLoading(true);
+      });
+    }
+  }, [courseId]);
 
   /** 내일정 */
   useEffect(() => {
@@ -348,7 +430,7 @@ function ScheduleMainPage() {
       fetchData();
 
       if (routeDayData.length === 0) {
-        getRouteDetail('1').then((result) => {
+        getRouteDetail(courseId.toString()).then((result) => {
           if (result.data.status !== 'ERROR' && result.status === 200) {
             let rd = {
               routeName: result.data.data.course.courseName,
@@ -376,53 +458,63 @@ function ScheduleMainPage() {
         });
       }
     }
-  }, [isSelected]);
+  }, [isSelected, isLocationReady]);
 
   useEffect(() => {
     /* 맵에 마커, 선 초기화 */
     setSe([]);
     setMarker([]);
     /*경로 일차별 경유지 정보 가져오기 */
-    getRouteDayDetail('1' as string, selectedDay).then((result) => {
-      if (result.status === 200) {
-        let arr: DaysOfRouteProps[] = [];
-        let lines: MapLinePathProps[] = [];
-        result.data.data.wayPoints.map((ele: any) => {
-          let data: DaysOfRouteProps = {
-            routeName: ele.name,
-            routeAddress: ele.address,
-            routeType: ele.type,
-            routeId: ele.waypointId,
-            routePoint: ele.pointNumber,
-            latitude: ele.lat,
-            longitude: ele.lon,
-          };
-          arr.push(data);
-          /* 다중 경유지 정보, 시작점, 도착점 저장 */
+    if (scheduleId > 0) {
+      getDayNumData(selectedDay, scheduleId).then((result) => {
+        if (result.status === 'SUCCESS') {
+          let arr: DaysOfRouteProps[] = [];
+          let lines: MapLinePathProps[] = [];
+          result.data.scheduleWayPointList.map((ele: any, idx: number) => {
+            let data: DaysOfRouteProps = {
+              routeName: ele.name,
+              routeAddress: ele.address,
+              routeType: ele.type,
+              routeId: ele.scheduleWayPointId,
+              latitude: ele.lat,
+              longitude: ele.lon,
+              state: ele.state,
+              routePoint: (idx + 1).toString(),
+            };
+            arr.push(data);
+            /* 다중 경유지 정보, 시작점, 도착점 저장 */
 
-          let line: MapLinePathProps = {
-            name: ele.name,
-            x: ele.lat,
-            y: ele.lon,
-          };
+            let line: MapLinePathProps = {
+              name: ele.name,
+              x: ele.lat,
+              y: ele.lon,
+            };
 
-          lines.push(line);
+            lines.push(line);
 
-          let markerData: LineStartEndProps = {
-            x: ele.lat,
-            y: ele.lon,
-          };
-          setMarker((pre) => [...pre, markerData]);
-        });
-        arr.sort((a: any, b: any) => a.routePoint - b.routePoint);
-        setDayOfRoute(arr);
-        setLinePath(lines);
-        /* 지도 중심점 잡기 */
-        setLatitude(arr[0].latitude);
-        setLongitude(arr[0].longitude);
-      }
-    });
-  }, [selectedDay]);
+            let markerData: LineStartEndProps = {
+              x: ele.lat,
+              y: ele.lon,
+            };
+            setMarker((pre) => [...pre, markerData]);
+          });
+          arr.sort((a: any, b: any) => a.routePoint - b.routePoint);
+          setDayOfRoute(arr);
+          setLinePath(lines);
+          setWayPoints(arr);
+          /* 지도 중심점 잡기 */
+          if (arr.length > 0 && arr[0] && arr[0].latitude && arr[0].longitude) {
+            setLat(arr[0].latitude);
+            setLon(arr[0].longitude);
+            setIsLocationReady(true);
+          } else {
+            console.error('중심점 비어있음');
+            setIsLocationReady(false);
+          }
+        }
+      });
+    }
+  }, [selectedDay, scheduleId]);
 
   useEffect(() => {
     if (linePath.length > 0) {
@@ -492,30 +584,30 @@ function ScheduleMainPage() {
         });
       }
     }
-  }, [linePath]);
+  }, [linePath, isLocationReady]);
 
   /** 날씨 */
   useEffect(() => {
-    const fetchData = async () => {
-      if (lat !== null && lon !== null) {
+    if (lat !== null && lon !== null && isLocationReady) {
+      const fetchData = async () => {
         try {
           const response = await getWeather(lat, lon);
 
           if (response && response.status === 'SUCCESS') {
             setWeatherData(response.data);
           } else {
-            console.error(error);
+            console.error('Error:', response.error);
           }
         } catch (error) {
           console.error('Fetch Error:', error);
         } finally {
           setLoading(false);
         }
-      }
-    };
+      };
 
-    fetchData();
-  }, [lat, lon]);
+      fetchData();
+    }
+  }, [isLocationReady]);
 
   /** 지도 및 하위 컴포넌트  */
 
@@ -569,10 +661,11 @@ function ScheduleMainPage() {
   return (
     <ScheduleMainPageContainer>
       <Header
-        purpose="user"
+        purpose="merge"
         clickBack={() => navigate(-1)}
         $isborder={true}
         plusBtnclick={() => navigate('/schedule/addSchedule')}
+        isSchedule
       />
 
       <S.SchduleTypeContainer>
@@ -654,49 +747,53 @@ function ScheduleMainPage() {
 
                   {/* 지도 및 하위 컴포넌트 container */}
                   <R.RouteDetailInfoContainer>
-                    <RouteDetailInfo
-                      marker={marker}
-                      deleteHandler={(name: string) => {}}
-                      setSelectedIdx={setSelectedIdx}
-                      reviews={reviews}
-                      setDayOfRoute={setDayOfRoute}
-                      dayOfRoute={dayOfRoute}
-                      linePath={mapLines}
-                      selected={selected}
-                      selectedDay={selectedDay}
-                      latitude={latitude}
-                      longitude={longitude}
-                      dayData={routeDayData}
-                      attractions={attractions}
-                      setLoading={setLoading}
-                      setSelectedDay={setSelectedDay}
-                      setIsOpen={setIsOpen}
-                      setBsType={setBsType}
-                      reviewType={reviewType}
-                    />
+                    {lat !== null && lon !== null && (
+                      <RouteDetailInfo
+                        marker={marker}
+                        deleteHandler={(name: string) => {}}
+                        setSelectedIdx={setSelectedIdx}
+                        reviews={reviews}
+                        setDayOfRoute={setDayOfRoute}
+                        dayOfRoute={dayOfRoute}
+                        linePath={mapLines}
+                        selected={selected}
+                        selectedDay={selectedDay}
+                        latitude={lat}
+                        longitude={lon}
+                        dayData={routeDayData}
+                        attractions={attractions}
+                        setLoading={setLoading}
+                        setSelectedDay={setSelectedDay}
+                        setIsOpen={setIsOpen}
+                        setBsType={setBsType}
+                        reviewType={reviewType}
+                      />
+                    )}
                   </R.RouteDetailInfoContainer>
-
-                  <S.AttractionsBox>
-                    <S.AttrantiosTypeBox>관광지</S.AttrantiosTypeBox>
-                    <S.AttractionsOverflow>
-                      {attractionsCard.length > 0 &&
-                        attractionsCard.map((ele) => (
-                          <S.AttractionCard
-                            img={(ele as ScheduleAttractionsProps).image1}
-                          >
-                            <S.AttractionCardTitle>
-                              {(ele as ScheduleAttractionsProps).title}
-                            </S.AttractionCardTitle>
-                            <S.AttractionCardDetail>
-                              <Icon name="IconFlag" size={20} />
-                              <S.AttractionCardDetailText>
-                                {(ele as ScheduleAttractionsProps).name}
-                              </S.AttractionCardDetailText>
-                            </S.AttractionCardDetail>
-                          </S.AttractionCard>
-                        ))}
-                    </S.AttractionsOverflow>
-                  </S.AttractionsBox>
+                  <S.AttractionsContainer>
+                    <S.AttractionsBox>
+                      <S.AttrantiosTypeBox>관광지</S.AttrantiosTypeBox>
+                      <S.AttractionsOverflow>
+                        {attractionsCard.length > 0 &&
+                          attractionsCard.map((ele) => (
+                            <S.AttractionCard
+                              img={(ele as ScheduleAttractionsProps).image1}
+                              onClick={() => {}}
+                            >
+                              <S.AttractionCardTitle>
+                                {(ele as ScheduleAttractionsProps).title}
+                              </S.AttractionCardTitle>
+                              <S.AttractionCardDetail>
+                                <Icon name="IconFlag" size={20} />
+                                <S.AttractionCardDetailText>
+                                  {(ele as ScheduleAttractionsProps).name}
+                                </S.AttractionCardDetailText>
+                              </S.AttractionCardDetail>
+                            </S.AttractionCard>
+                          ))}
+                      </S.AttractionsOverflow>
+                    </S.AttractionsBox>
+                  </S.AttractionsContainer>
                 </>
               ) : (
                 <>
@@ -776,8 +873,8 @@ function ScheduleMainPage() {
                 linePath={mapLines}
                 selected={selected}
                 selectedDay={selectedDay}
-                latitude={latitude}
-                longitude={longitude}
+                latitude={lat || 0}
+                longitude={lon || 0}
                 dayData={routeDayData}
                 attractions={attractions}
                 setLoading={setLoading}
