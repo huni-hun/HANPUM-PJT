@@ -24,6 +24,7 @@ import BottomSheet from '@/components/Style/Route/BottomSheet';
 import ReviewModal from '@/components/Style/Route/ReviewModal';
 import { GetLineData } from '@/api/route/POST';
 import { RouteDelete } from '@/api/route/Delete';
+import { toast } from 'react-toastify';
 
 function RouteDetailPage() {
   const { routeid } = useParams();
@@ -180,7 +181,7 @@ function RouteDetailPage() {
             }
           })
           .catch((err) => {
-            console.log(err);
+            toast.error('해당경로는 길찾기를 제공하지 않습니다.');
           });
       } else {
         let arr: MapLinePathProps[] = [];
@@ -210,7 +211,7 @@ function RouteDetailPage() {
                   }
                 })
                 .catch((err) => {
-                  console.log(err);
+                  toast.error('해당경로는 길찾기를 제공하지 않습니다.');
                 }),
             );
 

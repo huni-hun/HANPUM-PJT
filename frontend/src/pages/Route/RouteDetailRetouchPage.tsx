@@ -29,6 +29,7 @@ import Icon from '@/components/common/Icon/Icon';
 import SearchPlacePage from './SearchPlacePage';
 import { GetDistance, GetLineData } from '@/api/route/POST';
 import { RetouchRoute } from '@/api/route/PUT';
+import { toast } from 'react-toastify';
 
 function RouteDetailRetouchPage() {
   const { routeid } = useParams();
@@ -312,7 +313,7 @@ function RouteDetailRetouchPage() {
             }
           })
           .catch((err) => {
-            console.log(err);
+            toast.error('해당경로는 길찾기를 제공하지 않습니다.');
           });
       } else {
         let arr: MapLinePathProps[] = [];
@@ -342,7 +343,7 @@ function RouteDetailRetouchPage() {
                   }
                 })
                 .catch((err) => {
-                  console.log(err);
+                  toast.error('해당경로는 길찾기를 제공하지 않습니다.');
                 }),
             );
 

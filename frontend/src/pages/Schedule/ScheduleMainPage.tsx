@@ -447,7 +447,7 @@ function ScheduleMainPage() {
             }
           })
           .catch((err) => {
-            console.log(err);
+            toast.error('해당경로는 길찾기를 제공하지 않습니다.');
           });
       } else {
         let arr: MapLinePathProps[] = [];
@@ -477,7 +477,7 @@ function ScheduleMainPage() {
                   }
                 })
                 .catch((err) => {
-                  console.log(err);
+                  toast.error('해당경로는 길찾기를 제공하지 않습니다.');
                 }),
             );
 
