@@ -8,7 +8,9 @@ function RoutePlaceCard(props: DaysOfRouteProps) {
         <R.PlaceName>{props.routeName}</R.PlaceName>
         <R.PlaceAddressBox>{props.routeAddress}</R.PlaceAddressBox>
       </R.PlaceInfoBox>
-      <R.PlaceNumberBox>{props.routePoint}</R.PlaceNumberBox>
+      <R.PlaceNumberBox turnGreen={props.turnGreen || false}>
+        {props.routePoint}
+      </R.PlaceNumberBox>
     </R.Card>
   );
 }

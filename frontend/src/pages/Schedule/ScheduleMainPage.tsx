@@ -40,6 +40,7 @@ import {
   RouteReviewProps,
 } from '@/models/route';
 import {
+  getDayNumData,
   getGroupScheduleData,
   getMyScheduleData,
   getNearbyLocData,
@@ -120,6 +121,7 @@ function ScheduleMainPage() {
   const [se, setSe] = useState<LineStartEndProps[]>([]);
   /** 코스 아이디 */
   const [courseId, setCourseId] = useState<number>(0);
+  const [scheduleId, setScheduleId] = useState<number>(0);
   /** 현재 경유지 -> 다음 경유지 도착  */
   const [wayPoints, setWayPoints] = useState<DaysOfRouteProps[]>([]);
   const [currentWaypoint, setCurrentWaypoint] = useState(0); // 현재 경유지 인덱스
@@ -285,6 +287,8 @@ function ScheduleMainPage() {
           setLat(latitude);
           setLon(longitude);
           setIsLocationReady(true);
+
+          handleLocationUpdate(latitude, longitude);
         },
         (error) => {
           console.error('Error occurred while fetching location:', error);
@@ -335,6 +339,7 @@ function ScheduleMainPage() {
           if (response && response.status === 'SUCCESS') {
             setRunningScheduleData(response.data);
             setCourseId(response.data.courseId);
+            setScheduleId(response.data.scheduleId);
           } else {
             console.error('Error:', response.error);
           }
@@ -347,38 +352,40 @@ function ScheduleMainPage() {
       };
 
       fetchData();
-
-      /** waypoint data */
-      if (routeDayData.length === 0) {
-        getRouteDetail(courseId.toString()).then((result) => {
-          if (result.data.status !== 'ERROR' && result.status === 200) {
-            let rd = {
-              routeName: result.data.data.course.courseName,
-              routeContent: result.data.data.course.content,
-              writeDate: result.data.data.course.writeDate,
-              routeComment: result.data.data.course.commentCnt,
-              routeScore: result.data.data.course.scoreAvg,
-              start: result.data.data.course.startPoint,
-              end: result.data.data.course.endPoint,
-              img: result.data.data.course.backgroundImg,
-              writeState: result.data.data.course.writeState,
-            };
-            setRouteData(rd);
-            result.data.data.courseDays.forEach((ele: any) => {
-              let data = {
-                dayNum: ele.dayNumber,
-                totalDistance: ele.total_distance,
-                totalCalorie: ele.total_calorie,
-                totalDuration: ele.total_duration,
-              };
-              setRouteDayData((prev) => [...prev, data]);
-            });
-          }
-          setLoading(true);
-        });
-      }
     }
   }, [isSelected, isLocationReady]);
+
+  useEffect(() => {
+    /** waypoint data */
+    if (routeDayData.length === 0) {
+      getRouteDetail(courseId.toString()).then((result) => {
+        if (result.data.status !== 'ERROR' && result.status === 200) {
+          let rd = {
+            routeName: result.data.data.course.courseName,
+            routeContent: result.data.data.course.content,
+            writeDate: result.data.data.course.writeDate,
+            routeComment: result.data.data.course.commentCnt,
+            routeScore: result.data.data.course.scoreAvg,
+            start: result.data.data.course.startPoint,
+            end: result.data.data.course.endPoint,
+            img: result.data.data.course.backgroundImg,
+            writeState: result.data.data.course.writeState,
+          };
+          setRouteData(rd);
+          result.data.data.courseDays.forEach((ele: any) => {
+            let data = {
+              dayNum: ele.dayNumber,
+              totalDistance: ele.total_distance,
+              totalCalorie: ele.total_calorie,
+              totalDuration: ele.total_duration,
+            };
+            setRouteDayData((prev) => [...prev, data]);
+          });
+        }
+        setLoading(true);
+      });
+    }
+  }, [courseId]);
 
   /** 내일정 */
   useEffect(() => {
@@ -460,43 +467,42 @@ function ScheduleMainPage() {
     setSe([]);
     setMarker([]);
     /*경로 일차별 경유지 정보 가져오기 */
-    getRouteDayDetail(courseId.toString() as string, selectedDay).then(
-      (result) => {
-        if (result.status === 200) {
+    if (scheduleId > 0) {
+      getDayNumData(selectedDay, scheduleId).then((result) => {
+        if (result.status === 'SUCCESS') {
           let arr: DaysOfRouteProps[] = [];
           let lines: MapLinePathProps[] = [];
-          result.data.data.wayPoints.map((ele: any) => {
+          result.data.scheduleWayPointList.map((ele: any, idx: number) => {
             let data: DaysOfRouteProps = {
               routeName: ele.name,
               routeAddress: ele.address,
               routeType: ele.type,
-              routeId: ele.waypointId,
-              routePoint: ele.pointNumber,
+              routeId: ele.scheduleWayPointId,
               latitude: ele.lat,
               longitude: ele.lon,
+              state: ele.state,
+              routePoint: (idx + 1).toString(),
             };
             arr.push(data);
             /* 다중 경유지 정보, 시작점, 도착점 저장 */
-            if (ele.type === '경유지') {
-              let line: MapLinePathProps = {
-                name: ele.name,
-                x: ele.lat,
-                y: ele.lon,
-              };
 
-              lines.push(line);
-            } else {
-              let seData: LineStartEndProps = {
-                x: ele.lat,
-                y: ele.lon,
-              };
-              setSe((pre) => [...pre, seData]);
-            }
+            let line: MapLinePathProps = {
+              name: ele.name,
+              x: ele.lat,
+              y: ele.lon,
+            };
+
+            lines.push(line);
+
             let markerData: LineStartEndProps = {
               x: ele.lat,
               y: ele.lon,
             };
             setMarker((pre) => [...pre, markerData]);
+
+            if (ele.state === 2) {
+              setArriveGreen(true);
+            }
           });
           arr.sort((a: any, b: any) => a.routePoint - b.routePoint);
           setDayOfRoute(arr);
@@ -512,9 +518,9 @@ function ScheduleMainPage() {
             setIsLocationReady(false);
           }
         }
-      },
-    );
-  }, [selectedDay, isLocationReady]);
+      });
+    }
+  }, [selectedDay, scheduleId]);
 
   useEffect(() => {
     if (linePath.length > 0) {
@@ -767,6 +773,7 @@ function ScheduleMainPage() {
                         setIsOpen={setIsOpen}
                         setBsType={setBsType}
                         reviewType={reviewType}
+                        turnGreen={arriveGreen}
                       />
                     )}
                   </R.RouteDetailInfoContainer>
@@ -882,6 +889,7 @@ function ScheduleMainPage() {
                 setIsOpen={setIsOpen}
                 setBsType={setBsType}
                 reviewType={reviewType}
+                turnGreen={arriveGreen}
               />
             </R.RouteDetailInfoContainer>
             {/* 모임멤버 */}
