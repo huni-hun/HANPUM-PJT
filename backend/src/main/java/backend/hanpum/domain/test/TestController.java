@@ -17,7 +17,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/test")
 public class TestController {
-
+    // BUILD TEST
+    
     private final WeatherService weatherService;
     private final ApiResponse apiResponse;
 
