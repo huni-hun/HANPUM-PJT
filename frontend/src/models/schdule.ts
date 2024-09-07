@@ -11,15 +11,33 @@ export interface WeatherProps {
 
 /** 모임일정 - 모임멤버 */
 export interface Member {
-  groupMemberId: number;
-  joinType: string;
-  memberId: number;
-  profilePicture: string;
-  nickname: string;
+  courseId?: number;
+  courseTypes?: string[];
+  dday?: number;
+  description?: string;
+  endDate?: string;
+  endPoint?: string;
+  groupImg?: string;
+  groupJoinStatus?: string;
+  like?: boolean;
+  likeCount?: number;
+  readerName?: string;
+  readerProfileImg?: string;
+  recruitedCount?: number;
+  recruitmentCount?: number;
+  recruitmentPeriod?: string;
+  recruitmentStart?: string;
+  startDate?: string;
+  startPoint?: string;
+  title?: string;
+  totalDays?: number;
+  profilePicture?: string;
+  nickname?: string;
 }
 
 export interface MeetMemberProps {
   memberCount: number;
+
   members: Member[];
 }
 

@@ -112,25 +112,6 @@ function DetailMineSchedulePage() {
     routeContent: myScheduleListData?.content,
   };
 
-  /** feed 더미 데이터 */
-  /** === useState (dayData) && (totalDistance) */
-  const dummyFeedInfoData = {
-    router: '일정',
-    feedInfoTitle: '일정 정보',
-    /** 출발지 , 도착지 */
-    departuresPlace: '태종대 전망대',
-    arrivalsPlace: '태종대 전망대',
-    /** 출발일, 도착일 */
-    startDate: '2024.08.04',
-    endDate: '2024.08.16',
-    /** 거리 */
-    currentDistance: 100,
-    totalDistance: 200,
-    dayData: [{ dayNum: 1 }, { dayNum: 2 }, { dayNum: 3 }],
-    /** 오늘 일정 달성률 퍼센트 */
-    percent: 30,
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
