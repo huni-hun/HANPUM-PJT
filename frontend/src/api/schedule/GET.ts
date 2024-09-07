@@ -44,16 +44,9 @@ export async function getDayNumData(id: string, dayNumber: number) {
 }
 
 /** 일정 - 주변 관광지 정보 가져오기 */
-export async function getNearbyLocData(
-  OS: string,
-  distance: number,
-  lat: number,
-  lon: number,
-) {
+export async function getNearbyLocData(lat: number, lon: number) {
   const response = await api.get('/api/schedule/nearby', {
     params: {
-      OS,
-      distance,
       lat,
       lon,
     },

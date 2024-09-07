@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import * as M from '@/components/Style/Meet/MeetRequest';
 import Header from '@/components/common/Header/Header';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { GetMeetMemberDetailList } from '@/api/meet/GET';
 import { MemberDetailDataProps } from '@/models/meet';
 import { toast } from 'react-toastify';
 import memberImg from '../../assets/img/memberImg.svg';
 import BottomSheet from '@/components/Style/Route/BottomSheet';
+import { DeleteMeetExile } from '@/api/meet/Delete';
 
 function MemberManageDetail() {
   const navigate = useNavigate();
@@ -19,6 +20,9 @@ function MemberManageDetail() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [bsType, setBsType] = useState<string>('설정');
   const [reviewType, setReviewType] = useState<string>('공개 여부');
+  /** 멤버 아이디 넘겨받기 */
+  const location = useLocation();
+  const { memberId } = location.state || {};
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,6 +83,25 @@ function MemberManageDetail() {
     setIsRejectModalOpen(false);
   };
 
+  /** 내보내기 */
+  const deleteMemeber = async () => {
+    try {
+      setLoading(true);
+      const response = await DeleteMeetExile(memberId);
+      if (response && response.status === 'SUCCESS') {
+        toast.success('수락 완료되었습니다.');
+        setIsOpen(false);
+      } else {
+        toast.error('수락 실패했습니다.');
+      }
+    } catch (error) {
+      toast.error('에러 발생');
+    } finally {
+      setIsOpen(false);
+      setLoading(false);
+    }
+  };
+
   return (
     <MainPageContainer>
       <Header
@@ -130,6 +153,8 @@ function MemberManageDetail() {
           bsType={bsType}
           setIsOpen={setIsOpen}
           route="모임관리"
+          bsTypeText={'설정'}
+          onExport={deleteMemeber}
         />
       )}
     </MainPageContainer>

@@ -11,8 +11,11 @@ export interface WeatherProps {
 
 /** 모임일정 - 모임멤버 */
 export interface Member {
-  memberImg: string;
-  memberName: string;
+  groupMemberId: number;
+  joinType: string;
+  memberId: number;
+  profilePicture: string;
+  nickname: string;
 }
 
 export interface MeetMemberProps {
@@ -49,7 +52,7 @@ export interface RunningScheduleProps {
   date: string;
   visit: boolean;
   running: boolean;
-  totalDistance: string;
+  totalDistance: number;
   totalDuration: string;
   totalCalories: string;
   scheduleWayPointList: WayPoint[];
@@ -90,4 +93,13 @@ export interface ScheduleDayResDto {
   totalCalories: string;
   scheduleWayPointList: WayPoint[];
   attractionList: Attraction[];
+}
+
+/** 관광지  */
+export interface ScheduleAttractionsProps {
+  title: string;
+  tel: string;
+  name: string;
+  image1: string;
+  address: string;
 }

@@ -269,6 +269,7 @@ function RouteDetailPage() {
           setSelected={setReviewType}
           route={'경로설정'}
           bsType={'경로설정'}
+          bsTypeText={'설정'}
           setIsOpen={setIsOpenSetting}
           onEdit={() => {
             navigate(`/route/detail/retouch/${routeid}`);
@@ -286,6 +287,7 @@ function RouteDetailPage() {
           setSelected={setReviewType}
           route={'경로정렬'}
           bsType={'경로정렬'}
+          bsTypeText={'정렬'}
           setIsOpen={setIsOpenSorting}
         />
       );

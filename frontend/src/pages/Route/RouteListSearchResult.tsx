@@ -145,6 +145,7 @@ function RouteListSearchResult(props: RouteListSearchResultProps) {
           selected={reviewType}
           setSelected={setReviewType}
           bsType={'정렬'}
+          bsTypeText={'정렬'}
           setIsOpen={setIsOpen}
         />
       )}

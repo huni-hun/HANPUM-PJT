@@ -19,13 +19,17 @@ import SchduleCard from '@/components/Schedule/SchduleCard';
 import scheduleBackgroundImg from '../../assets/img/scheduleBackground.png';
 import goyuMY from '../../assets/img/goyuMY.png';
 import {
+  MeetMemberProps,
+  Member,
   RunningScheduleProps,
   SchduleCardProps,
   WeatherProps,
+  ScheduleAttractionsProps,
 } from '@/models/schdule';
 import BottomTab from '@/components/common/BottomTab/BottomTab';
 import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
 import {
+  AttractionsAddCardProps,
   AttractionsProps,
   DaysOfRouteProps,
   FeedInfoProps,
@@ -38,6 +42,7 @@ import {
 import {
   getGroupScheduleData,
   getMyScheduleData,
+  getNearbyLocData,
   getRunningScheduleData,
   getWeather,
 } from '@/api/schedule/GET';
@@ -53,7 +58,9 @@ import { GetLineData } from '@/api/route/POST';
 function ScheduleMainPage() {
   const BtnClick = () => {};
   const navigate = useNavigate();
-  const [isSelected, setIsSelected] = useState<String>('Proceeding');
+  const [isSelected, setIsSelected] = useState<'Proceeding' | 'Mine' | 'Class'>(
+    'Proceeding',
+  );
 
   /** 진행중 */
   const [runningScheduleData, setRunningScheduleData] =
@@ -61,10 +68,15 @@ function ScheduleMainPage() {
   /** 내일정 */
   const [myScheduleListData, setMyScheduleListData] =
     useState<SchduleCardProps | null>(null);
-  /** 내일정 */
+  /** 모임 일정 */
   const [meetListData, setMeetListData] = useState<RunningScheduleProps | null>(
     null,
   );
+  /** 관광지 */
+  const [attractionsCard, setAttractionsCard] = useState<
+    ScheduleAttractionsProps[]
+  >([]);
+  const [memberData, setMemberData] = useState<Member[]>([]);
   const [error, setError] = useState<string | null>(null);
   /** 위치 가져오기*/
   const [lat, setLat] = useState<number | null>(null);
@@ -86,6 +98,7 @@ function ScheduleMainPage() {
   const [routeType, setRouteType] = useState<string[]>([]);
   const [totalDistance, setTotalDistance] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
+  /** 현재 위치 */
   const [latitude, setLatitude] = useState<number>(0);
   const [longitude, setLongitude] = useState<number>(0);
   const [attractions, setAttractions] = useState<AttractionsProps[]>([]);
@@ -157,9 +170,9 @@ function ScheduleMainPage() {
         : `D+${Math.abs(diffDays)}`;
   };
 
-  /** feed 더미 데이터 */
+  /** 진행중 feed */
   /** === useState (routeData) */
-  const feedData = {
+  const runningFeedData = {
     routeFeedImg: runningScheduleData?.backgroundImg || goyuMY,
     routeUserImg: memberImg,
     routeName: runningScheduleData?.title,
@@ -167,57 +180,13 @@ function ScheduleMainPage() {
     routeTypes: runningScheduleData?.courseTypes || [],
   };
 
-  console.log(runningScheduleData?.courseTypes, '왜 ');
-
+  /** 모임 feed */
   const meetFeedData = {
     routeFeedImg: meetListData?.backgroundImg || goyuMY,
     routeUserImg: memberImg,
     routeName: meetListData?.title,
     routeContent: meetListData?.content,
     routeTypes: meetListData?.courseTypes || [],
-  };
-
-  /** feed 더미 데이터 */
-  /** === useState (dayData) && (totalDistance) */
-  const dummyFeedInfoData = {
-    router: '일정',
-    feedInfoTitle: '일정 정보',
-    proceessDay: 1,
-    /** 출발지 , 도착지 */
-    departuresPlace: '태종대 전망대',
-    arrivalsPlace: '태종대 전망대',
-    /** 출발일, 도착일 */
-    startDate: '2024.08.04',
-    endDate: '2024.08.16',
-    /** 거리 */
-    currentDistance: 100,
-    totalDistance: 200,
-    dayData: [{ dayNum: 1 }, { dayNum: 2 }, { dayNum: 3 }],
-    /** 오늘 일정 달성률 퍼센트 */
-    percent: 30,
-  };
-
-  /** 모임일정 */
-  const dummyMemberData = {
-    memberCount: 3,
-
-    members: [
-      {
-        memberImg: memberImg,
-        memberName: '김영우',
-      },
-      {
-        memberImg: memberImg,
-        memberName: '장효령',
-      },
-      {
-        memberImg: memberImg,
-        memberName: '심채운',
-      },
-    ],
-    /** 배열로 받을 때 (컴포넌트 타입 변경 필요) 
-    memberImgs: [memberImg, memberImg, memberImg],
-    memberNames: ['김영우', '장효령', '심채운'],*/
   };
 
   const clickCard = (scheduleId?: number, dDay?: string) => {
@@ -233,106 +202,181 @@ function ScheduleMainPage() {
   const location = useLocation();
   const navigator = useNavigate();
   const data = { ...location };
-  const [runningData, setRunningData] = useState<RunningScheduleProps[]>([]);
+
+  useEffect(() => {
+    const geo = window.navigator.geolocation;
+
+    if (geo) {
+      geo.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          // 위도와 경도가 제대로 설정됨
+          setLat(latitude);
+          setLon(longitude);
+        },
+        (error) => {
+          console.error('Error occurred while fetching location:', error);
+          alert('위치 가져오기 실패');
+        },
+        {
+          enableHighAccuracy: true,
+          maximumAge: 30000,
+          timeout: 20000,
+        },
+      );
+    } else {
+      alert('지원하지 않는 브라우저입니다.');
+    }
+  }, []);
+
+  console.log(lat, '위도', lon, '경도');
 
   /** 진행중 */
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getRunningScheduleData();
-        console.log(response);
-        if (response && response.status === 'SUCCESS') {
-          setRunningScheduleData(response.data);
-        } else {
-          console.error(error);
+    if (isSelected === 'Proceeding') {
+      /** 진행중 data */
+      const fetchData = async () => {
+        try {
+          const response = await getRunningScheduleData();
+          if (response && response.status === 'SUCCESS') {
+            setRunningScheduleData(response.data);
+          } else {
+            console.error('Error:', response.error);
+          }
+        } catch (error: unknown) {
+          console.error('Fetch Error:', error);
+          toast.error((error as AxiosError).message);
+        } finally {
+          setLoading(false);
         }
-      } catch (error: unknown) {
-        console.error('Fetch Error:', error);
+      };
 
-        toast.error((error as AxiosError).message);
-      } finally {
-        setLoading(false);
+      fetchData();
+
+      /** waypoint data */
+      if (routeDayData.length === 0) {
+        getRouteDetail('1').then((result) => {
+          if (result.data.status !== 'ERROR' && result.status === 200) {
+            let rd = {
+              routeName: result.data.data.course.courseName,
+              routeContent: result.data.data.course.content,
+              writeDate: result.data.data.course.writeDate,
+              routeComment: result.data.data.course.commentCnt,
+              routeScore: result.data.data.course.scoreAvg,
+              start: result.data.data.course.startPoint,
+              end: result.data.data.course.endPoint,
+              img: result.data.data.course.backgroundImg,
+              writeState: result.data.data.course.writeState,
+            };
+            setRouteData(rd);
+            result.data.data.courseDays.forEach((ele: any) => {
+              let data = {
+                dayNum: ele.dayNumber,
+                totalDistance: ele.total_distance,
+                totalCalorie: ele.total_calorie,
+                totalDuration: ele.total_duration,
+              };
+              setRouteDayData((prev) => [...prev, data]);
+            });
+          }
+          setLoading(true);
+        });
       }
-    };
 
-    fetchData();
-  }, []);
+      const nearByData = async () => {
+        try {
+          const response = await getNearbyLocData(lat || 0, lon || 0);
+          if (response && response.status === 'SUCCESS') {
+            setAttractionsCard(response.data);
+          } else {
+            console.error('Error:', response.error);
+          }
+        } catch (error: unknown) {
+          console.error('Fetch Error:', error);
+          toast.error((error as AxiosError).message);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      nearByData();
+    }
+  }, [isSelected, routeDayData.length]);
 
   /** 내일정 */
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getMyScheduleData();
-
-        if (response && response.status === 'SUCCESS') {
-          setMyScheduleListData(response.data);
-        } else {
-          console.error(error);
+    if (isSelected === 'Mine') {
+      const fetchData = async () => {
+        try {
+          const response = await getMyScheduleData();
+          if (response && response.status === 'SUCCESS') {
+            setMyScheduleListData(response.data);
+          } else {
+            console.error('Error:', response.error);
+          }
+        } catch (error) {
+          console.error('Fetch Error:', error);
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        console.error('Fetch Error:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+      };
 
-    fetchData();
-  }, []);
+      fetchData();
+    }
+  }, [isSelected]);
 
   /** 모임일정 */
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getGroupScheduleData();
-
-        if (response && response.status === 'SUCCESS') {
-          setMeetListData(response.data);
-        } else {
-          console.error(error);
+    if (isSelected === 'Class') {
+      const fetchData = async () => {
+        try {
+          const response = await getGroupScheduleData();
+          if (response && response.status === 'SUCCESS') {
+            setMeetListData(response.data);
+            setMemberData(response.data.groupMemberResDtoList);
+          } else {
+            console.error('Error:', response.error);
+          }
+        } catch (error: unknown) {
+          console.error('Fetch Error:', error);
+          toast.error((error as AxiosError).message);
+        } finally {
+          setLoading(false);
         }
-      } catch (error: unknown) {
-        console.error('Fetch Error:', error);
+      };
 
-        toast.error((error as AxiosError).message);
-      } finally {
-        setLoading(false);
-      }
-    };
+      fetchData();
 
-    fetchData();
-
-    if (routeDayData.length === 0) {
-      /*경로 상세 정보 가져오기 */
-      /*이 정보 안가져 오면 총 몇일인지 알 수 없어서 가져와야 됩니다.*/
-      getRouteDetail('1' as string).then((result) => {
-        if (result.data.status !== 'ERROR' && result.status === 200) {
-          let rd: RouteDetailProps = {
-            routeName: result.data.data.course.courseName,
-            routeContent: result.data.data.course.content,
-            writeDate: result.data.data.course.writeDate,
-            routeComment: result.data.data.course.commentCnt,
-            routeScore: result.data.data.course.scoreAvg,
-            start: result.data.data.course.startPoint,
-            end: result.data.data.course.endPoint,
-            img: result.data.data.course.backgroundImg,
-            writeState: result.data.data.course.writeState,
-          };
-          setRouteData(rd);
-          result.data.data.courseDays.map((ele: any) => {
-            let data: RouteDetailDayProps = {
-              dayNum: ele.dayNumber,
-              totalDistance: ele.total_distance,
-              totalCalorie: ele.total_calorie,
-              totalDuration: ele.total_duration,
+      if (routeDayData.length === 0) {
+        getRouteDetail('1').then((result) => {
+          if (result.data.status !== 'ERROR' && result.status === 200) {
+            let rd = {
+              routeName: result.data.data.course.courseName,
+              routeContent: result.data.data.course.content,
+              writeDate: result.data.data.course.writeDate,
+              routeComment: result.data.data.course.commentCnt,
+              routeScore: result.data.data.course.scoreAvg,
+              start: result.data.data.course.startPoint,
+              end: result.data.data.course.endPoint,
+              img: result.data.data.course.backgroundImg,
+              writeState: result.data.data.course.writeState,
             };
-            setRouteDayData((pre) => [...pre, data]);
-          });
-        }
-
-        setLoading(true);
-      });
+            setRouteData(rd);
+            result.data.data.courseDays.forEach((ele: any) => {
+              let data = {
+                dayNum: ele.dayNumber,
+                totalDistance: ele.total_distance,
+                totalCalorie: ele.total_calorie,
+                totalDuration: ele.total_duration,
+              };
+              setRouteDayData((prev) => [...prev, data]);
+            });
+          }
+          setLoading(true);
+        });
+      }
     }
-  }, []);
+  }, [isSelected]);
 
   useEffect(() => {
     /* 맵에 마커, 선 초기화 */
@@ -473,30 +517,6 @@ function ScheduleMainPage() {
     fetchData();
   }, [lat, lon]);
 
-  useEffect(() => {
-    const geo = window.navigator.geolocation;
-
-    if (geo) {
-      geo.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setLat(latitude);
-          setLon(longitude);
-        },
-        () => {
-          alert('위치 가져오기 실패');
-        },
-        {
-          enableHighAccuracy: true,
-          maximumAge: 30000,
-          timeout: 27000,
-        },
-      );
-    } else {
-      alert('Geolocation is not supported by this browser.');
-    }
-  }, []);
-
   /** 지도 및 하위 컴포넌트  */
 
   const firstDayData = runningScheduleData?.scheduleDayResDtoList[0];
@@ -514,6 +534,7 @@ function ScheduleMainPage() {
     }),
   );
 
+  /** 진행중 feed */
   const feedInfoProps: FeedInfoProps = {
     feedInfoTitle: '일정 정보',
     departuresPlace,
@@ -591,7 +612,7 @@ function ScheduleMainPage() {
                 <>
                   <S.RouteInfoContainer>
                     <>
-                      <Feed routeData={feedData} />
+                      <Feed routeData={runningFeedData} />
                       <FeedInfo
                         feedInfoTitle={feedInfoProps.feedInfoTitle}
                         departuresPlace={feedInfoProps.departuresPlace}
@@ -600,7 +621,7 @@ function ScheduleMainPage() {
                           runningScheduleData.startDate || '',
                         )}
                         endDate={formatDate(runningScheduleData.endDate || '-')}
-                        totalDistance={feedInfoProps.totalDistance}
+                        totalDistance={runningScheduleData.totalDistance}
                         dayData={feedInfoProps.dayData}
                         percentage={feedInfoProps.percentage}
                       />
@@ -654,6 +675,28 @@ function ScheduleMainPage() {
                       reviewType={reviewType}
                     />
                   </R.RouteDetailInfoContainer>
+
+                  <S.AttractionsBox>
+                    <S.AttrantiosTypeBox>관광지</S.AttrantiosTypeBox>
+                    <S.AttractionsOverflow>
+                      {attractionsCard.length > 0 &&
+                        attractionsCard.map((ele) => (
+                          <S.AttractionCard
+                            img={(ele as ScheduleAttractionsProps).image1}
+                          >
+                            <S.AttractionCardTitle>
+                              {(ele as ScheduleAttractionsProps).title}
+                            </S.AttractionCardTitle>
+                            <S.AttractionCardDetail>
+                              <Icon name="IconFlag" size={20} />
+                              <S.AttractionCardDetailText>
+                                {(ele as ScheduleAttractionsProps).name}
+                              </S.AttractionCardDetailText>
+                            </S.AttractionCardDetail>
+                          </S.AttractionCard>
+                        ))}
+                    </S.AttractionsOverflow>
+                  </S.AttractionsBox>
                 </>
               ) : (
                 <>
@@ -709,7 +752,7 @@ function ScheduleMainPage() {
         <S.Main>
           <S.Overflow>
             <R.RouteInfoContainer>
-              <Feed routeData={feedData} isUserContainer />
+              <Feed routeData={meetFeedData} isUserContainer />
               <FeedInfo
                 feedInfoTitle="모임 일정 정보"
                 departuresPlace={feedInfoProps.departuresPlace}
@@ -723,22 +766,32 @@ function ScheduleMainPage() {
             </R.RouteInfoContainer>
             {/* 지도 및 하위 컴포넌트 container */}
             <R.RouteDetailInfoContainer>
-              {/* <RouteDetailInfo
-          selected={selected}
-          selectedDay={selectedDay}
-          latitude={latitude}
-          longitude={longitude}
-          dayData={dayData}
-          attractions={attractions}
-          setLoading={setLoading}
-          setSelectedDay={setSelectedDay}
-        /> */}
+              <RouteDetailInfo
+                marker={marker}
+                deleteHandler={(name: string) => {}}
+                setSelectedIdx={setSelectedIdx}
+                reviews={reviews}
+                setDayOfRoute={setDayOfRoute}
+                dayOfRoute={dayOfRoute}
+                linePath={mapLines}
+                selected={selected}
+                selectedDay={selectedDay}
+                latitude={latitude}
+                longitude={longitude}
+                dayData={routeDayData}
+                attractions={attractions}
+                setLoading={setLoading}
+                setSelectedDay={setSelectedDay}
+                setIsOpen={setIsOpen}
+                setBsType={setBsType}
+                reviewType={reviewType}
+              />
             </R.RouteDetailInfoContainer>
             {/* 모임멤버 */}
             <S.ScheduleMainContainer>
               <MeetMember
-                memberCount={dummyMemberData.memberCount}
-                members={dummyMemberData.members}
+                memberCount={memberData.length}
+                members={memberData || []}
               />
             </S.ScheduleMainContainer>
           </S.Overflow>
@@ -754,4 +807,5 @@ export default ScheduleMainPage;
 const ScheduleMainPageContainer = styled.div`
   width: 100%;
   height: 100%;
+  background-color: #fff;
 `;
