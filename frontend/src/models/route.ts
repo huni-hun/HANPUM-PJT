@@ -91,6 +91,7 @@ export interface DaysOfRouteProps {
   routePoint: string;
   latitude: number;
   longitude: number;
+  state?: number;
 }
 
 export interface AttractionsProps {

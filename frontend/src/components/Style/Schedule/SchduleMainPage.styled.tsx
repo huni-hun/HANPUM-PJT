@@ -490,10 +490,14 @@ export const DetailWayOverflow = styled.div`
     display: none;
   }
 `;
+export const AttractionsContainer = styled.div`
+  width: 100%;
 
+  background-color: #fff;
+`;
 export const AttractionsBox = styled.div`
   width: 90%;
-  min-height: 20vh;
+  min-height: 28vh;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
