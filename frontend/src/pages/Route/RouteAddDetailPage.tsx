@@ -211,7 +211,7 @@ function RouteAddDetailPage() {
             </R.MapSearchBox>
             <R.MapBox>
               {loading ? (
-                <Map latitude={curLatitude} longitude={curLongtitude} />
+                <Map latitude={curLatitude} longitude={curLongtitude} infoBtn />
               ) : null}
             </R.MapBox>
             <R.PlaceContainer>
