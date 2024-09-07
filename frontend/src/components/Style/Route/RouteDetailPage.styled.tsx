@@ -825,7 +825,8 @@ export const AddBtnContainer = styled.div`
 
 export const TagsWrap = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: left;
+  gap: 1rem;
   width: 60%;
   align-items: center;
   height: 2.8rem;

@@ -96,6 +96,8 @@ export interface DaysOfRouteProps {
   latitude: number;
   longitude: number;
   state?: number;
+  /** 스케줄 경유지 처리 */
+  turnGreen?: boolean;
 }
 
 export interface AttractionsProps {
