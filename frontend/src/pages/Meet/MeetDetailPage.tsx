@@ -12,12 +12,22 @@ import FeedInfo from '@/components/Style/Common/FeedInfo';
 import memberImg from '../../assets/img/memberImg.svg';
 
 import goyuMY from '../../assets/img/goyuMY.png';
+
+import BottomSheet from '@/components/Style/Route/BottomSheet';
+
 import { Member, SchduleCardProps } from '@/models/schdule';
 import { GetMeetDetailList } from '@/api/meet/GET';
 
 function DetailMineSchedulePage() {
   const BtnClick = () => {};
   const navigate = useNavigate();
+
+  /** 헤더 설정 열기 */
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [bsType, setBsType] = useState<string>('설정');
+  const [reviewType, setReviewType] = useState<string>('공개 여부');
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+
   const location = useLocation();
   const { groupId } = location.state || {};
   const [memberData, setMemberData] = useState<Member>();
@@ -63,8 +73,20 @@ function DetailMineSchedulePage() {
   const dayNum = memberData?.totalDays || 0;
   const dayData = [{ dayNum: dayNum }];
 
+  /** 바텀탭 - 수정 클릭시 */
+  const handleEdit = () => {
+    navigate(`/meet/edit`, {
+      state: { groupId },
+    });
+  };
+
+  /** 바텀탭 - 삭제 클릭시 */
+  const handleDelete = () => {
+    setIsDeleteModalOpen(true);
+  };
+
   return (
-    <ScheduleMainPageContainer>
+    <MainPageContainer>
       <Header
         purpose="result"
         title={`D-${memberData?.dday}`}
@@ -109,13 +131,29 @@ function DetailMineSchedulePage() {
           </R.RouteDetailInfoContainer>
         </R.Overflow>
       </R.Main>
-    </ScheduleMainPageContainer>
+      {isOpen && (
+        <BottomSheet
+          selected={reviewType}
+          setSelected={setReviewType}
+          bsType={bsType}
+          setIsOpen={setIsOpen}
+          route="모임필터"
+          bsTypeText={'설정'}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+      )}
+    </MainPageContainer>
   );
 }
 
 export default DetailMineSchedulePage;
 
-const ScheduleMainPageContainer = styled.div`
-  width: 100%;
+const MainPageContainer = styled.div`
+  width: 100vw;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  overflow-y: auto;
 `;

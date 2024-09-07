@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import * as R from '@/components/Style/Route/RouteDetailPage.styled';
-
+import * as S from '../../components/Style/Schedule/SchduleMainPage.styled';
 import Header from '@/components/common/Header/Header';
 
 import styled from 'styled-components';
@@ -11,10 +11,14 @@ import FeedInfo from '@/components/Style/Common/FeedInfo';
 import memberImg from '../../assets/img/memberImg.svg';
 
 import goyuMY from '../../assets/img/goyuMY.png';
-import { RunningScheduleProps, SchduleCardProps } from '@/models/schdule';
+import {
+  RunningScheduleProps,
+  SchduleCardProps,
+  ScheduleAttractionsProps,
+} from '@/models/schdule';
 import BottomSheet from '@/components/Style/Route/BottomSheet';
 import MeetModal from '@/components/Meet/MeetModal';
-import { getMyScheduleDetailData } from '@/api/schedule/GET';
+import { getMyScheduleDetailData, getNearbyLocData } from '@/api/schedule/GET';
 import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
 import {
   AttractionsProps,
@@ -30,6 +34,8 @@ import { GetLineData } from '@/api/route/POST';
 import BottomTab from '@/components/common/BottomTab/BottomTab';
 import { DeleteSchedule } from '@/api/schedule/Delete';
 import { toast } from 'react-toastify';
+import { AxiosError } from 'axios';
+import Icon from '@/components/common/Icon/Icon';
 
 function DetailMineSchedulePage() {
   const BtnClick = () => {};
@@ -47,8 +53,13 @@ function DetailMineSchedulePage() {
     useState<RunningScheduleProps | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  /** 관광지 */
+  const [attractionsCard, setAttractionsCard] = useState<
+    ScheduleAttractionsProps[]
+  >([]);
   /** 루트 디테일  */
   /** 위치 가져오기*/
+
   const [routeData, setRouteData] = useState<RouteDetailProps>(null!);
   const [lat, setLat] = useState<number | null>(null);
   const [lon, setLon] = useState<number | null>(null);
@@ -131,6 +142,24 @@ function DetailMineSchedulePage() {
 
     fetchData();
 
+    const nearByData = async () => {
+      try {
+        const response = await getNearbyLocData(lat || 0, lon || 0);
+        if (response && response.status === 'SUCCESS') {
+          setAttractionsCard(response.data);
+        } else {
+          console.error('Error:', response.error);
+        }
+      } catch (error: unknown) {
+        console.error('Fetch Error:', error);
+        toast.error((error as AxiosError).message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    nearByData();
+
     if (routeDayData.length === 0) {
       /*경로 상세 정보 가져오기 */
       /*이 정보 안가져 오면 총 몇일인지 알 수 없어서 가져와야 됩니다.*/
@@ -162,7 +191,7 @@ function DetailMineSchedulePage() {
         setLoading(true);
       });
     }
-  }, []);
+  }, [myScheduleListData]);
 
   useEffect(() => {
     /* 맵에 마커, 선 초기화 */
@@ -296,17 +325,18 @@ function DetailMineSchedulePage() {
           setLat(latitude);
           setLon(longitude);
         },
-        () => {
+        (error) => {
+          console.error('Error occurred while fetching location:', error);
           alert('위치 가져오기 실패');
         },
         {
           enableHighAccuracy: true,
           maximumAge: 30000,
-          timeout: 27000,
+          timeout: 20000,
         },
       );
     } else {
-      alert('Geolocation is not supported by this browser.');
+      alert('지원하지 않는 브라우저입니다.');
     }
   }, []);
 
@@ -403,7 +433,31 @@ function DetailMineSchedulePage() {
             reviewType={reviewType}
           />
         </R.RouteDetailInfoContainer>
+        <S.AttractionsContainer>
+          <S.AttractionsBox>
+            <S.AttrantiosTypeBox>관광지</S.AttrantiosTypeBox>
+            <S.AttractionsOverflow>
+              {attractionsCard.length > 0 &&
+                attractionsCard.map((ele) => (
+                  <S.AttractionCard
+                    img={(ele as ScheduleAttractionsProps).image1}
+                  >
+                    <S.AttractionCardTitle>
+                      {(ele as ScheduleAttractionsProps).title}
+                    </S.AttractionCardTitle>
+                    <S.AttractionCardDetail>
+                      <Icon name="IconFlag" size={20} />
+                      <S.AttractionCardDetailText>
+                        {(ele as ScheduleAttractionsProps).name}
+                      </S.AttractionCardDetailText>
+                    </S.AttractionCardDetail>
+                  </S.AttractionCard>
+                ))}
+            </S.AttractionsOverflow>
+          </S.AttractionsBox>
+        </S.AttractionsContainer>
       </R.Overflow>
+
       {isOpen && (
         <BottomSheet
           selected={reviewType}
@@ -434,7 +488,7 @@ export default DetailMineSchedulePage;
 
 const ScheduleMainPageContainer = styled.div`
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   background-color: #f5f5f5;

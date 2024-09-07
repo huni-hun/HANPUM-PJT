@@ -180,7 +180,7 @@ export const IconBox = styled.div`
 `;
 
 export const WriteDateBox = styled.div`
-  width: 20%;
+  width: 15vw;
   height: 100%;
   display: flex;
   flex-direction: row;
@@ -229,7 +229,7 @@ export const EndDateBox = styled.div`
 `;
 
 export const DateBox = styled.div`
-  width: 50%;
+  width: 60vw;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -332,7 +332,7 @@ export const DistanceNumBox = styled.div`
 `;
 
 export const PlaceBox = styled.div`
-  width: 80%;
+  width: 60vw;
   height: 100%;
   display: flex;
   flex-direction: column;

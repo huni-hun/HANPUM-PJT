@@ -163,11 +163,19 @@ const Header = ({
       case 'merge':
         return (
           <Flex $align="center" $justify="space-between">
-            <div className="search-bar" onClick={clickOption}>
-              <Icon name="IconSearch" size={14} />
-              <input type="text" />
-            </div>
-            <Flex $gap={20} style={{ width: 'auto', marginLeft: '9px' }}>
+            {!isSchedule && (
+              <div className="search-bar" onClick={clickOption}>
+                <Icon name="IconSearch" size={14} />
+                <input type="text" />
+              </div>
+            )}
+            <Flex
+              $gap={20}
+              style={{
+                width: 'auto',
+                marginLeft: isSchedule ? '280px' : '9px',
+              }}
+            >
               <Icon name="IconHeaderPlus" onClick={plusBtnclick} size={14} />
               <Icon
                 name="IconUser"

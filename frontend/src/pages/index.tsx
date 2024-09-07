@@ -8,6 +8,7 @@ import AddSchedulePage from '@pages/Schedule/AddSchedulePage';
 import DetailMineSchedulePage from '@pages/Schedule/DetailMineSchedulePage';
 import SuccessAddSchedulePage from '@pages/Schedule/SuccessAddSchedulePage';
 import EditMySchedulePage from '@pages/Schedule/EditMySchedulePage';
+import ScheduleMemoPage from '@/pages/Schedule/ScheduleMemoPage';
 
 /** 경로 */
 import RouteList from '@pages/Route/RouteList';
@@ -57,6 +58,7 @@ export {
   DetailMineSchedulePage,
   SuccessAddSchedulePage,
   EditMySchedulePage,
+  ScheduleMemoPage,
   /** 경로 */
   RouteList,
   RouteAddPlacePage,
