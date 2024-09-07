@@ -50,7 +50,9 @@ const WeatherSchedule = ({
   };
 
   const formatPrecipitation = (precipitation: string): string => {
-    return precipitation.replace(/(?<=\d)mm$/, '');
+    return precipitation.includes('강수없음')
+      ? precipitation.replace('mm', '')
+      : precipitation;
   };
 
   return (

@@ -8,11 +8,14 @@ import { colors } from '@/styles/colorPalette';
 interface BottomSheetProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   bsType: string;
+  bsTypeText: string;
   setSelected: React.Dispatch<React.SetStateAction<string>>;
   selected: string;
   route?: string;
   onEdit?: () => void;
   onDelete?: () => void;
+  /** 모임 내보내기  */
+  onExport?: () => void;
   id?: number;
   writeState?: boolean;
 }
@@ -106,6 +109,11 @@ function BottomSheet(props: BottomSheetProps) {
         navigate('/가입신청관리');
         break;
       case '내보내기':
+        if (props.onExport) props.onExport();
+        else {
+          props.setIsOpen(false);
+          toast.error('내보내기 권한이 없습니다.');
+        }
         break;
       default:
         break;
@@ -141,6 +149,7 @@ function BottomSheet(props: BottomSheetProps) {
 
   const BottomSheetMain = () => {
     switch (props.bsType) {
+      case '일정':
       case '경로설정':
       case '경로정렬':
       case '모임필터':
@@ -173,7 +182,12 @@ function BottomSheet(props: BottomSheetProps) {
                     onClick={() => {}}
                     isDelete={ele === '삭제'}
                     style={{
-                      color: isSpecial && isSelected ? colors.main : 'inherit',
+                      color:
+                        ele === '삭제'
+                          ? colors.red
+                          : isSpecial && isSelected
+                            ? colors.main
+                            : 'inherit',
                     }}
                   >
                     {ele}
@@ -226,7 +240,7 @@ function BottomSheet(props: BottomSheetProps) {
             >
               <Icon name="IconClose" size={15} />
             </R.HeaderIconBox>
-            {props.bsType}
+            {props.bsTypeText}
           </R.BottomSheetHeader>
           {BottomSheetMain()}
         </R.BottomSheetContentBox>
