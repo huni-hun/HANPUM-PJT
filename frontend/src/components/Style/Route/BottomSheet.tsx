@@ -86,14 +86,14 @@ function BottomSheet(props: BottomSheetProps) {
 
     switch (option) {
       case '수정':
-        if (props.onEdit) props.onEdit();
+        if (props.onEdit && props.writeState) props.onEdit();
         else {
           props.setIsOpen(false);
           toast.error('수정권한이 없습니다.');
         }
         break;
       case '삭제':
-        if (props.onDelete) props.onDelete();
+        if (props.onDelete && props.writeState) props.onDelete();
         else {
           props.setIsOpen(false);
           toast.error('삭제권한이 없습니다.');
@@ -167,6 +167,7 @@ function BottomSheet(props: BottomSheetProps) {
                   onClick={() => {
                     handleOptionClick(ele);
                     setSelectedOption(ele);
+                    props.setSelected(ele);
                   }}
                 >
                   <R.SettingIconBox isNoIcon={isSpecial}>

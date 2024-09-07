@@ -17,13 +17,12 @@ export const Badge = styled.div`
 `;
 
 export const MeetInfoWrap = styled.div`
-  width: 85%;
   height: 30vw;
   display: flex;
   justify-content: space-between;
   border: 0.1rem solid ${colors.grey1};
   border-radius: 1rem;
-  margin: 2rem 0 2rem 0;
+  margin: 2rem 0 1rem 0;
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -37,13 +36,13 @@ export const MeetInfoText = styled.div`
   padding: 0 3rem;
   gap: 0.3rem;
   p {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-weight: bold;
   }
 
   span {
     color: #777;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
   }
 `;
 
@@ -51,4 +50,12 @@ export const Hr = styled.div`
   width: 0.1rem;
   height: 9vw;
   background-color: #ccc;
+`;
+
+/* 모임 태그 */
+export const MeetInfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 85%;
+  height: 55vh;
 `;

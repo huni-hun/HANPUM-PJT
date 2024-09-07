@@ -87,29 +87,18 @@ export const AddRoute = async (data: AddRouteProps) => {
   return response;
 };
 
-export const GetLineData = async (
-  data: MapLinePathProps[],
-  start: LineStartEndProps,
-  end: LineStartEndProps,
-) => {
-  let arr = {
-    start,
-    end,
-    data,
-    avoid: ['toll', 'motorway', 'uturn', 'ferries'],
-    car_types: 7,
-  };
+export const GetLineData = async (data: MapLinePathProps[]) => {
   const response = api.post(
-    '/api/course/search/multiWaypoint',
+    '/api/course/search/tmapMulti',
     [
-      {
-        x: start.x,
-        y: start.y,
-      },
-      {
-        x: end.x,
-        y: end.y,
-      },
+      // {
+      //   x: start.x,
+      //   y: start.y,
+      // },
+      // {
+      //   x: end.x,
+      //   y: end.y,
+      // },
       ...data,
     ],
     {

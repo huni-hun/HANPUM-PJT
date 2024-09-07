@@ -9,6 +9,11 @@ import { getRouteList } from '@/api/route/GET';
 import { RouteListProps } from '@/models/route';
 import { useNavigate } from 'react-router-dom';
 import CardLong from '@/components/common/CardLong/CardLong';
+import { GetUser } from '@/api/mypage/GET';
+import { useQuery } from 'react-query';
+import { STATUS } from '@/constants';
+import { toast } from 'react-toastify';
+import { AxiosError } from 'axios';
 
 function RouteList() {
   const [arr, setArr] = useState<RouteListProps[]>([]);
@@ -16,6 +21,19 @@ function RouteList() {
   const [arrD, setArrD] = useState<RouteListProps[]>([]);
   const [morePageOpen, setMoreOpenPage] = useState<boolean>(false);
   const navigator = useNavigate();
+
+  const { data: userInfo } = useQuery('getUser', GetUser, {
+    onSuccess: (res) => {
+      // console.log('res ::', res.data);
+      if (res.status === STATUS.success) {
+      } else if (res.status === STATUS.error) {
+        toast.error(res.message);
+      }
+    },
+    onError: (error: AxiosError) => {
+      toast.error(error.message);
+    },
+  });
 
   useEffect(() => {
     const data: RouteListProps[] = [];
@@ -116,7 +134,9 @@ function RouteList() {
       <R.MainContainer>
         <R.RouteCardContainer>
           <R.RouteTypeHeader>
-            <R.TypeTitle>김미미님에게 잘 맞는 경로</R.TypeTitle>
+            <R.TypeTitle>
+              {userInfo.data.nickname}님에게 잘 맞는 경로
+            </R.TypeTitle>
             <R.MoreButton>
               <R.MoreText
                 onClick={() => {

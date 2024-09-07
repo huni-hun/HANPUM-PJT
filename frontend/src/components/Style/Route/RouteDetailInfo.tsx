@@ -123,6 +123,7 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
                 latitude={props.longitude}
                 longitude={props.latitude}
                 marker={props.marker}
+                infoBtn
               />
             </R.MapBox>
             <R.DetailHeader>

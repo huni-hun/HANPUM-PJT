@@ -123,6 +123,7 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
         <Map
           latitude={props.selectedPlace.longitude}
           longitude={props.selectedPlace.latitude}
+          infoBtn
         />
       </Ra.MapContainer>
       <Ra.PlaceBottomContainer>

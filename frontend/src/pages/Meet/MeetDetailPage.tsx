@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as S from '../../components/Style/Schedule/SchduleMainPage.styled';
 import * as R from '@/components/Style/Route/RouteDetailPage.styled';
 
@@ -12,60 +12,71 @@ import FeedInfo from '@/components/Style/Common/FeedInfo';
 import memberImg from '../../assets/img/memberImg.svg';
 
 import goyuMY from '../../assets/img/goyuMY.png';
-import { SchduleCardProps } from '@/models/schdule';
+
 import BottomSheet from '@/components/Style/Route/BottomSheet';
+
+import { Member, SchduleCardProps } from '@/models/schdule';
+import { GetMeetDetailList } from '@/api/meet/GET';
 
 function DetailMineSchedulePage() {
   const BtnClick = () => {};
   const navigate = useNavigate();
-  /** 멤버 아이디 넘겨받기 */
-  const location = useLocation();
-  const { groupMemberId } = location.state || {};
+
   /** 헤더 설정 열기 */
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [bsType, setBsType] = useState<string>('설정');
   const [reviewType, setReviewType] = useState<string>('공개 여부');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
-  /** feed 더미 데이터 */
-  /** === useState (routeData) */
-  const dummtFeedData = {
-    routeFeedImg: goyuMY,
-    routeUserImg: memberImg,
-    routeName: '코스 이름(태종대 전망대)',
-    routeContent: '이 코스는 초보자에게 적합합니다.',
-    /** 출발일, 도착일 */
-    startDate: '2024.08.04',
-    endDate: '2024.08.16',
-    /** 모집마감, 모집인원, 관심 (초깃값 0으로 해줘야해용) */
-    memberCount: 10,
-    totalMember: 20,
-    likeCount: 1,
-  };
+  const location = useLocation();
+  const { groupId } = location.state || {};
+  const [memberData, setMemberData] = useState<Member>();
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   /** feed 더미 데이터 */
-  /** === useState (dayData) && (totalDistance) */
-  const dummyFeedInfoData = {
-    router: '일정',
-    feedInfoTitle: '일정 정보',
-    /** 출발지 , 도착지 */
-    departuresPlace: '태종대 전망대',
-    arrivalsPlace: '태종대 전망대',
-    /** 출발일, 도착일 */
-    startDate: '2024.08.04',
-    endDate: '2024.08.16',
-    /** 거리 */
-    currentDistance: 100,
-    totalDistance: 200,
-    dayData: [{ dayNum: 1 }, { dayNum: 2 }, { dayNum: 3 }],
-    /** 오늘 일정 달성률 퍼센트 */
-    percent: 30,
+  /** === useState (routeData) */
+  const feedData = {
+    routeFeedImg: memberData?.groupImg || goyuMY,
+    routeUserImg: memberData?.readerProfileImg || memberImg,
+    routeName: memberData?.title,
+    routeContent: memberData?.description,
+    memberCount: memberData?.recruitedCount,
+    totalMember: memberData?.recruitmentCount,
+    likeCount: memberData?.likeCount,
+    startDate: memberData?.startDate,
+    endDate: memberData?.endDate,
+    meetDday: memberData?.dday,
+    meetTypes: memberData?.courseTypes || [],
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await GetMeetDetailList(groupId);
+
+        if (response && response.status === 'SUCCESS') {
+          setMemberData(response.data);
+        } else {
+          setError('데이터 가져오기 실패');
+        }
+      } catch (error) {
+        console.error('Fetch Error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const dayNum = memberData?.totalDays || 0;
+  const dayData = [{ dayNum: dayNum }];
 
   /** 바텀탭 - 수정 클릭시 */
   const handleEdit = () => {
     navigate(`/meet/edit`, {
-      state: { groupMemberId },
+      state: { groupId },
     });
   };
 
@@ -76,20 +87,25 @@ function DetailMineSchedulePage() {
 
   return (
     <MainPageContainer>
-      <Header purpose="result" title="D-16" clickBack={() => navigate(-1)} />
+      <Header
+        purpose="result"
+        title={`D-${memberData?.dday}`}
+        clickBack={() => navigate(-1)}
+      />
 
       <R.Main>
         <R.Overflow>
           <R.RouteInfoContainer>
-            <Feed routeData={dummtFeedData} isUserContainer meetRouter />
+            <Feed routeData={feedData} isUserContainer meetRouter />
             <FeedInfo
               feedInfoTitle="모임 일정 정보"
-              departuresPlace={dummyFeedInfoData.departuresPlace}
-              arrivalsPlace={dummyFeedInfoData.arrivalsPlace}
-              startDate={dummyFeedInfoData.startDate}
-              endDate={dummyFeedInfoData.endDate}
-              totalDistance={dummyFeedInfoData.totalDistance}
-              dayData={dummyFeedInfoData.dayData}
+              departuresPlace={memberData?.endPoint}
+              arrivalsPlace={memberData?.startPoint}
+              startDate={memberData?.startDate}
+              endDate={memberData?.endDate}
+              totalDistance={53}
+              dayData={dayData}
+              isMeetFeed={'30rem'}
             />
           </R.RouteInfoContainer>
 
@@ -105,6 +121,13 @@ function DetailMineSchedulePage() {
           setLoading={setLoading}
           setSelectedDay={setSelectedDay}
         /> */}
+            {/* 모임멤버 */}
+            {/* <S.ScheduleMainContainer>
+              <MeetMember
+                memberCount={memberData.length}
+                members={memberData || []}
+              />
+            </S.ScheduleMainContainer> */}
           </R.RouteDetailInfoContainer>
         </R.Overflow>
       </R.Main>
