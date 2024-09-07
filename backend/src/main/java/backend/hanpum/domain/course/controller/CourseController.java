@@ -174,4 +174,12 @@ public class CourseController {
 
         return response.success(ResponseCode.SEARCH_MULTI_WAYPOINT_COURSE_RESTAPI_SUCCESS, multiWaypointSearchResDtoList);
     }
+
+    @Operation(summary = "티맵 보행자 다중 경유지 경로 조회", description = "티맵 보행자 다중 경유지 경로 조회 API")
+    @PostMapping("/search/tmapMulti")
+    public ResponseEntity<?> searchTmapMultiWaypoint(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody List<MultiWaypointSearchReqDto> multiWaypointSearchReqDtoList) {
+        List<MultiWaypointSearchResDto> multiWaypointSearchResDtoList = courseService.getSearchTmapMultiWaypoint(multiWaypointSearchReqDtoList);
+
+        return response.success(ResponseCode.SEARCH_TMAP_MULTI_WAYPOINT_COURSE_RESTAPI_SUCCESS, multiWaypointSearchResDtoList);
+    }
 }
