@@ -28,6 +28,8 @@ import {
 import { getRouteDayDetail, getRouteDetail } from '@/api/route/GET';
 import { GetLineData } from '@/api/route/POST';
 import BottomTab from '@/components/common/BottomTab/BottomTab';
+import { DeleteSchedule } from '@/api/schedule/Delete';
+import { toast } from 'react-toastify';
 
 function DetailMineSchedulePage() {
   const BtnClick = () => {};
@@ -80,6 +82,25 @@ function DetailMineSchedulePage() {
   const delteModalClose = () => {
     setIsDeleteModalOpen(false);
     setIsOpen(false);
+  };
+
+  /** 일정 삭제 */
+  const deleteSchedule = async () => {
+    try {
+      setLoading(true);
+      const response = await DeleteSchedule(scheduleId);
+      if (response && response.status === 'SUCCESS') {
+        toast.success('수락 완료되었습니다.');
+        setIsDeleteModalOpen(false);
+      } else {
+        toast.error('수락 실패했습니다.');
+      }
+    } catch (error) {
+      toast.error('에러 발생');
+    } finally {
+      setIsDeleteModalOpen(false);
+      setLoading(false);
+    }
   };
 
   /** feed 더미 데이터 */
@@ -306,7 +327,7 @@ function DetailMineSchedulePage() {
     })) || [];
 
   const formattedDistance = myScheduleListData?.totalDistance
-    ? parseFloat(parseFloat(myScheduleListData.totalDistance).toFixed(1))
+    ? Number(myScheduleListData.totalDistance.toFixed(1)) // toFixed()의 결과를 숫자로 변환
     : 0;
 
   return (
@@ -367,6 +388,7 @@ function DetailMineSchedulePage() {
           bsType={bsType}
           setIsOpen={setIsOpen}
           route="일정"
+          bsTypeText={'설정'}
           onEdit={handleEdit}
           onDelete={handleDelete}
         />
@@ -375,7 +397,7 @@ function DetailMineSchedulePage() {
       {isDeleteModalOpen && (
         <MeetModal
           onCancel={delteModalClose}
-          onConfirm={() => {}}
+          onConfirm={deleteSchedule}
           title="삭제하시겠어요?"
           content={'삭제하면 복구가 어렵습니다.'}
         />

@@ -24,10 +24,12 @@ import {
   RunningScheduleProps,
   SchduleCardProps,
   WeatherProps,
+  ScheduleAttractionsProps,
 } from '@/models/schdule';
 import BottomTab from '@/components/common/BottomTab/BottomTab';
 import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
 import {
+  AttractionsAddCardProps,
   AttractionsProps,
   DaysOfRouteProps,
   FeedInfoProps,
@@ -40,6 +42,7 @@ import {
 import {
   getGroupScheduleData,
   getMyScheduleData,
+  getNearbyLocData,
   getRunningScheduleData,
   getWeather,
 } from '@/api/schedule/GET';
@@ -69,6 +72,10 @@ function ScheduleMainPage() {
   const [meetListData, setMeetListData] = useState<RunningScheduleProps | null>(
     null,
   );
+  /** 관광지 */
+  const [attractionsCard, setAttractionsCard] = useState<
+    ScheduleAttractionsProps[]
+  >([]);
   const [memberData, setMemberData] = useState<Member[]>([]);
   const [error, setError] = useState<string | null>(null);
   /** 위치 가져오기*/
@@ -91,6 +98,7 @@ function ScheduleMainPage() {
   const [routeType, setRouteType] = useState<string[]>([]);
   const [totalDistance, setTotalDistance] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
+  /** 현재 위치 */
   const [latitude, setLatitude] = useState<number>(0);
   const [longitude, setLongitude] = useState<number>(0);
   const [attractions, setAttractions] = useState<AttractionsProps[]>([]);
@@ -181,26 +189,6 @@ function ScheduleMainPage() {
     routeTypes: meetListData?.courseTypes || [],
   };
 
-  /** 모임일정 */
-  const dummyMemberData = {
-    memberCount: 3,
-
-    members: [
-      {
-        memberImg: memberImg,
-        memberName: '김영우',
-      },
-      {
-        memberImg: memberImg,
-        memberName: '장효령',
-      },
-      {
-        memberImg: memberImg,
-        memberName: '심채운',
-      },
-    ],
-  };
-
   const clickCard = (scheduleId?: number, dDay?: string) => {
     if (scheduleId !== undefined) {
       navigate(`/schedule/detail/mine`, {
@@ -214,11 +202,39 @@ function ScheduleMainPage() {
   const location = useLocation();
   const navigator = useNavigate();
   const data = { ...location };
-  const [runningData, setRunningData] = useState<RunningScheduleProps[]>([]);
+
+  useEffect(() => {
+    const geo = window.navigator.geolocation;
+
+    if (geo) {
+      geo.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          // 위도와 경도가 제대로 설정됨
+          setLat(latitude);
+          setLon(longitude);
+        },
+        (error) => {
+          console.error('Error occurred while fetching location:', error);
+          alert('위치 가져오기 실패');
+        },
+        {
+          enableHighAccuracy: true,
+          maximumAge: 30000,
+          timeout: 20000,
+        },
+      );
+    } else {
+      alert('지원하지 않는 브라우저입니다.');
+    }
+  }, []);
+
+  console.log(lat, '위도', lon, '경도');
 
   /** 진행중 */
   useEffect(() => {
     if (isSelected === 'Proceeding') {
+      /** 진행중 data */
       const fetchData = async () => {
         try {
           const response = await getRunningScheduleData();
@@ -237,6 +253,7 @@ function ScheduleMainPage() {
 
       fetchData();
 
+      /** waypoint data */
       if (routeDayData.length === 0) {
         getRouteDetail('1').then((result) => {
           if (result.data.status !== 'ERROR' && result.status === 200) {
@@ -265,6 +282,24 @@ function ScheduleMainPage() {
           setLoading(true);
         });
       }
+
+      const nearByData = async () => {
+        try {
+          const response = await getNearbyLocData(lat || 0, lon || 0);
+          if (response && response.status === 'SUCCESS') {
+            setAttractionsCard(response.data);
+          } else {
+            console.error('Error:', response.error);
+          }
+        } catch (error: unknown) {
+          console.error('Fetch Error:', error);
+          toast.error((error as AxiosError).message);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      nearByData();
     }
   }, [isSelected, routeDayData.length]);
 
@@ -446,30 +481,6 @@ function ScheduleMainPage() {
     fetchData();
   }, [lat, lon]);
 
-  useEffect(() => {
-    const geo = window.navigator.geolocation;
-
-    if (geo) {
-      geo.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setLat(latitude);
-          setLon(longitude);
-        },
-        () => {
-          alert('위치 가져오기 실패');
-        },
-        {
-          enableHighAccuracy: true,
-          maximumAge: 30000,
-          timeout: 27000,
-        },
-      );
-    } else {
-      alert('Geolocation is not supported by this browser.');
-    }
-  }, []);
-
   /** 지도 및 하위 컴포넌트  */
 
   const firstDayData = runningScheduleData?.scheduleDayResDtoList[0];
@@ -574,7 +585,7 @@ function ScheduleMainPage() {
                           runningScheduleData.startDate || '',
                         )}
                         endDate={formatDate(runningScheduleData.endDate || '-')}
-                        totalDistance={feedInfoProps.totalDistance}
+                        totalDistance={runningScheduleData.totalDistance}
                         dayData={feedInfoProps.dayData}
                         percentage={feedInfoProps.percentage}
                       />
@@ -628,6 +639,28 @@ function ScheduleMainPage() {
                       reviewType={reviewType}
                     />
                   </R.RouteDetailInfoContainer>
+
+                  <S.AttractionsBox>
+                    <S.AttrantiosTypeBox>관광지</S.AttrantiosTypeBox>
+                    <S.AttractionsOverflow>
+                      {attractionsCard.length > 0 &&
+                        attractionsCard.map((ele) => (
+                          <S.AttractionCard
+                            img={(ele as ScheduleAttractionsProps).image1}
+                          >
+                            <S.AttractionCardTitle>
+                              {(ele as ScheduleAttractionsProps).title}
+                            </S.AttractionCardTitle>
+                            <S.AttractionCardDetail>
+                              <Icon name="IconFlag" size={20} />
+                              <S.AttractionCardDetailText>
+                                {(ele as ScheduleAttractionsProps).name}
+                              </S.AttractionCardDetailText>
+                            </S.AttractionCardDetail>
+                          </S.AttractionCard>
+                        ))}
+                    </S.AttractionsOverflow>
+                  </S.AttractionsBox>
                 </>
               ) : (
                 <>
@@ -738,4 +771,5 @@ export default ScheduleMainPage;
 const ScheduleMainPageContainer = styled.div`
   width: 100%;
   height: 100%;
+  background-color: #fff;
 `;

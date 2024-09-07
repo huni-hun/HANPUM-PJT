@@ -52,7 +52,7 @@ export interface RunningScheduleProps {
   date: string;
   visit: boolean;
   running: boolean;
-  totalDistance: string;
+  totalDistance: number;
   totalDuration: string;
   totalCalories: string;
   scheduleWayPointList: WayPoint[];
@@ -93,4 +93,13 @@ export interface ScheduleDayResDto {
   totalCalories: string;
   scheduleWayPointList: WayPoint[];
   attractionList: Attraction[];
+}
+
+/** 관광지  */
+export interface ScheduleAttractionsProps {
+  title: string;
+  tel: string;
+  name: string;
+  image1: string;
+  address: string;
 }
