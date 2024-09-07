@@ -2,7 +2,7 @@ import { colors } from '@/styles/colorPalette';
 import styled from 'styled-components';
 
 interface ScheduleProps {
-  turnGreen: boolean;
+  turnGreen?: boolean;
 }
 
 export const Card = styled.div`
