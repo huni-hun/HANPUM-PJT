@@ -11,13 +11,6 @@ const FeedContainer = ({
   isUserContainer,
   meetRouter,
 }: FeedProps) => {
-  /** 모임 - feed하위 박스 d-day 만들기 */
-  const today = new Date();
-  const start = routeData?.startDate ? new Date(routeData?.startDate) : null;
-  const meetDday = start
-    ? Math.ceil((start.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
-    : null;
-
   return (
     <>
       {meetRouter ? (
@@ -58,24 +51,31 @@ const FeedContainer = ({
 
       {meetRouter ? (
         <>
-          <M.MeetInfoWrap>
-            <M.MeetInfoText>
-              <p>D {meetDday}</p>
-              <span>모집 마감</span>
-            </M.MeetInfoText>
-            <M.Hr />
-            <M.MeetInfoText>
-              <p>
-                {routeData?.memberCount} / {routeData?.totalMember}
-              </p>
-              <span>모집 인원</span>
-            </M.MeetInfoText>
-            <M.Hr />
-            <M.MeetInfoText>
-              <p>{routeData?.likeCount}</p>
-              <span>관심</span>
-            </M.MeetInfoText>
-          </M.MeetInfoWrap>
+          <M.MeetInfoContainer>
+            <M.MeetInfoWrap>
+              <M.MeetInfoText>
+                <p>D - {routeData?.meetDday}</p>
+                <span>모집 마감</span>
+              </M.MeetInfoText>
+              <M.Hr />
+              <M.MeetInfoText>
+                <p>
+                  {routeData?.memberCount} / {routeData?.totalMember}
+                </p>
+                <span>모집 인원</span>
+              </M.MeetInfoText>
+              <M.Hr />
+              <M.MeetInfoText>
+                <p>{routeData?.likeCount}</p>
+                <span>관심</span>
+              </M.MeetInfoText>
+            </M.MeetInfoWrap>
+            <R.TagsWrap>
+              {routeData?.meetTypes?.map((type, index) => (
+                <R.Tags key={index}>{type}</R.Tags>
+              )) || ''}
+            </R.TagsWrap>
+          </M.MeetInfoContainer>
         </>
       ) : (
         <></>

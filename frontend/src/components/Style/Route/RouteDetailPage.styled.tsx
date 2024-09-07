@@ -6,6 +6,10 @@ interface StyledProps {
   backgroundImg?: string;
 }
 
+interface MeetStyleProps {
+  isMeetFeed?: string;
+}
+
 export const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -197,9 +201,9 @@ export const RouteInfo = styled.p`
   font-size: 1.4rem;
 `;
 
-export const RouteDateBox = styled.div`
+export const RouteDateBox = styled.div<MeetStyleProps>`
   width: 85vw;
-  height: 16.5rem;
+  height: ${(props) => (props.isMeetFeed ? '35rem' : '16.5rem')};
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -345,7 +349,7 @@ export const PlaceText = styled.p`
 `;
 
 export const DistanceBox = styled.div`
-  width: 20%;
+  width: 15vw;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -825,9 +829,6 @@ export const TagsWrap = styled.div`
   width: 60%;
   align-items: center;
   height: 2.8rem;
-  position: absolute;
-  bottom: 2rem;
-  box-sizing: border-box;
 `;
 
 export const Tags = styled.div`
