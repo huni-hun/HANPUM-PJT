@@ -26,6 +26,8 @@ import { GetLineData } from '@/api/route/POST';
 import { RouteDelete } from '@/api/route/Delete';
 import { toast } from 'react-toastify';
 
+import defaultImg from '@/assets/img/mountain.jpg';
+
 function RouteDetailPage() {
   const { routeid } = useParams();
   const navigate = useNavigate();
@@ -313,7 +315,11 @@ function RouteDetailPage() {
         <R.Overflow>
           <R.RouteInfoContainer>
             <R.ImgBox>
-              <img src={routeData.img} />
+              <img
+                src={
+                  routeData.img.includes('test') ? defaultImg : routeData.img
+                }
+              />
             </R.ImgBox>
             <R.UserContainer>
               <R.UserImgBox>

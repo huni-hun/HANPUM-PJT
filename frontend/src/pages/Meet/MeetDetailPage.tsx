@@ -5,73 +5,297 @@ import * as R from '@/components/Style/Route/RouteDetailPage.styled';
 import Header from '@/components/common/Header/Header';
 
 import styled from 'styled-components';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 import Feed from '@/components/Style/Common/Feed';
 import FeedInfo from '@/components/Style/Common/FeedInfo';
 import memberImg from '../../assets/img/memberImg.svg';
 
 import goyuMY from '../../assets/img/goyuMY.png';
-
+import { Member, SchduleCardProps } from '@/models/schdule';
+import { useQuery } from 'react-query';
+import { GetMeetDetailList } from '@/api/meet/GET';
+import { STATUS } from '@/constants';
+import { toast } from 'react-toastify';
+import { AxiosError } from 'axios';
+import {
+  AttractionsProps,
+  DaysOfRouteProps,
+  LineStartEndProps,
+  MapLinePathProps,
+  RouteDetailDayProps,
+  RouteDetailProps,
+  RouteReviewProps,
+} from '@/models/route';
+import {
+  getRouteDayAttraction,
+  getRouteDayDetail,
+  getRouteDetail,
+} from '@/api/route/GET';
+import { GetLineData } from '@/api/route/POST';
+import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
 import BottomSheet from '@/components/Style/Route/BottomSheet';
 
-import { Member, SchduleCardProps } from '@/models/schdule';
-import { GetMeetDetailList } from '@/api/meet/GET';
-
 function DetailMineSchedulePage() {
+  const [routeId, setRouteId] = useState<number>(-1);
+  const [selected, setSelected] = useState<string>('course');
+  const [selectedDay, setSelectedDay] = useState<number>(0);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [routeData, setRouteData] = useState<RouteDetailProps>(null!);
+  const [dayData, setDayData] = useState<RouteDetailDayProps[]>([]);
+  const [routeType, setRouteType] = useState<string[]>([]);
+  const [totalDistance, setTotalDistance] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [latitude, setLatitude] = useState<number>(0);
+  const [longitude, setLongitude] = useState<number>(0);
+  const [attractions, setAttractions] = useState<AttractionsProps[]>([]);
+  const [linePath, setLinePath] = useState<MapLinePathProps[]>([]);
+  const [se, setSe] = useState<LineStartEndProps[]>([]);
+  const [marker, setMarker] = useState<LineStartEndProps[]>([]);
+  const [bsType, setBsType] = useState<string>('설정');
+  const [reviewType, setReviewType] = useState<string>('최신순');
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [retouch, setRetouch] = useState<boolean>(false);
+  const [dayOfRoute, setDayOfRoute] = useState<DaysOfRouteProps[]>([]);
+  const [reviewLoading, setReviewLoading] = useState<boolean>(false);
+  const [reviews, setReviews] = useState<RouteReviewProps[]>([]);
+  const [selectedIdx, setSelectedIdx] = useState<number>(-1);
+  const [mapLines, setMapLines] = useState<any[]>([]);
+
   const BtnClick = () => {};
   const navigate = useNavigate();
+  const { id } = useParams();
+
+  const { data: meetDetail } = useQuery(
+    ['id', id],
+    () => GetMeetDetailList(Number(id?.substring(1))),
+    {
+      onSuccess: (res) => {
+        if (res.status === STATUS.success) {
+          setRouteId(res.data.courseId);
+        } else if (res.status === STATUS.error) {
+          toast.error(res.message);
+        }
+      },
+      onError: (error: AxiosError) => {
+        toast.error(error.message);
+      },
+    },
+  );
+  useEffect(() => {
+    if (routeId > 0) {
+      if (dayData.length === 0) {
+        getRouteDetail(String(routeId)).then((result) => {
+          if (result.data.status !== 'ERROR' && result.status === 200) {
+            let num = 0;
+            let rd: RouteDetailProps = {
+              routeName: result.data.data.course.courseName,
+              routeContent: result.data.data.course.content,
+              writeDate: result.data.data.course.writeDate,
+              routeComment: result.data.data.course.commentCnt,
+              routeScore: result.data.data.course.scoreAvg,
+              start: result.data.data.course.startPoint,
+              end: result.data.data.course.endPoint,
+              img: result.data.data.course.backgroundImg,
+              writeState: result.data.data.course.writeState,
+            };
+            setRouteData(rd);
+            result.data.data.courseDays.map((ele: any) => {
+              let data: RouteDetailDayProps = {
+                dayNum: ele.dayNumber,
+                totalDistance: ele.total_distance,
+                totalCalorie: ele.total_calorie,
+                totalDuration: ele.total_duration,
+              };
+              setDayData((pre) => [...pre, data]);
+              setSelectedDay(1);
+              num += ele.total_distance;
+            });
+            let type: string[] = [];
+            result.data.data.course.courseTypes.map((ele: string) => {
+              type.push(ele);
+            });
+            setRouteType(type);
+            setTotalDistance(num);
+          }
+        });
+      }
+    }
+  }, [routeId]);
+
+  useEffect(() => {
+    setMarker([]);
+    getRouteDayDetail(String(routeId), selectedDay).then((result) => {
+      if (result.status === 200) {
+        let arr: DaysOfRouteProps[] = [];
+        let lines: MapLinePathProps[] = [];
+        result.data.data.wayPoints.map((ele: any) => {
+          let data: DaysOfRouteProps = {
+            routeName: ele.name,
+            routeAddress: ele.address,
+            routeType: ele.type,
+            routeId: ele.waypointId,
+            routePoint: ele.pointNumber,
+            latitude: ele.lat,
+            longitude: ele.lon,
+          };
+          arr.push(data);
+
+          let line: MapLinePathProps = {
+            name: ele.name,
+            x: ele.lat,
+            y: ele.lon,
+          };
+
+          lines.push(line);
+
+          let markerData: LineStartEndProps = {
+            x: ele.lat,
+            y: ele.lon,
+          };
+          setMarker((pre) => [...pre, markerData]);
+        });
+        arr.sort((a: any, b: any) => a.routePoint - b.routePoint);
+        setDayOfRoute(arr);
+        setLinePath(lines);
+
+        // setLatitude(arr[0].latitude);
+        // setLongitude(arr[0].longitude);
+      }
+    });
+
+    getRouteDayAttraction(String(routeId), selectedDay).then((res) => {
+      if (res.status === 200 && res.data.status === 'SUCCESS') {
+        let attArr: AttractionsProps[] = [];
+        res.data.data.map((ele: any) => {
+          let attData: AttractionsProps = {
+            name: ele.name,
+            type: ele.type,
+            attractionId: ele.attractionId,
+            address: ele.address,
+            latitude: ele.lat,
+            longitude: ele.lon,
+            img: ele.img,
+          };
+          attArr.push(attData);
+        });
+        setAttractions(attArr);
+      }
+    });
+  }, [selectedDay]);
+
+  useEffect(() => {
+    if (linePath.length > 0) {
+      const mapLines: any[] = [];
+      if (linePath.length <= 5) {
+        GetLineData(linePath)
+          .then((res) => {
+            if (res.status === 200 && res.data.status === 'SUCCESS') {
+              res.data.data.forEach((ele: any) => {
+                ele.vertexes.forEach((vertex: any, index: number) => {
+                  if (index % 2 === 0) {
+                    mapLines.push(
+                      new window.kakao.maps.LatLng(
+                        ele.vertexes[index + 1],
+                        ele.vertexes[index],
+                      ),
+                    );
+                  }
+                });
+              });
+              setMapLines([...mapLines]); // 복사본으로 상태 업데이트
+            }
+          })
+          .catch((err) => {
+            toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+          });
+      } else {
+        let arr: MapLinePathProps[] = [];
+        const promises: Promise<any>[] = []; // 비동기 작업을 저장할 배열
+
+        linePath.forEach((ele: MapLinePathProps, idx: number) => {
+          arr.push(ele);
+
+          if (arr.length === 5 || idx === linePath.length - 1) {
+            // 배열이 5개가 되었거나 마지막 요소일 때 GetLineData 호출
+            promises.push(
+              GetLineData(arr)
+                .then((res) => {
+                  if (res.status === 200 && res.data.status === 'SUCCESS') {
+                    res.data.data.forEach((ele: any) => {
+                      ele.vertexes.forEach((vertex: any, index: number) => {
+                        if (index % 2 === 0) {
+                          mapLines.push(
+                            new window.kakao.maps.LatLng(
+                              ele.vertexes[index + 1],
+                              ele.vertexes[index],
+                            ),
+                          );
+                        }
+                      });
+                    });
+                  }
+                })
+                .catch((err) => {
+                  toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+                }),
+            );
+
+            // 배열 초기화
+            arr = [];
+          }
+        });
+
+        // 모든 비동기 작업이 완료된 후에 setMapLines 호출
+        Promise.all(promises).then(() => {
+          setMapLines([...mapLines]);
+        });
+      }
+    }
+  }, [linePath]);
+
+  useEffect(() => {
+    if (latitude !== undefined) {
+      setLoading(true);
+    }
+  }, [latitude]);
+
+  useEffect(() => {
+    if (dayOfRoute.length > 0 && dayOfRoute[0].latitude !== undefined) {
+      setLatitude(dayOfRoute[0].latitude);
+      setLongitude(dayOfRoute[0].longitude);
+    }
+  }, [dayOfRoute]);
 
   /** 헤더 설정 열기 */
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [bsType, setBsType] = useState<string>('설정');
-  const [reviewType, setReviewType] = useState<string>('공개 여부');
+  // const [isOpen, setIsOpen] = useState<boolean>(false);
+  // const [bsType, setBsType] = useState<string>('설정');
+  // const [reviewType, setReviewType] = useState<string>('공개 여부');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
   const location = useLocation();
   const { groupId } = location.state || {};
   const [memberData, setMemberData] = useState<Member>();
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  // const [loading, setLoading] = useState<boolean>(false);
 
   /** feed 더미 데이터 */
   /** === useState (routeData) */
   const feedData = {
-    routeFeedImg: memberData?.groupImg || goyuMY,
-    routeUserImg: memberData?.readerProfileImg || memberImg,
-    routeName: memberData?.title,
-    routeContent: memberData?.description,
-    memberCount: memberData?.recruitedCount,
-    totalMember: memberData?.recruitmentCount,
-    likeCount: memberData?.likeCount,
-    startDate: memberData?.startDate,
-    endDate: memberData?.endDate,
-    meetDday: memberData?.dday,
-    meetTypes: memberData?.courseTypes || [],
+    routeFeedImg: meetDetail.data.groupImg || goyuMY,
+    routeUserImg: meetDetail.data.readerProfileImg || memberImg,
+    routeName: meetDetail.data.title,
+    routeContent: meetDetail.data.description,
+    memberCount: meetDetail.data.recruitedCount,
+    totalMember: meetDetail.data.recruitmentCount,
+    likeCount: meetDetail.data.likeCount,
+    startDate: meetDetail.data.startDate,
+    endDate: meetDetail.data.endDate,
+    meetDday: meetDetail.data.dday,
+    meetTypes: meetDetail.data.courseTypes || [],
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await GetMeetDetailList(groupId);
-
-        if (response && response.status === 'SUCCESS') {
-          setMemberData(response.data);
-        } else {
-          setError('데이터 가져오기 실패');
-        }
-      } catch (error) {
-        console.error('Fetch Error:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const dayNum = memberData?.totalDays || 0;
-  const dayData = [{ dayNum: dayNum }];
+  // const dayData = [{ dayNum: dayNum }];
 
   /** 바텀탭 - 수정 클릭시 */
   const handleEdit = () => {
@@ -85,11 +309,11 @@ function DetailMineSchedulePage() {
     setIsDeleteModalOpen(true);
   };
 
-  return (
+  return loading && meetDetail !== undefined ? (
     <MainPageContainer>
       <Header
         purpose="result"
-        title={`D-${memberData?.dday}`}
+        title={`D-${meetDetail.data.dday}`}
         clickBack={() => navigate(-1)}
       />
 
@@ -99,35 +323,66 @@ function DetailMineSchedulePage() {
             <Feed routeData={feedData} isUserContainer meetRouter />
             <FeedInfo
               feedInfoTitle="모임 일정 정보"
-              departuresPlace={memberData?.endPoint}
-              arrivalsPlace={memberData?.startPoint}
-              startDate={memberData?.startDate}
-              endDate={memberData?.endDate}
-              totalDistance={53}
-              dayData={dayData}
+              departuresPlace={meetDetail.data.startPoint}
+              arrivalsPlace={meetDetail.data.endPoint}
+              startDate={meetDetail.data.startDate}
+              endDate={meetDetail.data.endDate}
+              totalDistance={totalDistance}
+              dayData={meetDetail.data.totalDays}
               isMeetFeed={'30rem'}
             />
+            <R.ContentSelecContainer>
+              <R.ContentBox
+                selected={selected === 'course'}
+                onClick={() => {
+                  setSelected('course');
+                }}
+              >
+                코스
+              </R.ContentBox>
+              <R.ContentBox
+                selected={selected === 'information'}
+                onClick={() => {
+                  setSelected('information');
+                }}
+              >
+                관광지
+              </R.ContentBox>
+              <R.ContentBox
+                selected={selected === 'review'}
+                onClick={() => {
+                  setSelected('review');
+                }}
+              >
+                멤버
+              </R.ContentBox>
+            </R.ContentSelecContainer>
           </R.RouteInfoContainer>
 
           {/* 지도 및 하위 컴포넌트 container */}
           <R.RouteDetailInfoContainer>
-            {/* <RouteDetailInfo
-          selected={selected}
-          selectedDay={selectedDay}
-          latitude={latitude}
-          longitude={longitude}
-          dayData={dayData}
-          attractions={attractions}
-          setLoading={setLoading}
-          setSelectedDay={setSelectedDay}
-        /> */}
-            {/* 모임멤버 */}
-            {/* <S.ScheduleMainContainer>
-              <MeetMember
-                memberCount={memberData.length}
-                members={memberData || []}
+            {loading ? (
+              <RouteDetailInfo
+                marker={marker}
+                deleteHandler={(name: string) => {}}
+                setSelectedIdx={setSelectedIdx}
+                reviews={reviews}
+                setDayOfRoute={setDayOfRoute}
+                dayOfRoute={dayOfRoute}
+                linePath={mapLines}
+                selected={selected}
+                selectedDay={selectedDay}
+                latitude={latitude}
+                longitude={longitude}
+                dayData={dayData}
+                attractions={attractions}
+                setLoading={setLoading}
+                setSelectedDay={setSelectedDay}
+                setIsOpen={setIsOpen}
+                setBsType={setBsType}
+                reviewType={reviewType}
               />
-            </S.ScheduleMainContainer> */}
+            ) : null}
           </R.RouteDetailInfoContainer>
         </R.Overflow>
       </R.Main>
@@ -144,7 +399,7 @@ function DetailMineSchedulePage() {
         />
       )}
     </MainPageContainer>
-  );
+  ) : null;
 }
 
 export default DetailMineSchedulePage;

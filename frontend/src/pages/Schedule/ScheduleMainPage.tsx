@@ -289,9 +289,6 @@ function ScheduleMainPage() {
           const { latitude, longitude } = position.coords;
           setLat(latitude);
           setLon(longitude);
-          setIsLocationReady(true);
-
-          handleLocationUpdate(latitude, longitude);
         },
         (error) => {
           console.error('Error occurred while fetching location:', error);
@@ -508,17 +505,12 @@ function ScheduleMainPage() {
           arr.sort((a: any, b: any) => a.routePoint - b.routePoint);
           setDayOfRoute(arr);
           setLinePath(lines);
+
           setWayPoints(arr);
 
           /* 지도 중심점 잡기 */
-          if (arr.length > 0 && arr[0] && arr[0].latitude && arr[0].longitude) {
-            setLat(arr[0].latitude);
-            setLon(arr[0].longitude);
-            setIsLocationReady(true);
-          } else {
-            console.error('중심점 비어있음');
-            setIsLocationReady(false);
-          }
+          setLatitude(arr[0].latitude);
+          setLongitude(arr[0].longitude);
         }
       });
     }
