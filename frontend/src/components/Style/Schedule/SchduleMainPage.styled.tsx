@@ -605,3 +605,13 @@ export const MeetMemberNodata = styled.div`
   height: 75vh;
   padding: 1rem;
 `;
+
+export const SchduleCardContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100vw;
+  height: 100%;
+  margin-top: 13vw;
+  /* padding-bottom: 8vh; */
+`;
