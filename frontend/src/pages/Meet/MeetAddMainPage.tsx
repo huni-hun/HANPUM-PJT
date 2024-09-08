@@ -146,7 +146,7 @@ function MeetAddMainPage() {
   };
 
   return (
-    <MainPageContainer>
+    <>
       <Header
         purpose="title"
         title="모임 생성"
@@ -157,95 +157,97 @@ function MeetAddMainPage() {
           navigate(-1);
         }}
       />
-      <M.MainContainer>
-        <div className="form">
-          <div className="container">
-            <Text $typography="t12" $bold>
-              모임 이미지
-            </Text>
-            <div className="img-box">
-              {previewImage ? (
-                <img src={previewImage} alt="프로필 이미지 미리보기" />
-              ) : (
-                <Icon name="IconCameraGrey" width={52} height={38} />
-              )}
+      <MainPageContainer>
+        <M.MainContainer>
+          <div className="form">
+            <div className="container">
+              <Text $typography="t12" $bold>
+                모임 이미지
+              </Text>
+              <div className="img-box">
+                {previewImage ? (
+                  <img src={previewImage} alt="프로필 이미지 미리보기" />
+                ) : (
+                  <Icon name="IconCameraGrey" width={52} height={38} />
+                )}
 
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+              </div>
+            </div>
+
+            <div className="container">
+              <Text $typography="t12" $bold>
+                모임 이름
+              </Text>
+              <Input
+                placeholder="김동산"
+                name="title"
+                value={meetRequest?.title || ''}
+                onChange={handleInfoChange}
               />
             </div>
+
+            <div className="container">
+              <Text $typography="t12" $bold>
+                모임 내용
+              </Text>
+              <textarea
+                placeholder="내용을 작성해 주세요."
+                name="description"
+                value={meetRequest?.description || ''}
+                onChange={handleInfoChange}
+              />
+            </div>
+            <M.ToggleSliderBox>
+              <ToggleSlider
+                title="모집인원"
+                unit="인"
+                min={0}
+                max={15}
+                value={meetRequest?.recruitmentCount || 0}
+                onChange={handleRecruitmentCountChange}
+              />
+            </M.ToggleSliderBox>
           </div>
 
-          <div className="container">
-            <Text $typography="t12" $bold>
-              모임 이름
+          <div className="category-container" onClick={clickAddDeadline}>
+            <Text $bold={true} $typography="t12">
+              모집 마감일
             </Text>
-            <Input
-              placeholder="김동산"
-              name="title"
-              value={meetRequest?.title || ''}
-              onChange={handleInfoChange}
-            />
+            <M.ScheduleTextWrap>
+              <M.ScheduleText>{recruitmentPeriod}</M.ScheduleText>
+              <Icon name="IconArrowRight" />
+            </M.ScheduleTextWrap>
           </div>
 
-          <div className="container">
-            <Text $typography="t12" $bold>
-              모임 내용
+          <div className="category-container" onClick={clickAddSchdule}>
+            <Text $bold={true} $typography="t12">
+              일정
             </Text>
-            <textarea
-              placeholder="내용을 작성해 주세요."
-              name="description"
-              value={meetRequest?.description || ''}
-              onChange={handleInfoChange}
-            />
+            <M.ScheduleTextWrap>
+              {/* 일정에서 날짜를 선택안했을 때 (여기에 조건 추가해서 경로 붙이면 될듯 합니다) */}
+              {startDate !== undefined && (
+                <M.ScheduleText>
+                  {startDate} - {endDate}
+                </M.ScheduleText>
+              )}
+
+              <Icon name="IconArrowRight" />
+            </M.ScheduleTextWrap>
           </div>
-          <M.ToggleSliderBox>
-            <ToggleSlider
-              title="모집인원"
-              unit="인"
-              min={0}
-              max={15}
-              value={meetRequest?.recruitmentCount || 0}
-              onChange={handleRecruitmentCountChange}
-            />
-          </M.ToggleSliderBox>
-        </div>
 
-        <div className="category-container" onClick={clickAddDeadline}>
-          <Text $bold={true} $typography="t12">
-            모집 마감일
-          </Text>
-          <M.ScheduleTextWrap>
-            <M.ScheduleText>{recruitmentPeriod}</M.ScheduleText>
-            <Icon name="IconArrowRight" />
-          </M.ScheduleTextWrap>
-        </div>
-
-        <div className="category-container" onClick={clickAddSchdule}>
-          <Text $bold={true} $typography="t12">
-            일정
-          </Text>
-          <M.ScheduleTextWrap>
-            {/* 일정에서 날짜를 선택안했을 때 (여기에 조건 추가해서 경로 붙이면 될듯 합니다) */}
-            {startDate !== undefined && (
-              <M.ScheduleText>
-                {startDate} - {endDate}
-              </M.ScheduleText>
-            )}
-
-            <Icon name="IconArrowRight" />
-          </M.ScheduleTextWrap>
-        </div>
-
-        <div className="btn-box">
-          <BaseButton size="large" onClick={handleCreateGroup}>
-            모임 생성하기
-          </BaseButton>
-        </div>
-      </M.MainContainer>
-    </MainPageContainer>
+          <div className="btn-box">
+            <BaseButton size="large" onClick={handleCreateGroup}>
+              모임 생성하기
+            </BaseButton>
+          </div>
+        </M.MainContainer>
+      </MainPageContainer>
+    </>
   );
 }
 

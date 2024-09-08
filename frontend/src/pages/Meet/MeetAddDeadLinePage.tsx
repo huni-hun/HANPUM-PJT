@@ -27,9 +27,14 @@ function MeetAddSchedulePage() {
   const [postSchedule, setPostSchedule] = useState<ScheduleData | null>(null);
   /** coursId add.main에서 가져오기 */
   const location = useLocation();
-  const { courseId, startDate, recruitmentPeriod } = location.state || {};
+  const { courseId, startDate, recruitmentPeriod, isEdit } =
+    location.state || {};
+
   /** 날짜 선택 시 vh 늘어나면서 data picker,map 활성화 */
   const [isExpanded, setIsExpanded] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<string>(
+    startDate || recruitmentPeriod || '',
+  );
 
   /** 달력 선택 start, endData 쓸 수 있는거 */
   const [dates, setDates] = useState({
@@ -37,34 +42,35 @@ function MeetAddSchedulePage() {
     endDate: '',
   });
 
+  useEffect(() => {
+    if (recruitmentPeriod) {
+      setSelectedDate(recruitmentPeriod.trim() || '');
+    }
+  }, [recruitmentPeriod]);
+
   // 날짜가 변경될 때 호출되는 함수
   const handleDateChange = (range: {
     startDate: string | null;
     endDate: string | null;
   }) => {
-    setDates({
-      startDate: range.startDate || '',
-      endDate: range.endDate || '',
-    });
+    if (range.startDate) {
+      setSelectedDate(range.startDate);
+    }
   };
 
   const postMeetDeadSchdule = (recruitmentPeriod: string) => {
     if (startDate !== '') {
-      navigate(`/meet/addMain`, {
+      navigate(isEdit ? '/meet/edit' : '/meet/addMain', {
         state: {
           courseId,
           startDate,
-          recruitmentPeriod,
+          recruitmentPeriod: recruitmentPeriod,
         },
       });
     } else {
       toast.error('날짜를 선택해주세요!');
     }
   };
-
-  useEffect(() => {
-    console.log(dates, '날짜들');
-  }, [dates]);
 
   /** 하위 컴포넌트 클릭시 vh 변경되는 이벤트 막기 */
   const handleStopEvent = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -89,8 +95,8 @@ function MeetAddSchedulePage() {
             <S.H3>마감일을 선택해주세요.</S.H3>
             <S.DatePicker>
               <RangeCalendar
-                startDate={dates.startDate}
-                endDate={dates.endDate}
+                startDate={selectedDate}
+                endDate={selectedDate}
                 onDateChange={handleDateChange}
                 isPickDate={true}
               />
@@ -110,7 +116,7 @@ function MeetAddSchedulePage() {
             fontSize={1.8}
             children="등록"
             color="#ffffff"
-            onClick={() => postMeetDeadSchdule(dates.startDate)}
+            onClick={() => postMeetDeadSchdule(selectedDate)}
           />
         </R.ButtonBox>
       </R.BottomContainer>
