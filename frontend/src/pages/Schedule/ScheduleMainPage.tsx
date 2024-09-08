@@ -126,7 +126,7 @@ function ScheduleMainPage() {
   const [wayPoints, setWayPoints] = useState<DaysOfRouteProps[]>([]);
   const [currentWaypoint, setCurrentWaypoint] = useState(0); // 현재 경유지 인덱스
   const DISTANCE_THRESHOLD = 0.01; // 거리 기준 (1km 정도)
-  const [arriveGreen, setArriveGreen] = useState(false);
+  const [arriveGreen, setArriveGreen] = useState<boolean[]>([]);
   /** 내일정 - card 컴포넌트 'n박 n일' 계산 */
   const formatDate = (dateStr: string): string => {
     // Convert "YYYYMMDD" to "YYYY-MM-DD"
@@ -216,13 +216,17 @@ function ScheduleMainPage() {
   const navigator = useNavigate();
   const data = { ...location };
 
-  /** 경유지 도착 시 초록색으로 변경 */
+  /** 경유지 도착 시 해당 waypointId state 2 로 처리 */
   const arriveSchedule = async (waypointId: number) => {
     try {
       const response = await PutScheduleArrive(waypointId);
 
       if (response && response.data.status === 'SUCCESS') {
-        setArriveGreen(true);
+        setArriveGreen((prev) => [...prev, true]);
+        // 상태 업데이트 후 데이터 새로 고침
+        if (scheduleId > 0) {
+          await getDayNumData(selectedDay, scheduleId);
+        }
       } else if (response && response.data.status === 'ERROR') {
         toast.error(response.data.message);
         setError('도착처리 실패했습니다.');
@@ -267,7 +271,6 @@ function ScheduleMainPage() {
         if (distance < DISTANCE_THRESHOLD) {
           if (nextWaypoint.routeId !== undefined) {
             arriveSchedule(nextWaypoint.routeId);
-            console.log(currentWaypoint, nextWaypoint);
           }
           setCurrentWaypoint((prev) => prev + 1);
         }
@@ -472,6 +475,8 @@ function ScheduleMainPage() {
         if (result.status === 'SUCCESS') {
           let arr: DaysOfRouteProps[] = [];
           let lines: MapLinePathProps[] = [];
+          /** 경유지 turnGreen 상태관리 */
+          let greenStates: boolean[] = [];
           result.data.scheduleWayPointList.map((ele: any, idx: number) => {
             let data: DaysOfRouteProps = {
               routeName: ele.name,
@@ -499,15 +504,12 @@ function ScheduleMainPage() {
               y: ele.lon,
             };
             setMarker((pre) => [...pre, markerData]);
-
-            if (ele.state === 2) {
-              setArriveGreen(true);
-            }
           });
           arr.sort((a: any, b: any) => a.routePoint - b.routePoint);
           setDayOfRoute(arr);
           setLinePath(lines);
           setWayPoints(arr);
+
           /* 지도 중심점 잡기 */
           if (arr.length > 0 && arr[0] && arr[0].latitude && arr[0].longitude) {
             setLat(arr[0].latitude);
@@ -520,7 +522,7 @@ function ScheduleMainPage() {
         }
       });
     }
-  }, [selectedDay, scheduleId]);
+  }, [selectedDay, scheduleId, arriveGreen]);
 
   useEffect(() => {
     if (linePath.length > 0) {
@@ -774,6 +776,7 @@ function ScheduleMainPage() {
                         setBsType={setBsType}
                         reviewType={reviewType}
                         turnGreen={arriveGreen}
+                        isSchedule
                       />
                     )}
                   </R.RouteDetailInfoContainer>
