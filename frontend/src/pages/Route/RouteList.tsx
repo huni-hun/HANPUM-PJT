@@ -134,9 +134,11 @@ function RouteList() {
       <R.MainContainer>
         <R.RouteCardContainer>
           <R.RouteTypeHeader>
-            <R.TypeTitle>
-              {userInfo.data.nickname}님에게 잘 맞는 경로
-            </R.TypeTitle>
+            {userInfo && (
+              <R.TypeTitle>
+                {userInfo.data.nickname}님에게 잘 맞는 경로
+              </R.TypeTitle>
+            )}
             <R.MoreButton>
               <R.MoreText
                 onClick={() => {
