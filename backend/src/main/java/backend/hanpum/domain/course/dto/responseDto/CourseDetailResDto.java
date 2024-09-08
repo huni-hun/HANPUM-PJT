@@ -13,5 +13,7 @@ import java.util.List;
 @Builder
 public class CourseDetailResDto {
     CourseResDto course;
+    String nickname;
+    String profilePicture;
     List<CourseDayResDto> courseDays;
 }
