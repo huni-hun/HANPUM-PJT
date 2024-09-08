@@ -283,6 +283,15 @@ function DetailMineSchedulePage() {
 
   // const [loading, setLoading] = useState<boolean>(false);
 
+  // YYYYMMDD 형식을 YYYY.MM.DD로 변환하는 함수
+  const formatDate = (dateStr: string) => {
+    if (!dateStr || dateStr.length !== 8) return dateStr;
+    const year = dateStr.substring(0, 4);
+    const month = dateStr.substring(4, 6);
+    const day = dateStr.substring(6, 8);
+    return `${year}.${month}.${day}`;
+  };
+
   /** feed 더미 데이터 */
   /** === useState (routeData) */
   const feedData = {
@@ -293,8 +302,8 @@ function DetailMineSchedulePage() {
     memberCount: meetDetail?.data?.recruitedCount,
     totalMember: meetDetail?.data?.recruitmentCount,
     likeCount: meetDetail?.data?.likeCount,
-    startDate: meetDetail?.data?.startDate,
-    endDate: meetDetail?.data?.endDate,
+    startDate: formatDate(meetDetail?.data?.startDate),
+    endDate: formatDate(meetDetail?.data?.endDate),
     meetDday: meetDetail?.data?.dday,
     meetTypes: meetDetail?.data?.courseTypes || [],
   };
@@ -363,8 +372,8 @@ function DetailMineSchedulePage() {
               feedInfoTitle="모임 일정 정보"
               departuresPlace={meetDetail?.data?.startPoint}
               arrivalsPlace={meetDetail?.data?.endPoint}
-              startDate={meetDetail?.data?.startDate}
-              endDate={meetDetail?.data?.endDate}
+              startDate={formatDate(meetDetail?.data?.startDate)}
+              endDate={formatDate(meetDetail?.data?.endDate)}
               totalDistance={totalDistance}
               dayData={meetDetail?.data?.totalDays}
               isMeetFeed="44rem"
