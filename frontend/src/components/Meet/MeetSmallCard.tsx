@@ -9,14 +9,16 @@ import { MeetInfo } from '@/models/meet';
 import { startDateEndDateStringFormat } from '@/utils/util';
 import { useNavigate } from 'react-router-dom';
 
-function MeetSmallCard({ data }: { data: MeetInfo }) {
+function MeetSmallCard({
+  data,
+  onClick,
+}: {
+  data: MeetInfo;
+  onClick?: () => void;
+}) {
   const navigate = useNavigate();
   return (
-    <MeetSmallCardContainer
-      onClick={() => {
-        navigate(`/meet/${data.groupId}`, { state: { groupId: data.groupId } });
-      }}
-    >
+    <MeetSmallCardContainer onClick={onClick}>
       <img src={data.groupImg} alt="그룹 이미지" />
       <DateBadge totalDays={3} style={{ top: '12px', left: '12px' }} />
       <Icon

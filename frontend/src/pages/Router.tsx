@@ -103,7 +103,7 @@ export default function Router() {
             />
             {/* 모임 */}
             <Route path="/meet/list" element={<MeetList />} />
-            <Route path="/meet/:id" element={<MeetDetailPage />} />
+            <Route path="/meet/detail" element={<MeetDetailPage />} />
             <Route path="/meet/filter" element={<MeetFilterPage />} />
             <Route
               path="/meet/requestManageList"

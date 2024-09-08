@@ -39,7 +39,8 @@ interface RouteDetailInfoProps {
   setSelectedIdx: React.Dispatch<React.SetStateAction<number>>;
   deleteHandler: (name: string) => void;
   marker: any[];
-  turnGreen?: boolean;
+  isSchedule?: boolean;
+  turnGreen?: boolean[];
 }
 
 function RouteDetailInfo(props: RouteDetailInfoProps) {
@@ -174,7 +175,13 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
                           idx={idx}
                         />
                       ) : (
-                        <RoutePlaceCard {...ele} turnGreen={props.turnGreen} />
+                        <RoutePlaceCard
+                          {...ele}
+                          isSchedule={props.isSchedule}
+                          turnGreen={
+                            props.turnGreen ? props.turnGreen[idx] : false
+                          }
+                        />
                       ),
                     )
                   : null}

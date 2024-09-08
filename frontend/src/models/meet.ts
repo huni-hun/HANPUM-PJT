@@ -19,7 +19,7 @@ export interface MemberInfo {
 
 export interface MemberListProps {
   memberInfo: MemberInfo[];
-  onClick?: (memberId: number) => void;
+  onClick: (memberId: number) => void;
 }
 
 export interface MemberDetailDataProps {
@@ -48,6 +48,7 @@ export interface MeetInfo {
   totalDistance: number;
   recruitedCount: number;
   recruitmentCount: number;
+  onClick?: () => void;
 }
 
 export interface MeetFilterInfo {

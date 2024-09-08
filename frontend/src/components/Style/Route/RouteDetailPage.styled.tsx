@@ -38,7 +38,7 @@ export const HeaderButton = styled.div`
 
 export const Main = styled.div`
   width: 100%;
-  height: 93vh;
+  height: 100vh;
 
   display: flex;
   flex-direction: row;
@@ -70,7 +70,7 @@ export const RouteInfoContainer = styled.div`
 
 export const ImgBox = styled.div<StyledProps>`
   width: 100%;
-  height: 29.3rem;
+  height: 50rem;
   background-color: #d9d9d9;
   background-size: cover;
   background-position: center;
@@ -203,7 +203,7 @@ export const RouteInfo = styled.p`
 
 export const RouteDateBox = styled.div<MeetStyleProps>`
   width: 85vw;
-  height: ${(props) => (props.isMeetFeed ? '35rem' : '16.5rem')};
+  height: ${(props) => props.isMeetFeed || '16.5rem'};
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -821,7 +821,7 @@ export const AddBtnContainer = styled.div`
   margin-top: 2rem;
 `;
 
-/** 효령 - Feed.tsx */
+/** 효령 - 일정 Feed.tsx */
 
 export const TagsWrap = styled.div`
   display: flex;
@@ -830,6 +830,8 @@ export const TagsWrap = styled.div`
   width: 60%;
   align-items: center;
   height: 2.8rem;
+  position: absolute;
+  bottom: 2rem;
 `;
 
 export const Tags = styled.div`

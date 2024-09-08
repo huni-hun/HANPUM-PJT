@@ -2,6 +2,7 @@ import { colors } from '@/styles/colorPalette';
 import styled from 'styled-components';
 
 interface ScheduleProps {
+  scheduleState?: boolean;
   turnGreen?: boolean;
 }
 
@@ -48,8 +49,9 @@ export const PlaceNumberBox = styled.div<ScheduleProps>`
   justify-content: center;
   left: -0.85rem;
   background-color: ${(props) =>
-    props.turnGreen ? colors.grey2 : colors.main};
-  color: ${(props) => (props.turnGreen ? '#000' : colors.white)};
+    props.scheduleState || props.turnGreen ? colors.main : colors.grey2};
+  color: ${(props) =>
+    props.scheduleState || props.turnGreen ? colors.white : '#000'};
 `;
 
 export const RetouchCardContainer = styled.div`
