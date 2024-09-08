@@ -821,7 +821,7 @@ export const AddBtnContainer = styled.div`
   margin-top: 2rem;
 `;
 
-/** 효령 - Feed.tsx */
+/** 효령 - 일정 Feed.tsx */
 
 export const TagsWrap = styled.div`
   display: flex;
@@ -830,6 +830,8 @@ export const TagsWrap = styled.div`
   width: 60%;
   align-items: center;
   height: 2.8rem;
+  position: absolute;
+  bottom: 2rem;
 `;
 
 export const Tags = styled.div`

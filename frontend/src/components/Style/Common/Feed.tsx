@@ -70,11 +70,11 @@ const FeedContainer = ({
                 <span>관심</span>
               </M.MeetInfoText>
             </M.MeetInfoWrap>
-            <R.TagsWrap>
+            <M.TagsWrap>
               {routeData?.meetTypes?.map((type, index) => (
-                <R.Tags key={index}>{type}</R.Tags>
+                <M.Tags key={index}>{type}</M.Tags>
               )) || ''}
-            </R.TagsWrap>
+            </M.TagsWrap>
           </M.MeetInfoContainer>
         </>
       ) : (

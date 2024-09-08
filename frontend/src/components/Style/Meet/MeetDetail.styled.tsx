@@ -59,3 +59,29 @@ export const MeetInfoContainer = styled.div`
   width: 85%;
   height: 55vh;
 `;
+
+/** 효령 - Feed.tsx */
+
+export const TagsWrap = styled.div`
+  display: flex;
+  justify-content: left;
+  gap: 1rem;
+  /* width: 60%; */
+  align-items: center;
+  height: 2.8rem;
+  /* border: 1px solid red; */
+`;
+
+export const Tags = styled.div`
+  border: ${colors.main} 1px solid;
+  color: ${colors.main};
+  font-weight: 600;
+  padding: 0.1rem 1rem;
+  height: 100%;
+  font-size: 1.2rem;
+  text-align: center;
+  border-radius: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;

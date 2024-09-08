@@ -226,7 +226,7 @@ export const WeatherContentWrap = styled.div`
   height: 80%;
   justify-content: space-between;
   flex-shrink: 0;
-  margin-top: 1.9rem;
+  margin-top: 1rem;
 `;
 
 export const WeatherContent = styled.div`
