@@ -27,16 +27,16 @@ public class GroupDetailGetResDto {
     private List<String> courseTypes; // 경로 타입
     private String startPoint; // 출발지
     private String endPoint; // 목적지
+    private Double totalDistance; // 총 이동 거리
     private Integer totalDays; // 총 일정 기간
     private String startDate; // 일정 시작일
     private String endDate; // 일정 출발일
     private boolean isLike; // 좋아요 눌렀는지 안눌렀는지
     private GroupJoinStatus groupJoinStatus; // 조회한 멤버 상태
 
-    public GroupDetailGetResDto(Long courseId, String title, String groupImg,
-                                String description, Date recruitmentStart, Date recruitmentPeriod,
+    public GroupDetailGetResDto(Long courseId, String title, String groupImg, String description, Date recruitmentStart, Date recruitmentPeriod,
                                 Long recruitedCount, int recruitmentCount, int likeCount, String startPoint, String endPoint,
-                                Integer totalDays, String startDate, String endDate, boolean isLike) {
+                                Double totalDistance,Integer totalDays, String startDate, String endDate, boolean isLike) {
         this.courseId = courseId;
         this.title = title;
         this.groupImg = groupImg;
@@ -48,6 +48,7 @@ public class GroupDetailGetResDto {
         this.likeCount = likeCount;
         this.startPoint = startPoint;
         this.endPoint = endPoint;
+        this.totalDistance = totalDistance;
         this.totalDays = totalDays;
         this.startDate = startDate;
         this.endDate = endDate;

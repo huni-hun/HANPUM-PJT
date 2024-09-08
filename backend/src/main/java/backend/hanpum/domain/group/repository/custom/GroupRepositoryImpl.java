@@ -180,6 +180,7 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                         group.likeCount,              // 좋아요 수
                         course.startPoint,            // 출발지
                         course.endPoint,              // 목적지
+                        course.totalDistance,         // 총 이동 거리
                         course.totalDays,              // 총 일정 기간
                         schedule.startDate,           // 일정 시작일
                         schedule.endDate,           // 일정 종료일
@@ -197,7 +198,7 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                 .where(group.groupId.eq(groupId))
                 .where(groupMember.joinType.ne(JoinType.APPLY))
                 .groupBy(group.groupId, course.courseId, group.title, group.groupImg, group.description, group.recruitmentStart, group.recruitmentPeriod,
-                        course.startPoint, course.endPoint, course.totalDays, schedule.startDate, schedule.endDate)
+                        course.startPoint, course.endPoint, course.totalDistance, course.totalDays, schedule.startDate, schedule.endDate)
                 .fetchOne());
     }
 
