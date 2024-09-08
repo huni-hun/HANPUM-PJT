@@ -145,7 +145,7 @@ public class GroupServiceImpl implements GroupService {
                 .map(courseType -> courseType.getTypeName().name())
                 .collect(Collectors.toList());
         long differenceInMillis = leader.getGroup().getRecruitmentPeriod().getTime() - new Date().getTime();
-        long differenceInDays = TimeUnit.MILLISECONDS.toDays(differenceInMillis);
+        long differenceInDays = TimeUnit.MILLISECONDS.toDays(differenceInMillis) + 1;
         groupDetailGetResDto.setReaderProfileImg(leader.getMember().getProfilePicture());
         groupDetailGetResDto.setReaderName((leader.getMember().getName()));
         groupDetailGetResDto.setCourseTypes(courseTypeNameList);
