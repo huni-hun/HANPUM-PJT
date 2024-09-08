@@ -5,14 +5,14 @@ import * as R from '@/components/Style/Route/RouteDetailPage.styled';
 import Header from '@/components/common/Header/Header';
 
 import styled from 'styled-components';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 import Feed from '@/components/Style/Common/Feed';
 import FeedInfo from '@/components/Style/Common/FeedInfo';
 import memberImg from '../../assets/img/memberImg.svg';
 
 import goyuMY from '../../assets/img/goyuMY.png';
-import { SchduleCardProps } from '@/models/schdule';
+import { Member, SchduleCardProps } from '@/models/schdule';
 import { useQuery } from 'react-query';
 import { GetMeetDetailList } from '@/api/meet/GET';
 import { STATUS } from '@/constants';
@@ -34,6 +34,7 @@ import {
 } from '@/api/route/GET';
 import { GetLineData } from '@/api/route/POST';
 import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
+import BottomSheet from '@/components/Style/Route/BottomSheet';
 
 function DetailMineSchedulePage() {
   const [routeId, setRouteId] = useState<number>(-1);
@@ -266,49 +267,60 @@ function DetailMineSchedulePage() {
     }
   }, [dayOfRoute]);
 
-  /** feed 더미 데이터 */
-  /** === useState (routeData) */
-  const dummtFeedData = {
-    routeFeedImg: goyuMY,
-    routeUserImg: memberImg,
-    routeName: '코스 이름(태종대 전망대)',
-    routeContent: '이 코스는 초보자에게 적합합니다.',
-    /** 출발일, 도착일 */
-    startDate: '2024.08.04',
-    endDate: '2024.08.16',
-    /** 모집마감, 모집인원, 관심 (초깃값 0으로 해줘야해용) */
-    memberCount: 10,
-    totalMember: 20,
-    likeCount: 1,
-  };
+  /** 헤더 설정 열기 */
+  // const [isOpen, setIsOpen] = useState<boolean>(false);
+  // const [bsType, setBsType] = useState<string>('설정');
+  // const [reviewType, setReviewType] = useState<string>('공개 여부');
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+
+  const location = useLocation();
+  const { groupId } = location.state || {};
+  const [memberData, setMemberData] = useState<Member>();
+  const [error, setError] = useState<string | null>(null);
+  // const [loading, setLoading] = useState<boolean>(false);
 
   /** feed 더미 데이터 */
-  /** === useState (dayData) && (totalDistance) */
-  const dummyFeedInfoData = {
-    router: '일정',
-    feedInfoTitle: '일정 정보',
-    /** 출발지 , 도착지 */
-    departuresPlace: '태종대 전망대',
-    arrivalsPlace: '태종대 전망대',
-    /** 출발일, 도착일 */
-    startDate: '2024.08.04',
-    endDate: '2024.08.16',
-    /** 거리 */
-    currentDistance: 100,
-    totalDistance: 200,
-    dayData: [{ dayNum: 1 }, { dayNum: 2 }, { dayNum: 3 }],
-    /** 오늘 일정 달성률 퍼센트 */
-    percent: 30,
+  /** === useState (routeData) */
+  const feedData = {
+    routeFeedImg: meetDetail.data.groupImg || goyuMY,
+    routeUserImg: meetDetail.data.readerProfileImg || memberImg,
+    routeName: meetDetail.data.title,
+    routeContent: meetDetail.data.description,
+    memberCount: meetDetail.data.recruitedCount,
+    totalMember: meetDetail.data.recruitmentCount,
+    likeCount: meetDetail.data.likeCount,
+    startDate: meetDetail.data.startDate,
+    endDate: meetDetail.data.endDate,
+    meetDday: meetDetail.data.dday,
+    meetTypes: meetDetail.data.courseTypes || [],
+  };
+
+  // const dayData = [{ dayNum: dayNum }];
+
+  /** 바텀탭 - 수정 클릭시 */
+  const handleEdit = () => {
+    navigate(`/meet/edit`, {
+      state: { groupId },
+    });
+  };
+
+  /** 바텀탭 - 삭제 클릭시 */
+  const handleDelete = () => {
+    setIsDeleteModalOpen(true);
   };
 
   return loading && meetDetail !== undefined ? (
-    <ScheduleMainPageContainer>
-      <Header purpose="result" title="D-16" clickBack={() => navigate(-1)} />
+    <MainPageContainer>
+      <Header
+        purpose="result"
+        title={`D-${meetDetail.data.dday}`}
+        clickBack={() => navigate(-1)}
+      />
 
       <R.Main>
         <R.Overflow>
           <R.RouteInfoContainer>
-            <Feed routeData={dummtFeedData} isUserContainer meetRouter />
+            <Feed routeData={feedData} isUserContainer meetRouter />
             <FeedInfo
               feedInfoTitle="모임 일정 정보"
               departuresPlace={meetDetail.data.startPoint}
@@ -317,6 +329,7 @@ function DetailMineSchedulePage() {
               endDate={meetDetail.data.endDate}
               totalDistance={totalDistance}
               dayData={meetDetail.data.totalDays}
+              isMeetFeed={'30rem'}
             />
             <R.ContentSelecContainer>
               <R.ContentBox
@@ -373,13 +386,29 @@ function DetailMineSchedulePage() {
           </R.RouteDetailInfoContainer>
         </R.Overflow>
       </R.Main>
-    </ScheduleMainPageContainer>
+      {isOpen && (
+        <BottomSheet
+          selected={reviewType}
+          setSelected={setReviewType}
+          bsType={bsType}
+          setIsOpen={setIsOpen}
+          route="모임필터"
+          bsTypeText={'설정'}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+      )}
+    </MainPageContainer>
   ) : null;
 }
 
 export default DetailMineSchedulePage;
 
-const ScheduleMainPageContainer = styled.div`
-  width: 100%;
+const MainPageContainer = styled.div`
+  width: 100vw;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  overflow-y: auto;
 `;

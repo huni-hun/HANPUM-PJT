@@ -8,6 +8,7 @@ export interface FeedProps {
     routeScore?: number;
     routeComment?: string;
     routeTypes?: string[];
+    meetTypes?: string[];
     /** badge */
     startDate?: string;
     endDate?: string;
@@ -16,6 +17,7 @@ export interface FeedProps {
     memberCount?: number;
     totalMember?: number;
     likeCount?: number;
+    meetDday?: number;
   } | null;
   /** feed에 userImg + userName이 있을 때 */
   isUserContainer?: boolean;
@@ -44,6 +46,8 @@ export interface FeedInfoProps {
   dayData: { dayNum: number }[];
   percentage?: number;
   rate?: number;
+  /** style */
+  isMeetFeed?: string;
 }
 
 export interface RouteListProps {
@@ -92,6 +96,9 @@ export interface DaysOfRouteProps {
   latitude: number;
   longitude: number;
   state?: number;
+
+  /** 스케줄 경유지 처리 */
+  turnGreen?: boolean;
 }
 
 export interface AttractionsProps {

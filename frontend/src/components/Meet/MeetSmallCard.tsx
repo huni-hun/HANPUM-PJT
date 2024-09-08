@@ -14,7 +14,7 @@ function MeetSmallCard({ data }: { data: MeetInfo }) {
   return (
     <MeetSmallCardContainer
       onClick={() => {
-        navigate(`/meet/:${data.groupId}`);
+        navigate(`/meet/${data.groupId}`, { state: { groupId: data.groupId } });
       }}
     >
       <img src={data.groupImg} alt="그룹 이미지" />
