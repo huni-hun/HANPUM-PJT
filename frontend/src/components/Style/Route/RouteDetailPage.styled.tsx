@@ -6,10 +6,6 @@ interface StyledProps {
   backgroundImg?: string;
 }
 
-interface MeetStyleProps {
-  isMeetFeed?: string;
-}
-
 export const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -61,7 +57,7 @@ export const Overflow = styled.div`
 
 export const RouteInfoContainer = styled.div`
   width: 100vw;
-  height: 80vh;
+  height: 100vh;
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
@@ -70,7 +66,7 @@ export const RouteInfoContainer = styled.div`
 
 export const ImgBox = styled.div<StyledProps>`
   width: 100%;
-  height: 50rem;
+  height: 30rem;
   background-color: #d9d9d9;
   background-size: cover;
   background-position: center;
@@ -108,9 +104,9 @@ export const UserName = styled.p`
   margin-left: 1.8rem;
 `;
 
-export const RouteNameInfo = styled.div<MeetStyleProps>`
+export const RouteNameInfo = styled.div`
   width: 85vw;
-  height: ${(props) => props.isMeetFeed || '20.2rem'};
+  height: 20.2rem;
   display: flex;
   flex-direction: column;
   /* border-bottom: 0.1rem solid #d9d9d9; */
@@ -127,16 +123,16 @@ export const RouteNameInfoContainer = styled.div`
 
 export const RouteTypeContainer = styled.div`
   width: 100%;
-  height: 27%;
+  height: 15vh;
   display: flex;
   flex-direction: row;
   align-items: center;
   overflow: auto;
 `;
 
-export const RouteType = styled.div<{ isLong: boolean }>`
+export const RouteType = styled.div<{ isLong?: boolean }>`
   width: ${(props) => (props ? '7.5rem' : '6.4rem')};
-  height: 2.8rem;
+  height: 2.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -156,7 +152,8 @@ export const RouteReviewContainer = styled.div`
   flex-direction: row;
   align-items: end;
   justify-content: space-between;
-  padding: 0 0.9rem 0 0.9rem;
+  padding: 0 0.9rem 1rem 0.9rem;
+  border-bottom: ${colors.grey1} solid 0.1rem;
 `;
 
 export const IconContainer = styled.div`
@@ -201,9 +198,9 @@ export const RouteInfo = styled.p`
   font-size: 1.4rem;
 `;
 
-export const RouteDateBox = styled.div<MeetStyleProps>`
+export const RouteDateBox = styled.div`
   width: 85vw;
-  height: ${(props) => props.isMeetFeed || '16.5rem'};
+  height: 16.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -375,7 +372,7 @@ export const Distance = styled.p`
 
 export const ContentSelecContainer = styled.div`
   width: 100vw;
-  height: 15rem;
+  height: 5.5rem;
   display: flex;
   flex-direction: row;
   border-bottom: 0.1rem solid #d9d9d9;

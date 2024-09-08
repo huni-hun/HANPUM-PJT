@@ -95,7 +95,7 @@ export const RouteAddBtn = styled.div`
 `;
 
 export const RouteAddBtnTextBox = styled.div`
-  widht: 40%;
+  width: 40%;
   height: 80%;
   display: flex;
   flex-direction: column;

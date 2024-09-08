@@ -6,14 +6,20 @@ import Icon from '../common/Icon/Icon';
 import Text from '../common/Text';
 import styled from 'styled-components';
 
-function MeetLongCard({ data }: { data: MeetInfo }) {
+function MeetLongCard({
+  data,
+  onClick,
+}: {
+  onClick?: () => void;
+  data: MeetInfo;
+}) {
   console.log(data);
 
   if (!data) {
     return null;
   }
   return (
-    <MeetLongCardContainer>
+    <MeetLongCardContainer onClick={onClick}>
       <img src={data.groupImg} alt="" />
       <DateBadge
         style={{ top: '16px', left: '20px' }}

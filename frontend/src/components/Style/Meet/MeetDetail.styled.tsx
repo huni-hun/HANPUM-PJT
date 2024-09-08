@@ -1,6 +1,14 @@
 import { colors } from '@/styles/colorPalette';
 import styled from 'styled-components';
 
+interface StyledProps {
+  backgroundImg?: string;
+}
+
+interface MeetStyleProps {
+  isMeetFeed?: string;
+}
+
 export const Badge = styled.div`
   background-color: ${colors.black}90;
   color: ${colors.white};
@@ -85,4 +93,67 @@ export const Tags = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+/** feed */
+export const RouteNameInfo = styled.div<MeetStyleProps>`
+  width: 85vw;
+  height: ${(props) => props.isMeetFeed || '20.2rem'};
+  display: flex;
+  flex-direction: column;
+  /* border-bottom: 0.1rem solid #d9d9d9; */
+  padding: 1.4rem 0 1rem 0;
+  position: relative;
+`;
+
+export const RouteNameInfoContainer = styled.div`
+  width: 100%;
+  height: 60%;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const RouteDateBox = styled.div<MeetStyleProps>`
+  width: 85vw;
+  height: ${(props) => props.isMeetFeed || '20.2rem'};
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  position: relative;
+  padding-bottom: 2rem;
+`;
+
+export const RouteTypeContainer = styled.div`
+  width: 100%;
+  height: 27%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  overflow: auto;
+`;
+
+export const RouteType = styled.div<{ isLong: boolean }>`
+  width: ${(props) => (props ? '7.5rem' : '6.4rem')};
+  height: 2.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10rem;
+  border: 0.1rem solid ${colors.main};
+  color: ${colors.main};
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-right: 0.8rem;
+  flex-shrink: 1;
+`;
+
+export const RouteName = styled.p`
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.2rem;
+`;
+
+export const RouteInfo = styled.p`
+  color: #c9c9c9;
+  font-size: 1.4rem;
 `;

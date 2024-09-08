@@ -158,7 +158,10 @@ function MeetList() {
               >
                 내 모임
               </Text>
-              <MeetLongCard data={myMeet.data} />
+              <MeetLongCard
+                data={myMeet.data}
+                onClick={() => clickMeetCard(myMeet.data.groupId)}
+              />
             </>
           )}
           <Flex

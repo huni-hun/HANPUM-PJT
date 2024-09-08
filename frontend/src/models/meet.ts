@@ -48,6 +48,11 @@ export interface MeetInfo {
   totalDistance: number;
   recruitedCount: number;
   recruitmentCount: number;
+  readerProfileImg?: string;
+  readerName?: string;
+  description?: string;
+  recruitmentPeriod?: string;
+
   onClick?: () => void;
 }
 
