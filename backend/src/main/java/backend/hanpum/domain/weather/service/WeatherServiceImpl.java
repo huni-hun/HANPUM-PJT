@@ -56,6 +56,7 @@ public class WeatherServiceImpl implements WeatherService {
         try {
             URI uri = new URI(url);
             ResponseEntity<String> response = restTemplate.getForEntity(uri, String.class);
+            System.out.println(response);
             return parseDayWeatherResponse(response.getBody(), now);
         } catch (Exception e) {
             throw new WeatherParsingException(e.getMessage());
@@ -123,6 +124,9 @@ public class WeatherServiceImpl implements WeatherService {
                             weatherResDto.setNowWeather(ptyCondition);
                         }
                         break;
+                    case "POP":  // 추가: 강수 확률 처리
+                        weatherResDto.setPrecipitationProbability(fcstValue + "%");
+                        break;
                     case "RN1":
                     case "PCP":
                         weatherResDto.setPrecipitation(fcstValue + "mm");
@@ -135,6 +139,7 @@ public class WeatherServiceImpl implements WeatherService {
             throw new WeatherParsingException(e.getMessage());
         }
     }
+
 
     private String getSkyCondition(int skyValue) {
         switch (skyValue) {
