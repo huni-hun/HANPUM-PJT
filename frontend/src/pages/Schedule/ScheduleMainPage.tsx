@@ -664,7 +664,9 @@ function ScheduleMainPage() {
         purpose="merge"
         clickBack={() => navigate(-1)}
         $isborder={true}
-        plusBtnclick={() => navigate('/schedule/addSchedule')}
+        plusBtnclick={() =>
+          navigate('/schedule/addSchedule', { state: { ready: false } })
+        }
         isSchedule
       />
 

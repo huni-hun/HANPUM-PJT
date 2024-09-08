@@ -27,6 +27,7 @@ import { RouteDelete } from '@/api/route/Delete';
 import { toast } from 'react-toastify';
 
 import defaultImg from '@/assets/img/mountain.jpg';
+import { GetUser } from '@/api/mypage/GET';
 
 function RouteDetailPage() {
   const { routeid } = useParams();
@@ -55,14 +56,17 @@ function RouteDetailPage() {
   const [reviews, setReviews] = useState<RouteReviewProps[]>([]);
   const [selectedIdx, setSelectedIdx] = useState<number>(-1);
   const [mapLines, setMapLines] = useState<any[]>([]);
+  const [memberId, setMemberId] = useState<number>(0);
   /** 바텀 sheet */
   const [isOpenSetting, setIsOpenSetting] = useState<boolean>(false); // 경로설정 BottomSheet 열림 상태
   const [isOpenSorting, setIsOpenSorting] = useState<boolean>(false); // 경로정렬 BottomSheet 열림 상태
+
   useEffect(() => {
     if (dayData.length === 0) {
       getRouteDetail(routeid as string).then((result) => {
         if (result.data.status !== 'ERROR' && result.status === 200) {
           let num = 0;
+          setMemberId(result.data.data.course.memberId);
           let rd: RouteDetailProps = {
             routeName: result.data.data.course.courseName,
             routeContent: result.data.data.course.content,
@@ -97,6 +101,10 @@ function RouteDetailPage() {
       });
     }
   }, []);
+
+  // useEffect(() => {
+  //   GetUser(()=>{})
+  // }, [memberId]);
 
   useEffect(() => {
     setSe([]);
@@ -447,7 +455,16 @@ function RouteDetailPage() {
             children="일정 생성"
             color="#ffffff"
             onClick={() => {
-              navigate('/schedule/addSchedule');
+              navigate('/schedule/addSchedule', {
+                state: {
+                  id: routeid,
+                  latitude: latitude,
+                  longitude: longitude,
+                  ready: true,
+                  start: routeData.start,
+                  end: routeData.end,
+                },
+              });
             }}
           />
         </R.ButtonBox>
