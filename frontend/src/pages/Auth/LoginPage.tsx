@@ -8,6 +8,8 @@ import { isInitAtom } from '@/atoms/isAuthEnticatedAtom';
 import Cookies from 'js-cookie';
 import { encodeToken } from '@/utils/util';
 import { useNavigate } from 'react-router-dom';
+import TermsText from '@/components/My/config/TermsText';
+import PersonalInformationText from '@/components/My/config/PersonalInformationText';
 
 function LoginPage() {
   const init = useRecoilValue(isInitAtom);

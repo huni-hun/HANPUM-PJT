@@ -44,6 +44,8 @@ function UserInfo({
     string | null
   >(null);
 
+  console.log('인증번호 발송', checkEmailMessage);
+
   // 초기 진입시 error message 뜨는 것 dirty로 분기처리
   const [dirty, setDirty] = useState<
     Partial<Record<keyof UserSignupFormValues, boolean>>
@@ -74,7 +76,10 @@ function UserInfo({
 
     // 아이디 유효성 검사
     const loginIdPattern = /^[a-zA-Z0-9]{6,13}$/;
-    if (!loginIdPattern.test(formValues.loginId?.trim() || '')) {
+    const trimmedLoginId = formValues.loginId?.trim() || '';
+    if (/\s/.test(formValues.loginId || '')) {
+      errors.loginId = '※빈칸은 사용할 수 없습니다.';
+    } else if (!loginIdPattern.test(trimmedLoginId)) {
       errors.loginId = '※영문과 숫자를 조합하여 6~13자로 입력해 주세요.';
     }
 
@@ -104,14 +109,14 @@ function UserInfo({
     }
 
     // 아이디 중복 확인 에러
-    if (checkIdErrorMessage) {
-      errors.checkLoginId = checkIdErrorMessage;
-    }
+    // if (checkIdErrorMessage) {
+    //   errors.checkLoginId = checkIdErrorMessage;
+    // }
 
     // 인증코드 전송 확인 에러
-    if (checkEmailMessage) {
-      errors.checkEmail = checkEmailMessage;
-    }
+    // if (checkEmailMessage) {
+    //   errors.checkEmail = checkEmailMessage;
+    // }
 
     // 이메일 인증 확인 에러
     if ((formValues.inputAuthCode?.trim() || '')?.length === 0) {
@@ -120,11 +125,13 @@ function UserInfo({
       errors.inputAuthCode = checkInputCodeMessage;
     }
 
+    console.log('errors ::', errors);
+
     return errors;
   }, [
     formValues,
-    checkEmailMessage,
-    checkIdErrorMessage,
+    // checkEmailMessage,
+    // checkIdErrorMessage,
     checkInputCodeMessage,
   ]);
 
@@ -176,6 +183,10 @@ function UserInfo({
             ...prev,
             sendEmail: false,
           }));
+          // setDirty((prev) => ({
+          //   ...prev,
+
+          // }))
         }
       },
       onError: (error: AxiosError) => {
@@ -239,6 +250,8 @@ function UserInfo({
     // TODO UI 수정
     return <div>...메일 전송중</div>;
   }
+
+  console.log('dirth ::', dirty);
 
   return (
     <S.UserInfoContainer>
@@ -334,7 +347,7 @@ function UserInfo({
         name="email"
         onChange={handleInfoChange}
         value={formValues.email}
-        hasError={dirty.email && Boolean(validate.email || validate.checkEmail)}
+        hasError={dirty.email && Boolean(validate.email || checkEmailMessage)}
         onBlur={handleBlur}
         bottomElement={
           <Flex
@@ -431,14 +444,14 @@ function UserInfo({
           clickNext();
           setTime(0);
         }}
-        // disabled={
-        //   !(
-        //     formValues.sendAuthCode &&
-        //     formValues.sendEmail &&
-        //     formValues.sendLoginId &&
-        //     noError
-        //   )
-        // }
+        disabled={
+          !(
+            formValues.sendAuthCode &&
+            formValues.sendEmail &&
+            formValues.sendLoginId &&
+            noError
+          )
+        }
         // $bottom="5"
       />
     </S.UserInfoContainer>
