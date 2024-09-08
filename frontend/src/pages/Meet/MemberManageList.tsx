@@ -7,7 +7,7 @@ import * as M from '@/components/Style/Meet/MeetFilter.styled';
 import Header from '@/components/common/Header/Header';
 
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { RouteDetailProps } from '@/models/route';
 import FilterTable from '@/components/Meet/FilterTable';
@@ -21,16 +21,19 @@ function MemberManageList() {
   const navigate = useNavigate();
   const [listData, setListData] = useState<MemberInfo[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  /** 아이디  넘겨받기 */
+  const location = useLocation();
+  const { groupId } = location.state || {};
 
   /** 신청관리 리스트 */
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await GetMeetMemberList(10);
+        const response = await GetMeetMemberList(groupId);
         if (response && response.status === 'SUCCESS') {
           setListData(response.data.groupMemberResList || []);
-        } else {
-          console.error('error');
+        } else if (response.status === 'ERROR') {
+          toast.error(response.message);
         }
       } catch (error) {
         toast.error('에러');
@@ -43,7 +46,7 @@ function MemberManageList() {
   }, []);
 
   const clickMember = (memberId: number) => {
-    navigate('/meet/memberDetail', { state: { memberId } });
+    navigate('/meet/memberDetail', { state: { groupId, memberId } });
   };
 
   return (
@@ -53,8 +56,11 @@ function MemberManageList() {
         title="모임 인원 관리"
         clickBack={() => navigate(-1)}
       />
-
-      <MemberList memberInfo={listData} onClick={clickMember} />
+      {listData.length > 0 ? (
+        <MemberList memberInfo={listData} onClick={clickMember} />
+      ) : (
+        <>인원이 없습니다.</>
+      )}
     </MainPageContainer>
   );
 }

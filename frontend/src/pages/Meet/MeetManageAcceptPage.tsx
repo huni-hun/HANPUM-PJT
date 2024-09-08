@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import * as M from '@/components/Style/Meet/MeetRequest';
 import Header from '@/components/common/Header/Header';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import memberImg from '../../assets/img/memberImg.svg';
 import BaseButton from '@/components/common/BaseButton';
 import MeetModal from '@/components/Meet/MeetModal';
@@ -23,11 +23,14 @@ function MeetManageAcceptPage() {
     null,
   );
   const [loading, setLoading] = useState<boolean>(false);
+  /** 멤버 아이디 넘겨받기 */
+  const location = useLocation();
+  const { groupId, memberId } = location.state || {};
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await GetMeetMemberDetailList(10, 10);
+        const response = await GetMeetMemberDetailList(groupId, memberId);
         if (response && response.status === 'SUCCESS') {
           setMemberData(response.data || null);
         } else {

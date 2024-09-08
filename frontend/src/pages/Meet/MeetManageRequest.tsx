@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import * as M from '@/components/Style/Meet/MeetRequest';
 import Header from '@/components/common/Header/Header';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import memberImg from '../../assets/img/memberImg.svg';
 import BaseButton from '@/components/common/BaseButton';
 import { PostMeetApply } from '@/api/meet/POST';
@@ -20,6 +20,9 @@ function MeetManageRequest() {
   const [memberData, setMemberData] = useState<MemberDetailDataProps | null>(
     null,
   );
+  /** 멤버 아이디 넘겨받기 */
+  const location = useLocation();
+  const { groupId, memberId } = location.state || {};
 
   /** 회원 정보 가져오기 */
   useEffect(() => {
@@ -45,7 +48,7 @@ function MeetManageRequest() {
   const handleApply = async () => {
     try {
       setLoading(true);
-      const response = await PostMeetApply(10, applyPost);
+      const response = await PostMeetApply(groupId, applyPost);
       if (response && response.status === 'SUCCESS') {
         toast.success('신청이 완료되었습니다.');
       } else {

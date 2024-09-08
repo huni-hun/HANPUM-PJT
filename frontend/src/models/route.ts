@@ -30,6 +30,8 @@ export interface FeedProps {
   likeCount?: number;
   startDate?: string;
   endDate?: string;
+  /** 스타일 */
+  isMeetFeed?: string;
 }
 
 export interface FeedInfoProps {

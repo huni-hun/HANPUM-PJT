@@ -22,12 +22,12 @@ function MemberManageDetail() {
   const [reviewType, setReviewType] = useState<string>('공개 여부');
   /** 멤버 아이디 넘겨받기 */
   const location = useLocation();
-  const { memberId } = location.state || {};
+  const { groupId, memberId } = location.state || {};
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await GetMeetMemberDetailList(10, 10);
+        const response = await GetMeetMemberDetailList(groupId, memberId);
         if (response && response.status === 'SUCCESS') {
           setMemberData(response.data || null);
         } else {

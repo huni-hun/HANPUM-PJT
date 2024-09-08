@@ -108,9 +108,9 @@ export const UserName = styled.p`
   margin-left: 1.8rem;
 `;
 
-export const RouteNameInfo = styled.div`
+export const RouteNameInfo = styled.div<MeetStyleProps>`
   width: 85vw;
-  height: 20.2rem;
+  height: ${(props) => props.isMeetFeed || '20.2rem'};
   display: flex;
   flex-direction: column;
   /* border-bottom: 0.1rem solid #d9d9d9; */
@@ -375,7 +375,7 @@ export const Distance = styled.p`
 
 export const ContentSelecContainer = styled.div`
   width: 100vw;
-  height: 5.1rem;
+  height: 15rem;
   display: flex;
   flex-direction: row;
   border-bottom: 0.1rem solid #d9d9d9;
