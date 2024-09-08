@@ -286,9 +286,6 @@ function ScheduleMainPage() {
           const { latitude, longitude } = position.coords;
           setLat(latitude);
           setLon(longitude);
-          setIsLocationReady(true);
-
-          handleLocationUpdate(latitude, longitude);
         },
         (error) => {
           console.error('Error occurred while fetching location:', error);
@@ -499,28 +496,17 @@ function ScheduleMainPage() {
               y: ele.lon,
             };
             setMarker((pre) => [...pre, markerData]);
-
-            if (ele.state === 2) {
-              setArriveGreen(true);
-            }
           });
           arr.sort((a: any, b: any) => a.routePoint - b.routePoint);
           setDayOfRoute(arr);
           setLinePath(lines);
-          setWayPoints(arr);
           /* 지도 중심점 잡기 */
-          if (arr.length > 0 && arr[0] && arr[0].latitude && arr[0].longitude) {
-            setLat(arr[0].latitude);
-            setLon(arr[0].longitude);
-            setIsLocationReady(true);
-          } else {
-            console.error('중심점 비어있음');
-            setIsLocationReady(false);
-          }
+          setLatitude(arr[0].latitude);
+          setLongitude(arr[0].longitude);
         }
       });
     }
-  }, [selectedDay, scheduleId]);
+  }, [selectedDay]);
 
   useEffect(() => {
     if (linePath.length > 0) {
@@ -753,29 +739,26 @@ function ScheduleMainPage() {
 
                   {/* 지도 및 하위 컴포넌트 container */}
                   <R.RouteDetailInfoContainer>
-                    {lat !== null && lon !== null && (
-                      <RouteDetailInfo
-                        marker={marker}
-                        deleteHandler={(name: string) => {}}
-                        setSelectedIdx={setSelectedIdx}
-                        reviews={reviews}
-                        setDayOfRoute={setDayOfRoute}
-                        dayOfRoute={dayOfRoute}
-                        linePath={mapLines}
-                        selected={selected}
-                        selectedDay={selectedDay}
-                        latitude={lat}
-                        longitude={lon}
-                        dayData={routeDayData}
-                        attractions={attractions}
-                        setLoading={setLoading}
-                        setSelectedDay={setSelectedDay}
-                        setIsOpen={setIsOpen}
-                        setBsType={setBsType}
-                        reviewType={reviewType}
-                        turnGreen={arriveGreen}
-                      />
-                    )}
+                    <RouteDetailInfo
+                      marker={marker}
+                      deleteHandler={(name: string) => {}}
+                      setSelectedIdx={setSelectedIdx}
+                      reviews={reviews}
+                      setDayOfRoute={setDayOfRoute}
+                      dayOfRoute={dayOfRoute}
+                      linePath={mapLines}
+                      selected={selected}
+                      selectedDay={selectedDay}
+                      latitude={latitude}
+                      longitude={longitude}
+                      dayData={routeDayData}
+                      attractions={attractions}
+                      setLoading={setLoading}
+                      setSelectedDay={setSelectedDay}
+                      setIsOpen={setIsOpen}
+                      setBsType={setBsType}
+                      reviewType={reviewType}
+                    />
                   </R.RouteDetailInfoContainer>
                   <S.AttractionsContainer>
                     <S.AttractionsBox>
