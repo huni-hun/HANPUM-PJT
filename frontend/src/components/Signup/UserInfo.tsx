@@ -95,11 +95,6 @@ function UserInfo({
       errors.checkPassword = '비밀번호가 일치하지 않습니다.';
     }
 
-    // 이름 유효성 검사
-    if ((formValues.name?.trim() || '').length === 0) {
-      errors.name = '이름을 입력해주세요.';
-    }
-
     // 이메일 유효성 검사
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if ((formValues.email?.trim() || '').length === 0) {
@@ -294,24 +289,6 @@ function UserInfo({
           '※영문과 숫자를 조합하여 6~13자로 입력해 주세요.'
         }
       />
-
-      <TextField
-        label="이름"
-        name="name"
-        onBlur={handleBlur}
-        value={formValues.name}
-        onChange={handleInfoChange}
-        hasError={dirty.name && Boolean(validate.name)}
-      />
-
-      {dirty.name && Boolean(validate.name) ? (
-        <Message
-          hasError={dirty.name && Boolean(validate.name)}
-          text={validate.name || ''}
-        />
-      ) : (
-        <Spacing size={4.2} />
-      )}
 
       <TextField
         label="비밀번호"

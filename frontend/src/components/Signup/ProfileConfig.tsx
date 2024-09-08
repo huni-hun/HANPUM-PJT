@@ -170,9 +170,16 @@ function ProfileConfig({
   const validate = useMemo(() => {
     let errors: Partial<UserSignupFormValues> = {};
 
+    // 이름 유효성 검사
+    if ((formValues.name?.trim() || '').length === 0) {
+      errors.name = '이름을 입력해주세요.';
+    }
+
     const nickNamePattern = /^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]{3,8}$/;
     if (!nickNamePattern.test(formValues.nickname?.trim() || '')) {
       errors.nickname = '※특수 문자는 제외해 주세요.(3~8자)';
+    } else if (formValues.nickname?.trim() || ''.length === 0) {
+      errors.nickname = '닉네임을 입력해주세요.';
     }
 
     if (chcekNicknameMessage) {
@@ -289,6 +296,24 @@ function ProfileConfig({
           <Icon name="IconCamera" size={19} />
         </div>
       </div>
+
+      <TextField
+        label="이름"
+        name="name"
+        onBlur={handleBlur}
+        value={formValues.name}
+        onChange={handleInfoChange}
+        hasError={dirty.name && Boolean(validate.name)}
+      />
+
+      {dirty.name && Boolean(validate.name) ? (
+        <Message
+          hasError={dirty.name && Boolean(validate.name)}
+          text={validate.name || ''}
+        />
+      ) : (
+        <Spacing size={4.2} />
+      )}
 
       <TextField
         label="닉네임"

@@ -61,6 +61,8 @@ export default function Router() {
         {!isAuth ? (
           <>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/find/:account" element={<FindPage />} />
             <Route path="*" element={<Navigate to="/login" />} />
           </>
         ) : (
