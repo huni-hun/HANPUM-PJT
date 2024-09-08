@@ -376,7 +376,7 @@ function DetailMineSchedulePage() {
               endDate={formatDate(meetDetail?.data?.endDate)}
               totalDistance={totalDistance}
               dayData={meetDetail?.data?.totalDays}
-              isMeetFeed="44rem"
+              isMeetFeed="18rem"
             />
             <R.ContentSelecContainer>
               <R.ContentBox

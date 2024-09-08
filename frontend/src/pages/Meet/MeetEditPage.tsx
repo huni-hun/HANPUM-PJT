@@ -1,34 +1,52 @@
 import { ChangeEvent, useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import styled from 'styled-components';
 import Icon from '../../components/common/Icon/Icon';
 import * as M from '../../components/Style/Meet/MeetAddMain.styled';
 import Input from '../../components/common/Input/Input';
 import Header from '@/components/common/Header/Header';
-import { useLocation, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
 import ToggleSlider from '@/components/common/ToggleSlider/ToggleSlider';
-import { CreateMeetRequestDto, MeetInfo } from '@/models/meet';
 import Text from '@/components/common/Text';
 import BaseButton from '@/components/common/BaseButton';
-import { PostGroup } from '@/api/meet/POST';
-import { toast } from 'react-toastify';
-import useImageCompression from '@/hooks/global/useImageCompression';
+import { CreateMeetRequestDto, MeetInfo } from '@/models/meet';
 import { GetMeetDetailList } from '@/api/meet/GET';
+import { PutGroup } from '@/api/meet/PUT';
+import useImageCompression from '@/hooks/global/useImageCompression';
 
 function MeetEditPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { compressImage, compressedImage } = useImageCompression();
+  const {
+    groupId: stateGroupId,
+    courseId,
+    startDate,
+    endDate,
+    recruitmentPeriod,
+    isEdit,
+  } = location.state || {};
+
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [multipartFile, setMultipartFile] = useState<File | string | undefined>(
+    undefined,
+  );
   const [meetRequest, setMeetRequest] = useState<Partial<CreateMeetRequestDto>>(
     {},
   );
   const [detailData, setDetailData] = useState<MeetInfo>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [groupId, setGroupId] = useState<number | null>(stateGroupId || null);
 
-  const { groupId, courseId, startDate, endDate, recruitmentPeriod } =
-    location.state || {};
-
+  // 초기 로딩 시 groupId와 meetRequest를 로컬 스토리지에서 불러옴
   useEffect(() => {
+    if (!stateGroupId) {
+      const savedGroupId = localStorage.getItem('groupId');
+      if (savedGroupId) {
+        setGroupId(JSON.parse(savedGroupId));
+      }
+    }
+
     const savedMeetRequest = localStorage.getItem('meetRequest');
     if (savedMeetRequest) {
       setMeetRequest(JSON.parse(savedMeetRequest));
@@ -38,46 +56,64 @@ function MeetEditPage() {
     if (savedImage) {
       setPreviewImage(savedImage);
     }
-  }, []);
+  }, [stateGroupId]);
 
-  /** 로컬 스토리지로 input value + 이미지 저장 */
+  // meetRequest가 변경될 때 로컬 스토리지에 저장
   useEffect(() => {
+    localStorage.setItem('groupId', JSON.stringify(groupId));
     localStorage.setItem('meetRequest', JSON.stringify(meetRequest));
-  }, [meetRequest]);
+  }, [meetRequest, groupId]);
 
-  /** location state로 관리 */
+  // 모임 상세 정보 가져오기
   useEffect(() => {
-    if (location.state) {
-      setMeetRequest((prevState) => ({
-        ...prevState,
-        ...location.state,
-      }));
-    }
-  }, [location.state]);
+    const fetchData = async () => {
+      if (!groupId) return;
 
-  /** 이미지 핸들링 */
+      try {
+        setLoading(true);
+        const response = await GetMeetDetailList(groupId);
+        if (response?.status === 'SUCCESS') {
+          setDetailData(response.data);
+          setPreviewImage(response.data.groupImg);
+          setMeetRequest({
+            multipartFile: response.data.groupImg,
+            title: response.data.title,
+            description: response.data.description,
+            recruitmentCount: response.data.recruitmentCount,
+            recruitmentPeriod: response.data.recruitmentPeriod,
+          });
+        } else if (response?.status === 'ERROR') {
+          toast.error(response.message);
+        }
+      } catch (error) {
+        toast.error('에러 발생');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [groupId]);
+
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-
       reader.onloadend = () => {
         if (reader.result) {
           const imageUrl = reader.result as string;
           setPreviewImage(imageUrl);
           localStorage.setItem('previewImage', imageUrl);
-          setMeetRequest((prevValue) => ({
-            ...prevValue,
+          setMeetRequest((prev) => ({
+            ...prev,
             multipartFile: file,
           }));
         }
       };
-
       reader.readAsDataURL(file);
     }
   };
 
-  /** 모임 이름, 내용 input */
   const handleInfoChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -87,7 +123,6 @@ function MeetEditPage() {
     });
   };
 
-  /** 모임 인원 toggle 슬라이드 */
   const handleRecruitmentCountChange = (count: number) => {
     setMeetRequest({
       ...meetRequest,
@@ -95,180 +130,135 @@ function MeetEditPage() {
     });
   };
 
-  /** 모집 마감일 페이지로 이동 */
   const clickAddDeadline = () => {
     navigate('/meet/addMain/AddDeadline', {
       state: {
         courseId,
         startDate,
-        recruitmentPeriod,
+        recruitmentPeriod: meetRequest.recruitmentPeriod,
+        isEdit: true,
       },
     });
   };
 
-  /** 모집 일정 선택 페이지로 이동 */
-  const clickAddSchdule = () => {
-    navigate('/meet/addMain/addSchedule', {
-      state: {
-        courseId,
-        startDate,
-        recruitmentPeriod,
-      },
-    });
-  };
+  const handleEditGroup = async () => {
+    if (!groupId) return;
 
-  /** 모임 정보 가져오기 */
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await GetMeetDetailList(groupId);
-        if (response && response.status === 'SUCCESS') {
-          setDetailData(response.data);
-        } else if (response.status === 'ERROR') {
-          toast.error(response.message);
-        }
-      } catch (error) {
-        toast.error('에러');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  /** 모임 생성 post api */
-  const handleCreateGroup = async () => {
     try {
-      const multipartFile = previewImage;
       const groupPostReqDto = {
         title: meetRequest.title || '',
         description: meetRequest.description || '',
         recruitmentCount: meetRequest.recruitmentCount || 0,
         recruitmentPeriod: recruitmentPeriod || '',
-        /** 일정쪽 */
-        schedulePostReqDto: {
-          courseId: courseId || 0,
-          startDate: startDate || '',
-        },
       };
 
-      const response = await PostGroup(multipartFile || '', groupPostReqDto);
-
-      if (response && response.status === 'SUCCESS') {
-        toast.success('모임 생성이 완료되었습니다!');
+      const response = await PutGroup(
+        groupId,
+        previewImage || '',
+        groupPostReqDto,
+      );
+      if (response?.status === 'SUCCESS') {
+        toast.success('모임 수정이 완료되었습니다!');
         navigate('/schedule/success');
         localStorage.removeItem('meetRequest');
         localStorage.removeItem('previewImage');
+        localStorage.removeItem('groupId');
       } else {
-        toast.error('모임 생성에 실패했습니다.');
+        toast.error('모임 수정에 실패했습니다.');
       }
     } catch (error) {
-      toast.error('모임 생성 중 오류가 발생했습니다.');
+      toast.error('모임 수정 중 오류가 발생했습니다.');
     }
   };
 
   return (
-    <MainPageContainer>
+    <>
       <Header
         purpose="title"
-        title="모임 생성"
+        title="모임 수정"
         $isborder={true}
         clickBack={() => {
           localStorage.removeItem('meetRequest');
           localStorage.removeItem('previewImage');
+          localStorage.removeItem('groupId');
           navigate(-1);
         }}
       />
-      <M.MainContainer>
-        <div className="form">
-          <div className="container">
-            <Text $typography="t12" $bold>
-              모임 이미지
-            </Text>
-            <div className="img-box">
-              {previewImage ? (
-                <img src={previewImage} alt="프로필 이미지 미리보기" />
-              ) : (
-                <Icon name="IconCameraGrey" width={52} height={38} />
-              )}
+      <MainPageContainer>
+        <M.MainContainer>
+          <div className="form">
+            <div className="container">
+              <Text $typography="t12" $bold>
+                모임 이미지
+              </Text>
+              <div className="img-box">
+                {previewImage ? (
+                  <img src={previewImage} alt="프로필 이미지 미리보기" />
+                ) : (
+                  <Icon name="IconCameraGrey" width={52} height={38} />
+                )}
 
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+              </div>
+            </div>
+
+            <div className="container">
+              <Text $typography="t12" $bold>
+                모임 이름
+              </Text>
+              <Input
+                placeholder="김동산"
+                name="title"
+                value={meetRequest.title || ''}
+                onChange={handleInfoChange}
               />
             </div>
+
+            <div className="container">
+              <Text $typography="t12" $bold>
+                모임 내용
+              </Text>
+              <textarea
+                placeholder="내용을 작성해 주세요."
+                name="description"
+                value={meetRequest?.description || ''}
+                onChange={handleInfoChange}
+              />
+            </div>
+            <M.ToggleSliderBox>
+              <ToggleSlider
+                title="모집인원"
+                unit="인"
+                min={0}
+                max={15}
+                value={meetRequest?.recruitmentCount || 0}
+                onChange={handleRecruitmentCountChange}
+              />
+            </M.ToggleSliderBox>
           </div>
 
-          <div className="container">
-            <Text $typography="t12" $bold>
-              모임 이름
+          <div className="category-container" onClick={clickAddDeadline}>
+            <Text $bold={true} $typography="t12">
+              모집 마감일
             </Text>
-            <Input
-              placeholder="김동산"
-              name="title"
-              value={meetRequest?.title || ''}
-              onChange={handleInfoChange}
-            />
+            <M.ScheduleTextWrap>
+              <M.ScheduleText>{recruitmentPeriod}</M.ScheduleText>
+              <Icon name="IconArrowRight" />
+            </M.ScheduleTextWrap>
           </div>
 
-          <div className="container">
-            <Text $typography="t12" $bold>
-              모임 내용
-            </Text>
-            <textarea
-              placeholder="내용을 작성해 주세요."
-              name="description"
-              value={meetRequest?.description || ''}
-              onChange={handleInfoChange}
-            />
+          <div className="btn-box">
+            <BaseButton size="large" onClick={handleEditGroup}>
+              모임 수정하기
+            </BaseButton>
           </div>
-          <M.ToggleSliderBox>
-            <ToggleSlider
-              title="모집인원"
-              unit="인"
-              min={0}
-              max={15}
-              value={meetRequest?.recruitmentCount || 0}
-              onChange={handleRecruitmentCountChange}
-            />
-          </M.ToggleSliderBox>
-        </div>
-
-        <div className="category-container" onClick={clickAddDeadline}>
-          <Text $bold={true} $typography="t12">
-            모집 마감일
-          </Text>
-          <M.ScheduleTextWrap>
-            <M.ScheduleText>{recruitmentPeriod}</M.ScheduleText>
-            <Icon name="IconArrowRight" />
-          </M.ScheduleTextWrap>
-        </div>
-
-        <div className="category-container" onClick={clickAddSchdule}>
-          <Text $bold={true} $typography="t12">
-            일정
-          </Text>
-          <M.ScheduleTextWrap>
-            {/* 일정에서 날짜를 선택안했을 때 (여기에 조건 추가해서 경로 붙이면 될듯 합니다) */}
-            {startDate !== undefined && (
-              <M.ScheduleText>
-                {startDate} - {endDate}
-              </M.ScheduleText>
-            )}
-
-            <Icon name="IconArrowRight" />
-          </M.ScheduleTextWrap>
-        </div>
-
-        <div className="btn-box">
-          <BaseButton size="large" onClick={handleCreateGroup}>
-            모임 생성하기
-          </BaseButton>
-        </div>
-      </M.MainContainer>
-    </MainPageContainer>
+        </M.MainContainer>
+      </MainPageContainer>
+    </>
   );
 }
 

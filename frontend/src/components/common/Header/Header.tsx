@@ -110,7 +110,7 @@ const Header = ({
               name="IconHeaderPlus"
               // onClick={() => onClickHandler('mypage')}
               onClick={() => {
-                onClickHandler('meet/memberDetail');
+                onClickHandler('meet/addMain');
               }}
               size={20}
             />

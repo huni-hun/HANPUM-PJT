@@ -65,7 +65,7 @@ export const MeetInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 85%;
-  height: 55vh;
+  /* height: 55vh; */
   padding-bottom: 1rem;
 `;
 
