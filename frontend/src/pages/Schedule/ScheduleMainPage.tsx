@@ -289,6 +289,7 @@ function ScheduleMainPage() {
           const { latitude, longitude } = position.coords;
           setLat(latitude);
           setLon(longitude);
+          setIsLocationReady(true);
         },
         (error) => {
           console.error('Error occurred while fetching location:', error);
@@ -305,7 +306,7 @@ function ScheduleMainPage() {
       alert('지원하지 않는 브라우저입니다.');
       setIsLocationReady(false);
     }
-  }, [isLocationReady]);
+  }, []);
 
   /** 주변 관광지 가져오기 */
   useEffect(() => {
@@ -327,7 +328,7 @@ function ScheduleMainPage() {
       };
       nearByData();
     }
-  }, [isSelected, isLocationReady]);
+  }, [isLocationReady]);
 
   /** 진행중 */
   useEffect(() => {
@@ -607,7 +608,7 @@ function ScheduleMainPage() {
 
       fetchData();
     }
-  }, [isLocationReady]);
+  }, [isSelected, isLocationReady]);
 
   /** 지도 및 하위 컴포넌트  */
 
@@ -656,6 +657,13 @@ function ScheduleMainPage() {
     const differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24));
 
     return differenceInDays >= 0 ? differenceInDays + 1 : 0;
+  };
+
+  /** 관광지 클릭 */
+  const clickAttraction = (index: number) => {
+    navigate('/schedule/memo', {
+      state: { attractionIndex: index, attractionsCard },
+    });
   };
 
   return (
@@ -779,10 +787,10 @@ function ScheduleMainPage() {
                       <S.AttrantiosTypeBox>관광지</S.AttrantiosTypeBox>
                       <S.AttractionsOverflow>
                         {attractionsCard.length > 0 &&
-                          attractionsCard.map((ele) => (
+                          attractionsCard.map((ele, index) => (
                             <S.AttractionCard
                               img={(ele as ScheduleAttractionsProps).image1}
-                              onClick={() => {}}
+                              onClick={() => clickAttraction(index)}
                             >
                               <S.AttractionCardTitle>
                                 {(ele as ScheduleAttractionsProps).title}
@@ -812,7 +820,8 @@ function ScheduleMainPage() {
       {/* 내 일정 tab */}
       {isSelected === 'Mine' && (
         <S.Main>
-          <S.Overflow>
+          {/* <S.Overflow> */}
+          <S.SchduleCardContainer>
             {myScheduleListData &&
             Array.isArray(myScheduleListData) &&
             myScheduleListData.length > 0 ? (
@@ -844,7 +853,8 @@ function ScheduleMainPage() {
             ) : (
               <S.NoData>일정이 없습니다.</S.NoData>
             )}
-          </S.Overflow>
+            {/* </S.Overflow> */}
+          </S.SchduleCardContainer>
         </S.Main>
       )}
 
