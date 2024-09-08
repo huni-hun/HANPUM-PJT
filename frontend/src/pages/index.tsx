@@ -35,6 +35,7 @@ import RequestManageList from '@pages/Meet/RequestManageList';
 import MemberManageList from '@pages/Meet/MemberManageList';
 import MeetManageRequest from '@pages/Meet/MeetManageRequest';
 import MeetEditPage from '@pages/Meet/MeetEditPage';
+import MeetAddCompletePage from './Meet/MeetAddCompletePage';
 
 /** 커뮤니티 */
 
@@ -85,6 +86,7 @@ export {
   MeetAddDeadLinePage,
   MemberManageDetail,
   MeetEditPage,
+  MeetAddCompletePage,
 
   /** 마이페이지, 회원관련 */
   SignupPage,
