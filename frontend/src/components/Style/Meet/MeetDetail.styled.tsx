@@ -17,7 +17,7 @@ export const Badge = styled.div`
 `;
 
 export const MeetInfoWrap = styled.div`
-  height: 30vw;
+  height: 20vw;
   display: flex;
   justify-content: space-between;
   border: 0.1rem solid ${colors.grey1};

@@ -37,6 +37,17 @@ import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
 import BottomSheet from '@/components/Style/Route/BottomSheet';
 
 function DetailMineSchedulePage() {
+  /** 헤더 설정 열기 */
+  // const [isOpen, setIsOpen] = useState<boolean>(false);
+  // const [bsType, setBsType] = useState<string>('설정');
+  // const [reviewType, setReviewType] = useState<string>('공개 여부');
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+
+  const location = useLocation();
+  const { groupId } = location.state || {};
+  const [memberData, setMemberData] = useState<Member>();
+  const [error, setError] = useState<string | null>(null);
+
   const [routeId, setRouteId] = useState<number>(-1);
   const [selected, setSelected] = useState<string>('course');
   const [selectedDay, setSelectedDay] = useState<number>(0);
@@ -64,11 +75,11 @@ function DetailMineSchedulePage() {
 
   const BtnClick = () => {};
   const navigate = useNavigate();
-  const { id } = useParams();
 
   const { data: meetDetail } = useQuery(
-    ['id', id],
-    () => GetMeetDetailList(Number(id?.substring(1))),
+    ['id', groupId],
+
+    () => GetMeetDetailList(groupId),
     {
       onSuccess: (res) => {
         if (res.status === STATUS.success) {
@@ -82,6 +93,7 @@ function DetailMineSchedulePage() {
       },
     },
   );
+
   useEffect(() => {
     if (routeId > 0) {
       if (dayData.length === 0) {
@@ -267,32 +279,22 @@ function DetailMineSchedulePage() {
     }
   }, [dayOfRoute]);
 
-  /** 헤더 설정 열기 */
-  // const [isOpen, setIsOpen] = useState<boolean>(false);
-  // const [bsType, setBsType] = useState<string>('설정');
-  // const [reviewType, setReviewType] = useState<string>('공개 여부');
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
-
-  const location = useLocation();
-  const { groupId } = location.state || {};
-  const [memberData, setMemberData] = useState<Member>();
-  const [error, setError] = useState<string | null>(null);
   // const [loading, setLoading] = useState<boolean>(false);
 
   /** feed 더미 데이터 */
   /** === useState (routeData) */
   const feedData = {
-    routeFeedImg: meetDetail.data.groupImg || goyuMY,
-    routeUserImg: meetDetail.data.readerProfileImg || memberImg,
-    routeName: meetDetail.data.title,
-    routeContent: meetDetail.data.description,
-    memberCount: meetDetail.data.recruitedCount,
-    totalMember: meetDetail.data.recruitmentCount,
-    likeCount: meetDetail.data.likeCount,
-    startDate: meetDetail.data.startDate,
-    endDate: meetDetail.data.endDate,
-    meetDday: meetDetail.data.dday,
-    meetTypes: meetDetail.data.courseTypes || [],
+    routeFeedImg: meetDetail?.data?.groupImg || goyuMY,
+    routeUserImg: meetDetail?.data?.readerProfileImg || memberImg,
+    routeName: meetDetail?.data?.title,
+    routeContent: meetDetail?.data?.description,
+    memberCount: meetDetail?.data?.recruitedCount,
+    totalMember: meetDetail?.data?.recruitmentCount,
+    likeCount: meetDetail?.data?.likeCount,
+    startDate: meetDetail?.data?.startDate,
+    endDate: meetDetail?.data?.endDate,
+    meetDday: meetDetail?.data?.dday,
+    meetTypes: meetDetail?.data?.courseTypes || [],
   };
 
   // const dayData = [{ dayNum: dayNum }];
@@ -313,7 +315,7 @@ function DetailMineSchedulePage() {
     <MainPageContainer>
       <Header
         purpose="result"
-        title={`D-${meetDetail.data.dday}`}
+        title={`D-${meetDetail?.data?.dday}`}
         clickBack={() => navigate(-1)}
       />
 
@@ -323,13 +325,13 @@ function DetailMineSchedulePage() {
             <Feed routeData={feedData} isUserContainer meetRouter />
             <FeedInfo
               feedInfoTitle="모임 일정 정보"
-              departuresPlace={meetDetail.data.startPoint}
-              arrivalsPlace={meetDetail.data.endPoint}
-              startDate={meetDetail.data.startDate}
-              endDate={meetDetail.data.endDate}
+              departuresPlace={meetDetail?.data?.startPoint}
+              arrivalsPlace={meetDetail?.data?.endPoint}
+              startDate={meetDetail?.data?.startDate}
+              endDate={meetDetail?.data?.endDate}
               totalDistance={totalDistance}
-              dayData={meetDetail.data.totalDays}
-              isMeetFeed={'30rem'}
+              dayData={meetDetail?.data?.totalDays}
+              isMeetFeed="40rem"
             />
             <R.ContentSelecContainer>
               <R.ContentBox
@@ -406,7 +408,7 @@ export default DetailMineSchedulePage;
 
 const MainPageContainer = styled.div`
   width: 100vw;
-  height: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: #fff;
