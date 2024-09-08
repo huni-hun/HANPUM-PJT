@@ -10,6 +10,7 @@ const FeedContainer = ({
   routeData,
   isUserContainer,
   meetRouter,
+  isMeetFeed,
 }: FeedProps) => {
   return (
     <>
@@ -37,7 +38,7 @@ const FeedContainer = ({
         <></>
       )}
 
-      <R.RouteNameInfo>
+      <R.RouteNameInfo isMeetFeed={isMeetFeed}>
         <R.RouteNameInfoContainer>
           <R.RouteName>{routeData?.routeName || ''}</R.RouteName>
           <R.RouteInfo>{routeData?.routeContent || ''}</R.RouteInfo>

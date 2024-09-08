@@ -114,10 +114,10 @@ function DetailMineSchedulePage() {
       setLoading(true);
       const response = await DeleteSchedule(scheduleId);
       if (response && response.status === 'SUCCESS') {
-        toast.success('수락 완료되었습니다.');
+        toast.success('일정 삭제 완료되었습니다.');
         setIsDeleteModalOpen(false);
       } else {
-        toast.error('수락 실패했습니다.');
+        toast.error('일정 삭제 실패했습니다.');
       }
     } catch (error) {
       toast.error('에러 발생');

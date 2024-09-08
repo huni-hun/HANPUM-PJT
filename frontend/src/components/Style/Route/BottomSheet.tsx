@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Icon from '@/components/common/Icon/Icon';
 import * as R from '@/components/Style/Route/RouteBottom.styled';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { colors } from '@/styles/colorPalette';
 
@@ -25,6 +25,9 @@ function BottomSheet(props: BottomSheetProps) {
   const [isClosing, setIsClosing] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const navigate = useNavigate();
+  /** 모임 - 그룹아이디 */
+  const location = useLocation();
+  const { groupId } = location.state || {};
 
   const handleClose = () => {
     setIsClosing(true);
@@ -35,7 +38,7 @@ function BottomSheet(props: BottomSheetProps) {
   };
 
   type IconName =
-    | 'IconMemberGrey'
+    | 'IconMemberBlack'
     | 'IconListManage'
     | 'IconDeleteBlack'
     | 'IconRetouch'
@@ -58,7 +61,7 @@ function BottomSheet(props: BottomSheetProps) {
 
     switch (option) {
       case '멤버관리':
-        return 'IconMemberGrey';
+        return 'IconMemberBlack';
       case '가입 신청 관리':
         return 'IconListManage';
       case '삭제':
@@ -103,10 +106,15 @@ function BottomSheet(props: BottomSheetProps) {
       case '공개 여부':
         break;
       case '멤버관리':
-        navigate('/멤버관리');
+        navigate('/meet/memberMangeList', {
+          state: { groupId },
+        });
         break;
+
       case '가입 신청 관리':
-        navigate('/가입신청관리');
+        navigate('/meet/requestManageList', {
+          state: { groupId },
+        });
         break;
       case '내보내기':
         if (props.onExport) props.onExport();

@@ -75,3 +75,11 @@ export const HeaderWrapper = styled.div<HeaderWrapperProps>`
     font-size: 1.4rem;
   }
 `;
+
+/** 효령 스타일 추가 */
+export const TextWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 15vw;
+  align-items: center;
+`;

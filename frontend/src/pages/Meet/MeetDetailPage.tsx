@@ -35,6 +35,8 @@ import {
 import { GetLineData } from '@/api/route/POST';
 import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
 import BottomSheet from '@/components/Style/Route/BottomSheet';
+import MeetModal from '@/components/Meet/MeetModal';
+import { DeleteMeet } from '@/api/meet/Delete';
 
 function DetailMineSchedulePage() {
   /** 헤더 설정 열기 */
@@ -306,23 +308,57 @@ function DetailMineSchedulePage() {
     });
   };
 
+  /** 모달 끄는 함수 */
+  const delteModalClose = () => {
+    setIsDeleteModalOpen(false);
+    setIsOpen(false);
+  };
+
   /** 바텀탭 - 삭제 클릭시 */
   const handleDelete = () => {
     setIsDeleteModalOpen(true);
   };
 
+  /** 모임 삭제 */
+  const deleteSchedule = async () => {
+    try {
+      setLoading(true);
+      const response = await DeleteMeet(groupId);
+      if (response && response.status === 'SUCCESS') {
+        toast.success('모임 삭제 완료되었습니다.');
+        setIsDeleteModalOpen(false);
+      } else {
+        toast.error('모임 삭제 실패했습니다.');
+      }
+    } catch (error) {
+      toast.error('에러 발생');
+    } finally {
+      setIsDeleteModalOpen(false);
+      setLoading(false);
+    }
+  };
+
   return loading && meetDetail !== undefined ? (
     <MainPageContainer>
       <Header
-        purpose="result"
+        purpose="schedule"
         title={`D-${meetDetail?.data?.dday}`}
         clickBack={() => navigate(-1)}
+        clickOption={() => {
+          setIsOpen(true);
+          setBsType('모임필터');
+        }}
       />
 
       <R.Main>
         <R.Overflow>
           <R.RouteInfoContainer>
-            <Feed routeData={feedData} isUserContainer meetRouter />
+            <Feed
+              routeData={feedData}
+              isUserContainer
+              meetRouter
+              isMeetFeed="8vh"
+            />
             <FeedInfo
               feedInfoTitle="모임 일정 정보"
               departuresPlace={meetDetail?.data?.startPoint}
@@ -331,7 +367,7 @@ function DetailMineSchedulePage() {
               endDate={meetDetail?.data?.endDate}
               totalDistance={totalDistance}
               dayData={meetDetail?.data?.totalDays}
-              isMeetFeed="40rem"
+              isMeetFeed="44rem"
             />
             <R.ContentSelecContainer>
               <R.ContentBox
@@ -398,6 +434,15 @@ function DetailMineSchedulePage() {
           bsTypeText={'설정'}
           onEdit={handleEdit}
           onDelete={handleDelete}
+        />
+      )}
+
+      {isDeleteModalOpen && (
+        <MeetModal
+          onCancel={delteModalClose}
+          onConfirm={deleteSchedule}
+          title="삭제하시겠어요?"
+          content={'삭제하면 복구가 어렵습니다.'}
         />
       )}
     </MainPageContainer>

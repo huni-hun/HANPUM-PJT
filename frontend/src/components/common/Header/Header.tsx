@@ -302,24 +302,20 @@ const Header = ({
         return (
           <>
             <Flex $align="center" $justify="space-between">
-              <Text as="div">
-                <Icon
-                  name="IconBackArrow"
-                  className="back-arrow"
-                  size={15}
-                  onClick={clickBack}
-                />
-              </Text>
+              <S.TextWrap>
+                <Text as="div">
+                  <Icon
+                    name="IconBackArrow"
+                    className="back-arrow"
+                    size={15}
+                    onClick={clickBack}
+                  />
+                </Text>
 
-              <Text
-                as="div"
-                $bold={true}
-                $typography="t15"
-                color="black1"
-                textAlign={isSchedule ? 'left' : 'center'}
-              >
-                {title}
-              </Text>
+                <Text as="div" $bold={true} $typography="t15" color="black1">
+                  {title}
+                </Text>
+              </S.TextWrap>
               <Icon name="IconOption" size={15} onClick={clickOption} />
             </Flex>
           </>
