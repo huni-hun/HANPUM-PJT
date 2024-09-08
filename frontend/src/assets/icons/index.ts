@@ -60,6 +60,9 @@ export { ReactComponent as IconLeftWhiteArrow } from './leftWhiteArrow.svg';
 export { ReactComponent as IconMember } from './member.svg';
 export { ReactComponent as IconHeart } from './heart.svg';
 
+// 모임 완성
+export { ReactComponent as IconMeetComplete } from './IconMeetComplete.svg';
+
 // 모임 리스트
 export { ReactComponent as IconHeartInGrey } from './heart_in_grey.svg';
 export { ReactComponent as IconGreyLeftArrow } from './grey_left_arrow.svg';
