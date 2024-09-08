@@ -38,17 +38,17 @@ const FeedContainer = ({
         <></>
       )}
 
-      <R.RouteNameInfo isMeetFeed={isMeetFeed}>
-        <R.RouteNameInfoContainer>
-          <R.RouteName>{routeData?.routeName || ''}</R.RouteName>
-          <R.RouteInfo>{routeData?.routeContent || ''}</R.RouteInfo>
-          <R.TagsWrap>
+      <M.RouteNameInfo isMeetFeed={isMeetFeed}>
+        <M.RouteNameInfoContainer>
+          <M.RouteName>{routeData?.routeName || ''}</M.RouteName>
+          <M.RouteInfo>{routeData?.routeContent || ''}</M.RouteInfo>
+          <M.TagsWrap>
             {routeData?.routeTypes?.map((type, index) => (
               <R.Tags key={index}>{type}</R.Tags>
             )) || ''}
-          </R.TagsWrap>
-        </R.RouteNameInfoContainer>
-      </R.RouteNameInfo>
+          </M.TagsWrap>
+        </M.RouteNameInfoContainer>
+      </M.RouteNameInfo>
 
       {meetRouter ? (
         <>

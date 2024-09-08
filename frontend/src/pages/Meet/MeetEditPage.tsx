@@ -6,14 +6,15 @@ import Header from '@/components/common/Header/Header';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ToggleSlider from '@/components/common/ToggleSlider/ToggleSlider';
-import { CreateMeetRequestDto } from '@/models/meet';
+import { CreateMeetRequestDto, MeetInfo } from '@/models/meet';
 import Text from '@/components/common/Text';
 import BaseButton from '@/components/common/BaseButton';
 import { PostGroup } from '@/api/meet/POST';
 import { toast } from 'react-toastify';
 import useImageCompression from '@/hooks/global/useImageCompression';
+import { GetMeetDetailList } from '@/api/meet/GET';
 
-function MeetAddMainPage() {
+function MeetEditPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { compressImage, compressedImage } = useImageCompression();
@@ -21,8 +22,10 @@ function MeetAddMainPage() {
   const [meetRequest, setMeetRequest] = useState<Partial<CreateMeetRequestDto>>(
     {},
   );
+  const [detailData, setDetailData] = useState<MeetInfo>();
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const { courseId, startDate, endDate, recruitmentPeriod } =
+  const { groupId, courseId, startDate, endDate, recruitmentPeriod } =
     location.state || {};
 
   useEffect(() => {
@@ -113,6 +116,26 @@ function MeetAddMainPage() {
       },
     });
   };
+
+  /** 모임 정보 가져오기 */
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await GetMeetDetailList(groupId);
+        if (response && response.status === 'SUCCESS') {
+          setDetailData(response.data);
+        } else if (response.status === 'ERROR') {
+          toast.error(response.message);
+        }
+      } catch (error) {
+        toast.error('에러');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   /** 모임 생성 post api */
   const handleCreateGroup = async () => {
@@ -249,7 +272,7 @@ function MeetAddMainPage() {
   );
 }
 
-export default MeetAddMainPage;
+export default MeetEditPage;
 
 const MainPageContainer = styled.div`
   width: 100vw;

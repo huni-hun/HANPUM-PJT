@@ -852,50 +852,58 @@ function ScheduleMainPage() {
       {isSelected === 'Class' && (
         <S.Main>
           <S.Overflow>
-            <R.RouteInfoContainer>
-              <Feed routeData={meetFeedData} isUserContainer />
-              <FeedInfo
-                feedInfoTitle="모임 일정 정보"
-                departuresPlace={feedInfoProps.departuresPlace}
-                arrivalsPlace={feedInfoProps.arrivalsPlace}
-                startDate={formatDate(meetListData?.startDate || '')}
-                endDate={formatDate(meetListData?.endDate || '-')}
-                totalDistance={feedInfoProps.totalDistance}
-                dayData={feedInfoProps.dayData}
-                percentage={feedInfoProps.percentage}
-              />
-            </R.RouteInfoContainer>
-            {/* 지도 및 하위 컴포넌트 container */}
-            <R.RouteDetailInfoContainer>
-              <RouteDetailInfo
-                marker={marker}
-                deleteHandler={(name: string) => {}}
-                setSelectedIdx={setSelectedIdx}
-                reviews={reviews}
-                setDayOfRoute={setDayOfRoute}
-                dayOfRoute={dayOfRoute}
-                linePath={mapLines}
-                selected={selected}
-                selectedDay={selectedDay}
-                latitude={lat || 0}
-                longitude={lon || 0}
-                dayData={routeDayData}
-                attractions={attractions}
-                setLoading={setLoading}
-                setSelectedDay={setSelectedDay}
-                setIsOpen={setIsOpen}
-                setBsType={setBsType}
-                reviewType={reviewType}
-                turnGreen={arriveGreen}
-              />
-            </R.RouteDetailInfoContainer>
-            {/* 모임멤버 */}
-            <S.ScheduleMainContainer>
-              <MeetMember
-                memberCount={memberData.length}
-                members={memberData || []}
-              />
-            </S.ScheduleMainContainer>
+            {myScheduleListData &&
+            Array.isArray(myScheduleListData) &&
+            myScheduleListData.length > 0 ? (
+              <>
+                <R.RouteInfoContainer>
+                  <Feed routeData={meetFeedData} isUserContainer />
+                  <FeedInfo
+                    feedInfoTitle="모임 일정 정보"
+                    departuresPlace={feedInfoProps.departuresPlace}
+                    arrivalsPlace={feedInfoProps.arrivalsPlace}
+                    startDate={formatDate(meetListData?.startDate || '')}
+                    endDate={formatDate(meetListData?.endDate || '-')}
+                    totalDistance={feedInfoProps.totalDistance}
+                    dayData={feedInfoProps.dayData}
+                    percentage={feedInfoProps.percentage}
+                  />
+                </R.RouteInfoContainer>
+                {/* 지도 및 하위 컴포넌트 container */}
+                <R.RouteDetailInfoContainer>
+                  <RouteDetailInfo
+                    marker={marker}
+                    deleteHandler={(name: string) => {}}
+                    setSelectedIdx={setSelectedIdx}
+                    reviews={reviews}
+                    setDayOfRoute={setDayOfRoute}
+                    dayOfRoute={dayOfRoute}
+                    linePath={mapLines}
+                    selected={selected}
+                    selectedDay={selectedDay}
+                    latitude={lat || 0}
+                    longitude={lon || 0}
+                    dayData={routeDayData}
+                    attractions={attractions}
+                    setLoading={setLoading}
+                    setSelectedDay={setSelectedDay}
+                    setIsOpen={setIsOpen}
+                    setBsType={setBsType}
+                    reviewType={reviewType}
+                    turnGreen={arriveGreen}
+                  />
+                </R.RouteDetailInfoContainer>
+                {/* 모임멤버 */}
+                <S.ScheduleMainContainer>
+                  <MeetMember
+                    memberCount={memberData.length}
+                    members={memberData || []}
+                  />
+                </S.ScheduleMainContainer>
+              </>
+            ) : (
+              <S.NoData>일정이 없습니다.</S.NoData>
+            )}
           </S.Overflow>
         </S.Main>
       )}

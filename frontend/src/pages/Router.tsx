@@ -46,6 +46,7 @@ import {
   MeetAddDeadLinePage,
   MemberManageDetail,
   ScheduleMemoPage,
+  MeetEditPage,
 } from './index'; // index.tsx에서 컴포넌트를 가져옵니다.
 import useIsAuth from '@/hooks/auth/useIsAuth';
 import { useEffect } from 'react';
@@ -126,6 +127,7 @@ export default function Router() {
               element={<MeetAddDeadLinePage />}
             />
             <Route path="/meet/memberDetail" element={<MemberManageDetail />} />
+            <Route path="/meet/edit" element={<MeetEditPage />} />
 
             {/* 로그인/ 회원가입/ 찾기 */}
             <Route path="/login" element={<LoginPage />} />

@@ -2,6 +2,7 @@
 import React from 'react';
 import * as R from '@/components/Style/Route/RouteDetailPage.styled';
 import * as S from '@/components/Style/Schedule/SchduleMainPage.styled';
+import * as M from '@/components/Style/Meet/MeetDetail.styled';
 import { FeedInfoProps } from '@/models/route';
 import Icon from '@/components/common/Icon/Icon';
 
@@ -16,7 +17,7 @@ const FeedInfo = ({
   isMeetFeed,
 }: FeedInfoProps) => {
   return (
-    <R.RouteDateBox isMeetFeed={isMeetFeed}>
+    <M.RouteDateBox isMeetFeed={isMeetFeed}>
       <S.Hr></S.Hr>
       <R.RouteName>{feedInfoTitle}</R.RouteName>
       <R.StartDateBox>
@@ -55,7 +56,7 @@ const FeedInfo = ({
           </R.Distance>
         </R.DistanceBox>
       </R.EndDateBox>
-    </R.RouteDateBox>
+    </M.RouteDateBox>
   );
 };
 
