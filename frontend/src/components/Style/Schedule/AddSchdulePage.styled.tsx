@@ -109,16 +109,17 @@ export const RouteMapWrap = styled.div<{ $isExpanded: boolean }>`
 
 export const RouteMapContent = styled.div`
   background-color: #ccc;
-  transition: height 0.5s ease;
   border-radius: 1.5rem;
   text-align: center;
   font-size: 4rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-sizing: border-box;
+`;
+
+export const MapBox = styled.div`
   width: 100%;
-  height: 100%;
+  height: 25rem;
 `;
 
 export const ScheduleType = styled.p<{ selected: boolean }>`

@@ -25,7 +25,6 @@ function AddSchedulePage() {
   const navigate = useNavigate();
   const location = useLocation();
   const routedata = { ...location.state };
-  console.log(routedata);
   const BtnClick = () => {};
   const [error, setError] = useState<string | null>(null);
   const [postSchedule, setPostSchedule] = useState<ScheduleData | null>(null);
@@ -60,7 +59,7 @@ function AddSchedulePage() {
       // startDate를 "YYYYMMDD" 형식으로 변환
       const formattedDate = startDate.replace(/-/g, '');
 
-      const response = await PostMineSchedule(2, formattedDate);
+      const response = await PostMineSchedule(routedata.id, formattedDate);
 
       if (response && response.data.status === 'SUCCESS') {
         setPostSchedule(response.data);
@@ -95,6 +94,20 @@ function AddSchedulePage() {
   }, [dates]);
 
   useEffect(() => {
+    if (
+      localStorage.getItem('startDate') !== null &&
+      localStorage.getItem('endDate') !== null
+    ) {
+      const start = localStorage.getItem('startDate');
+      const end = localStorage.getItem('endDate');
+      setDates({
+        startDate: start === null ? '' : start.substring(1, start.length - 1),
+        endDate: end === null ? '' : end.substring(1, end.length - 1),
+      });
+    }
+  }, []);
+
+  useEffect(() => {
     if (routedata.ready) {
       setIsMapReady(routedata.ready);
       setLatitude(routedata.latitude);
@@ -112,7 +125,11 @@ function AddSchedulePage() {
       <Header
         purpose="title"
         title="일정을 등록해주세요"
-        clickBack={() => navigate(-1)}
+        clickBack={() => {
+          navigate(-1);
+          localStorage.setItem('startDate', '');
+          localStorage.setItem('endDate', '');
+        }}
         $isShadow
       />
       {/* <S.Container> */}
@@ -186,12 +203,22 @@ function AddSchedulePage() {
                   onClick={() => {
                     if (!isMapReady) {
                       navigate('/route/list');
+                      localStorage.setItem(
+                        'startDate',
+                        JSON.stringify(dates.startDate),
+                      );
+                      localStorage.setItem(
+                        'endDate',
+                        JSON.stringify(dates.endDate),
+                      );
                     }
                   }}
                 >
-                  {isMapReady ? (
-                    <Map latitude={latitude} longitude={longitude} />
-                  ) : null}
+                  <S.MapBox>
+                    {isMapReady ? (
+                      <Map latitude={longitude} longitude={latitude} />
+                    ) : null}
+                  </S.MapBox>
                 </S.RouteMapContent>
               </S.RouteMapWrap>
             </>
