@@ -120,11 +120,11 @@ export const ScheduleWeatherContainer = styled.div`
 
 export const SchduleProgressWrap = styled.div`
   width: 85vw;
-  height: 22vh;
+  /* height: 22vh; */
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  padding-top: 2rem;
+  /* padding-top: 2rem; */
 `;
 
 export const PercentBox = styled.div`
@@ -587,4 +587,21 @@ export const AttractionCardDetailText = styled.div`
   text-overflow: clip;
   font-size: 1.2rem;
   font-weight: bold;
+`;
+
+export const MeetMemeberContainer = styled.div`
+  width: 95%;
+  height: 75vh;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  margin-top: 2rem;
+  padding-bottom: 2rem;
+`;
+
+export const MeetMemberNodata = styled.div`
+  height: 75vh;
+  padding: 1rem;
 `;

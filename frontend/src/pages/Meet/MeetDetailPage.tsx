@@ -14,7 +14,7 @@ import memberImg from '../../assets/img/memberImg.svg';
 import goyuMY from '../../assets/img/goyuMY.png';
 import { Member, SchduleCardProps } from '@/models/schdule';
 import { useQuery } from 'react-query';
-import { GetMeetDetailList } from '@/api/meet/GET';
+import { GetMeetDetailList, GetMeetMemberList } from '@/api/meet/GET';
 import { STATUS } from '@/constants';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
@@ -37,8 +37,9 @@ import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
 import BottomSheet from '@/components/Style/Route/BottomSheet';
 import MeetModal from '@/components/Meet/MeetModal';
 import { DeleteMeet } from '@/api/meet/Delete';
+import { MemberInfo } from '@/models/meet';
 
-function DetailMineSchedulePage() {
+function MeetDetailPage() {
   /** 헤더 설정 열기 */
   // const [isOpen, setIsOpen] = useState<boolean>(false);
   // const [bsType, setBsType] = useState<string>('설정');
@@ -47,7 +48,7 @@ function DetailMineSchedulePage() {
 
   const location = useLocation();
   const { groupId } = location.state || {};
-  const [memberData, setMemberData] = useState<Member>();
+  const [memberData, setMemberData] = useState<MemberInfo[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const [routeId, setRouteId] = useState<number>(-1);
@@ -347,11 +348,30 @@ function DetailMineSchedulePage() {
     }
   };
 
+  /** 멤버 정보 */
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await GetMeetMemberList(groupId);
+
+        if (response && response.status === 'SUCCESS') {
+          setMemberData(response.data.groupMemberResList);
+        } else if (response.status === 'ERROR') {
+          toast.error(response.message);
+        }
+      } catch (error) {
+        console.error('Fetch Error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
   return loading && meetDetail !== undefined ? (
     <MainPageContainer>
       <Header
-        purpose="schedule"
-        title={`D-${meetDetail?.data?.dday}`}
+        purpose="route-detail"
         clickBack={() => navigate(-1)}
         clickOption={() => {
           setIsOpen(true);
@@ -428,8 +448,13 @@ function DetailMineSchedulePage() {
                 setIsOpen={setIsOpen}
                 setBsType={setBsType}
                 reviewType={reviewType}
+                isMeetPage
+                memberData={memberData}
+                memberCount={memberData.length}
               />
-            ) : null}
+            ) : (
+              <>로딩중입니다.</>
+            )}
           </R.RouteDetailInfoContainer>
         </R.Overflow>
       </R.Main>
@@ -458,7 +483,7 @@ function DetailMineSchedulePage() {
   ) : null;
 }
 
-export default DetailMineSchedulePage;
+export default MeetDetailPage;
 
 const MainPageContainer = styled.div`
   width: 100vw;

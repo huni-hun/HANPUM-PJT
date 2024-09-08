@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import * as S from '../../components/Style/Schedule/SchduleMainPage.styled';
+import * as S from '@/components/Style/Schedule/SchduleMainPage.styled';
 import * as R from '@/components/Style/Route/RouteDetailPage.styled';
 
 import Header from '@/components/common/Header/Header';
