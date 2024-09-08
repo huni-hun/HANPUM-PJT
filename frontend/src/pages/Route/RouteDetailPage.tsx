@@ -56,7 +56,8 @@ function RouteDetailPage() {
   const [reviews, setReviews] = useState<RouteReviewProps[]>([]);
   const [selectedIdx, setSelectedIdx] = useState<number>(-1);
   const [mapLines, setMapLines] = useState<any[]>([]);
-  const [memberId, setMemberId] = useState<number>(0);
+  const [memberName, setMemberName] = useState<string>('');
+  const [profileImg, setProfileImg] = useState<string>('');
   /** 바텀 sheet */
   const [isOpenSetting, setIsOpenSetting] = useState<boolean>(false); // 경로설정 BottomSheet 열림 상태
   const [isOpenSorting, setIsOpenSorting] = useState<boolean>(false); // 경로정렬 BottomSheet 열림 상태
@@ -64,9 +65,9 @@ function RouteDetailPage() {
   useEffect(() => {
     if (dayData.length === 0) {
       getRouteDetail(routeid as string).then((result) => {
+        console.log(result);
         if (result.data.status !== 'ERROR' && result.status === 200) {
           let num = 0;
-          setMemberId(result.data.data.course.memberId);
           let rd: RouteDetailProps = {
             routeName: result.data.data.course.courseName,
             routeContent: result.data.data.course.content,
@@ -79,6 +80,8 @@ function RouteDetailPage() {
             writeState: result.data.data.course.writeState,
           };
           setRouteData(rd);
+          setProfileImg(result.data.data.profilePicture);
+          setMemberName(result.data.data.nickname);
           result.data.data.courseDays.map((ele: any) => {
             let data: RouteDetailDayProps = {
               dayNum: ele.dayNumber,
@@ -101,10 +104,6 @@ function RouteDetailPage() {
       });
     }
   }, []);
-
-  // useEffect(() => {
-  //   GetUser(()=>{})
-  // }, [memberId]);
 
   useEffect(() => {
     setSe([]);
@@ -331,9 +330,13 @@ function RouteDetailPage() {
             </R.ImgBox>
             <R.UserContainer>
               <R.UserImgBox>
-                <Icon name="IconUserBasicImg" size={42} />
+                {profileImg === '' ? (
+                  <Icon name="IconUserBasicImg" size={42} />
+                ) : (
+                  <img src={profileImg} />
+                )}
               </R.UserImgBox>
-              <R.UserName>작성자</R.UserName>
+              <R.UserName>{memberName}</R.UserName>
             </R.UserContainer>
             <R.RouteNameInfo>
               <R.RouteNameInfoContainer>
