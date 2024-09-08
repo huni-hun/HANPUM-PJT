@@ -117,6 +117,8 @@ export const RouteMapContent = styled.div`
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+  width: 100%;
+  height: 100%;
 `;
 
 export const ScheduleType = styled.p<{ selected: boolean }>`

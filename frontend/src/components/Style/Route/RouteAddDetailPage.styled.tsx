@@ -96,8 +96,8 @@ export const MapCard = styled.div`
   display: flex;
   flex-direction: column;
   padding: 1.6rem 1.6rem 1.6rem 1.6rem;
-  box-shadow: 0.2rem 0.2rem 0.3rem ${colors.grey1};
   overflow-y: auto;
+  z-index: 10;
 `;
 
 export const MapCardTitle = styled.p`

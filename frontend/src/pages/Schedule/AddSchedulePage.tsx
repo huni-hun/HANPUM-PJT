@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import * as S from '../../components/Style/Schedule/AddSchdulePage.styled';
 import * as R from '../../components/Style/Route/RouteAddDetailPage.styled';
 import Header from '@/components/common/Header/Header';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import Calendar from '../../components/common/Calendar/RangeCalendar';
 import BaseButton from '@/components/common/BaseButton';
@@ -13,6 +13,7 @@ import { toast } from 'react-toastify';
 import BottomTab from '@/components/common/BottomTab/BottomTab';
 import Button from '@/components/common/Button/Button';
 import { colors } from '@/styles/colorPalette';
+import Map from '@/components/common/Map/Map';
 
 interface ScheduleData {
   courseId: number;
@@ -22,9 +23,15 @@ interface ScheduleData {
 
 function AddSchedulePage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const routedata = { ...location.state };
+  console.log(routedata);
   const BtnClick = () => {};
   const [error, setError] = useState<string | null>(null);
   const [postSchedule, setPostSchedule] = useState<ScheduleData | null>(null);
+  const [isMapReady, setIsMapReady] = useState<boolean>(false);
+  const [latitude, setLatitude] = useState<number>(0);
+  const [longitude, setLongitude] = useState<number>(0);
 
   /** 날짜 선택 시 vh 늘어나면서 data picker,map 활성화 */
   const [isExpanded, setIsExpanded] = useState(false);
@@ -87,6 +94,14 @@ function AddSchedulePage() {
     console.log(dates, '날짜들');
   }, [dates]);
 
+  useEffect(() => {
+    if (routedata.ready) {
+      setIsMapReady(routedata.ready);
+      setLatitude(routedata.latitude);
+      setLongitude(routedata.longitude);
+    }
+  }, [routedata]);
+
   /** 하위 컴포넌트 클릭시 vh 변경되는 이벤트 막기 */
   const handleStopEvent = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
@@ -148,12 +163,14 @@ function AddSchedulePage() {
           <S.RouteTop>
             <S.H3>경로</S.H3>
             <S.RoutePointWrap>
-              {dummyData.point.map((point, index) => (
-                <S.RoutePointSection key={index}>
-                  <S.RoutePointTitle>{point.title}</S.RoutePointTitle>
-                  <S.RoutePointContent>{point.content}</S.RoutePointContent>
-                </S.RoutePointSection>
-              ))}
+              <S.RoutePointSection>
+                <S.RoutePointTitle>출발지</S.RoutePointTitle>
+                <S.RoutePointContent>{routedata.start}</S.RoutePointContent>
+              </S.RoutePointSection>
+              <S.RoutePointSection>
+                <S.RoutePointTitle>도착지</S.RoutePointTitle>
+                <S.RoutePointContent>{routedata.end}</S.RoutePointContent>
+              </S.RoutePointSection>
             </S.RoutePointWrap>
           </S.RouteTop>
           {isExpanded ? (
@@ -165,7 +182,17 @@ function AddSchedulePage() {
                 onClick={handleStopEvent}
                 $isExpanded={isExpanded}
               >
-                <S.RouteMapContent>지도</S.RouteMapContent>
+                <S.RouteMapContent
+                  onClick={() => {
+                    if (!isMapReady) {
+                      navigate('/route/list');
+                    }
+                  }}
+                >
+                  {isMapReady ? (
+                    <Map latitude={latitude} longitude={longitude} />
+                  ) : null}
+                </S.RouteMapContent>
               </S.RouteMapWrap>
             </>
           )}
