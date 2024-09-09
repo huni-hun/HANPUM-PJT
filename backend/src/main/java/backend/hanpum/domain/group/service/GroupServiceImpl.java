@@ -190,7 +190,8 @@ public class GroupServiceImpl implements GroupService {
     public GroupApplyListGetResDto getGroupApplyList(Long memberId, Long groupId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
-        if(member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
+        if(member.getGroupMember().getGroup() != group ||
+                member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
         List<GroupApplyResDto> groupApplyList = groupMemberRepositoryCustom.findGroupApplyList(groupId);
         return GroupApplyListGetResDto.builder().groupApplyResList(groupApplyList).build();
     }
