@@ -19,11 +19,13 @@ function LoginPage() {
 
   useEffect(() => {
     if (tryKakao === 'true') {
+      console.log('여기임?');
       const memberType = Cookies.get('memberType');
       const accessToken = Cookies.get('accessToken');
 
       if (accessToken) {
         const token = encodeToken(accessToken.split('+')[1]);
+
         localStorage.setItem('token', JSON.stringify(token));
         Cookies.remove('accessToken', { path: '/' });
       }

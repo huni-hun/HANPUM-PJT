@@ -1,36 +1,5 @@
-import { decodeToken, encodeToken } from '@/utils/util';
+import { decodeToken, encodeToken, handleTokenExpiration } from '@/utils/util';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { toast } from 'react-toastify';
-import { GetRefreshToken } from './signup/POST';
-import { useNavigate } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
-import { isAuthEnticatedAtom } from '@/atoms/isAuthEnticatedAtom';
-
-interface FailedRequest {
-  resolve: (value?: unknown) => void;
-  reject: (reason?: unknown) => void;
-}
-
-// 토큰 갱신 중 여부
-let isRefreshing = false;
-
-// 통신 시 실패한 요청 큐에 저장, 408 에러 발생하면 토큰 재발급, 그 후 순차적으로 요청 다시 실행
-// 실패한 요청들 대기열
-let failedQueue: FailedRequest[] = [];
-
-// obj인지 판단
-const processQueue = (error: Error | null, token: string | null = null) => {
-  failedQueue.forEach(({ resolve, reject }) => {
-    if (error) {
-      reject(error);
-    } else {
-      resolve(token);
-    }
-  });
-  console.log('queue ::', failedQueue);
-
-  failedQueue = [];
-};
 
 const api = axios.create({
   baseURL: `${process.env.REACT_APP_BASEURL}`,
@@ -38,138 +7,37 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    // (config: AxiosRequestConfig) => {
     try {
-      const localToken = localStorage.getItem('token');
-      const sessionToken = sessionStorage.getItem('token');
-      console.log('localToken ::', localToken);
-      console.log('sessionToken ::', sessionToken);
+      const token = localStorage.getItem('token');
 
-      if (localToken != null) {
-        const token = decodeToken(localToken);
-        // const tokenObj = localToken;
+      if (token != null) {
+        const decodedToken = decodeToken(token);
 
-        console.log(token);
-
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-          // config.headers.Authorization = `Bearer ${tokenObj}`;
-        }
-      } else if (sessionToken != null) {
-        // const tokenObj = decodeToken(JSON.parse(sessionToken));
-        const token = decodeToken(sessionToken);
-        console.log(token);
-
-        // const tokenObj = sesstionToken;
-
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-          // config.headers.Authorization = `Bearer ${tokenObj}`;
+        if (decodedToken) {
+          config.headers.Authorization = `Bearer ${decodedToken}`;
         }
       }
-    } catch (error) {
-      console.error('Error parsing token from localStorage:', error);
-    }
-    // console.log('Request headers:', config.headers);
-
-    // const token =
-    //   'eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiQ09NTU9OIiwic3ViIjoiaGFucHVtMiIsImlhdCI6MTcyNTUzNzcyMywiZXhwIjoxNzI1NTM3NzMzfQ.pFf_GNEH9uTIJMzWMpMnPhtKuzg_voRJo7BdRsaAjtE';
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
+    } catch (error) {}
     return config;
   },
   (error) => Promise.reject(error),
 );
 
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
     if (error.response?.status === 408 && !originalRequest._retry) {
-      toast.error('408: 토큰 만료');
-      console.log('408에러 출현');
+      originalRequest._retry = true;
 
-      if (!isRefreshing) {
-        isRefreshing = true;
-        originalRequest._retry = true;
-
-        try {
-          const { data } = await GetRefreshToken();
-          console.log('data :: ', data);
-          const newToken = data.accessToken;
-          console.log('newToken ::', newToken);
-
-          const tokenParts = newToken.split('+');
-          const secondPart = tokenParts[1];
-
-          if (!secondPart) {
-            console.log('secondPart 없음');
-            throw new Error(
-              'Invalid token format: second part of token missing',
-            );
-          }
-
-          // encodeToken 함수 호출
-          const encodedTokenObj = encodeToken(secondPart);
-          console.log(encodeToken);
-
-          // encodedToken이 undefined일 경우 처리
-          if (!encodedTokenObj) {
-            console.log('암호화 실패');
-            throw new Error('암호화 실패.');
-          }
-
-          console.log('암호화한 new Token ::', encodedTokenObj);
-
-          localStorage.setItem('token', encodedTokenObj);
-          // sessionStorage.setItem('token', JSON.stringify(hashToken));
-          api.defaults.headers.common['Authorization'] = `Bearer ${secondPart}`;
-
-          // 큐에 있던 요청들 재시도
-          processQueue(null, encodedTokenObj);
-          isRefreshing = false;
-
-          // 원래 요청 재시도
-          return api(originalRequest);
-        } catch (refreshError) {
-          // 큐 요청들 실패 처리
-          processQueue(refreshError as Error, null);
-          isRefreshing = false;
-          return Promise.reject(refreshError);
-        }
-
-        // }
-      } else {
-        return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        })
-          .then((token) => {
-            originalRequest.headers['Authorization'] = `Bearer ${token}`;
-            return api(originalRequest); // 큐에 있던 요청을 새 토큰으로 재시도
-          })
-          .catch((err) => Promise.reject(err));
+      try {
+        // 토큰 갱신 후 원래 요청 재시도
+        return await handleTokenExpiration(originalRequest);
+      } catch (err) {
+        return Promise.reject(err);
       }
     }
-
-    // 400: 잘못된 요청
-    if (error.response?.status === 400) {
-      console.error('400: 잘못된 요청');
-      return Promise.reject(error);
-    }
-
-    // 404: 리소스 없음, 토큰 삭제 및 로그인 페이지 이동
-    // if (error.response?.status === 404) {
-    //   toast.error('404: 리소스 없음');
-    //   console.log('404  떠서 로그인으로 이동')
-    //   localStorage.removeItem('token');
-    //   sessionStorage.removeItem('token');
-    //   window.location.href = '/login'; // 로그인 페이지로 이동
-    //   return Promise.reject(error);
-    // }
 
     return Promise.reject(error);
   },

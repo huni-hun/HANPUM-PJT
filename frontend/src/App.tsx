@@ -11,10 +11,7 @@ function App() {
   const setAuthEnticate = useSetRecoilState(isAuthEnticatedAtom);
 
   const checkAuth = () => {
-    if (
-      localStorage.getItem('token') != null ||
-      sessionStorage.getItem('token') != null
-    ) {
+    if (localStorage.getItem('token') != null) {
       setAuthEnticate(true);
     } else {
       setAuthEnticate(false);

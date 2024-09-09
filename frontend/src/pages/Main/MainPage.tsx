@@ -32,6 +32,7 @@ import { addInterestMeetToggle } from '@api/meet/POST';
 import { deleteInterestRoute } from '@api/route/Delete';
 import { GetUser } from '@api/mypage/GET';
 import { RouteListProps } from '@models/route';
+import useQueryHandling from '@/hooks/global/useQueryHandling';
 
 function MainPage() {
   const navigator = useNavigate();
@@ -56,25 +57,51 @@ function MainPage() {
     navigator('/route/list/more', { state: { keyword: keyword } });
   };
 
-  const { data: userInfo } = useQuery('getUser', GetUser, {
-    onSuccess: (res) => {
-      // console.log('res ::', res.data);
-      if (res.status === STATUS.success) {
-      } else if (res.status === STATUS.error) {
-        toast.error(res.message);
-      }
-    },
-    onError: (error: AxiosError) => {
-      toast.error(error.message);
-    },
-  });
+  const { data: userInfo } = useQueryHandling(
+    'getUser',
+    GetUser,
+    //   {
+    //   onSuccess: (res) => {
+    //     // console.log('res ::', res.data);
+    //     if (res.status === STATUS.success) {
+    //     } else if (res.status === STATUS.error) {
+    //       toast.error(res.message);
+    //     }
+    //   },
+    //   onError: (error: AxiosError) => {
+    //     // toast.error(error.message);
+    //   },
+    // }
+  );
 
   // 내 일정
-  const { data: mySchedule } = useQuery('getMySchedule', getMySchedule);
+  // const { data: mySchedule } = useQuery('getMySchedule', getMySchedule);
+  const { data: mySchedule } = useQueryHandling(
+    'getMySchedule',
+    getMySchedule,
+    // {
+    //   onSuccess: (data) => {
+    //     console.log('일정 불러오기 성공:', data);
+    //   },
+    //   onError: (error: AxiosError) => {},
+    // },
+  );
 
   // 경로(초보자 코스)
-  const { data: routeList } = useQuery(['getRouteList', type], () =>
-    getMainRouteList(type),
+  // const { data: routeList } = useQuery(['getRouteList', type], () =>
+  //   getMainRouteList(type),
+  // );
+  const { data: routeList } = useQueryHandling(
+    ['getRouteList', type],
+    () => getMainRouteList(type),
+    // {
+    //   onSuccess: (data) => {
+    //     console.log('경로 리스트 불러오기 성공:', data);
+    //   },
+    //   onError: (error: AxiosError) => {
+    //     toast.error(`경로 리스트 불러오기 실패: ${error.message}`);
+    //   },
+    // },
   );
 
   // console.log('userInfo ::', userInfo.data.nickname);
@@ -109,15 +136,10 @@ function MainPage() {
   });
 
   // 모임(인기순 1개)
-  const { data: groupListData } = useQuery(
+  const { data: groupListData } = useQueryHandling(
     ['getGroupList', requestDto.pageable.sort],
     () => GetGroupList(requestDto),
   );
-
-  // console.log(
-  //   '지금 보이는 것의 id는 ',
-  //   groupListData?.data.groupResDtoList[0].groupId,
-  // );
 
   // 모임 관심 등록 토글
   const { mutate: addMeetInterestToggle } = useMutation(addInterestMeetToggle, {

@@ -99,7 +99,7 @@ export async function Login(loginId: string, password: string) {
   return data;
 }
 
-// 로그아웃 TODO
+// 로그아웃
 export async function Logout() {
   const { data } = await api.post('/api/auth/logout');
   return data;
@@ -107,6 +107,7 @@ export async function Logout() {
 
 // 토큰 재발급
 export async function GetRefreshToken() {
+  console.log('요청 호출');
   const { data } = await api.post('/api/auth/reissue-token');
   return data;
 }
