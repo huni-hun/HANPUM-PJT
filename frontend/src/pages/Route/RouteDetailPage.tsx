@@ -68,7 +68,6 @@ function RouteDetailPage() {
   useEffect(() => {
     if (dayData.length === 0) {
       getRouteDetail(routeid as string).then((result) => {
-        console.log(result);
         if (result.data.status !== 'ERROR' && result.status === 200) {
           let num = 0;
           let rd: RouteDetailProps = {
@@ -348,7 +347,9 @@ function RouteDetailPage() {
               </R.RouteNameInfoContainer>
               <R.RouteTypeContainer>
                 {routeType.map((ele: string) => (
-                  <R.RouteType isLong={ele.length > 3}>{ele}</R.RouteType>
+                  <R.RouteType $isLong={ele.length > 3} key={ele}>
+                    {ele}
+                  </R.RouteType>
                 ))}
               </R.RouteTypeContainer>
               <R.RouteReviewContainer>

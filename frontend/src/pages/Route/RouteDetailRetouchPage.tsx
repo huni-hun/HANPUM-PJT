@@ -511,7 +511,7 @@ function RouteDetailRetouchPage() {
               </R.RouteNameInfoContainer>
               <R.RouteTypeContainer>
                 {routeType.map((ele: string) => (
-                  <R.RouteType isLong={ele.length > 3}>{ele}</R.RouteType>
+                  <R.RouteType $isLong={ele.length > 3}>{ele}</R.RouteType>
                 ))}
               </R.RouteTypeContainer>
               <R.RouteReviewContainer>

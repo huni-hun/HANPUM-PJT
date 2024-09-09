@@ -7,7 +7,7 @@ import Flex from '../../common/Flex';
 import Icon from '../../common/Icon/Icon';
 import CardLong from '../../common/CardLong/CardLong';
 import { useQuery } from 'react-query';
-import { GetInterestRouteList } from '@/api/mypage/GET';
+import { GetSelfRouteList } from '@/api/mypage/GET';
 import { STATUS } from '@/constants';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 function MyRoot() {
   const navigate = useNavigate();
 
-  const { data: userRoute } = useQuery('getUserRoute', GetInterestRouteList, {
+  const { data: userRoute } = useQuery('getUserRoute', GetSelfRouteList, {
     onSuccess: (res) => {
       // console.log('res ::', res.data);
       if (res.status === STATUS.success) {

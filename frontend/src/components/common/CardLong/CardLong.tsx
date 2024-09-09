@@ -17,7 +17,7 @@ function CardLong({
   onClickOutside,
   onClickCard,
 }: {
-  item: UserRouteProps;
+  item: UserRouteProps | MeetInfo;
   hasHeart?: boolean;
   hasLock?: boolean;
   canDelete?: boolean;
@@ -39,7 +39,11 @@ function CardLong({
       const deltaX = e.touches[0].clientX - startX;
       if (deltaX < -58) {
         if (onSwipe) {
-          onSwipe(item.courseId);
+          if (isMeetInfo(item)) {
+            onSwipe(item.groupId);
+          } else {
+            onSwipe(item.courseId);
+          }
         }
         setCanDeleted(true);
       } else {
@@ -78,6 +82,16 @@ function CardLong({
     };
   }, [isSwiped]);
 
+  const isUserRouteProps = (
+    item: UserRouteProps | MeetInfo,
+  ): item is UserRouteProps => {
+    return (item as UserRouteProps).courseId !== undefined;
+  };
+
+  const isMeetInfo = (item: UserRouteProps | MeetInfo): item is MeetInfo => {
+    return (item as MeetInfo).groupId !== undefined;
+  };
+
   return (
     <S.CardLongContainer onClick={onClickCard}>
       <div
@@ -94,17 +108,27 @@ function CardLong({
         <div className="info-box">
           <div className="review">
             {/* <Icon name="IconStar" /> */}
-            <Text $typography="t12" color="white">
-              {item.scoreAvg}
-            </Text>
-            <Text $typography="t12" color="white">
-              ({item.commentCnt})
-            </Text>
+            {isUserRouteProps(item) && (
+              <Text $typography="t12" color="white">
+                {item.scoreAvg}
+              </Text>
+            )}
+            {isUserRouteProps(item) && (
+              <Text $typography="t12" color="white">
+                ({item.commentCnt})
+              </Text>
+            )}
           </div>
 
-          <Text $typography="t14" $bold={true} color="white">
-            {item.courseName}
-          </Text>
+          {isUserRouteProps(item) ? (
+            <Text $typography="t14" $bold={true} color="white">
+              {item.courseName}
+            </Text>
+          ) : (
+            <Text $typography="t14" $bold={true} color="white">
+              {item.title}
+            </Text>
+          )}
 
           <div className="info-root">
             <Text $typography="t10" color="white">
