@@ -168,7 +168,27 @@ function MeetList() {
             <Icon name="IconDownArrow" />
           </Flex>
           <div className="small-list">
-            {groupListData?.pages[0]?.data.groupResDtoList.length === 0 ? (
+            {groupListData?.pages && groupListData.pages.length > 0 ? (
+              groupListData.pages[0].data.groupResDtoList.length === 0 ? (
+                <Text
+                  $typography="t14"
+                  $bold={true}
+                  style={{
+                    paddingLeft: '8px',
+                    minHeight: '220px',
+                    height: '100%',
+                  }}
+                >
+                  필터링 된 데이터가 없습니다.
+                </Text>
+              ) : (
+                groupListData.pages.map((page) =>
+                  page.data.groupResDtoList.map((groupData: MeetInfo) => (
+                    <MeetSmallCard key={groupData.groupId} data={groupData} />
+                  )),
+                )
+              )
+            ) : (
               <Text
                 $typography="t14"
                 $bold={true}
@@ -178,14 +198,8 @@ function MeetList() {
                   height: '100%',
                 }}
               >
-                필터링 된 데이터가 없습니다.
+                데이터를 불러오는 중입니다.
               </Text>
-            ) : (
-              groupListData?.pages.map((page) =>
-                page.data.groupResDtoList.map((groupData: MeetInfo) => (
-                  <MeetSmallCard key={groupData.groupId} data={groupData} />
-                )),
-              )
             )}
             {isFetching && <div>불러오는 중..</div>}
             <div ref={loadMoreRef} style={{ height: '1px' }} />
