@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import Router from '@pages/Router';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { isAuthEnticatedAtom } from './atoms/isAuthEnticatedAtom';
 import useIsAuth from './hooks/auth/useIsAuth';
@@ -10,13 +10,10 @@ import useIsAuth from './hooks/auth/useIsAuth';
 function App() {
   const setAuthEnticate = useSetRecoilState(isAuthEnticatedAtom);
 
-  const checkAuth = () => {
-    if (localStorage.getItem('token') != null) {
-      setAuthEnticate(true);
-    } else {
-      setAuthEnticate(false);
-    }
-  };
+  const checkAuth = useCallback(() => {
+    const token = localStorage.getItem('token');
+    setAuthEnticate(!!token);
+  }, [setAuthEnticate]);
 
   useEffect(() => {
     checkAuth();
@@ -32,7 +29,7 @@ function App() {
     return () => {
       window.removeEventListener('storage', handleStorageChange);
     };
-  }, [setAuthEnticate]);
+  }, [setAuthEnticate, checkAuth]);
 
   // console.log('로그인 되어있는지 ::', temp);
   return (

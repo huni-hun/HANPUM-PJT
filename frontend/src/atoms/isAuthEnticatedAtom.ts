@@ -2,7 +2,7 @@ import { atom } from 'recoil';
 
 export const isAuthEnticatedAtom = atom({
   key: 'authState',
-  default: false,
+  default: !!localStorage.getItem('token'),
 });
 
 export const isInitAtom = atom({
