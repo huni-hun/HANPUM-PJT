@@ -48,7 +48,7 @@ function RootCard(props: RootCardProps) {
       <div className="card">
         <div className="card-top">
           <div className="card-top-img">
-            <img src={img} alt="" />
+            <img src={props.backgroundImg} alt="" />
             <div className="card-progress">{props.progressRate}%</div>
           </div>
           <div className="card-top-info">
@@ -91,7 +91,15 @@ function RootCard(props: RootCardProps) {
           <BaseButton
             size="large"
             onClick={() => {
-              navigate(`/mypage/review/${1}`);
+              navigate(`/mypage/review/${1}`, {
+                state: {
+                  start: props.startPoint,
+                  end: props.endPoint,
+                  title: props.courseName,
+                  courseId: props.courseId,
+                  img: props.backgroundImg,
+                },
+              });
             }}
           >
             리뷰쓰기

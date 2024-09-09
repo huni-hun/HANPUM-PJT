@@ -104,7 +104,10 @@ function CardLong({
           transition: 'width 0.3s ease',
         }}
       >
-        <img src={image} alt="" />
+        <img
+          src={isUserRouteProps(item) ? item.backgroundImg : item.groupImg}
+          alt=""
+        />
         <div className="info-box">
           <div className="review">
             {/* <Icon name="IconStar" /> */}
