@@ -27,7 +27,7 @@ public class JwtProvider {
     private static final String AUTHORIZATION_KEY = "type";
     private static final String BEARER_PREFIX = "Bearer+";
 
-    private static final long ACCESS_TOKEN_TIME = 1000 * 60 * 60 * 24;
+    private static final long ACCESS_TOKEN_TIME = 1000 * 60 * 60 * 24Ls;
     private static final long REFRESH_TOKEN_TIME = 1000 * 60 * 60 * 24 * 14L;
 
     private final RedisDao redisDao;
