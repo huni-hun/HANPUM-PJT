@@ -38,6 +38,8 @@ import BottomSheet from '@/components/Style/Route/BottomSheet';
 import MeetModal from '@/components/Meet/MeetModal';
 import { DeleteMeet } from '@/api/meet/Delete';
 import { MemberInfo } from '@/models/meet';
+import Button from '@/components/common/Button/Button';
+import { colors } from '@/styles/colorPalette';
 
 function MeetDetailPage() {
   /** 헤더 설정 열기 */
@@ -48,6 +50,11 @@ function MeetDetailPage() {
 
   const location = useLocation();
   const { groupId } = location.state || {};
+  if (groupId !== undefined) {
+    localStorage.setItem('groupId', JSON.stringify(groupId));
+  }
+  const savedGroupId = localStorage.getItem('groupId');
+  const groupIdNumber = savedGroupId ? Number(JSON.parse(savedGroupId)) : null;
   const [memberData, setMemberData] = useState<MemberInfo[]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -80,9 +87,9 @@ function MeetDetailPage() {
   const navigate = useNavigate();
 
   const { data: meetDetail } = useQuery(
-    ['id', groupId],
+    ['id', groupIdNumber],
 
-    () => GetMeetDetailList(groupId),
+    () => GetMeetDetailList(groupIdNumber || 0),
     {
       onSuccess: (res) => {
         if (res.status === STATUS.success) {
@@ -314,8 +321,13 @@ function MeetDetailPage() {
   /** 바텀탭 - 수정 클릭시 */
   const handleEdit = () => {
     navigate(`/meet/edit`, {
-      state: { groupId },
+      state: { groupIdNumber },
     });
+  };
+
+  /** 신청하기 */
+  const clickApply = () => {
+    navigate(`/meet/request`);
   };
 
   /** 모달 끄는 함수 */
@@ -333,7 +345,7 @@ function MeetDetailPage() {
   const deleteSchedule = async () => {
     try {
       setLoading(true);
-      const response = await DeleteMeet(groupId);
+      const response = await DeleteMeet(groupIdNumber || 0);
       if (response && response.status === 'SUCCESS') {
         toast.success('모임 삭제 완료되었습니다.');
         setIsDeleteModalOpen(false);
@@ -350,32 +362,34 @@ function MeetDetailPage() {
 
   /** 멤버 정보 */
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await GetMeetMemberList(groupId);
-
-        if (response && response.status === 'SUCCESS') {
-          setMemberData(response.data.groupMemberResList);
-        } else if (response.status === 'ERROR') {
-          toast.error(response.message);
+    if (selected === 'review' && groupIdNumber) {
+      const fetchData = async () => {
+        try {
+          const response = await GetMeetMemberList(groupIdNumber);
+          if (response && response.status === 'SUCCESS') {
+            setMemberData(response.data.groupMemberResList);
+          } else if (response.status === 'ERROR') {
+            toast.error(response.message);
+            // setSelected('course');
+          }
+        } catch (error) {
+          console.error('Fetch Error:', error);
+        } finally {
         }
-      } catch (error) {
-        console.error('Fetch Error:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+      };
+      fetchData();
+    }
+  }, [selected]);
 
   return loading && meetDetail !== undefined ? (
     <MainPageContainer>
       <Header
         purpose="route-detail"
-        clickBack={() => navigate(-1)}
+        clickBack={() => navigate('/meet/list')}
         clickOption={() => {
           setIsOpen(true);
           setBsType('모임필터');
+          localStorage.removeItem('groupId');
         }}
       />
 
@@ -479,6 +493,21 @@ function MeetDetailPage() {
           content={'삭제하면 복구가 어렵습니다.'}
         />
       )}
+      <R.BottomContainer>
+        <R.ButtonBox>
+          <Button
+            width={30}
+            height={6}
+            fc="ffffff"
+            bc={colors.main}
+            radius={0.7}
+            fontSize={1.6}
+            children="신청하기"
+            color="#ffffff"
+            onClick={clickApply}
+          />
+        </R.ButtonBox>
+      </R.BottomContainer>
     </MainPageContainer>
   ) : null;
 }

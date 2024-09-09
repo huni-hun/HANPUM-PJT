@@ -44,15 +44,18 @@ interface RouteDetailInfoProps {
   deleteHandler: (name: string) => void;
   marker: any[];
   isSchedule?: boolean;
+  state?: number;
   turnGreen?: boolean[];
   isMeetPage?: boolean;
   memberData?: MemberInfo[];
   memberCount?: number;
 }
 
-function RouteDetailInfo(props: RouteDetailInfoProps) {
+function RouteDetailInfo({
+  isSchedule = false,
+  ...props
+}: RouteDetailInfoProps) {
   const location = useLocation();
-
   const draggingPos = useRef<any>(null);
   const dragOverPos = useRef<any>(null);
 
@@ -184,7 +187,8 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
                       ) : (
                         <RoutePlaceCard
                           {...ele}
-                          isSchedule={props.isSchedule}
+                          isSchedule={isSchedule}
+                          state={ele.state}
                           turnGreen={
                             props.turnGreen ? props.turnGreen[idx] : false
                           }
