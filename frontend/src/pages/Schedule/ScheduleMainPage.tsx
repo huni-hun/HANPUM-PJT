@@ -109,8 +109,6 @@ function ScheduleMainPage() {
   const [bsType, setBsType] = useState<string>('설정');
   const [reviewType, setReviewType] = useState<string>('최신순');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  /** 렌더링 이슈 해결 */
-  const [triggerRender, setTriggerRender] = useState(false);
   /** 루트 디테일  */
   const [marker, setMarker] = useState<LineStartEndProps[]>([]);
   const [selectedIdx, setSelectedIdx] = useState<number>(-1);

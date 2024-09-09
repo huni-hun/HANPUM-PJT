@@ -1,6 +1,7 @@
 /** 경로, 모임, 일정에 쓰이는 맨 위 feed 부분 */
 import * as R from '@/components/Style/Route/RouteDetailPage.styled';
 import * as M from '@/components/Style/Meet/MeetDetail.styled';
+import * as S from '@/components/Style/Schedule/SchduleMainPage.styled';
 import { FeedProps } from '@/models/route';
 import Icon from '@/components/common/Icon/Icon';
 
@@ -38,17 +39,17 @@ const FeedContainer = ({
         <></>
       )}
 
-      <M.RouteNameInfo isMeetFeed={isMeetFeed}>
-        <M.RouteNameInfoContainer>
-          <M.RouteName>{routeData?.routeName || ''}</M.RouteName>
-          <M.RouteInfo>{routeData?.routeContent || ''}</M.RouteInfo>
-          <M.TagsWrap>
+      <S.RouteNameInfo isMeetFeed={isMeetFeed}>
+        <S.RouteNameInfoContainer>
+          <S.RouteName>{routeData?.routeName || ''}</S.RouteName>
+          <S.RouteInfo>{routeData?.routeContent || ''}</S.RouteInfo>
+          <S.TagsWrap>
             {routeData?.routeTypes?.map((type, index) => (
               <R.Tags key={index}>{type}</R.Tags>
             )) || ''}
-          </M.TagsWrap>
-        </M.RouteNameInfoContainer>
-      </M.RouteNameInfo>
+          </S.TagsWrap>
+        </S.RouteNameInfoContainer>
+      </S.RouteNameInfo>
 
       {meetRouter ? (
         <>

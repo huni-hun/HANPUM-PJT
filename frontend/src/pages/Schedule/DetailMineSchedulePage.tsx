@@ -66,7 +66,6 @@ function DetailMineSchedulePage() {
   const [courseId, setCourseId] = useState<number>(0);
   /** 루트 디테일  */
   /** 위치 가져오기*/
-
   const [routeData, setRouteData] = useState<RouteDetailProps>(null!);
   const [lat, setLat] = useState<number | null>(null);
   const [lon, setLon] = useState<number | null>(null);
@@ -179,38 +178,6 @@ function DetailMineSchedulePage() {
       nearByData();
     }
   }, [isLocationReady]);
-
-  useEffect(() => {
-    /** waypoint data */
-    if (routeDayData.length === 0) {
-      getRouteDetail(courseId.toString()).then((result) => {
-        if (result.data.status !== 'ERROR' && result.status === 200) {
-          let rd = {
-            routeName: result.data.data.course.courseName,
-            routeContent: result.data.data.course.content,
-            writeDate: result.data.data.course.writeDate,
-            routeComment: result.data.data.course.commentCnt,
-            routeScore: result.data.data.course.scoreAvg,
-            start: result.data.data.course.startPoint,
-            end: result.data.data.course.endPoint,
-            img: result.data.data.course.backgroundImg,
-            writeState: result.data.data.course.writeState,
-          };
-          setRouteData(rd);
-          result.data.data.courseDays.forEach((ele: any) => {
-            let data = {
-              dayNum: ele.dayNumber,
-              totalDistance: ele.total_distance,
-              totalCalorie: ele.total_calorie,
-              totalDuration: ele.total_duration,
-            };
-            setRouteDayData((prev) => [...prev, data]);
-          });
-        }
-        setLoading(true);
-      });
-    }
-  }, [courseId]);
 
   useEffect(() => {
     /* 맵에 마커, 선 초기화 */
@@ -366,6 +333,38 @@ function DetailMineSchedulePage() {
     }
   }, []);
 
+  useEffect(() => {
+    /** waypoint data */
+    if (routeDayData.length === 0) {
+      getRouteDetail(courseId.toString()).then((result) => {
+        if (result.data.status !== 'ERROR' && result.status === 200) {
+          let rd = {
+            routeName: result.data.data.course.courseName,
+            routeContent: result.data.data.course.content,
+            writeDate: result.data.data.course.writeDate,
+            routeComment: result.data.data.course.commentCnt,
+            routeScore: result.data.data.course.scoreAvg,
+            start: result.data.data.course.startPoint,
+            end: result.data.data.course.endPoint,
+            img: result.data.data.course.backgroundImg,
+            writeState: result.data.data.course.writeState,
+          };
+          setRouteData(rd);
+          result.data.data.courseDays.forEach((ele: any) => {
+            let data = {
+              dayNum: ele.dayNumber,
+              totalDistance: ele.total_distance,
+              totalCalorie: ele.total_calorie,
+              totalDuration: ele.total_duration,
+            };
+            setRouteDayData((prev) => [...prev, data]);
+          });
+        }
+        setLoading(true);
+      });
+    }
+  }, [courseId]);
+
   /** 내일정 - card 컴포넌트 'n박 n일' 계산 */
   const formatDate = (dateStr: string): string => {
     // Convert "YYYYMMDD" to "YYYY-MM-DD"
@@ -502,7 +501,7 @@ function DetailMineSchedulePage() {
       alert('지원하지 않는 브라우저입니다.');
       setIsLocationReady(false);
     }
-  }, [isLocationReady]);
+  }, []);
 
   return (
     <ScheduleMainPageContainer>
