@@ -16,7 +16,7 @@ export const PostMeetLike = async (groupId: number) => {
 /** 모임 생성  */
 export const PostGroup = async (
   multipartFile: string,
-  groupPostReqDto: {
+  data: {
     title: string;
     description: string;
     recruitmentCount: number;
@@ -27,11 +27,20 @@ export const PostGroup = async (
     };
   },
 ) => {
-  const params = {
-    multipartFile,
-    groupPostReqDto,
-  };
-  const response = await api.post(`/api/group`, params);
+  console.log(data);
+  const formData = new FormData();
+  const groupPostReqDto = new Blob([JSON.stringify(data)], {
+    type: 'application/json',
+  });
+
+  formData.append('groupPostReqDto', groupPostReqDto);
+  formData.append('multipartFile', multipartFile);
+
+  const response = await api.post(`/api/group`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
   return response.data;
 };
 

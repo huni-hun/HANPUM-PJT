@@ -1,7 +1,7 @@
 import Icon from '@/components/common/Icon/Icon';
 import * as R from '@/components/Style/Route/RouteDetailPage.styled';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
   getRouteDayAttraction,
   getRouteDayDetail,
@@ -32,6 +32,9 @@ import { GetUser } from '@/api/mypage/GET';
 function RouteDetailPage() {
   const { routeid } = useParams();
   const navigate = useNavigate();
+
+  const location = useLocation();
+  const { startDate, recruitmentPeriod, type } = location.state || {};
 
   const [selected, setSelected] = useState<string>('course');
   const [selectedDay, setSelectedDay] = useState<number>(1);
@@ -458,16 +461,32 @@ function RouteDetailPage() {
             children="일정 생성"
             color="#ffffff"
             onClick={() => {
-              navigate('/schedule/addSchedule', {
-                state: {
-                  id: routeid,
-                  latitude: latitude,
-                  longitude: longitude,
-                  ready: true,
-                  start: routeData.start,
-                  end: routeData.end,
-                },
-              });
+              if (type === 'schedule') {
+                navigate('/schedule/addSchedule', {
+                  state: {
+                    id: routeid,
+                    latitude: latitude,
+                    longitude: longitude,
+                    ready: true,
+                    start: routeData.start,
+                    end: routeData.end,
+                  },
+                });
+              }
+              if (type === 'meet') {
+                navigate('/meet/addMain/addSchedule', {
+                  state: {
+                    courseId: routeid,
+                    startDate: startDate,
+                    recruitmentPeriod: recruitmentPeriod,
+                    lat: latitude,
+                    lon: longitude,
+                    ready: true,
+                    start: routeData.start,
+                    end: routeData.end,
+                  },
+                });
+              }
             }}
           />
         </R.ButtonBox>

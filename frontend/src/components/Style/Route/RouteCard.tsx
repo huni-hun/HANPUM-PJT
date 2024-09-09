@@ -10,7 +10,14 @@ import { RouteLikeDelete } from '@/api/route/Delete';
 import { useRecoilValue } from 'recoil';
 import { isAuthEnticatedAtom } from '@/atoms/isAuthEnticatedAtom';
 
-function RouteCard(props: RouteListProps) {
+interface RouteCardProps {
+  ele: RouteListProps;
+  startDate?: string;
+  recruitmentPeriod?: string;
+  type?: string;
+}
+
+function RouteCard(props: RouteCardProps) {
   const navigator = useNavigate();
 
   const isAuth = useRecoilValue(isAuthEnticatedAtom);
@@ -19,7 +26,7 @@ function RouteCard(props: RouteListProps) {
   const likeHandler = () => {
     if (isAuth) {
       if (!like) {
-        setRouteLike(String(props.routeId))
+        setRouteLike(String(props.ele.routeId))
           .then((result) => {
             if (result.status === 200 && result.data.status === 'SUCCESS') {
               setLike(true);
@@ -29,7 +36,7 @@ function RouteCard(props: RouteListProps) {
             console.log(err);
           });
       } else {
-        RouteLikeDelete(String(props.routeId))
+        RouteLikeDelete(String(props.ele.routeId))
           .then((result) => {
             if (result.status === 200 && result.data.status === 'SUCCESS') {
               setLike(false);
@@ -45,19 +52,25 @@ function RouteCard(props: RouteListProps) {
   };
 
   useEffect(() => {
-    setLike(props.interestFlag);
+    setLike(props.ele.interestFlag);
   }, []);
 
   return (
     <C.Card
       onClick={() => {
-        navigator(`/route/detail/${props.routeId}`);
+        navigator(`/route/detail/${props.ele.routeId}`, {
+          state: {
+            startDate: props.startDate,
+            type: props.type,
+            recruitmentPeriod: props.recruitmentPeriod,
+          },
+        });
       }}
-      img={props.img.startsWith('testu') ? test : props.img}
+      img={props.ele.img.startsWith('testu') ? test : props.ele.img}
     >
       <C.TopContent>
         <C.ContentContainer>
-          <C.Content>{`${props.totalDays - 1}박 ${props.totalDays}일`}</C.Content>
+          <C.Content>{`${props.ele.totalDays - 1}박 ${props.ele.totalDays}일`}</C.Content>
         </C.ContentContainer>
         <Icon
           name={like ? 'IconModiHeartFill' : 'IconModiHeartNonFill'}
@@ -72,21 +85,23 @@ function RouteCard(props: RouteListProps) {
         <C.RouteNTitleBox>
           <C.RouteContentBox>
             <Icon name="IconGrenStar" size={15} />
-            <C.RouteScoreText>{props.routeScore}</C.RouteScoreText>
-            <C.RouteScoreText>{`(${props.routeComment})`}</C.RouteScoreText>
+            <C.RouteScoreText>{props.ele.routeScore}</C.RouteScoreText>
+            <C.RouteScoreText>{`(${props.ele.routeComment})`}</C.RouteScoreText>
           </C.RouteContentBox>
-          <C.TitleBox>{props.routeName}</C.TitleBox>
+          <C.TitleBox>{props.ele.routeName}</C.TitleBox>
           <C.RouteBox>
             <C.RouteText>
-              {props.start.length > 2
-                ? props.start.substring(0, 2)
-                : props.start}
+              {props.ele.start.length > 2
+                ? props.ele.start.substring(0, 2)
+                : props.ele.start}
             </C.RouteText>
             <Icon name="IconArrowWhite" size={10} path="" />
             <C.RouteText>
-              {props.end.length > 2 ? props.end.substring(0, 2) : props.end}
+              {props.ele.end.length > 2
+                ? props.ele.end.substring(0, 2)
+                : props.ele.end}
             </C.RouteText>
-            <C.RouteDistanceBox>{props.totalDistance}km</C.RouteDistanceBox>
+            <C.RouteDistanceBox>{props.ele.totalDistance}km</C.RouteDistanceBox>
           </C.RouteBox>
         </C.RouteNTitleBox>
         {/* <C.BContent>

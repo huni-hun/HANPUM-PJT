@@ -225,7 +225,7 @@ function MainPage() {
           </Flex>
           <Flex>
             {routes &&
-              routes.map((ele) => <RouteCard {...ele} key={ele.routeId} />)}
+              routes.map((ele) => <RouteCard ele={ele} key={ele.routeId} />)}
           </Flex>
         </div>
 

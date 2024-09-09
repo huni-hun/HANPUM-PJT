@@ -7,7 +7,7 @@ import BottomTab from '@/components/common/BottomTab/BottomTab';
 import { useEffect, useState } from 'react';
 import { getRouteList } from '@/api/route/GET';
 import { RouteListProps } from '@/models/route';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import CardLong from '@/components/common/CardLong/CardLong';
 import { GetUser } from '@/api/mypage/GET';
 import { useQuery } from 'react-query';
@@ -21,6 +21,9 @@ function RouteList() {
   const [arrD, setArrD] = useState<RouteListProps[]>([]);
   const [morePageOpen, setMoreOpenPage] = useState<boolean>(false);
   const navigator = useNavigate();
+
+  const location = useLocation();
+  const { startDate, recruitmentPeriod, type } = location.state || {};
 
   const { data: userInfo } = useQuery('getUser', GetUser, {
     onSuccess: (res) => {
@@ -154,7 +157,13 @@ function RouteList() {
             <R.BlankBox />
             <R.OverFlow>
               {arr.map((ele) => (
-                <RouteCard {...ele} key={ele.routeId} />
+                <RouteCard
+                  ele={ele}
+                  startDate={startDate}
+                  type={type}
+                  recruitmentPeriod={recruitmentPeriod}
+                  key={ele.routeId}
+                />
               ))}
             </R.OverFlow>
             <R.BlankBox />
@@ -176,7 +185,13 @@ function RouteList() {
             <R.BlankBox />
             <R.OverFlow>
               {arr.map((ele) => (
-                <RouteCard {...ele} key={ele.routeId} />
+                <RouteCard
+                  ele={ele}
+                  startDate={startDate}
+                  type={type}
+                  recruitmentPeriod={recruitmentPeriod}
+                  key={ele.routeId}
+                />
               ))}
             </R.OverFlow>
           </R.CardContainer>
@@ -199,7 +214,13 @@ function RouteList() {
             <R.BlankBox />
             <R.OverFlow>
               {arrC.map((ele) => (
-                <RouteCard {...ele} />
+                <RouteCard
+                  ele={ele}
+                  startDate={startDate}
+                  type={type}
+                  recruitmentPeriod={recruitmentPeriod}
+                  key={ele.routeId}
+                />
               ))}
             </R.OverFlow>
           </R.CardContainer>
@@ -222,7 +243,13 @@ function RouteList() {
             <R.BlankBox />
             <R.OverFlow>
               {arrD.map((ele) => (
-                <RouteCard {...ele} />
+                <RouteCard
+                  ele={ele}
+                  startDate={startDate}
+                  type={type}
+                  recruitmentPeriod={recruitmentPeriod}
+                  key={ele.routeId}
+                />
               ))}
             </R.OverFlow>
           </R.CardContainer>

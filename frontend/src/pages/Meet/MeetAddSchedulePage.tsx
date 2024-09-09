@@ -13,6 +13,7 @@ import { toast } from 'react-toastify';
 import BottomTab from '@/components/common/BottomTab/BottomTab';
 import Button from '@/components/common/Button/Button';
 import { colors } from '@/styles/colorPalette';
+import Map from '@/components/common/Map/Map';
 
 interface ScheduleData {
   courseId: number;
@@ -25,9 +26,21 @@ function MeetAddSchedulePage() {
   const BtnClick = () => {};
   const [error, setError] = useState<string | null>(null);
   const [postSchedule, setPostSchedule] = useState<ScheduleData | null>(null);
+  const [isMapReady, setIsMapReady] = useState<boolean>(false);
+  const [latitude, setLatitude] = useState<number>(0);
+  const [longitude, setLongitude] = useState<number>(0);
   /** coursId add.main에서 가져오기 */
   const location = useLocation();
-  const { courseId, startDate, recruitmentPeriod } = location.state || {};
+  const {
+    courseId,
+    startDate,
+    recruitmentPeriod,
+    start,
+    end,
+    ready,
+    lat,
+    lon,
+  } = location.state || {};
   /** 날짜 선택 시 vh 늘어나면서 data picker,map 활성화 */
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -53,12 +66,16 @@ function MeetAddSchedulePage() {
     endDate: string,
   ) => {
     if (startDate !== '') {
+      localStorage.setItem('startD', '');
+      localStorage.setItem('endD', '');
       navigate(`/meet/addMain`, {
         state: {
           courseId,
           startDate,
           endDate,
           recruitmentPeriod,
+          start,
+          end,
         },
       });
     } else {
@@ -83,12 +100,49 @@ function MeetAddSchedulePage() {
   };
 
   useEffect(() => {
+    if (
+      localStorage.getItem('startD') !== null &&
+      localStorage.getItem('endD') !== null
+    ) {
+      const start = localStorage.getItem('startD');
+      const end = localStorage.getItem('endD');
+      setDates({
+        startDate: start === null ? '' : start.substring(1, start.length - 1),
+        endDate: end === null ? '' : end.substring(1, end.length - 1),
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (ready) {
+      setIsMapReady(ready);
+      setLatitude(lat);
+      setLongitude(lon);
+    }
+  }, [ready]);
+
+  useEffect(() => {
     console.log(dates, '날짜들');
   }, [dates]);
 
   /** 하위 컴포넌트 클릭시 vh 변경되는 이벤트 막기 */
   const handleStopEvent = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
+  };
+
+  const handleRouteStopEvent = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+    if (!isMapReady) {
+      navigate('/route/list', {
+        state: {
+          type: 'meet',
+          startDate: startDate,
+          recruitmentPeriod: recruitmentPeriod,
+        },
+      });
+      localStorage.setItem('startD', JSON.stringify(dates.startDate));
+      localStorage.setItem('endD', JSON.stringify(dates.endDate));
+    }
   };
 
   return (
@@ -147,12 +201,18 @@ function MeetAddSchedulePage() {
           <S.RouteTop>
             <S.H3>경로</S.H3>
             <S.RoutePointWrap>
-              {dummyData.point.map((point, index) => (
-                <S.RoutePointSection key={index}>
-                  <S.RoutePointTitle>{point.title}</S.RoutePointTitle>
-                  <S.RoutePointContent>{point.content}</S.RoutePointContent>
-                </S.RoutePointSection>
-              ))}
+              <S.RoutePointSection key={1}>
+                <S.RoutePointTitle>출발지</S.RoutePointTitle>
+                <S.RoutePointContent>
+                  {start != null ? start : ''}
+                </S.RoutePointContent>
+              </S.RoutePointSection>
+              <S.RoutePointSection key={2}>
+                <S.RoutePointTitle>도착지</S.RoutePointTitle>
+                <S.RoutePointContent>
+                  {end != null ? end : ''}
+                </S.RoutePointContent>
+              </S.RoutePointSection>
             </S.RoutePointWrap>
           </S.RouteTop>
           {isExpanded ? (
@@ -161,10 +221,14 @@ function MeetAddSchedulePage() {
             <>
               {/* vh 활성화 되었을 때 지도 */}
               <S.RouteMapWrap
-                onClick={handleStopEvent}
+                onClick={handleRouteStopEvent}
                 $isExpanded={isExpanded}
               >
-                <S.RouteMapContent>지도</S.RouteMapContent>
+                <S.MapBox>
+                  {isMapReady ? (
+                    <Map latitude={latitude} longitude={longitude} />
+                  ) : null}
+                </S.MapBox>
               </S.RouteMapWrap>
             </>
           )}

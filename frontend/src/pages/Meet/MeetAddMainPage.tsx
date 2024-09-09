@@ -22,9 +22,8 @@ function MeetAddMainPage() {
     {},
   );
 
-  const { courseId, startDate, endDate, recruitmentPeriod } =
+  const { courseId, startDate, endDate, recruitmentPeriod, start, end } =
     location.state || {};
-
   useEffect(() => {
     const savedMeetRequest = localStorage.getItem('meetRequest');
     if (savedMeetRequest) {
@@ -116,6 +115,7 @@ function MeetAddMainPage() {
 
   /** 모임 생성 post api */
   const handleCreateGroup = async () => {
+    console.log(courseId);
     try {
       const multipartFile = previewImage;
       const groupPostReqDto = {
@@ -125,8 +125,8 @@ function MeetAddMainPage() {
         recruitmentPeriod: recruitmentPeriod || '',
         /** 일정쪽 */
         schedulePostReqDto: {
-          courseId: courseId || 0,
-          startDate: startDate || '',
+          courseId: Number(courseId) || 0,
+          startDate: startDate.split('-').join('') || '',
         },
       };
 
@@ -141,6 +141,7 @@ function MeetAddMainPage() {
         toast.error('모임 생성에 실패했습니다.');
       }
     } catch (error) {
+      console.log(error);
       toast.error('모임 생성 중 오류가 발생했습니다.');
     }
   };
@@ -228,16 +229,25 @@ function MeetAddMainPage() {
             <Text $bold={true} $typography="t12">
               일정
             </Text>
-            <M.ScheduleTextWrap>
-              {/* 일정에서 날짜를 선택안했을 때 (여기에 조건 추가해서 경로 붙이면 될듯 합니다) */}
-              {startDate !== undefined && (
-                <M.ScheduleText>
-                  {startDate} - {endDate}
-                </M.ScheduleText>
-              )}
+            <div className="schedule-info">
+              <M.ScheduleTextWrap>
+                {/* 일정에서 날짜를 선택안했을 때 (여기에 조건 추가해서 경로 붙이면 될듯 합니다) */}
+                {startDate !== undefined && (
+                  <M.ScheduleText>
+                    {startDate} - {endDate}
+                  </M.ScheduleText>
+                )}
 
-              <Icon name="IconArrowRight" />
-            </M.ScheduleTextWrap>
+                <Icon name="IconArrowRight" />
+              </M.ScheduleTextWrap>
+              <M.ScheduleTextWrap>
+                {start !== undefined && (
+                  <M.ScheduleText>
+                    {start} - {end}
+                  </M.ScheduleText>
+                )}
+              </M.ScheduleTextWrap>
+            </div>
           </div>
 
           <div className="btn-box">

@@ -203,6 +203,14 @@ export const MainContainer = styled.div`
     background-color: ${colors.white};
   }
 
+  .schedule-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    display: flex;
+    flex-direction: column;
+  }
+
   .btn-box {
     margin: 49px auto 20px;
   }

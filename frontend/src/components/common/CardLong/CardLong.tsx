@@ -4,7 +4,7 @@ import Icon from '../Icon/Icon';
 import Text from '../Text';
 import { useEffect, useState } from 'react';
 import Flex from '../Flex';
-import { RouteListProps } from '@/models/route';
+import { RouteListProps, UserRouteProps } from '@/models/route';
 import { MeetInfo } from '@/models/meet';
 
 function CardLong({
@@ -17,7 +17,7 @@ function CardLong({
   onClickOutside,
   onClickCard,
 }: {
-  item: RouteListProps;
+  item: UserRouteProps;
   hasHeart?: boolean;
   hasLock?: boolean;
   canDelete?: boolean;
@@ -39,7 +39,7 @@ function CardLong({
       const deltaX = e.touches[0].clientX - startX;
       if (deltaX < -58) {
         if (onSwipe) {
-          onSwipe(item.routeId);
+          onSwipe(item.courseId);
         }
         setCanDeleted(true);
       } else {
@@ -95,24 +95,24 @@ function CardLong({
           <div className="review">
             {/* <Icon name="IconStar" /> */}
             <Text $typography="t12" color="white">
-              3.5
+              {item.scoreAvg}
             </Text>
             <Text $typography="t12" color="white">
-              (3)
+              ({item.commentCnt})
             </Text>
           </div>
 
           <Text $typography="t14" $bold={true} color="white">
-            {item.routeName}
+            {item.courseName}
           </Text>
 
           <div className="info-root">
             <Text $typography="t10" color="white">
-              {item.start}
+              {item.startPoint}
             </Text>
             <Icon name="IconArrowWhite" />
             <Text $typography="t10" color="white">
-              {item.end}
+              {item.endPoint}
             </Text>
             <div className="line" />
             <Text $typography="t10" color="white">
@@ -149,7 +149,7 @@ function CardLong({
 
         <div className="badge">
           <Text $typography="t12" $bold={true} color="white">
-            5박 6일
+            {item.totalDays - 1}박 {item.totalDays}일
           </Text>
         </div>
 
