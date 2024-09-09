@@ -1,3 +1,4 @@
+import { CreateMeetProps, CreateMeetRequestDto } from '@/models/meet';
 import api from '../index';
 
 /** 모임 신청 */
@@ -14,27 +15,21 @@ export const PostMeetLike = async (groupId: number) => {
 };
 
 /** 모임 생성  */
-export const PostGroup = async (
-  multipartFile: string,
-  data: {
-    title: string;
-    description: string;
-    recruitmentCount: number;
-    recruitmentPeriod: string;
-    schedulePostReqDto: {
-      courseId: number;
-      startDate: string;
-    };
-  },
-) => {
-  console.log(data);
+export const PostGroup = async (props: CreateMeetProps) => {
   const formData = new FormData();
-  const groupPostReqDto = new Blob([JSON.stringify(data)], {
+  const { multipartFile, ...rest } = props;
+  console.log(props);
+
+  const groupPostReqDto = new Blob([JSON.stringify(rest)], {
     type: 'application/json',
   });
 
-  formData.append('groupPostReqDto', groupPostReqDto);
+  groupPostReqDto.text().then((result) => {
+    console.log(result); // JSON 문자열 출력
+  });
+
   formData.append('multipartFile', multipartFile);
+  formData.append('groupPostReqDto', groupPostReqDto);
 
   const response = await api.post(`/api/group`, formData, {
     headers: {

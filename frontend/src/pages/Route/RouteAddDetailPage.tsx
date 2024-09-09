@@ -280,7 +280,6 @@ function RouteAddDetailPage() {
               ) {
                 AddRoute(addRoute)
                   .then((res) => {
-                    console.log(res);
                     if (res.status === 200) {
                       navigate('/route/add/complete');
                     }

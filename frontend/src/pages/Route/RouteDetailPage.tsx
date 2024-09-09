@@ -265,10 +265,12 @@ function RouteDetailPage() {
   const deleteHandler = () => {
     RouteDelete(routeid as string)
       .then((res) => {
-        console.log(res);
+        if (res.status === 200 && res.data.status === 'SUCCESS') {
+          toast.done('경로 삭제에 성공했습니다.');
+        }
       })
       .catch((err) => {
-        console.log(err);
+        toast.error('경로 삭제에 실패했습니다.');
       });
   };
 

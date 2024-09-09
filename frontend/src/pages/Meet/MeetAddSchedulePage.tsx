@@ -226,7 +226,7 @@ function MeetAddSchedulePage() {
               >
                 <S.MapBox>
                   {isMapReady ? (
-                    <Map latitude={latitude} longitude={longitude} />
+                    <Map latitude={longitude} longitude={latitude} />
                   ) : null}
                 </S.MapBox>
               </S.RouteMapWrap>

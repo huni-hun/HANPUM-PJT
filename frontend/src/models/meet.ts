@@ -82,3 +82,17 @@ export interface CreateMeetRequestDto {
   courseId: number;
   startDate: string;
 }
+
+export interface CreateMeetProps {
+  multipartFile: string;
+  groupPostReqDto: {
+    title: string;
+    description: string;
+    recruitmentCount: number;
+    recruitmentPeriod: string;
+    schedulePostReqDto: {
+      courseId: number;
+      startDate: string;
+    };
+  };
+}

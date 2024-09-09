@@ -40,83 +40,95 @@ function RouteList() {
 
   useEffect(() => {
     const data: RouteListProps[] = [];
-    getRouteList('해안길', 4).then((result) => {
-      if (result.status === 200) {
-        result.data.data.courseListMap['해안길'].map((ele: any) => {
-          let data: RouteListProps = {
-            routeName: ele.courseName,
-            routeContent: ele.content,
-            routeScore: ele.scoreAvg,
-            routeComment: ele.commentCnt,
-            routeId: ele.courseId,
-            img: ele.backgroundImg,
-            writeState: ele.writeState,
-            openState: ele.openState,
-            memberId: ele.memberId,
-            writeDate: ele.writeDate,
-            start: ele.startPoint,
-            end: ele.endPoint,
-            totalDistance: Math.round(ele.totalDistance),
-            totalDays: ele.totalDays,
-            interestFlag: ele.interestFlag,
-          };
+    getRouteList('해안길', 4)
+      .then((result) => {
+        if (result.status === 200) {
+          result.data.data.courseListMap['해안길'].map((ele: any) => {
+            let data: RouteListProps = {
+              routeName: ele.courseName,
+              routeContent: ele.content,
+              routeScore: ele.scoreAvg,
+              routeComment: ele.commentCnt,
+              routeId: ele.courseId,
+              img: ele.backgroundImg,
+              writeState: ele.writeState,
+              openState: ele.openState,
+              memberId: ele.memberId,
+              writeDate: ele.writeDate,
+              start: ele.startPoint,
+              end: ele.endPoint,
+              totalDistance: Math.round(ele.totalDistance),
+              totalDays: ele.totalDays,
+              interestFlag: ele.interestFlag,
+            };
 
-          setArr((pre) => [...pre, data]);
-        });
-      }
-    });
+            setArr((pre) => [...pre, data]);
+          });
+        }
+      })
+      .catch((err) => {
+        toast.error('경로를 가져오지 못 했습니다.');
+      });
 
-    getRouteList('초보자', 4).then((result) => {
-      if (result.status === 200) {
-        result.data.data.courseListMap['초보자'].map((ele: any) => {
-          let data: RouteListProps = {
-            routeName: ele.courseName,
-            routeContent: ele.content,
-            routeScore: ele.scoreAvg,
-            routeComment: ele.commentCnt,
-            routeId: ele.courseId,
-            img: ele.backgroundImg,
-            writeState: ele.writeState,
-            openState: ele.openState,
-            memberId: ele.memberId,
-            writeDate: ele.writeDate,
-            start: ele.startPoint,
-            end: ele.endPoint,
-            totalDistance: Math.round(ele.totalDistance),
-            totalDays: ele.totalDays,
-            interestFlag: ele.interestFlag,
-          };
+    getRouteList('초보자', 4)
+      .then((result) => {
+        if (result.status === 200) {
+          result.data.data.courseListMap['초보자'].map((ele: any) => {
+            let data: RouteListProps = {
+              routeName: ele.courseName,
+              routeContent: ele.content,
+              routeScore: ele.scoreAvg,
+              routeComment: ele.commentCnt,
+              routeId: ele.courseId,
+              img: ele.backgroundImg,
+              writeState: ele.writeState,
+              openState: ele.openState,
+              memberId: ele.memberId,
+              writeDate: ele.writeDate,
+              start: ele.startPoint,
+              end: ele.endPoint,
+              totalDistance: Math.round(ele.totalDistance),
+              totalDays: ele.totalDays,
+              interestFlag: ele.interestFlag,
+            };
 
-          setArrC((pre) => [...pre, data]);
-        });
-      }
-    });
+            setArrC((pre) => [...pre, data]);
+          });
+        }
+      })
+      .catch((err) => {
+        toast.error('경로를 가져오지 못 했습니다.');
+      });
 
-    getRouteList('숙련자', 4).then((result) => {
-      if (result.status === 200) {
-        result.data.data.courseListMap['숙련자'].map((ele: any) => {
-          let data: RouteListProps = {
-            routeName: ele.courseName,
-            routeContent: ele.content,
-            routeScore: ele.scoreAvg,
-            routeComment: ele.commentCnt,
-            routeId: ele.courseId,
-            img: ele.backgroundImg,
-            writeState: ele.writeState,
-            openState: ele.openState,
-            memberId: ele.memberId,
-            writeDate: ele.writeDate,
-            start: ele.startPoint,
-            end: ele.endPoint,
-            totalDistance: Math.round(ele.totalDistance),
-            totalDays: ele.totalDays,
-            interestFlag: ele.interestFlag,
-          };
+    getRouteList('숙련자', 4)
+      .then((result) => {
+        if (result.status === 200) {
+          result.data.data.courseListMap['숙련자'].map((ele: any) => {
+            let data: RouteListProps = {
+              routeName: ele.courseName,
+              routeContent: ele.content,
+              routeScore: ele.scoreAvg,
+              routeComment: ele.commentCnt,
+              routeId: ele.courseId,
+              img: ele.backgroundImg,
+              writeState: ele.writeState,
+              openState: ele.openState,
+              memberId: ele.memberId,
+              writeDate: ele.writeDate,
+              start: ele.startPoint,
+              end: ele.endPoint,
+              totalDistance: Math.round(ele.totalDistance),
+              totalDays: ele.totalDays,
+              interestFlag: ele.interestFlag,
+            };
 
-          setArrD((pre) => [...pre, data]);
-        });
-      }
-    });
+            setArrD((pre) => [...pre, data]);
+          });
+        }
+      })
+      .catch((err) => {
+        toast.error('경로를 가져오지 못 했습니다.');
+      });
   }, []);
 
   const clickMoreBtn = (keyword: string) => {

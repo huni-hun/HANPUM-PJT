@@ -6,7 +6,7 @@ import Header from '@/components/common/Header/Header';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ToggleSlider from '@/components/common/ToggleSlider/ToggleSlider';
-import { CreateMeetRequestDto } from '@/models/meet';
+import { CreateMeetProps, CreateMeetRequestDto } from '@/models/meet';
 import Text from '@/components/common/Text';
 import BaseButton from '@/components/common/BaseButton';
 import { PostGroup } from '@/api/meet/POST';
@@ -17,7 +17,7 @@ function MeetAddMainPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { compressImage, compressedImage } = useImageCompression();
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [previewImage, setPreviewImage] = useState<string>(null!);
   const [meetRequest, setMeetRequest] = useState<Partial<CreateMeetRequestDto>>(
     {},
   );
@@ -52,24 +52,19 @@ function MeetAddMainPage() {
   }, [location.state]);
 
   /** 이미지 핸들링 */
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
+      const compressedFile = (await compressImage(file)) ?? file;
 
-      reader.onloadend = () => {
-        if (reader.result) {
-          const imageUrl = reader.result as string;
-          setPreviewImage(imageUrl);
-          localStorage.setItem('previewImage', imageUrl);
-          setMeetRequest((prevValue) => ({
-            ...prevValue,
-            multipartFile: file,
-          }));
-        }
-      };
+      const url = URL.createObjectURL(compressedFile);
 
-      reader.readAsDataURL(file);
+      setPreviewImage(url);
+      localStorage.setItem('previewImage', url);
+      setMeetRequest((prevValue) => ({
+        ...prevValue,
+        multipartFile: file,
+      }));
     }
   };
 
@@ -115,22 +110,29 @@ function MeetAddMainPage() {
 
   /** 모임 생성 post api */
   const handleCreateGroup = async () => {
-    console.log(courseId);
     try {
       const multipartFile = previewImage;
       const groupPostReqDto = {
         title: meetRequest.title || '',
         description: meetRequest.description || '',
         recruitmentCount: meetRequest.recruitmentCount || 0,
-        recruitmentPeriod: recruitmentPeriod || '',
+        recruitmentPeriod: recruitmentPeriod,
         /** 일정쪽 */
         schedulePostReqDto: {
-          courseId: Number(courseId) || 0,
-          startDate: startDate.split('-').join('') || '',
+          courseId: Number(courseId),
+          startDate: startDate.split('-').join(''),
         },
       };
 
-      const response = await PostGroup(multipartFile || '', groupPostReqDto);
+      const data: CreateMeetProps = {
+        multipartFile: multipartFile,
+        groupPostReqDto: groupPostReqDto,
+      };
+
+      // if (data.groupPostReqDto.title !== '') {
+
+      // }
+      const response = await PostGroup(data);
 
       if (response && response.status === 'SUCCESS') {
         toast.success('모임 생성이 완료되었습니다!');
@@ -138,6 +140,7 @@ function MeetAddMainPage() {
         localStorage.removeItem('meetRequest');
         localStorage.removeItem('previewImage');
       } else {
+        console.log(response);
         toast.error('모임 생성에 실패했습니다.');
       }
     } catch (error) {
