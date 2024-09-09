@@ -12,6 +12,7 @@ interface WeatherScheduleProps {
   weatherData: WeatherProps[];
   weatherIcon?: string;
   message?: string;
+  isWarning?: boolean;
 }
 
 const WeatherSchedule = ({
@@ -19,6 +20,7 @@ const WeatherSchedule = ({
   weatherData,
   weatherIcon,
   message,
+  isWarning,
 }: WeatherScheduleProps) => {
   // 현재 시간의 am/pm을 계산하는 함수
   const formatTime = (time: string): { period: string; hourMinute: string } => {
@@ -50,7 +52,9 @@ const WeatherSchedule = ({
   };
 
   const formatPrecipitation = (precipitation: string): string => {
-    return precipitation.replace(/(?<=\d)mm$/, '');
+    return precipitation.includes('강수없음')
+      ? precipitation.replace('mm', '')
+      : precipitation;
   };
 
   return (
@@ -87,10 +91,12 @@ const WeatherSchedule = ({
           })}
         </S.WeatherContentWrap>
       </S.WeatherWrap>
-      <S.EmergenyNotice>
-        <img src={weatherIcon} className="weather_img" alt="Weather icon" />
-        <p>{message}</p>
-      </S.EmergenyNotice>
+      {isWarning && (
+        <S.EmergenyNotice>
+          <img src={weatherIcon} className="weather_img" alt="Weather icon" />
+          <p>{message}</p>
+        </S.EmergenyNotice>
+      )}
     </S.WeatherContainer>
   );
 };

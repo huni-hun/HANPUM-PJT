@@ -2,10 +2,13 @@ import { useEffect, useState } from 'react';
 import * as M from '@/components/Style/Meet/MeetRequest';
 import Header from '@/components/common/Header/Header';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { GetMeetMemberDetailList } from '@/api/meet/GET';
 import { MemberDetailDataProps } from '@/models/meet';
 import { toast } from 'react-toastify';
+import memberImg from '../../assets/img/memberImg.svg';
+import BottomSheet from '@/components/Style/Route/BottomSheet';
+import { DeleteMeetExile } from '@/api/meet/Delete';
 
 function MemberManageDetail() {
   const navigate = useNavigate();
@@ -14,11 +17,17 @@ function MemberManageDetail() {
   );
   const [isRejectModalOpen, setIsRejectModalOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [bsType, setBsType] = useState<string>('설정');
+  const [reviewType, setReviewType] = useState<string>('공개 여부');
+  /** 멤버 아이디 넘겨받기 */
+  const location = useLocation();
+  const { groupId, memberId } = location.state || {};
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await GetMeetMemberDetailList(10, 10);
+        const response = await GetMeetMemberDetailList(groupId, memberId);
         if (response && response.status === 'SUCCESS') {
           setMemberData(response.data || null);
         } else {
@@ -74,18 +83,45 @@ function MemberManageDetail() {
     setIsRejectModalOpen(false);
   };
 
+  /** 내보내기 */
+  const deleteMemeber = async () => {
+    try {
+      setLoading(true);
+      const response = await DeleteMeetExile(memberId);
+      if (response && response.status === 'SUCCESS') {
+        toast.success('수락 완료되었습니다.');
+        setIsOpen(false);
+      } else {
+        toast.error('수락 실패했습니다.');
+      }
+    } catch (error) {
+      toast.error('에러 발생');
+    } finally {
+      setIsOpen(false);
+      setLoading(false);
+    }
+  };
+
   return (
     <MainPageContainer>
       <Header
-        purpose="result"
-        title="모임 신청"
+        purpose="schedule"
+        title="모임 인원관리"
         clickBack={() => navigate(-1)}
+        clickOption={() => {
+          setIsOpen(true);
+          setBsType('모임관리');
+        }}
       />
       <M.InfoWrap>
         <M.ProfileBox>
           <M.Img>
             <img
-              src={dummyMemberData.length > 0 ? dummyMemberData[0].img : ''}
+              src={
+                dummyMemberData.length > 0
+                  ? dummyMemberData[0].img.trim()
+                  : memberImg
+              }
               alt="프로필 이미지"
             />
           </M.Img>
@@ -110,6 +146,17 @@ function MemberManageDetail() {
           </M.InfoInput>
         </M.InfoInputBox>
       </M.InfoWrap>
+      {isOpen && (
+        <BottomSheet
+          selected={reviewType}
+          setSelected={setReviewType}
+          bsType={bsType}
+          setIsOpen={setIsOpen}
+          route="모임관리"
+          bsTypeText={'설정'}
+          onExport={deleteMemeber}
+        />
+      )}
     </MainPageContainer>
   );
 }
@@ -117,7 +164,10 @@ function MemberManageDetail() {
 export default MemberManageDetail;
 
 const MainPageContainer = styled.div`
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
   background-color: #fff;
+  overflow-y: auto;
 `;

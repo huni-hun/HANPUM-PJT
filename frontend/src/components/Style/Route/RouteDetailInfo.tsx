@@ -1,5 +1,6 @@
 import { getRouteDayDetail, getRouteReview } from '@/api/route/GET';
 import * as R from '@/components/Style/Route/RouteDetailPage.styled';
+import * as S from '../../../components/Style/Schedule/SchduleMainPage.styled';
 import {
   AttractionsProps,
   DaysOfRouteProps,
@@ -17,6 +18,9 @@ import { Select } from '@mobiscroll/react';
 import Icon from '@/components/common/Icon/Icon';
 import RouteRetouchPlaceCard from './RouteRetouchPlaceCard';
 import Button from '@/components/common/Button/Button';
+import MeetMember from '@/components/Schedule/MeetMember';
+import { Member } from '@/models/schdule';
+import { MemberInfo } from '@/models/meet';
 
 interface RouteDetailInfoProps {
   selected: string;
@@ -39,6 +43,11 @@ interface RouteDetailInfoProps {
   setSelectedIdx: React.Dispatch<React.SetStateAction<number>>;
   deleteHandler: (name: string) => void;
   marker: any[];
+  isSchedule?: boolean;
+  turnGreen?: boolean[];
+  isMeetPage?: boolean;
+  memberData?: MemberInfo[];
+  memberCount?: number;
 }
 
 function RouteDetailInfo(props: RouteDetailInfoProps) {
@@ -123,6 +132,7 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
                 latitude={props.longitude}
                 longitude={props.latitude}
                 marker={props.marker}
+                infoBtn
               />
             </R.MapBox>
             <R.DetailHeader>
@@ -172,7 +182,13 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
                           idx={idx}
                         />
                       ) : (
-                        <RoutePlaceCard {...ele} />
+                        <RoutePlaceCard
+                          {...ele}
+                          isSchedule={props.isSchedule}
+                          turnGreen={
+                            props.turnGreen ? props.turnGreen[idx] : false
+                          }
+                        />
                       ),
                     )
                   : null}
@@ -202,33 +218,54 @@ function RouteDetailInfo(props: RouteDetailInfoProps) {
       case 'review':
         return (
           <>
-            <R.DetailHeader>
-              <R.HeaderOverflow>
-                <R.ReviewHeaderTextBox
-                  onClick={() => {
-                    props.setIsOpen(true);
-                    props.setBsType('정렬');
-                  }}
-                >
-                  <R.ReviewHeaderText>{props.reviewType}</R.ReviewHeaderText>
-                  <div
-                    style={{
-                      transform: 'rotate(270deg)',
-                      marginLeft: '0.3rem',
-                    }}
-                  >
-                    <Icon name="IconBackArrow" size={10} />
-                  </div>
-                </R.ReviewHeaderTextBox>
-              </R.HeaderOverflow>
-            </R.DetailHeader>
-            <R.DetailMain>
-              <R.DetailMainOverflow>
-                {props.reviews.map((ele: RouteReviewProps) => (
-                  <ReviewCard {...ele} />
-                ))}
-              </R.DetailMainOverflow>
-            </R.DetailMain>
+            {props?.isMeetPage ? (
+              <>
+                {props.memberData && props.memberData.length > 0 ? (
+                  <S.MeetMemeberContainer>
+                    <MeetMember
+                      memberCount={props.memberCount || 0}
+                      members={props.memberData || []}
+                    />
+                  </S.MeetMemeberContainer>
+                ) : (
+                  <S.MeetMemberNodata>
+                    해당 모임에 허가되지 않은 접근입니다.
+                  </S.MeetMemberNodata>
+                )}
+              </>
+            ) : (
+              <>
+                <R.DetailHeader>
+                  <R.HeaderOverflow>
+                    <R.ReviewHeaderTextBox
+                      onClick={() => {
+                        props.setIsOpen(true);
+                        props.setBsType('정렬');
+                      }}
+                    >
+                      <R.ReviewHeaderText>
+                        {props.reviewType}
+                      </R.ReviewHeaderText>
+                      <div
+                        style={{
+                          transform: 'rotate(270deg)',
+                          marginLeft: '0.3rem',
+                        }}
+                      >
+                        <Icon name="IconBackArrow" size={10} />
+                      </div>
+                    </R.ReviewHeaderTextBox>
+                  </R.HeaderOverflow>
+                </R.DetailHeader>
+                <R.DetailMain>
+                  <R.DetailMainOverflow>
+                    {props.reviews.map((ele: RouteReviewProps) => (
+                      <ReviewCard {...ele} />
+                    ))}
+                  </R.DetailMainOverflow>
+                </R.DetailMain>
+              </>
+            )}
           </>
         );
       default:

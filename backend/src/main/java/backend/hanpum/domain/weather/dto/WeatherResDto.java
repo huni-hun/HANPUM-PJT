@@ -12,4 +12,5 @@ public class WeatherResDto {
     String nowTemperature;
     String nowWeather;
     String precipitation;
+    String precipitationProbability;
 }

@@ -97,7 +97,7 @@ export const ScheduleType = styled.p<{ isSelected: boolean }>`
 
 export const ScheduleMainContainer = styled.div`
   width: 100vw;
-  /* height: 75vh; */
+  height: 75vh;
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
@@ -120,11 +120,11 @@ export const ScheduleWeatherContainer = styled.div`
 
 export const SchduleProgressWrap = styled.div`
   width: 85vw;
-  height: 19vh;
+  /* height: 22vh; */
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  padding-top: 2rem;
+  /* padding-top: 2rem; */
 `;
 
 export const PercentBox = styled.div`
@@ -226,7 +226,7 @@ export const WeatherContentWrap = styled.div`
   height: 80%;
   justify-content: space-between;
   flex-shrink: 0;
-  margin-top: 1.9rem;
+  margin-top: 1rem;
 `;
 
 export const WeatherContent = styled.div`
@@ -255,7 +255,7 @@ export const WeatherContent = styled.div`
 
 export const EmergenyNotice = styled.div`
   width: 100%;
-  height: 7vh;
+  height: 8vh;
   background-color: #fbdcdc;
   border-radius: 1.5rem;
   display: flex;
@@ -264,13 +264,12 @@ export const EmergenyNotice = styled.div`
   margin-top: 2rem;
   .weather_img {
     width: 10vw;
-    height: 9vw;
+    height: 7vw;
     margin-left: 2rem;
   }
   p {
     font-size: 1.5rem;
-    margin-left: 1.5rem;
-    margin-top: 0.5rem;
+    margin-left: 1rem;
   }
 `;
 
@@ -306,6 +305,8 @@ export const Members = styled.div`
     width: 20vw;
     height: 19vw;
     margin-bottom: 1rem;
+    border: 1px solid #787878;
+    border-radius: 50%;
   }
 `;
 
@@ -328,9 +329,289 @@ export const Precipitation = styled.div`
   font-size: 1rem;
   height: 2vh;
   .precipitation {
-    width: 3vw;
+    width: 5vw;
   }
   img {
-    width: 2vw;
+    width: 3vw;
   }
+`;
+
+/** 관광지 */
+
+export const DayContainer = styled.div`
+  width: 91vw;
+  height: 7vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: auto;
+`;
+
+export const DayOverFlow = styled.div`
+  width: 100%;
+  height: 7vh;
+  display: flex;
+  flex-direction: row;
+  overflow-x: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  align-items: center;
+`;
+
+export const DayCard = styled.div<{ selected: boolean }>`
+  width: 7.4rem;
+  height: 3.3rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-right: 0.8rem;
+  align-items: center;
+  border: 0.15rem solid
+    ${(prop) => (prop.selected ? colors.main : colors.grey2)};
+  border-radius: 10rem;
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: ${(prop) => (prop.selected ? colors.main : colors.grey2)};
+  flex-shrink: 0;
+`;
+
+export const DatAddCard = styled.div`
+  width: 7.4rem;
+  height: 3.3rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border: 0.15rem solid ${colors.grey2};
+  border-radius: 10rem;
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: ${colors.grey2};
+  flex-shrink: 0;
+`;
+
+export const MapCard = styled.div`
+  width: 84vw;
+  min-height: 70vh;
+  border-radius: 1.2rem;
+  background-color: ${colors.white};
+  display: flex;
+  flex-direction: column;
+  padding: 1.6rem 1.6rem 1.6rem 1.6rem;
+  box-shadow: 0.2rem 0.2rem 0.3rem ${colors.grey1};
+  overflow-y: auto;
+`;
+
+export const MapCardTitle = styled.p`
+  font-size: 2rem;
+  font-weight: bold;
+`;
+
+export const MapSearchBox = styled.div`
+  width: 79vw;
+  height: 5rem;
+  border: 0.1rem solid ${colors.grey1};
+  border-radius: 10rem;
+  margin-top: 1.6rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 0 0 2.1rem;
+`;
+
+export const SearchText = styled.p`
+  font-size: 1.2rem;
+  color: ${colors.grey2};
+  margin-left: 1.1rem;
+`;
+
+export const MapBox = styled.div`
+  width: 83vw;
+  height: 38vh;
+  margin-top: 1.2rem;
+  flex-shrink: 0;
+`;
+
+export const PlaceContainer = styled.div`
+  width: 83vw;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const PlaceBox = styled.div`
+  width: 100%;
+  max-height: 35vh;
+  min-height: 10vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+`;
+
+export const PlaceTypeBox = styled.div`
+  width: 100%;
+  height: 4vh;
+  display: flex;
+  align-items: center;
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 1.6rem;
+`;
+
+export const BottomContainer = styled.div`
+  width: 100vw;
+  height: 13vh;
+  background-color: #ffffff;
+  border-radius: 0.8rem 0.8rem 0 0;
+  box-shadow: 0.1rem -0.1rem 0.1rem #d9d9d9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 55;
+  position: fixed;
+  bottom: 0;
+`;
+
+export const ButtonBox = styled.div`
+  width: 85%;
+  height: 70%;
+  display: flex;
+  align-items: start;
+  justify-content: end;
+`;
+
+export const DetailWayOverflow = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  align-items: center;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+export const AttractionsContainer = styled.div`
+  width: 100%;
+
+  background-color: #fff;
+`;
+export const AttractionsBox = styled.div`
+  width: 90%;
+  min-height: 28vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  margin: 0 auto;
+  padding-top: 4rem;
+  padding-bottom: 2rem;
+  gap: 1.5rem;
+`;
+
+export const AttrantiosTypeBox = styled.div`
+  width: 100%;
+  /* height: 0vh; */
+  display: flex;
+  align-items: center;
+  font-size: 1.6rem;
+  font-weight: bold;
+  /* margin-bottom: 1.6rem; */
+`;
+
+export const AttractionsOverflow = styled.div`
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  align-items: center;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+export const AttractionCard = styled.div<{ img: string }>`
+  width: 8.4rem;
+  height: 9rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.5rem 0.8rem 0.5rem 0.8rem;
+  background-color: ${colors.grey1};
+  gap: 2rem;
+  flex-shrink: 0;
+  margin-right: 0.4rem;
+  border-radius: 1.2rem;
+  background-image: url(${(props) => props.img});
+`;
+
+export const AttractionAddCard = styled.div`
+  width: 8.4rem;
+  height: 9rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 0.8rem 0.5rem 0.8rem;
+  background-color: ${colors.grey1};
+  flex-shrink: 0;
+  margin-right: 0.4rem;
+  border-radius: 1.2rem;
+  font-size: 3rem;
+  font-weight: bold;
+`;
+
+export const AttractionCardTitle = styled.p`
+  font-size: 1rem;
+  color: ${colors.white};
+`;
+
+export const AttractionCardDetail = styled.div`
+  width: 8.2rem;
+  height: 2.2rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: ${colors.white};
+`;
+
+export const AttractionCardDetailText = styled.div`
+  width: 70%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  white-space: nowrap; /* 텍스트가 줄바꿈 없이 한 줄로 유지되도록 설정 */
+  overflow: hidden; /* 부모 요소를 넘는 부분을 숨김 */
+  text-overflow: clip;
+  font-size: 1.2rem;
+  font-weight: bold;
+`;
+
+export const MeetMemeberContainer = styled.div`
+  width: 95%;
+  height: 75vh;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  margin-top: 2rem;
+  padding-bottom: 2rem;
+`;
+
+export const MeetMemberNodata = styled.div`
+  height: 75vh;
+  padding: 1rem;
+`;
+
+export const SchduleCardContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100vw;
+  height: 100%;
+  margin-top: 13vw;
+  /* padding-bottom: 8vh; */
 `;

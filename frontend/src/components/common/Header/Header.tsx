@@ -22,6 +22,8 @@ interface HeaderProps {
   changeEven?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   keyDownEven?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   plusBtnclick?: () => void;
+  /** 일정 & 모임 구분 */
+  isSchedule?: boolean;
 }
 
 const Header = ({
@@ -41,6 +43,7 @@ const Header = ({
   searchValue,
   plusBtnclick,
   $isGrey = false,
+  isSchedule,
 }: HeaderProps) => {
   const navigate = useNavigate();
   const onClickHandler = (to: string) => {
@@ -106,7 +109,9 @@ const Header = ({
             <Icon
               name="IconHeaderPlus"
               // onClick={() => onClickHandler('mypage')}
-              onClick={() => {}}
+              onClick={() => {
+                onClickHandler('meet/addMain');
+              }}
               size={20}
             />
             <Icon
@@ -158,15 +163,23 @@ const Header = ({
       case 'merge':
         return (
           <Flex $align="center" $justify="space-between">
-            <div className="search-bar" onClick={clickOption}>
-              <Icon name="IconSearch" size={14} />
-              <input type="text" />
-            </div>
-            <Flex $gap={20} style={{ width: 'auto', marginLeft: '9px' }}>
+            {!isSchedule && (
+              <div className="search-bar" onClick={clickOption}>
+                <Icon name="IconSearch" size={14} />
+                <input type="text" />
+              </div>
+            )}
+            <Flex
+              $gap={20}
+              style={{
+                width: 'auto',
+                marginLeft: isSchedule ? '280px' : '9px',
+              }}
+            >
               <Icon name="IconHeaderPlus" onClick={plusBtnclick} size={14} />
               <Icon
                 name="IconUser"
-                onClick={() => onClickHandler('my')}
+                onClick={() => onClickHandler('mypage')}
                 size={14}
               />
             </Flex>
@@ -284,6 +297,28 @@ const Header = ({
               size={20}
             />
           </Flex>
+        );
+      case 'schedule':
+        return (
+          <>
+            <Flex $align="center" $justify="space-between">
+              <S.TextWrap>
+                <Text as="div">
+                  <Icon
+                    name="IconBackArrow"
+                    className="back-arrow"
+                    size={15}
+                    onClick={clickBack}
+                  />
+                </Text>
+
+                <Text as="div" $bold={true} $typography="t15" color="black1">
+                  {title}
+                </Text>
+              </S.TextWrap>
+              <Icon name="IconOption" size={15} onClick={clickOption} />
+            </Flex>
+          </>
         );
     }
   };

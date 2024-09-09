@@ -1,6 +1,10 @@
 import { colors } from '@/styles/colorPalette';
 import styled, { keyframes } from 'styled-components';
 
+interface BottomSheetProps {
+  isNoIcon?: boolean;
+}
+
 const slideUp = keyframes`
   from {
     transform: translateY(100%);
@@ -39,6 +43,7 @@ export const BottomSheetContainer = styled.div<{ isClosing: boolean }>`
   justify-content: center;
   animation: ${({ isClosing }) => (isClosing ? slideDown : slideUp)} 0.3s
     ease-out;
+  cursor: pointer;
 `;
 
 export const BottomSheetContentBox = styled.div`
@@ -58,6 +63,7 @@ export const BottomSheetHeader = styled.div`
   justify-content: center;
   font-size: 2rem;
   font-weight: bold;
+  cursor: pointer;
 `;
 
 export const HeaderIconBox = styled.div`
@@ -76,7 +82,9 @@ export const BottomSheetMain = styled.div`
   height: 85%;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: flex-start;
+  gap: 2rem;
+  margin-top: 2rem;
 `;
 
 export const SortingTyepBox = styled.div`
@@ -99,26 +107,29 @@ export const SettingBox = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  /* justify-content: space-between; */
 `;
 
-export const SettingIconBox = styled.div`
-  width: 30%;
+export const SettingIconBox = styled.div<BottomSheetProps>`
+  width: ${(props) => (props.isNoIcon ? '0%' : '10%')};
   height: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: left;
+  cursor: pointer;
 `;
 
 export const SettingTextBox = styled.div<{ isDelete: boolean }>`
-  width: 70%;
+  width: 90%;
   height: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
   font-size: 1.4rem;
+  /* justify-content: space-between; */
   color: ${(props) => (props.isDelete ? colors.red : colors.black)};
+  cursor: pointer;
 `;
 
 export const SwitchInput = styled.input`
@@ -130,7 +141,7 @@ export const SwitchInput = styled.input`
 export const SwitchLabel = styled.label<{ isOpen: boolean }>`
   display: flex;
   position: relative;
-  width: 5.6rem;
+  width: 7.5rem;
   height: 3.1rem;
   border-radius: 10rem 10rem 10rem 10rem;
   background-color: ${({ isOpen }) => (isOpen ? '#1A823B' : '#d9d9d9')};

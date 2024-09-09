@@ -53,9 +53,9 @@ const ProgressSchedule = ({
 
           <S.PercentBox>
             <S.PercentText>{percentage}%</S.PercentText>
-            <S.CalculateDistance>
+            {/* <S.CalculateDistance>
               {totalDuration}km / {totalDistance}km
-            </S.CalculateDistance>
+            </S.CalculateDistance> */}
           </S.PercentBox>
         </R.StartDateBox>
         <S.ProgressBar percentage={percentage || 0}>

@@ -24,6 +24,10 @@ import BottomSheet from '@/components/Style/Route/BottomSheet';
 import ReviewModal from '@/components/Style/Route/ReviewModal';
 import { GetLineData } from '@/api/route/POST';
 import { RouteDelete } from '@/api/route/Delete';
+import { toast } from 'react-toastify';
+
+import defaultImg from '@/assets/img/mountain.jpg';
+import { GetUser } from '@/api/mypage/GET';
 
 function RouteDetailPage() {
   const { routeid } = useParams();
@@ -52,10 +56,16 @@ function RouteDetailPage() {
   const [reviews, setReviews] = useState<RouteReviewProps[]>([]);
   const [selectedIdx, setSelectedIdx] = useState<number>(-1);
   const [mapLines, setMapLines] = useState<any[]>([]);
+  const [memberName, setMemberName] = useState<string>('');
+  const [profileImg, setProfileImg] = useState<string>('');
+  /** 바텀 sheet */
+  const [isOpenSetting, setIsOpenSetting] = useState<boolean>(false); // 경로설정 BottomSheet 열림 상태
+  const [isOpenSorting, setIsOpenSorting] = useState<boolean>(false); // 경로정렬 BottomSheet 열림 상태
 
   useEffect(() => {
     if (dayData.length === 0) {
       getRouteDetail(routeid as string).then((result) => {
+        console.log(result);
         if (result.data.status !== 'ERROR' && result.status === 200) {
           let num = 0;
           let rd: RouteDetailProps = {
@@ -70,6 +80,8 @@ function RouteDetailPage() {
             writeState: result.data.data.course.writeState,
           };
           setRouteData(rd);
+          setProfileImg(result.data.data.profilePicture);
+          setMemberName(result.data.data.nickname);
           result.data.data.courseDays.map((ele: any) => {
             let data: RouteDetailDayProps = {
               dayNum: ele.dayNumber,
@@ -111,21 +123,15 @@ function RouteDetailPage() {
             longitude: ele.lon,
           };
           arr.push(data);
-          if (ele.type === '경유지') {
-            let line: MapLinePathProps = {
-              name: ele.name,
-              x: ele.lat,
-              y: ele.lon,
-            };
 
-            lines.push(line);
-          } else {
-            let seData: LineStartEndProps = {
-              x: ele.lat,
-              y: ele.lon,
-            };
-            setSe((pre) => [...pre, seData]);
-          }
+          let line: MapLinePathProps = {
+            name: ele.name,
+            x: ele.lat,
+            y: ele.lon,
+          };
+
+          lines.push(line);
+
           let markerData: LineStartEndProps = {
             x: ele.lat,
             y: ele.lon,
@@ -164,27 +170,70 @@ function RouteDetailPage() {
   useEffect(() => {
     if (linePath.length > 0) {
       const mapLines: any[] = [];
-      GetLineData(linePath, se[0], se[1])
-        .then((res) => {
-          if (res.status === 200 && res.data.status === 'SUCCESS') {
-            res.data.data.map((ele: any) => {
-              ele.vertexes.map((vertex: any, index: number) => {
-                if (index % 2 === 0) {
-                  mapLines.push(
-                    new window.kakao.maps.LatLng(
-                      ele.vertexes[index + 1],
-                      ele.vertexes[index],
-                    ),
-                  );
-                }
+      if (linePath.length <= 5) {
+        GetLineData(linePath)
+          .then((res) => {
+            if (res.status === 200 && res.data.status === 'SUCCESS') {
+              res.data.data.forEach((ele: any) => {
+                ele.vertexes.forEach((vertex: any, index: number) => {
+                  if (index % 2 === 0) {
+                    mapLines.push(
+                      new window.kakao.maps.LatLng(
+                        ele.vertexes[index + 1],
+                        ele.vertexes[index],
+                      ),
+                    );
+                  }
+                });
               });
-            });
-            setMapLines(mapLines);
+              setMapLines([...mapLines]); // 복사본으로 상태 업데이트
+            }
+          })
+          .catch((err) => {
+            toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+          });
+      } else {
+        let arr: MapLinePathProps[] = [];
+        const promises: Promise<any>[] = []; // 비동기 작업을 저장할 배열
+
+        linePath.forEach((ele: MapLinePathProps, idx: number) => {
+          arr.push(ele);
+
+          if (arr.length === 5 || idx === linePath.length - 1) {
+            // 배열이 5개가 되었거나 마지막 요소일 때 GetLineData 호출
+            promises.push(
+              GetLineData(arr)
+                .then((res) => {
+                  if (res.status === 200 && res.data.status === 'SUCCESS') {
+                    res.data.data.forEach((ele: any) => {
+                      ele.vertexes.forEach((vertex: any, index: number) => {
+                        if (index % 2 === 0) {
+                          mapLines.push(
+                            new window.kakao.maps.LatLng(
+                              ele.vertexes[index + 1],
+                              ele.vertexes[index],
+                            ),
+                          );
+                        }
+                      });
+                    });
+                  }
+                })
+                .catch((err) => {
+                  toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+                }),
+            );
+
+            // 배열 초기화
+            arr = [];
           }
-        })
-        .catch((err) => {
-          console.log(err);
         });
+
+        // 모든 비동기 작업이 완료된 후에 setMapLines 호출
+        Promise.all(promises).then(() => {
+          setMapLines([...mapLines]);
+        });
+      }
     }
   }, [linePath]);
 
@@ -221,6 +270,41 @@ function RouteDetailPage() {
       });
   };
 
+  const renderBottomSheet = () => {
+    if (isOpenSetting) {
+      return (
+        <BottomSheet
+          id={Number(routeid)}
+          selected={reviewType}
+          setSelected={setReviewType}
+          route={'경로설정'}
+          bsType={'경로설정'}
+          bsTypeText={'설정'}
+          setIsOpen={setIsOpenSetting}
+          onEdit={() => {
+            navigate(`/route/detail/retouch/${routeid}`);
+          }}
+          onDelete={deleteHandler}
+          writeState={routeData.writeState}
+        />
+      );
+    }
+    if (isOpenSorting) {
+      return (
+        <BottomSheet
+          id={Number(routeid)}
+          selected={reviewType}
+          setSelected={setReviewType}
+          route={'경로정렬'}
+          bsType={'경로정렬'}
+          bsTypeText={'정렬'}
+          setIsOpen={setIsOpenSorting}
+        />
+      );
+    }
+    return null;
+  };
+
   return loading ? (
     <R.Container>
       <Header
@@ -231,20 +315,28 @@ function RouteDetailPage() {
         }}
         clickOption={() => {
           setIsOpen(true);
-          setBsType('설정');
+          setIsOpenSetting(!isOpenSetting);
         }}
       />
       <R.Main>
         <R.Overflow>
           <R.RouteInfoContainer>
             <R.ImgBox>
-              <img src={routeData.img} />
+              <img
+                src={
+                  routeData.img.includes('test') ? defaultImg : routeData.img
+                }
+              />
             </R.ImgBox>
             <R.UserContainer>
               <R.UserImgBox>
-                <Icon name="IconUserBasicImg" size={42} />
+                {profileImg === '' ? (
+                  <Icon name="IconUserBasicImg" size={42} />
+                ) : (
+                  <img src={profileImg} />
+                )}
               </R.UserImgBox>
-              <R.UserName>작성자</R.UserName>
+              <R.UserName>{memberName}</R.UserName>
             </R.UserContainer>
             <R.RouteNameInfo>
               <R.RouteNameInfoContainer>
@@ -340,7 +432,7 @@ function RouteDetailPage() {
               attractions={attractions}
               setLoading={setLoading}
               setSelectedDay={setSelectedDay}
-              setIsOpen={setIsOpen}
+              setIsOpen={setIsOpenSorting}
               setBsType={setBsType}
               reviewType={reviewType}
             />
@@ -366,25 +458,21 @@ function RouteDetailPage() {
             children="일정 생성"
             color="#ffffff"
             onClick={() => {
-              navigate('/schedule/addSchedule');
+              navigate('/schedule/addSchedule', {
+                state: {
+                  id: routeid,
+                  latitude: latitude,
+                  longitude: longitude,
+                  ready: true,
+                  start: routeData.start,
+                  end: routeData.end,
+                },
+              });
             }}
           />
         </R.ButtonBox>
       </R.BottomContainer>
-      {isOpen && (
-        <BottomSheet
-          id={Number(routeid)}
-          selected={reviewType}
-          setSelected={setReviewType}
-          bsType={bsType}
-          setIsOpen={setIsOpen}
-          onEdit={() => {
-            navigate(`/route/detail/retouch/${routeid}`);
-          }}
-          onDelete={deleteHandler}
-          writeState={routeData.writeState}
-        />
-      )}
+      {renderBottomSheet()}
       {isModalOpen && (
         <ReviewModal
           routeid={routeid as string}

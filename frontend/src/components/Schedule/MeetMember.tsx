@@ -13,11 +13,11 @@ const MeetMember = ({ memberCount, members }: MeetMemberProps) => {
         {members.slice(0, memberCount).map((member, index) => (
           <S.Members key={index}>
             <img
-              src={member.memberImg}
-              alt={member.memberName}
+              src={member.profilePicture}
+              alt={member.nickname}
               className="member_img"
             />
-            <p>{member.memberName}</p>
+            <p>{member.nickname}</p>
           </S.Members>
         ))}
       </S.MembersWrap>

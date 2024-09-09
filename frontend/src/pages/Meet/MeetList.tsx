@@ -21,6 +21,7 @@ import { useRecoilValue } from 'recoil';
 function MeetList() {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  const navigate = useNavigate();
 
   const [openSort, setOpenSort] = useState(false);
   const meetFilterInfo = useRecoilValue(meetFilterInfoAtom);
@@ -132,6 +133,11 @@ function MeetList() {
     }));
   };
 
+  const clickMeetCard = (groupId: number) => {
+    console.log(groupId, '클릭 그룹');
+    navigate(`/meet/detail`, { state: { groupId } });
+  };
+
   return (
     <R.RouteListContainer>
       <Header
@@ -152,7 +158,10 @@ function MeetList() {
               >
                 내 모임
               </Text>
-              <MeetLongCard data={myMeet.data} />
+              <MeetLongCard
+                data={myMeet.data}
+                onClick={() => clickMeetCard(myMeet.data.groupId)}
+              />
             </>
           )}
           <Flex
@@ -169,22 +178,30 @@ function MeetList() {
           </Flex>
           <div className="small-list">
             {groupListData?.pages[0]?.data.groupResDtoList.length === 0 ? (
-              <Text
-                $typography="t14"
-                $bold={true}
-                style={{
-                  paddingLeft: '8px',
-                  minHeight: '220px',
-                  height: '100%',
-                }}
-              >
-                필터링 된 데이터가 없습니다.
-              </Text>
+              <>
+                <Text
+                  $typography="t14"
+                  $bold={true}
+                  style={{
+                    paddingLeft: '8px',
+                    minHeight: '220px',
+                    height: '100%',
+                  }}
+                >
+                  필터링 된 데이터가 없습니다.
+                </Text>
+              </>
             ) : (
               groupListData?.pages.map((page) =>
-                page.data.groupResDtoList.map((groupData: MeetInfo) => (
-                  <MeetSmallCard key={groupData.groupId} data={groupData} />
-                )),
+                page.data.groupResDtoList.map((groupData: MeetInfo) => {
+                  return (
+                    <MeetSmallCard
+                      key={groupData.groupId}
+                      data={groupData}
+                      onClick={() => clickMeetCard(groupData.groupId)}
+                    />
+                  );
+                }),
               )
             )}
             {isFetching && <div>불러오는 중..</div>}

@@ -72,7 +72,7 @@ function BottomTab() {
           }
           size={20}
         />
-        <Bt.TabText selected={curTab.includes('meet')}>내 정보</Bt.TabText>
+        <Bt.TabText selected={curTab.includes('mypage')}>내 정보</Bt.TabText>
       </Bt.BottomTabItem>
     </Bt.BottomTab>
   );

@@ -125,7 +125,7 @@ export const ExplanationCardTitle = styled.p`
 `;
 
 export const ExplanationRoute = styled.textarea`
-  width: 78vw;
+  width: 90%;
   height: 14vh;
   border-radius: 1.2rem;
   border: 0.2rem solid #d9d9d9;
@@ -269,7 +269,7 @@ export const RouteCardMain = styled.div`
 `;
 
 export const RouteExplane = styled.textarea`
-  width: 100%;
+  width: 70%;
   height: 90%;
   border-radius: 1.2rem;
   border: 0.2rem solid #d9d9d9;

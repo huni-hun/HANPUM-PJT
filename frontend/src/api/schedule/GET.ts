@@ -33,7 +33,7 @@ export async function getGroupScheduleData() {
 }
 
 /** 일정 - 일자별 일정조회 */
-export async function getDayNumData(id: string, dayNumber: number) {
+export async function getDayNumData(dayNumber: number, id: number) {
   const response = await api.get(`/api/schedule/day/${dayNumber}`, {
     params: {
       scheduleId: id,
@@ -44,16 +44,9 @@ export async function getDayNumData(id: string, dayNumber: number) {
 }
 
 /** 일정 - 주변 관광지 정보 가져오기 */
-export async function getNearbyLocData(
-  OS: string,
-  distance: number,
-  lat: number,
-  lon: number,
-) {
+export async function getNearbyLocData(lat: number, lon: number) {
   const response = await api.get('/api/schedule/nearby', {
     params: {
-      OS,
-      distance,
       lat,
       lon,
     },

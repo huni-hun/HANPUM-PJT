@@ -135,6 +135,7 @@ public class AuthServiceImpl implements AuthService {
         redisDao.deleteNickname(kakaoSignUpCompleteReqDto.getNickname());
     }
 
+    @Transactional
     @Override
     public LoginResDto login(LoginReqDto loginReqDto) {
         Member member = memberRepository.findMemberByLoginId(loginReqDto.getLoginId())

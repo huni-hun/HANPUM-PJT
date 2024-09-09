@@ -4,6 +4,10 @@ import backend.hanpum.domain.course.dto.responseDto.*;
 import backend.hanpum.domain.course.entity.*;
 import backend.hanpum.domain.course.enums.CourseTypes;
 import backend.hanpum.domain.course.repository.InterestCourseRepository;
+import backend.hanpum.domain.member.entity.Member;
+import backend.hanpum.domain.member.repository.MemberRepository;
+import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
+import backend.hanpum.exception.exception.auth.MemberNotFoundException;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -22,6 +26,7 @@ import java.util.Optional;
 public class CourseRepositoryImpl implements CourseRepositoryCustom {
 
     private final InterestCourseRepository interestCourseRepository;
+    private final MemberRepository memberRepository;
     private final JPAQueryFactory query;
 
     @Override
@@ -169,8 +174,11 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
                 .where(qCourseDay.course.courseId.eq(courseId))
                 .fetch();
 
+        Member member = memberRepository.findByCourses_courseId(courseResDto.getCourseId()).orElseThrow(MemberNotFoundException::new);
         CourseDetailResDto result = CourseDetailResDto.builder()
                 .course(courseResDto)
+                .nickname(member.getNickname())
+                .profilePicture(member.getProfilePicture())
                 .courseDays(courseDays)
                 .build();
 
