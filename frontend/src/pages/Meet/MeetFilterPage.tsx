@@ -66,8 +66,6 @@ function MeetFilterPage() {
     }));
   };
 
-  console.log(meetFilterInfo);
-
   return (
     <MeetFilterPageContainer>
       <Header
