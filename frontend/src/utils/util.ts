@@ -1,5 +1,6 @@
+import api from '@/api';
+import { GetRefreshToken } from '@/api/signup/POST';
 import { SignupRequestValues } from '@/models/signup';
-import { Token } from '@/models/user';
 import CryptoJS from 'crypto-js';
 
 const secretKey = process.env.REACT_APP_SECRET_KEY;
@@ -20,7 +21,6 @@ export function dateFormat(date: string | undefined) {
 export function telnumberFormat(telnum: string | undefined) {
   if (telnum) {
     telnum = telnum.replace(/\D/g, '');
-    // console.log(telnum);
 
     if (telnum.length <= 3) {
       return telnum;
@@ -36,32 +36,35 @@ export function telnumberFormat(telnum: string | undefined) {
 
 // 토큰 인코딩 refreshToken 제외
 export function encodeToken(accessToken: string) {
-  // console.log('인코딩에서', accessToken);
   if (secretKey) {
-    const token = {
-      accessToken: CryptoJS.AES.encrypt(accessToken, secretKey).toString(),
-    };
-
-    // console.log('token ::', token);
-    return token;
+    return CryptoJS.AES.encrypt(accessToken, secretKey).toString();
   }
 }
 
 // 토큰 디코딩
-export function decodeToken(tokenObj: Token) {
+export function decodeToken(accessToken: string) {
   if (secretKey) {
-    const accesssTokenBytes = CryptoJS.AES.decrypt(
-      tokenObj.accessToken,
-      secretKey,
+    let decrypted = CryptoJS.AES.decrypt(accessToken, secretKey).toString(
+      CryptoJS.enc.Utf8,
     );
-
-    const byteTokenObj = {
-      accessToken: accesssTokenBytes.toString(CryptoJS.enc.Utf8),
-    };
-
-    return byteTokenObj;
+    return decrypted;
   }
 }
+
+export const handleTokenExpiration = async (originalRequest?: any) => {
+  // 토큰 재발급 로직
+  const newToken = await GetRefreshToken();
+  const encodeNewToken = encodeToken(newToken.data.accessToken.split('+')[1]);
+  if (encodeNewToken) {
+    localStorage.setItem('token', encodeNewToken);
+
+    if (originalRequest) {
+      originalRequest.headers['Authorization'] = `Bearer ${encodeNewToken}`;
+      return api(originalRequest);
+    }
+  }
+  // window.location.reload();
+};
 
 // text Area \n 붙이기
 export function formatAreaValue(text: string) {

@@ -1,4 +1,5 @@
 import { Logout } from '@/api/signup/POST';
+import { isAuthEnticatedAtom } from '@/atoms/isAuthEnticatedAtom';
 import Flex from '@/components/common/Flex';
 import Header from '@/components/common/Header/Header';
 import Text from '@/components/common/Text';
@@ -10,9 +11,12 @@ import { AxiosError } from 'axios';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 
 function ConfigPage() {
+  const setIsAuth = useSetRecoilState(isAuthEnticatedAtom);
+
   const navigate = useNavigate();
 
   const { mutate: logout } = useMutation(Logout, {
@@ -21,6 +25,7 @@ function ConfigPage() {
         toast.success(res.message);
         localStorage.removeItem('token');
         sessionStorage.removeItem('token');
+        setIsAuth(false);
         navigate('/login');
       }
       if (res.status === STATUS.error) {

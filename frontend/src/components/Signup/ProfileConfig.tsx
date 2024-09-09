@@ -170,9 +170,24 @@ function ProfileConfig({
   const validate = useMemo(() => {
     let errors: Partial<UserSignupFormValues> = {};
 
+    const namePattern = /^[가-힣]+$/;
+
+    // 이름 유효성 검사
+    if ((formValues.name?.trim() || '').length === 0) {
+      errors.name = '이름을 입력해주세요.';
+    } else if (/\s/.test(formValues.name || '')) {
+      errors.name = '※빈칸은 사용할 수 없습니다.';
+    } else if (!namePattern.test(formValues.name?.trim() || '')) {
+      errors.name = '이름은 한글로 자음과 모음을 같이 입력해주세요.';
+    }
+
     const nickNamePattern = /^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]{3,8}$/;
-    if (!nickNamePattern.test(formValues.nickname?.trim() || '')) {
+    if (/\s/.test(formValues.nickname || '')) {
+      errors.nickname = '※빈칸은 사용할 수 없습니다.';
+    } else if (!nickNamePattern.test(formValues.nickname?.trim() || '')) {
       errors.nickname = '※특수 문자는 제외해 주세요.(3~8자)';
+    } else if ((formValues.nickname?.trim() || '').length === 0) {
+      errors.nickname = '닉네임을 입력해주세요.';
     }
 
     if (chcekNicknameMessage) {
@@ -289,6 +304,24 @@ function ProfileConfig({
           <Icon name="IconCamera" size={19} />
         </div>
       </div>
+
+      <TextField
+        label="이름"
+        name="name"
+        onBlur={handleBlur}
+        value={formValues.name}
+        onChange={handleInfoChange}
+        hasError={dirty.name && Boolean(validate.name)}
+      />
+
+      {dirty.name && Boolean(validate.name) ? (
+        <Message
+          hasError={dirty.name && Boolean(validate.name)}
+          text={validate.name || ''}
+        />
+      ) : (
+        <Spacing size={4.2} />
+      )}
 
       <TextField
         label="닉네임"
