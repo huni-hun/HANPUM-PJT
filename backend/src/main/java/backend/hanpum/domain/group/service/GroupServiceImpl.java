@@ -250,12 +250,11 @@ public class GroupServiceImpl implements GroupService {
     public void exileGroupMember(Long memberId, Long groupMemberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         GroupMember groupLeader = member.getGroupMember();
-        if(groupLeader.getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
         GroupMember groupMember = groupMemberRepository.findById(groupMemberId).orElseThrow(GroupMemberNotFoundException::new);
-        if(groupLeader.getGroup() == groupMember.getGroup()) {
-            groupMember.getMember().updateGroupMember(null);
-            groupMemberRepository.delete(groupMember);
-        }
+        if (groupLeader.getGroup() != groupMember.getGroup() ||
+                groupLeader.getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
+        groupMember.getMember().updateGroupMember(null);
+        groupMemberRepository.delete(groupMember);
     }
 
     @Override
@@ -325,8 +324,9 @@ public class GroupServiceImpl implements GroupService {
 
     private GroupMember validGroupApply(Long memberId, Long groupMemberId){
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
-        if(member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
         GroupMember groupMember = groupMemberRepository.findById(groupMemberId).orElseThrow(GroupMemberNotFoundException::new);
+        if(member.getGroupMember().getGroup() != groupMember.getGroup() ||
+                member.getGroupMember().getJoinType() != JoinType.GROUP_LEADER) throw new GroupPermissionException();
         if(groupMember.getJoinType() != JoinType.APPLY) throw new GroupAlreadyJoinedException();
         return groupMember;
     }
