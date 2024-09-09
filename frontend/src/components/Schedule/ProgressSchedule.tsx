@@ -38,7 +38,7 @@ const ProgressSchedule = ({
         </R.StartDateBox>
       </R.RouteDateBox>
 
-      <S.SchduleProgressWrap>
+      <S.SchduleProgressWrap isScheduleHeight>
         <S.Hr></S.Hr>
         <R.RouteName>오늘 일정의 달성률</R.RouteName>
         <R.StartDateBox>

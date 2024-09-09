@@ -26,7 +26,6 @@ function Withdraw() {
       if (res.status === STATUS.success) {
         toast.success(res.message);
         localStorage.removeItem('token');
-        sessionStorage.removeItem('token');
         navigate('/login');
       }
       if (res.status === STATUS.error) {

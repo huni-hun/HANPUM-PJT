@@ -10,10 +10,12 @@ function ProfileItem({
   label,
   value,
   param,
+  memberType,
 }: {
   label: string;
   value: string;
   param?: string;
+  memberType?: string;
 }) {
   const navigate = useNavigate();
   return (
@@ -22,28 +24,24 @@ function ProfileItem({
         {label}
       </Text>
 
-      {label === '소셜로그인' ? (
-        <div className="info no-border">
-          <div className="kakao">
-            <Text $typography="t16">{value}</Text>
+      <div
+        className="info"
+        onClick={() => {
+          if (param !== 'email') {
+            navigate(`/myprofile/:${param}`);
+          }
+        }}
+      >
+        <div className="kakao">
+          <Text $typography="t16">{value}</Text>
+          {memberType === 'KAKAO' && (
             <Flex $align="center" $justify="end">
               <img src={kakao} alt="kakao" />
               <Text $typography="t12">카카오</Text>
             </Flex>
-          </div>
+          )}
         </div>
-      ) : (
-        <div
-          className="info"
-          onClick={() => {
-            if (param !== 'email') {
-              navigate(`/myprofile/:${param}`);
-            }
-          }}
-        >
-          {value}
-        </div>
-      )}
+      </div>
     </S.ProfileItemContainer>
   );
 }

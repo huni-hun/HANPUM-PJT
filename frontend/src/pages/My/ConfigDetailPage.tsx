@@ -2,6 +2,7 @@ import Flex from '@/components/common/Flex';
 import Header from '@/components/common/Header/Header';
 import Text from '@/components/common/Text';
 import TextLineBreaks from '@/components/common/TextLineBreaks';
+import PersonalInformationText from '@/components/My/config/PersonalInformationText';
 import TermsText from '@/components/My/config/TermsText';
 import { ANNOUNCEMENT, POLICY } from '@/constants';
 import { colors } from '@/styles/colorPalette';
@@ -55,7 +56,7 @@ function ConfigDetailPage() {
       return <TermsText />;
     }
     if (id === '02') {
-      return <div>개인정보</div>;
+      return <PersonalInformationText />;
     }
   };
 

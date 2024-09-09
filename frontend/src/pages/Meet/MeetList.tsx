@@ -178,30 +178,26 @@ function MeetList() {
           </Flex>
           <div className="small-list">
             {groupListData?.pages[0]?.data.groupResDtoList.length === 0 ? (
-              <>
-                <Text
-                  $typography="t14"
-                  $bold={true}
-                  style={{
-                    paddingLeft: '8px',
-                    minHeight: '220px',
-                    height: '100%',
-                  }}
-                >
-                  필터링 된 데이터가 없습니다.
-                </Text>
-              </>
+              <Text
+                $typography="t14"
+                $bold={true}
+                style={{
+                  paddingLeft: '8px',
+                  minHeight: '220px',
+                  height: '100%',
+                }}
+              >
+                필터링 된 데이터가 없습니다.
+              </Text>
             ) : (
               groupListData?.pages.map((page) =>
-                page.data.groupResDtoList.map((groupData: MeetInfo) => {
-                  return (
-                    <MeetSmallCard
-                      key={groupData.groupId}
-                      data={groupData}
-                      onClick={() => clickMeetCard(groupData.groupId)}
-                    />
-                  );
-                }),
+                page.data.groupResDtoList.map((groupData: MeetInfo) => (
+                  <MeetSmallCard
+                    key={groupData.groupId}
+                    data={groupData}
+                    onClick={() => clickMeetCard(groupData.groupId)}
+                  />
+                )),
               )
             )}
             {isFetching && <div>불러오는 중..</div>}

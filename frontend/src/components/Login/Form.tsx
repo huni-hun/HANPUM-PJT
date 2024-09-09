@@ -50,9 +50,9 @@ const Form = () => {
     }));
   };
 
-  const toggleAutoLogin = () => {
-    setAutoLogin(!autoLogin);
-  };
+  // const toggleAutoLogin = () => {
+  //   setAutoLogin(!autoLogin);
+  // };
 
   const validate = useMemo(() => {
     let errors: Partial<UserSignupFormValues> = {};
@@ -86,11 +86,10 @@ const Form = () => {
 
           // console.log('token ::', token);
 
-          if (autoLogin) {
-            localStorage.setItem('token', JSON.stringify(token));
-          } else {
-            sessionStorage.setItem('token', JSON.stringify(token));
+          if (token) {
+            localStorage.setItem('token', token);
           }
+
           setIsAuthenticated(true);
           navigate('/home');
         }
@@ -155,7 +154,7 @@ const Form = () => {
           />
         )}
 
-        <div className="checkbox_input">
+        {/* <div className="checkbox_input">
           <div
             className={`checkbox_input-box ${autoLogin ? 'auto-check' : ''}`}
             onClick={toggleAutoLogin}
@@ -163,11 +162,11 @@ const Form = () => {
             <Icon name="IconCheckInSignIn" />
           </div>
           <Text $typography="t12">로그인 상태 유지</Text>
-        </div>
+        </div> */}
 
         <BaseButton
           size="large"
-          style={{ margin: '0 auto' }}
+          style={{ margin: '38px auto 0' }}
           disabled={!noError}
           onClick={() => {
             mutate({

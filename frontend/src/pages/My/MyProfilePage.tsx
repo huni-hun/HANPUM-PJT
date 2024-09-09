@@ -18,8 +18,9 @@ function MyProfilePage() {
   const queryClient = useQueryClient();
 
   const { data } = useQuery('getUser', GetUser);
+  const cachedData = queryClient.getQueryData('getUser');
 
-  console.log(data);
+  console.log(cachedData);
 
   const { mutate: changeProfileImg } = useMutation(ChangeProfileImg, {
     onSuccess: (res) => {
@@ -84,7 +85,12 @@ function MyProfilePage() {
               param="nickname"
             />
             <ProfileItem label="이름" value={data.data.name} param="name" />
-            <ProfileItem label="이메일" value={data.data.email} param="email" />
+            <ProfileItem
+              label="이메일"
+              value={data.data.email}
+              param="email"
+              memberType={data.data.memberType}
+            />
             {/* <ProfileItem label="이메일" value={data.data.email} /> */}
             <ProfileItem
               label="전화번호"
@@ -101,7 +107,7 @@ function MyProfilePage() {
               value={genderKor(data.data.gender)}
               param="gender"
             />
-            <ProfileItem label="소셜로그인" value="hanpum@kakao.com" />
+            {/* <ProfileItem label="소셜로그인" value="hanpum@kakao.com" /> */}
           </div>
         </>
       )}
@@ -115,7 +121,7 @@ const MyProfilePageContainer = styled.div`
   width: 100%;
   height: 100%;
   background-color: ${colors.white};
-  padding-bottom: 23.7rem;
+  padding-bottom: 2rem;
   .profile {
     display: flex;
     align-items: center;
@@ -124,7 +130,7 @@ const MyProfilePageContainer = styled.div`
     border-bottom: 1px solid ${colors.grey4};
     padding-bottom: 16px;
     &-prev_img {
-      margin-top: 12px;
+      margin-top: 21px;
       width: 10.3rem;
       height: 10.3rem;
       border-radius: 50%;

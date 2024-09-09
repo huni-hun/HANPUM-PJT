@@ -56,7 +56,7 @@ import { useEffect } from 'react';
 
 export default function Router() {
   const isAuth = useIsAuth();
-  console.log(isAuth);
+  // console.log(isAuth);
 
   return (
     <BrowserRouter>
@@ -64,6 +64,8 @@ export default function Router() {
         {!isAuth ? (
           <>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/find/:account" element={<FindPage />} />
             <Route path="*" element={<Navigate to="/login" />} />
           </>
         ) : (
@@ -135,9 +137,10 @@ export default function Router() {
             <Route path="/meet/edit" element={<MeetEditPage />} />
 
             {/* 로그인/ 회원가입/ 찾기 */}
-            <Route path="/login" element={<LoginPage />} />
+            {/* <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
-            <Route path="/find/:account" element={<FindPage />} />
+            <Route path="/find/:account" element={<FindPage />} /> */}
+            {/* <Route path="*" element={<Navigate to="/home" />} /> */}
 
             {/* 마이페이지 */}
             <Route path="/mypage" element={<MyPage />} />

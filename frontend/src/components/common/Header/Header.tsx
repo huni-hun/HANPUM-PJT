@@ -3,7 +3,7 @@ import * as S from './Header.styled';
 import Icon from '../Icon/Icon';
 import Flex from '../Flex';
 import Text from '../Text';
-import logo from '../../../assets/img/logo.png';
+import logo from '../../../assets/img/logo2.png';
 
 interface HeaderProps {
   purpose: string;

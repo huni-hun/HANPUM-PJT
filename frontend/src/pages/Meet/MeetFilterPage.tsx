@@ -66,8 +66,6 @@ function MeetFilterPage() {
     }));
   };
 
-  console.log(meetFilterInfo);
-
   return (
     <MeetFilterPageContainer>
       <Header
@@ -131,7 +129,7 @@ function MeetFilterPage() {
             onChange={handleTotalDaysChange}
           />
           <ToggleSlider
-            title="모집일자"
+            title="모임인원"
             unit="인"
             min={0}
             max={15}
