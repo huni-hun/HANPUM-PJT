@@ -19,73 +19,85 @@ function RouteListSearchPage() {
   const [keyword, setKeyword] = useState<string>('');
   const [searchSucess, setSearchSucess] = useState<boolean>(false);
   const [searchResult, setSearchResult] = useState<RouteListProps[]>([]);
+  const [distance, setDistance] = useState<string>('');
+  const [days, setDays] = useState<string>('');
+  const [types, setTypes] = useState<string>('');
 
   const navigator = useNavigate();
 
   const searchHandler = () => {
-    if (dateValue > 0 || sliderValue > 0 || selectType.length > 0) {
-      let distance = sliderValue > 0 ? `&maxDistance=${sliderValue}` : '';
-      let days = dateValue > 0 ? `&maxDays=${dateValue}` : '';
-      let types = `&selectedTypes=${selectType.join(',')}`;
-      const response = getRouteSearchListWithProps(
-        keyword,
-        distance,
-        days,
-        types,
-      );
+    if (
+      dateValue > 0 ||
+      sliderValue > 0 ||
+      selectType.length > 0 ||
+      keyword !== ''
+    ) {
+      let dis = sliderValue > 0 ? `&maxDistance=${sliderValue}` : '';
+      setDistance(dis);
+      let day = dateValue > 0 ? `&maxDays=${dateValue}` : '';
+      setDays(day);
+      let type = `&selectedTypes=${selectType.join(',')}`;
+      setTypes(type);
+      //   const response = getRouteSearchListWithProps(
+      //     keyword,
+      //     distance,
+      //     days,
+      //     types,
+      //   );
 
-      response.then((res) => {
-        if (res.status === 200) {
-          res.data.data.courseListMap.searchResult.map((ele: any) => {
-            let data: RouteListProps = {
-              routeName: ele.courseName,
-              routeContent: ele.content,
-              routeScore: ele.scoreAvg,
-              routeComment: ele.commentCnt,
-              routeId: ele.courseId,
-              img: ele.backgroundImg,
-              writeState: ele.writeState,
-              openState: ele.openState,
-              memberId: ele.memberId,
-              writeDate: ele.writeDate,
-              start: ele.startPoint,
-              end: ele.endPoint,
-              totalDistance: Math.round(ele.totalDistance),
-              totalDays: ele.totalDays,
-              interestFlag: ele.interestFlag,
-            };
-            setSearchResult((pre) => [...pre, data]);
-          });
-          setSearchSucess(true);
-        }
-      });
-    } else {
-      const response = getRouteSearchList(keyword);
-      response.then((res) => {
-        if (res.status === 200) {
-          res.data.data.courseListMap.searchResult.map((ele: any) => {
-            let data: RouteListProps = {
-              routeName: ele.courseName,
-              routeContent: ele.content,
-              routeScore: ele.scoreAvg,
-              routeComment: ele.commentCnt,
-              routeId: ele.courseId,
-              img: ele.backgroundImg,
-              writeState: ele.writeState,
-              openState: ele.openState,
-              memberId: ele.memberId,
-              writeDate: ele.writeDate,
-              start: ele.startPoint,
-              end: ele.endPoint,
-              totalDistance: Math.round(ele.totalDistance),
-              totalDays: ele.totalDays,
-              interestFlag: ele.interestFlag,
-            };
-            setSearchResult((pre) => [...pre, data]);
-          });
-          setSearchSucess(true);
-        }
-      });
+      //   response.then((res) => {
+      //     if (res.status === 200) {
+      //       res.data.data.courseListMap.searchResult.map((ele: any) => {
+      //         let data: RouteListProps = {
+      //           routeName: ele.courseName,
+      //           routeContent: ele.content,
+      //           routeScore: ele.scoreAvg,
+      //           routeComment: ele.commentCnt,
+      //           routeId: ele.courseId,
+      //           img: ele.backgroundImg,
+      //           writeState: ele.writeState,
+      //           openState: ele.openState,
+      //           memberId: ele.memberId,
+      //           writeDate: ele.writeDate,
+      //           start: ele.startPoint,
+      //           end: ele.endPoint,
+      //           totalDistance: Math.round(ele.totalDistance),
+      //           totalDays: ele.totalDays,
+      //           interestFlag: ele.interestFlag,
+      //         };
+      //         setSearchResult((pre) => [...pre, data]);
+      //       });
+      //       setSearchSucess(true);
+      //     }
+      //   });
+      // } else {
+      //   const response = getRouteSearchList(keyword);
+      //   response.then((res) => {
+      //     if (res.status === 200) {
+      //       res.data.data.courseListMap.searchResult.map((ele: any) => {
+      //         let data: RouteListProps = {
+      //           routeName: ele.courseName,
+      //           routeContent: ele.content,
+      //           routeScore: ele.scoreAvg,
+      //           routeComment: ele.commentCnt,
+      //           routeId: ele.courseId,
+      //           img: ele.backgroundImg,
+      //           writeState: ele.writeState,
+      //           openState: ele.openState,
+      //           memberId: ele.memberId,
+      //           writeDate: ele.writeDate,
+      //           start: ele.startPoint,
+      //           end: ele.endPoint,
+      //           totalDistance: Math.round(ele.totalDistance),
+      //           totalDays: ele.totalDays,
+      //           interestFlag: ele.interestFlag,
+      //         };
+      //         setSearchResult((pre) => [...pre, data]);
+      //       });
+      //       setSearchSucess(true);
+      //     }
+      //   });
+      setSearchSucess(true);
     }
   };
 
@@ -122,8 +134,10 @@ function RouteListSearchPage() {
   return searchSucess ? (
     <RouteListSearchResult
       keyword={keyword}
+      distance={distance}
+      days={days}
+      types={types}
       setSearchSucess={setSearchSucess}
-      searchResult={searchResult}
     />
   ) : (
     <R.Container>

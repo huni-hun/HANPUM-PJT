@@ -38,7 +38,7 @@ const ProgressSchedule = ({
         </R.StartDateBox>
       </R.RouteDateBox>
 
-      <S.SchduleProgressWrap>
+      <S.SchduleProgressWrap isScheduleHeight>
         <S.Hr></S.Hr>
         <R.RouteName>오늘 일정의 달성률</R.RouteName>
         <R.StartDateBox>
@@ -53,9 +53,9 @@ const ProgressSchedule = ({
 
           <S.PercentBox>
             <S.PercentText>{percentage}%</S.PercentText>
-            <S.CalculateDistance>
+            {/* <S.CalculateDistance>
               {totalDuration}km / {totalDistance}km
-            </S.CalculateDistance>
+            </S.CalculateDistance> */}
           </S.PercentBox>
         </R.StartDateBox>
         <S.ProgressBar percentage={percentage || 0}>

@@ -8,6 +8,7 @@ import AddSchedulePage from '@pages/Schedule/AddSchedulePage';
 import DetailMineSchedulePage from '@pages/Schedule/DetailMineSchedulePage';
 import SuccessAddSchedulePage from '@pages/Schedule/SuccessAddSchedulePage';
 import EditMySchedulePage from '@pages/Schedule/EditMySchedulePage';
+import ScheduleMemoPage from '@/pages/Schedule/ScheduleMemoPage';
 
 /** 경로 */
 import RouteList from '@pages/Route/RouteList';
@@ -33,6 +34,8 @@ import MemberManageDetail from '@pages/Meet/MemberManageDetail';
 import RequestManageList from '@pages/Meet/RequestManageList';
 import MemberManageList from '@pages/Meet/MemberManageList';
 import MeetManageRequest from '@pages/Meet/MeetManageRequest';
+import MeetEditPage from '@pages/Meet/MeetEditPage';
+import MeetAddCompletePage from './Meet/MeetAddCompletePage';
 
 /** 커뮤니티 */
 
@@ -57,6 +60,7 @@ export {
   DetailMineSchedulePage,
   SuccessAddSchedulePage,
   EditMySchedulePage,
+  ScheduleMemoPage,
   /** 경로 */
   RouteList,
   RouteAddPlacePage,
@@ -81,6 +85,8 @@ export {
   MeetAddSchedulePage,
   MeetAddDeadLinePage,
   MemberManageDetail,
+  MeetEditPage,
+  MeetAddCompletePage,
 
   /** 마이페이지, 회원관련 */
   SignupPage,

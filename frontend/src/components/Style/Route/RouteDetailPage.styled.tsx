@@ -34,7 +34,7 @@ export const HeaderButton = styled.div`
 
 export const Main = styled.div`
   width: 100%;
-  height: 93vh;
+  height: 100vh;
 
   display: flex;
   flex-direction: row;
@@ -57,7 +57,7 @@ export const Overflow = styled.div`
 
 export const RouteInfoContainer = styled.div`
   width: 100vw;
-  height: 80vh;
+  height: 100vh;
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
@@ -66,7 +66,7 @@ export const RouteInfoContainer = styled.div`
 
 export const ImgBox = styled.div<StyledProps>`
   width: 100%;
-  height: 29.3rem;
+  height: 30rem;
   background-color: #d9d9d9;
   background-size: cover;
   background-position: center;
@@ -96,6 +96,11 @@ export const UserImgBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
 `;
 
 export const UserName = styled.p`
@@ -123,16 +128,16 @@ export const RouteNameInfoContainer = styled.div`
 
 export const RouteTypeContainer = styled.div`
   width: 100%;
-  height: 27%;
+  height: 15vh;
   display: flex;
   flex-direction: row;
   align-items: center;
   overflow: auto;
 `;
 
-export const RouteType = styled.div<{ isLong: boolean }>`
+export const RouteType = styled.div<{ isLong?: boolean }>`
   width: ${(props) => (props ? '7.5rem' : '6.4rem')};
-  height: 2.8rem;
+  height: 2.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -152,7 +157,8 @@ export const RouteReviewContainer = styled.div`
   flex-direction: row;
   align-items: end;
   justify-content: space-between;
-  padding: 0 0.9rem 0 0.9rem;
+  padding: 0 0.9rem 1rem 0.9rem;
+  border-bottom: ${colors.grey1} solid 0.1rem;
 `;
 
 export const IconContainer = styled.div`
@@ -176,7 +182,7 @@ export const IconBox = styled.div`
 `;
 
 export const WriteDateBox = styled.div`
-  width: 20%;
+  width: 15vw;
   height: 100%;
   display: flex;
   flex-direction: row;
@@ -225,7 +231,7 @@ export const EndDateBox = styled.div`
 `;
 
 export const DateBox = styled.div`
-  width: 50%;
+  width: 60vw;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -328,7 +334,7 @@ export const DistanceNumBox = styled.div`
 `;
 
 export const PlaceBox = styled.div`
-  width: 80%;
+  width: 60vw;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -345,7 +351,7 @@ export const PlaceText = styled.p`
 `;
 
 export const DistanceBox = styled.div`
-  width: 20%;
+  width: 15vw;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -371,7 +377,7 @@ export const Distance = styled.p`
 
 export const ContentSelecContainer = styled.div`
   width: 100vw;
-  height: 5.1rem;
+  height: 5.5rem;
   display: flex;
   flex-direction: row;
   border-bottom: 0.1rem solid #d9d9d9;
@@ -393,7 +399,7 @@ export const ContentBox = styled.div<{ selected: boolean }>`
 
 export const RouteDetailInfoContainer = styled.div`
   width: 100vw;
-  height: 52vh;
+  height: 100vh;
   background-color: #ffffff;
 `;
 
@@ -817,17 +823,17 @@ export const AddBtnContainer = styled.div`
   margin-top: 2rem;
 `;
 
-/** 효령 - Feed.tsx */
+/** 효령 - 일정 Feed.tsx */
 
 export const TagsWrap = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: left;
+  gap: 1rem;
   width: 60%;
   align-items: center;
   height: 2.8rem;
   position: absolute;
   bottom: 2rem;
-  box-sizing: border-box;
 `;
 
 export const Tags = styled.div`

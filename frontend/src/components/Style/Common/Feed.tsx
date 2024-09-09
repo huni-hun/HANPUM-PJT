@@ -1,6 +1,7 @@
 /** 경로, 모임, 일정에 쓰이는 맨 위 feed 부분 */
 import * as R from '@/components/Style/Route/RouteDetailPage.styled';
 import * as M from '@/components/Style/Meet/MeetDetail.styled';
+import * as S from '@/components/Style/Schedule/SchduleMainPage.styled';
 import { FeedProps } from '@/models/route';
 import Icon from '@/components/common/Icon/Icon';
 
@@ -10,14 +11,8 @@ const FeedContainer = ({
   routeData,
   isUserContainer,
   meetRouter,
+  isMeetFeed,
 }: FeedProps) => {
-  /** 모임 - feed하위 박스 d-day 만들기 */
-  const today = new Date();
-  const start = routeData?.startDate ? new Date(routeData?.startDate) : null;
-  const meetDday = start
-    ? Math.ceil((start.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
-    : null;
-
   return (
     <>
       {meetRouter ? (
@@ -44,38 +39,45 @@ const FeedContainer = ({
         <></>
       )}
 
-      <R.RouteNameInfo>
-        <R.RouteNameInfoContainer>
-          <R.RouteName>{routeData?.routeName || ''}</R.RouteName>
-          <R.RouteInfo>{routeData?.routeContent || ''}</R.RouteInfo>
-          <R.TagsWrap>
+      <S.RouteNameInfo isMeetFeed={isMeetFeed}>
+        <S.RouteNameInfoContainer>
+          <S.RouteName>{routeData?.routeName || ''}</S.RouteName>
+          <S.RouteInfo>{routeData?.routeContent || ''}</S.RouteInfo>
+          <S.TagsWrap>
             {routeData?.routeTypes?.map((type, index) => (
               <R.Tags key={index}>{type}</R.Tags>
             )) || ''}
-          </R.TagsWrap>
-        </R.RouteNameInfoContainer>
-      </R.RouteNameInfo>
+          </S.TagsWrap>
+        </S.RouteNameInfoContainer>
+      </S.RouteNameInfo>
 
       {meetRouter ? (
         <>
-          <M.MeetInfoWrap>
-            <M.MeetInfoText>
-              <p>D {meetDday}</p>
-              <span>모집 마감</span>
-            </M.MeetInfoText>
-            <M.Hr />
-            <M.MeetInfoText>
-              <p>
-                {routeData?.memberCount} / {routeData?.totalMember}
-              </p>
-              <span>모집 인원</span>
-            </M.MeetInfoText>
-            <M.Hr />
-            <M.MeetInfoText>
-              <p>{routeData?.likeCount}</p>
-              <span>관심</span>
-            </M.MeetInfoText>
-          </M.MeetInfoWrap>
+          <M.MeetInfoContainer>
+            <M.MeetInfoWrap>
+              <M.MeetInfoText>
+                <p>D - {routeData?.meetDday}</p>
+                <span>모집 마감</span>
+              </M.MeetInfoText>
+              <M.Hr />
+              <M.MeetInfoText>
+                <p>
+                  {routeData?.memberCount} / {routeData?.totalMember}
+                </p>
+                <span>모집 인원</span>
+              </M.MeetInfoText>
+              <M.Hr />
+              <M.MeetInfoText>
+                <p>{routeData?.likeCount}</p>
+                <span>관심</span>
+              </M.MeetInfoText>
+            </M.MeetInfoWrap>
+            <M.TagsWrap>
+              {routeData?.meetTypes?.map((type, index) => (
+                <M.Tags key={index}>{type}</M.Tags>
+              )) || ''}
+            </M.TagsWrap>
+          </M.MeetInfoContainer>
         </>
       ) : (
         <></>

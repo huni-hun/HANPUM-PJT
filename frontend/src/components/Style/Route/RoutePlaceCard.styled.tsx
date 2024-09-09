@@ -1,6 +1,11 @@
 import { colors } from '@/styles/colorPalette';
 import styled from 'styled-components';
 
+interface ScheduleProps {
+  scheduleState?: boolean;
+  turnGreen?: boolean;
+}
+
 export const Card = styled.div`
   width: 80%;
   height: 7.5rem;
@@ -34,7 +39,7 @@ export const PlaceAddressBox = styled.div`
   flex-direction: column;
 `;
 
-export const PlaceNumberBox = styled.div`
+export const PlaceNumberBox = styled.div<ScheduleProps>`
   width: 1.7rem;
   height: 1.7rem;
   border-radius: 50%;
@@ -42,9 +47,11 @@ export const PlaceNumberBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${colors.main};
   left: -0.85rem;
-  color: ${colors.white};
+  background-color: ${(props) =>
+    props.scheduleState || props.turnGreen ? colors.main : colors.grey2};
+  color: ${(props) =>
+    props.scheduleState || props.turnGreen ? colors.white : '#000'};
 `;
 
 export const RetouchCardContainer = styled.div`

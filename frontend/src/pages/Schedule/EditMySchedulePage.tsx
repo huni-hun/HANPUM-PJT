@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as R from '@/components/Style/Route/RouteDetailPage.styled';
 import * as S from '../../components/Style/Schedule/AddSchdulePage.styled';
 import Header from '@/components/common/Header/Header';
@@ -11,7 +11,7 @@ import FeedInfo from '@/components/Style/Common/FeedInfo';
 import memberImg from '../../assets/img/memberImg.svg';
 
 import goyuMY from '../../assets/img/goyuMY.png';
-import { SchduleCardProps } from '@/models/schdule';
+import { RunningScheduleProps, SchduleCardProps } from '@/models/schdule';
 import BottomSheet from '@/components/Style/Route/BottomSheet';
 import MeetModal from '@/components/Meet/MeetModal';
 import BottomTab from '@/components/common/BottomTab/BottomTab';
@@ -20,6 +20,7 @@ import Button from '@/components/common/Button/Button';
 import { colors } from '@/styles/colorPalette';
 import { PutSchedule } from '@/api/schedule/PUT';
 import { toast } from 'react-toastify';
+import { getMyScheduleDetailData } from '@/api/schedule/GET';
 
 interface ScheduleData {
   courseId: number;
@@ -33,6 +34,10 @@ function EditMySchedulePage() {
   /** 스케줄 아이디, dday 넘겨받기 */
   const location = useLocation();
   const { scheduleId } = location.state || {};
+  /** 데이터 가져오기 */
+  const [myScheduleListData, setMyScheduleListData] =
+    useState<RunningScheduleProps | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   /** 헤더 설정 열기 */
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [bsType, setBsType] = useState<string>('설정');
@@ -69,32 +74,31 @@ function EditMySchedulePage() {
     }
   };
 
-  /** feed 더미 데이터 */
-  /** === useState (routeData) */
-  const dummtFeedData = {
-    routeFeedImg: goyuMY,
-    routeUserImg: memberImg,
-    routeName: '코스 이름(태종대 전망대)',
-    routeContent: '이 코스는 초보자에게 적합합니다.',
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getMyScheduleDetailData(scheduleId);
 
-  /** feed 더미 데이터 */
-  /** === useState (dayData) && (totalDistance) */
-  const dummyFeedInfoData = {
-    router: '일정',
-    feedInfoTitle: '일정 정보',
-    /** 출발지 , 도착지 */
-    departuresPlace: '태종대 전망대',
-    arrivalsPlace: '태종대 전망대',
-    /** 출발일, 도착일 */
-    startDate: '2024.08.04',
-    endDate: '2024.08.16',
-    /** 거리 */
-    currentDistance: 100,
-    totalDistance: 200,
-    dayData: [{ dayNum: 1 }, { dayNum: 2 }, { dayNum: 3 }],
-    /** 오늘 일정 달성률 퍼센트 */
-    percent: 30,
+        if (response && response.status === 'SUCCESS') {
+          setMyScheduleListData(response.data);
+        } else {
+          setError('데이터 가져오기 실패');
+        }
+      } catch (error) {
+        console.error('Fetch Error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [myScheduleListData]);
+
+  const feedData = {
+    routeFeedImg: myScheduleListData?.backgroundImg || goyuMY,
+    routeUserImg: memberImg,
+    routeName: myScheduleListData?.title,
+    routeContent: myScheduleListData?.content,
   };
 
   // 날짜가 변경될 때 호출되는 함수
@@ -131,6 +135,30 @@ function EditMySchedulePage() {
     ],
   };
 
+  /** 내일정 - card 컴포넌트 'n박 n일' 계산 */
+  const formatDate = (dateStr: string): string => {
+    // Convert "YYYYMMDD" to "YYYY-MM-DD"
+    const formattedDateStr = `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(6, 8)}`;
+
+    const date = new Date(formattedDateStr);
+
+    const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+    const weekday = weekdays[date.getDay()];
+
+    const formattedDate = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}(${weekday})`;
+
+    return formattedDate;
+  };
+
+  const dayData =
+    myScheduleListData?.scheduleDayResDtoList?.map((day, index) => ({
+      dayNum: index + 1,
+    })) || [];
+
+  const formattedDistance = myScheduleListData?.totalDistance
+    ? Number(myScheduleListData.totalDistance.toFixed(1)) // toFixed()의 결과를 숫자로 변환
+    : 0;
+
   return (
     <ScheduleMainPageContainer>
       <Header
@@ -146,15 +174,15 @@ function EditMySchedulePage() {
 
       <R.Overflow>
         <R.RouteInfoContainer>
-          <Feed routeData={dummtFeedData} isUserContainer />
+          <Feed routeData={feedData} isUserContainer />
           <FeedInfo
             feedInfoTitle="일정 정보"
-            departuresPlace={dummyFeedInfoData.departuresPlace}
-            arrivalsPlace={dummyFeedInfoData.arrivalsPlace}
-            startDate={dummyFeedInfoData.startDate}
-            endDate={dummyFeedInfoData.endDate}
-            totalDistance={dummyFeedInfoData.totalDistance}
-            dayData={dummyFeedInfoData.dayData}
+            departuresPlace={myScheduleListData?.startPoint}
+            arrivalsPlace={myScheduleListData?.endPoint}
+            startDate={formatDate(myScheduleListData?.startDate || '')}
+            endDate={formatDate(myScheduleListData?.endDate || '-')}
+            totalDistance={formattedDistance}
+            dayData={dayData}
           />
         </R.RouteInfoContainer>
         <S.DatePickerEditWrap>

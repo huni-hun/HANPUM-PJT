@@ -70,6 +70,9 @@ public class CourseServiceImpl implements CourseService {
     @Value("${api.kakaoAppKey}")
     private String kakaoAppKey;
 
+    @Value("${api.tmapKey}")
+    private String tmapKey;
+
     @Override
     @Transactional(readOnly = true)
     public CourseListMapResDto getCourseList(CourseTypes targetCourse, Double maxDistance, Integer maxDays, List<CourseTypes> selectedTypes, String keyword, Pageable pageable, Long memberId) {
@@ -730,6 +733,99 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public List<MultiWaypointSearchResDto> getSearchTmapMultiWaypoint(List<MultiWaypointSearchReqDto> multiWaypointSearchReqDtoList) {
+        RestTemplate restTemplate = new RestTemplate();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        MultiWaypointSearchReqDto origin = multiWaypointSearchReqDtoList.get(0);
+        MultiWaypointSearchReqDto destination = multiWaypointSearchReqDtoList.get(multiWaypointSearchReqDtoList.size() - 1);
+        List<MultiWaypointSearchReqDto> waypoints = multiWaypointSearchReqDtoList.subList(1, multiWaypointSearchReqDtoList.size() - 1);
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("startX", origin.getX());
+        requestBody.put("startY", origin.getY());
+        requestBody.put("startName", origin.getName());
+        requestBody.put("endX", destination.getX());
+        requestBody.put("endY", destination.getY());
+        requestBody.put("endName", destination.getName());
+        requestBody.put("speed", 4);
+        StringBuilder sb = new StringBuilder();
+        for (MultiWaypointSearchReqDto waypoint : waypoints) {
+            sb.append(waypoint.getX()).append(",").append(waypoint.getY()).append("_");
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        requestBody.put("passList", sb.toString());
+
+        String jsonBody = null;
+        try {
+            jsonBody = objectMapper.writeValueAsString(requestBody);
+        } catch (JsonProcessingException e) {
+            throw new JsonBadProcessingException();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("appKey", tmapKey);
+        HttpEntity<?> entity = new HttpEntity<>(jsonBody, headers);
+
+        if (multiWaypointSearchReqDtoList == null || multiWaypointSearchReqDtoList.size() < 2) {
+            throw new IllegalArgumentException("dtoList must contain at least origin and destination");
+        }
+
+        String BASE_URL = "https://apis.openapi.sk.com/tmap/routes/pedestrian";
+        ResponseEntity<String> resultMap = restTemplate.exchange(BASE_URL + "?version=1&callback=function", HttpMethod.POST, entity, String.class);
+
+        JsonNode root = null;
+        try {
+            root = objectMapper.readTree(resultMap.getBody());
+        } catch (JsonMappingException e) {
+            throw new JsonBadMappingException();
+        } catch (JsonProcessingException e) {
+            throw new JsonBadProcessingException();
+        }
+
+        List<MultiWaypointSearchResDto> multiWaypointSearchResDtoList = new ArrayList<>();
+        JsonNode routesNode = root.path("features");
+
+        List<Double> vertexes = new ArrayList<>();
+        double totalDistance = 0.0;
+        for (JsonNode featureNode : routesNode) {
+            JsonNode geometryNode = featureNode.path("geometry");
+            JsonNode propertiesNode = featureNode.path("properties");
+
+            if ("LineString".equals(geometryNode.path("type").asText())) {
+                JsonNode coordinatesNode = geometryNode.path("coordinates");
+                for (JsonNode coordinate : coordinatesNode) {
+                    vertexes.add(coordinate.get(0).asDouble());
+                    vertexes.add(coordinate.get(1).asDouble());
+                }
+
+                totalDistance += propertiesNode.path("distance").asDouble();
+            }
+
+            String description = propertiesNode.path("description").asText();
+            if (description.contains("경유지")) {
+                MultiWaypointSearchResDto multiWaypointSearchResDto = MultiWaypointSearchResDto.builder()
+                        .distance(String.valueOf(totalDistance))
+                        .vertexes(new ArrayList<>(vertexes))
+                        .build();
+                multiWaypointSearchResDtoList.add(multiWaypointSearchResDto);
+
+                vertexes.clear();
+                totalDistance = 0.0;
+            }
+        }
+        MultiWaypointSearchResDto multiWaypointSearchResDto = MultiWaypointSearchResDto.builder()
+                .distance(String.valueOf(totalDistance))
+                .vertexes(new ArrayList<>(vertexes))
+                .build();
+        multiWaypointSearchResDtoList.add(multiWaypointSearchResDto);
+
+        return multiWaypointSearchResDtoList;
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<CourseResDto> getInterestCourseList(Long memberId) {
         List<InterestCourse> interestCourseList = interestCourseRepository.findByMember_MemberId(memberId);
@@ -754,12 +850,12 @@ public class CourseServiceImpl implements CourseService {
                     .endPoint(course.getEndPoint())
                     .totalDistance(course.getTotalDistance())
                     .memberId(course.getMember().getMemberId())
+                    .commentCnt(reviews.size())
                     .scoreAvg(scoreAvg)
                     .totalDays(course.getTotalDays())
                     .build()
             );
         }
-
 
         return courseResDtoList;
     }

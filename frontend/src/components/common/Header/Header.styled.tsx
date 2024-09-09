@@ -13,7 +13,7 @@ export const HeaderWrapper = styled.div<HeaderWrapperProps>`
   align-items: center;
   gap: 2rem;
   padding: 0 2rem;
-  background-color: ${({ $isGrey }) => ($isGrey ? '' : colors.white)};
+  background-color: ${({ $isGrey }) => ($isGrey ? '#F5F5F5' : colors.white)};
   position: sticky;
   top: 0;
   z-index: 10;
@@ -74,4 +74,12 @@ export const HeaderWrapper = styled.div<HeaderWrapperProps>`
     padding: 0 12px;
     font-size: 1.4rem;
   }
+`;
+
+/** 효령 스타일 추가 */
+export const TextWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 15vw;
+  align-items: center;
 `;

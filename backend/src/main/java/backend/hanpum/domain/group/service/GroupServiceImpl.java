@@ -145,7 +145,7 @@ public class GroupServiceImpl implements GroupService {
                 .map(courseType -> courseType.getTypeName().name())
                 .collect(Collectors.toList());
         long differenceInMillis = leader.getGroup().getRecruitmentPeriod().getTime() - new Date().getTime();
-        long differenceInDays = TimeUnit.MILLISECONDS.toDays(differenceInMillis);
+        long differenceInDays = TimeUnit.MILLISECONDS.toDays(differenceInMillis) + 1;
         groupDetailGetResDto.setReaderProfileImg(leader.getMember().getProfilePicture());
         groupDetailGetResDto.setReaderName((leader.getMember().getName()));
         groupDetailGetResDto.setCourseTypes(courseTypeNameList);
@@ -222,6 +222,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public GroupMemberDetailGetResDto getGroupMemberDetail(Long memberId, Long groupId, Long groupMemberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
@@ -298,6 +299,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public GroupResDto getMemberJoinGroup(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         return groupRepositoryCustom.findGroupByMemberId(memberId);
