@@ -154,7 +154,7 @@ function MeetAddMainPage() {
         clickBack={() => {
           localStorage.removeItem('meetRequest');
           localStorage.removeItem('previewImage');
-          navigate(-1);
+          navigate('/meet/list');
         }}
       />
       <MainPageContainer>

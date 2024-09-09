@@ -60,7 +60,6 @@ function MeetEditPage() {
 
   // meetRequest가 변경될 때 로컬 스토리지에 저장
   useEffect(() => {
-    localStorage.setItem('groupId', JSON.stringify(groupId));
     localStorage.setItem('meetRequest', JSON.stringify(meetRequest));
   }, [meetRequest, groupId]);
 
@@ -171,18 +170,23 @@ function MeetEditPage() {
     }
   };
 
+  const handleBackClick = () => {
+    const groupId = localStorage.getItem('groupId');
+
+    localStorage.removeItem('meetRequest');
+    localStorage.removeItem('previewImage');
+    navigate('/meet/detail', {
+      state: { groupId: groupId ? Number(groupId) : '' },
+    });
+  };
+
   return (
     <>
       <Header
         purpose="title"
         title="모임 수정"
         $isborder={true}
-        clickBack={() => {
-          localStorage.removeItem('meetRequest');
-          localStorage.removeItem('previewImage');
-          localStorage.removeItem('groupId');
-          navigate(-1);
-        }}
+        clickBack={handleBackClick}
       />
       <MainPageContainer>
         <M.MainContainer>

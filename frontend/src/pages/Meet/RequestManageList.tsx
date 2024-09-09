@@ -24,22 +24,26 @@ function RequestManageList() {
   const [loading, setLoading] = useState<boolean>(false);
   /** 아이디  넘겨받기 */
   const location = useLocation();
-  const { groupId } = location.state || {};
+  const savedGroupId = localStorage.getItem('groupId');
+  const groupIdNumber = savedGroupId ? Number(JSON.parse(savedGroupId)) : null;
 
   /** 신청관리 리스트 */
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await GetMeetApplyList(groupId);
-        if (response && response.status === 'SUCCESS') {
-          setListData(response.data.groupApplyResList || []);
-        } else if (response.status === 'ERROR') {
-          toast.error('권한이 없습니다.');
+      if (groupIdNumber) {
+        try {
+          const response = await GetMeetApplyList(groupIdNumber);
+          if (response && response.status === 'SUCCESS') {
+            setListData(response.data.groupApplyResList || []);
+          } else if (response.status === 'ERROR') {
+            toast.error(response.message);
+            navigate('/meet/detail');
+          }
+        } catch (error) {
+          toast.error('에러');
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        toast.error('에러');
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -47,16 +51,18 @@ function RequestManageList() {
   }, []);
 
   const clickMember = (memberId: number) => {
-    navigate('/meet/accept', { state: { groupId, memberId } });
+    navigate('/meet/accept', { state: { groupIdNumber, memberId } });
+  };
+
+  const clickBack = () => {
+    navigate('/meet/detail', {
+      state: { groupId: groupIdNumber ? Number(groupIdNumber) : '' },
+    });
   };
 
   return (
     <MainPageContainer>
-      <Header
-        purpose="result"
-        title="모임 신청 관리"
-        clickBack={() => navigate(-1)}
-      />
+      <Header purpose="result" title="모임 신청 관리" clickBack={clickBack} />
 
       {listData.length > 0 ? (
         <MemberList memberInfo={listData} onClick={clickMember} />

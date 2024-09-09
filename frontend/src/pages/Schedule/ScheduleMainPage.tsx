@@ -776,7 +776,7 @@ function ScheduleMainPage() {
                         setBsType={setBsType}
                         reviewType={reviewType}
                         turnGreen={arriveGreen}
-                        isSchedule
+                        isSchedule={true}
                       />
                     )}
                   </R.RouteDetailInfoContainer>
@@ -899,6 +899,7 @@ function ScheduleMainPage() {
                     setBsType={setBsType}
                     reviewType={reviewType}
                     turnGreen={arriveGreen}
+                    isSchedule={true}
                   />
                 </R.RouteDetailInfoContainer>
                 {/* 모임멤버 */}

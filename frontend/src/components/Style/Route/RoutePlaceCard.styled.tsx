@@ -2,7 +2,8 @@ import { colors } from '@/styles/colorPalette';
 import styled from 'styled-components';
 
 interface ScheduleProps {
-  scheduleState?: boolean;
+  isSchedule?: boolean;
+  state?: number;
   turnGreen?: boolean;
 }
 
@@ -48,10 +49,25 @@ export const PlaceNumberBox = styled.div<ScheduleProps>`
   align-items: center;
   justify-content: center;
   left: -0.85rem;
-  background-color: ${(props) =>
-    props.scheduleState || props.turnGreen ? colors.main : colors.grey2};
-  color: ${(props) =>
-    props.scheduleState || props.turnGreen ? colors.white : '#000'};
+  background-color: ${(props) => {
+    if (props.isSchedule) {
+      /** 일정 페이지일때  */
+      return props.state === 2 || props.turnGreen ? colors.main : colors.grey2;
+    }
+    return colors.main; /** !일정 페이지 */
+  }};
+
+  color: ${(props) => {
+    if (props.isSchedule) {
+      if (props.state === 2 || props.turnGreen) {
+        return colors.white; // state가 2이거나 turnGreen이 true일 때
+      } else {
+        return colors.black;
+      }
+    } else {
+      return colors.white; /** ! 일정 페이지 */
+    }
+  }};
 `;
 
 export const RetouchCardContainer = styled.div`

@@ -21,8 +21,8 @@ function MeetManageRequest() {
     null,
   );
   /** 멤버 아이디 넘겨받기 */
-  const location = useLocation();
-  const { groupId, memberId } = location.state || {};
+  const savedGroupId = localStorage.getItem('groupId');
+  const groupIdNumber = savedGroupId ? Number(JSON.parse(savedGroupId)) : null;
 
   /** 회원 정보 가져오기 */
   useEffect(() => {
@@ -46,18 +46,21 @@ function MeetManageRequest() {
 
   /** post - 모임 신청 */
   const handleApply = async () => {
-    try {
-      setLoading(true);
-      const response = await PostMeetApply(groupId, applyPost);
-      if (response && response.status === 'SUCCESS') {
-        toast.success('신청이 완료되었습니다.');
-      } else {
-        toast.error('신청에 실패했습니다.');
+    if (groupIdNumber) {
+      try {
+        setLoading(true);
+        const response = await PostMeetApply(groupIdNumber, applyPost);
+        if (response && response.status === 'SUCCESS') {
+          toast.success('신청이 완료되었습니다.');
+        } else if (response.status === 'ERROR') {
+          toast.error(response.message);
+          navigate('/meet/detail');
+        }
+      } catch (error) {
+        toast.error('에러 발생');
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      toast.error('에러 발생');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -109,15 +112,15 @@ function MeetManageRequest() {
       <M.InfoWrap>
         <M.ProfileBox>
           <M.Img>
-            <img src={dummyMemberData[0].img} alt="프로필 이미지" />
+            <img src={dummyMemberData[0]?.img} alt="프로필 이미지" />
           </M.Img>
-          <M.Name>{dummyMemberData[0].nickname}</M.Name>
+          <M.Name>{dummyMemberData[0]?.nickname}</M.Name>
         </M.ProfileBox>
         <M.ProfileInfo>
           {profileDetails.map((detail, index) => (
             <M.ProfileInfoDetail key={index}>
-              <M.ProfileInfoTitle>{detail.title}</M.ProfileInfoTitle>
-              <M.ProfileInfoContent>{detail.content}</M.ProfileInfoContent>
+              <M.ProfileInfoTitle>{detail?.title}</M.ProfileInfoTitle>
+              <M.ProfileInfoContent>{detail?.content}</M.ProfileInfoContent>
             </M.ProfileInfoDetail>
           ))}
         </M.ProfileInfo>

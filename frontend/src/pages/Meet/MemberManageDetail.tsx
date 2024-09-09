@@ -21,13 +21,18 @@ function MemberManageDetail() {
   const [bsType, setBsType] = useState<string>('설정');
   const [reviewType, setReviewType] = useState<string>('공개 여부');
   /** 멤버 아이디 넘겨받기 */
+  const savedGroupId = localStorage.getItem('groupId');
+  const groupIdNumber = savedGroupId ? Number(JSON.parse(savedGroupId)) : null;
   const location = useLocation();
   const { groupId, memberId } = location.state || {};
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await GetMeetMemberDetailList(groupId, memberId);
+        const response = await GetMeetMemberDetailList(
+          groupIdNumber || 0,
+          memberId,
+        );
         if (response && response.status === 'SUCCESS') {
           setMemberData(response.data || null);
         } else {
@@ -75,24 +80,17 @@ function MemberManageDetail() {
         ]
       : [];
 
-  const rejectModalOpen = () => {
-    setIsRejectModalOpen(true);
-  };
-
-  const rejectModalClose = () => {
-    setIsRejectModalOpen(false);
-  };
-
   /** 내보내기 */
   const deleteMemeber = async () => {
     try {
       setLoading(true);
       const response = await DeleteMeetExile(memberId);
       if (response && response.status === 'SUCCESS') {
-        toast.success('수락 완료되었습니다.');
+        toast.success(response.message);
+        navigate('/meet/memberMangeList');
         setIsOpen(false);
-      } else {
-        toast.error('수락 실패했습니다.');
+      } else if (response.status === 'ERROR') {
+        toast.error(response.message);
       }
     } catch (error) {
       toast.error('에러 발생');
@@ -105,7 +103,7 @@ function MemberManageDetail() {
   return (
     <MainPageContainer>
       <Header
-        purpose="schedule"
+        purpose="meet-detail"
         title="모임 인원관리"
         clickBack={() => navigate(-1)}
         clickOption={() => {
