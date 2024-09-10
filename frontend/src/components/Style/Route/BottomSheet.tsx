@@ -19,7 +19,7 @@ interface BottomSheetProps {
   id?: number;
   writeState?: boolean;
   openState?: boolean;
-
+  isWrite?: boolean;
   groupJoinStatus?: string;
 }
 
@@ -99,7 +99,7 @@ function BottomSheet(props: BottomSheetProps) {
     switch (option) {
       case '수정':
         if (props.route === '경로설정') {
-          if (props.onEdit && props.writeState) {
+          if (props.onEdit && props.isWrite) {
             props.onEdit();
           } else {
             props.setIsOpen(false);

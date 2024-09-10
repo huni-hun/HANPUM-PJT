@@ -28,6 +28,7 @@ import { toast } from 'react-toastify';
 
 import defaultImg from '@/assets/img/mountain.jpg';
 import { GetUser } from '@/api/mypage/GET';
+import useQueryHandling from '@/hooks/global/useQueryHandling';
 
 function RouteDetailPage() {
   const { routeid } = useParams();
@@ -287,6 +288,23 @@ function RouteDetailPage() {
       });
   };
 
+  const { data: userInfo } = useQueryHandling(
+    'getUser',
+    GetUser,
+    //   {
+    //   onSuccess: (res) => {
+    //     // console.log('res ::', res.data);
+    //     if (res.status === STATUS.success) {
+    //     } else if (res.status === STATUS.error) {
+    //       toast.error(res.message);
+    //     }
+    //   },
+    //   onError: (error: AxiosError) => {
+    //     // toast.error(error.message);
+    //   },
+    // }
+  );
+
   const renderBottomSheet = () => {
     if (isOpenSetting) {
       return (
@@ -304,6 +322,7 @@ function RouteDetailPage() {
           onDelete={deleteHandler}
           writeState={routeData.writeState}
           openState={routeData.openState}
+          isWrite={memberName === userInfo.data.nickname}
         />
       );
     }
