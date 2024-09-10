@@ -30,7 +30,7 @@ function ReviewModal(props: ReviewModalProps) {
         }
       })
       .catch((err) => {
-        console.log(err);
+        toast.error('리뷰 작성에 실패했습니다.');
       });
   };
 

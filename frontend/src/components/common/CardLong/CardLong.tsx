@@ -4,7 +4,7 @@ import Icon from '../Icon/Icon';
 import Text from '../Text';
 import { useEffect, useState } from 'react';
 import Flex from '../Flex';
-import { RouteListProps } from '@/models/route';
+import { RouteListProps, UserRouteProps } from '@/models/route';
 import { MeetInfo } from '@/models/meet';
 
 function CardLong({
@@ -17,7 +17,7 @@ function CardLong({
   onClickOutside,
   onClickCard,
 }: {
-  item: RouteListProps;
+  item: UserRouteProps | MeetInfo;
   hasHeart?: boolean;
   hasLock?: boolean;
   canDelete?: boolean;
@@ -29,6 +29,7 @@ function CardLong({
   // const [isSwiped, setIsSwiped] = useState(false);
   const [startX, setStartX] = useState<number | null>(null);
   const [canDeleted, setCanDeleted] = useState(false);
+  const [img, setImg] = useState<string>('');
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setStartX(e.touches[0].clientX);
@@ -39,7 +40,11 @@ function CardLong({
       const deltaX = e.touches[0].clientX - startX;
       if (deltaX < -58) {
         if (onSwipe) {
-          onSwipe(item.routeId);
+          if (isMeetInfo(item)) {
+            onSwipe(item.groupId);
+          } else {
+            onSwipe(item.courseId);
+          }
         }
         setCanDeleted(true);
       } else {
@@ -63,7 +68,6 @@ function CardLong({
   // 삭제 버튼 누르기
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log('삭제 눌림');
   };
 
   useEffect(() => {
@@ -78,6 +82,36 @@ function CardLong({
     };
   }, [isSwiped]);
 
+  useEffect(() => {
+    if (isUserRouteProps(item)) {
+      if (item.backgroundImg !== null) {
+        if (item.backgroundImg.includes('test')) {
+          setImg(image);
+        } else {
+          setImg(item.backgroundImg);
+        }
+      } else {
+        setImg(image);
+      }
+    } else {
+      if (item.groupImg.includes('test') || item.groupImg === '') {
+        setImg(image);
+      } else {
+        setImg(item.groupImg);
+      }
+    }
+  }, []);
+
+  const isUserRouteProps = (
+    item: UserRouteProps | MeetInfo,
+  ): item is UserRouteProps => {
+    return (item as UserRouteProps).courseId !== undefined;
+  };
+
+  const isMeetInfo = (item: UserRouteProps | MeetInfo): item is MeetInfo => {
+    return (item as MeetInfo).groupId !== undefined;
+  };
+
   return (
     <S.CardLongContainer onClick={onClickCard}>
       <div
@@ -90,29 +124,39 @@ function CardLong({
           transition: 'width 0.3s ease',
         }}
       >
-        <img src={image} alt="" />
+        <img src={img} alt="" />
         <div className="info-box">
           <div className="review">
             {/* <Icon name="IconStar" /> */}
-            <Text $typography="t12" color="white">
-              3.5
-            </Text>
-            <Text $typography="t12" color="white">
-              (3)
-            </Text>
+            {isUserRouteProps(item) && (
+              <Text $typography="t12" color="white">
+                {item.scoreAvg}
+              </Text>
+            )}
+            {isUserRouteProps(item) && (
+              <Text $typography="t12" color="white">
+                ({item.commentCnt})
+              </Text>
+            )}
           </div>
 
-          <Text $typography="t14" $bold={true} color="white">
-            {item.routeName}
-          </Text>
+          {isUserRouteProps(item) ? (
+            <Text $typography="t14" $bold={true} color="white">
+              {item.courseName}
+            </Text>
+          ) : (
+            <Text $typography="t14" $bold={true} color="white">
+              {item.title}
+            </Text>
+          )}
 
           <div className="info-root">
             <Text $typography="t10" color="white">
-              {item.start}
+              {item.startPoint}
             </Text>
             <Icon name="IconArrowWhite" />
             <Text $typography="t10" color="white">
-              {item.end}
+              {item.endPoint}
             </Text>
             <div className="line" />
             <Text $typography="t10" color="white">
@@ -149,7 +193,7 @@ function CardLong({
 
         <div className="badge">
           <Text $typography="t12" $bold={true} color="white">
-            5박 6일
+            {item.totalDays - 1}박 {item.totalDays}일
           </Text>
         </div>
 

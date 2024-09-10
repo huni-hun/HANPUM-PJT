@@ -148,7 +148,7 @@ export const MoreText = styled.p`
 `;
 
 export const CardContainer = styled.div`
-  width: 94vw;
+  width: 100vw;
   height: 20rem;
   display: flex;
   flex-direction: row;

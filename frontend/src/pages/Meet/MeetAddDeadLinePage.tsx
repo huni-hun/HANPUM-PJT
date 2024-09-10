@@ -13,6 +13,7 @@ import { toast } from 'react-toastify';
 import BottomTab from '@/components/common/BottomTab/BottomTab';
 import Button from '@/components/common/Button/Button';
 import { colors } from '@/styles/colorPalette';
+import { CreateMeetRequestDto } from '@/models/meet';
 
 interface ScheduleData {
   courseId: number;
@@ -29,7 +30,8 @@ function MeetAddSchedulePage() {
   const location = useLocation();
   const { courseId, startDate, recruitmentPeriod, isEdit } =
     location.state || {};
-
+  const [meetRequest, setMeetRequest] =
+    useState<Partial<CreateMeetRequestDto> | null>(null);
   /** 날짜 선택 시 vh 늘어나면서 data picker,map 활성화 */
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>(
@@ -48,6 +50,16 @@ function MeetAddSchedulePage() {
     }
   }, [recruitmentPeriod]);
 
+  useEffect(() => {
+    if (isEdit) {
+      // isEdit일 때만 로컬 스토리지에서 데이터 읽기
+      const savedMeetRequest = localStorage.getItem('meetEditRequest');
+      if (savedMeetRequest) {
+        setMeetRequest(JSON.parse(savedMeetRequest));
+      }
+    }
+  }, [isEdit]);
+
   // 날짜가 변경될 때 호출되는 함수
   const handleDateChange = (range: {
     startDate: string | null;
@@ -60,13 +72,23 @@ function MeetAddSchedulePage() {
 
   const postMeetDeadSchdule = (recruitmentPeriod: string) => {
     if (startDate !== '') {
-      navigate(isEdit ? '/meet/edit' : '/meet/addMain', {
-        state: {
-          courseId,
-          startDate,
-          recruitmentPeriod: recruitmentPeriod,
-        },
-      });
+      const baseState = {
+        courseId,
+        startDate,
+        recruitmentPeriod: recruitmentPeriod,
+      };
+
+      if (isEdit) {
+        const savedMeetRequest = localStorage.getItem('meetEditRequest');
+        const state = {
+          ...baseState,
+          meetEditRequest: savedMeetRequest ? JSON.parse(savedMeetRequest) : {},
+        };
+        navigate('/meet/edit', { state });
+        console.log(state, '바뀐것듪');
+      } else {
+        navigate('/meet/addMain', { state: baseState });
+      }
     } else {
       toast.error('날짜를 선택해주세요!');
     }

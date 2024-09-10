@@ -97,6 +97,7 @@ function RouteAddMainPage() {
                           (await compressImage(file)) ?? file;
 
                         const reader = URL.createObjectURL(compressedFile);
+                        console.log(reader);
                         setImgData(compressedFile);
                         setImgSrc(reader);
 
