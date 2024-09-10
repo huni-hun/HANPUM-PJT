@@ -47,7 +47,6 @@ import ActivityLayout from '@components/My/ActivityLayout';
 import ReviewPage from '@pages/My/ReviewPage';
 import MyProfilePage from '@pages/My/MyProfilePage';
 import CategoryLayout from '@/components/My/edit/CategoryLayout';
-import ConfigPage from '@pages/My/ConfigPage';
 import ConfigLayout from '@components/My/config/ConfigLayout';
 import ConfigDetailPage from '@pages/My/ConfigDetailPage';
 
@@ -96,7 +95,6 @@ export {
   ReviewPage,
   MyProfilePage,
   CategoryLayout,
-  ConfigPage,
   ConfigLayout,
   ConfigDetailPage,
 };

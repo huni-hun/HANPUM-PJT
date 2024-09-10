@@ -235,7 +235,7 @@ const Header = ({
               style={{ position: 'absolute', right: 16 }}
               onClick={() => navigate('/config')}
             >
-              <Icon name="IconConfig" />
+              {/* <Icon name="IconConfig" /> */}
             </div>
           </Flex>
         );
@@ -289,7 +289,7 @@ const Header = ({
             <img
               src={logo}
               alt="logo"
-              style={{ width: '4.4rem', height: '3.7rem' }}
+              style={{ width: '3.1rem', height: '3rem' }}
             />
             <Icon
               name="IconUser"
