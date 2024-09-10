@@ -30,6 +30,7 @@ function Withdraw() {
         toast.success(res.message);
         localStorage.removeItem('token');
         navigate('/login');
+        sessionStorage.removeItem('send');
         setAuthEnticate(false);
       }
       if (res.status === STATUS.error) {

@@ -19,7 +19,7 @@ function LoginPage() {
 
   useEffect(() => {
     if (tryKakao === 'true') {
-      console.log('여기임?');
+      // console.log('여기임?');
       const memberType = Cookies.get('memberType');
       const accessToken = Cookies.get('accessToken');
 
@@ -38,7 +38,7 @@ function LoginPage() {
         navigate('/home');
       }
     }
-  }, []);
+  }, [tryKakao]);
 
   return (
     <LoginPageContainer>
