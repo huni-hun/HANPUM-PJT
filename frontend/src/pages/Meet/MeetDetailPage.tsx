@@ -320,9 +320,13 @@ function MeetDetailPage() {
 
   /** 바텀탭 - 수정 클릭시 */
   const handleEdit = () => {
-    navigate(`/meet/edit`, {
-      state: { groupIdNumber },
-    });
+    if (meetDetail.data?.groupJoinStatus === 'GROUP_LEADER') {
+      navigate(`/meet/edit`, {
+        state: { groupIdNumber },
+      });
+    } else {
+      toast.error('권한이 없습니다.');
+    }
   };
 
   /** 신청하기 */
@@ -338,7 +342,11 @@ function MeetDetailPage() {
 
   /** 바텀탭 - 삭제 클릭시 */
   const handleDelete = () => {
-    setIsDeleteModalOpen(true);
+    if (meetDetail.data?.groupJoinStatus === 'GROUP_LEADER') {
+      setIsDeleteModalOpen(true);
+    } else {
+      toast.error('권한이 없습니다.');
+    }
   };
 
   /** 모임 삭제 */
@@ -369,7 +377,7 @@ function MeetDetailPage() {
           if (response && response.status === 'SUCCESS') {
             setMemberData(response.data.groupMemberResList);
           } else if (response.status === 'ERROR') {
-            toast.error(response.message);
+            // toast.error(response.message);
             // setSelected('course');
           }
         } catch (error) {

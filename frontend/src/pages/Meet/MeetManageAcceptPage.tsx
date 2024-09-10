@@ -25,21 +25,28 @@ function MeetManageAcceptPage() {
   const [loading, setLoading] = useState<boolean>(false);
   /** 멤버 아이디 넘겨받기 */
   const location = useLocation();
+  const savedGroupId = localStorage.getItem('groupId');
+  const groupIdNumber = savedGroupId ? Number(JSON.parse(savedGroupId)) : null;
   const { groupId, memberId } = location.state || {};
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await GetMeetMemberDetailList(groupId, memberId);
-        if (response && response.status === 'SUCCESS') {
-          setMemberData(response.data || null);
-        } else {
-          console.error('error');
+      if (groupIdNumber) {
+        try {
+          const response = await GetMeetMemberDetailList(
+            groupIdNumber,
+            memberId,
+          );
+          if (response && response.status === 'SUCCESS') {
+            setMemberData(response.data || null);
+          } else if (response.status === 'ERROR') {
+            console.error(response.message);
+          }
+        } catch (error) {
+          toast.error('에러');
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        toast.error('에러');
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -104,8 +111,8 @@ function MeetManageAcceptPage() {
       if (response && response.status === 'SUCCESS') {
         toast.success('거절 완료되었습니다.');
         setIsRejectModalOpen(false);
-      } else {
-        toast.error('거절 실패했습니다.');
+      } else if (response.status === 'ERROR') {
+        toast.error(response.message);
       }
     } catch (error) {
       toast.error('에러 발생');
@@ -123,8 +130,8 @@ function MeetManageAcceptPage() {
       if (response && response.status === 'SUCCESS') {
         toast.success('수락 완료되었습니다.');
         setIsAcceptModalOpen(false);
-      } else {
-        toast.error('수락 실패했습니다.');
+      } else if (response.status === 'ERROR') {
+        toast.error(response.message);
       }
     } catch (error) {
       toast.error('에러 발생');
