@@ -7,8 +7,15 @@ function Loading() {
   return (
     <Dimmed>
       <LoadingContainer>
-        {/* <Icon name="IconLoading" width={35} height={17.5} /> */}
-        <Spinner />
+        <div className="spinner-box">
+          <Icon
+            name="IconLoading"
+            width={35}
+            height={17.5}
+            style={{ opacity: '0' }}
+          />
+          <Icon name="IconLoading" width={35} height={17.5} />
+        </div>
       </LoadingContainer>
     </Dimmed>
   );
@@ -24,24 +31,22 @@ const LoadingContainer = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 15;
-`;
+  .spinner-box {
+    width: 35px;
+    height: 34px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: spin 0.8s linear infinite;
 
-const Spinner = styled.div`
-  width: 35px;
-  height: 35px;
-  border: 4px solid ${colors.grey5};
-  border-top: 4px solid;
-  border-left: 4px solid;
-  border-radius: 50%;
-  transform: rotate(45deg);
-  /* animation: spin 0.7s linear infinite; */
-
-  @keyframes spin {
-    0% {
-      transform: rotate(0);
-    }
-    100% {
-      transform: rotate(360deg);
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
     }
   }
 `;
