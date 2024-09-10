@@ -34,7 +34,7 @@ const Spinner = styled.div`
   border-left: 4px solid;
   border-radius: 50%;
   transform: rotate(45deg);
-  animation: spin 0.7s linear infinite;
+  /* animation: spin 0.7s linear infinite; */
 
   @keyframes spin {
     0% {
