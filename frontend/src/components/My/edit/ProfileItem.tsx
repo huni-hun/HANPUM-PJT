@@ -38,7 +38,7 @@ function ProfileItem({
           {memberType === 'KAKAO' && (
             <Flex $align="center">
               <img src={kakao} alt="kakao" />
-              <Text $typography="t12">카카오</Text>
+              <Text $typography="t12">카카오 연동계정</Text>
             </Flex>
           )}
           {/* {temp === false && (

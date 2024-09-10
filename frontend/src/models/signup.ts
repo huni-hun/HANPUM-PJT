@@ -6,7 +6,7 @@ export interface SignupStep {
 // 약관 동의
 export interface Term {
   title: string;
-  link: string;
+  url?: string;
   id: string;
 }
 

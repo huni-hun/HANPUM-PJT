@@ -126,7 +126,7 @@ function UserInfo({
       errors.inputAuthCode = checkInputCodeMessage;
     }
 
-    console.log('errors ::', errors);
+    // console.log('errors ::', errors);
 
     return errors;
   }, [
@@ -252,7 +252,7 @@ function UserInfo({
     return <Loading />;
   }
 
-  console.log('dirth ::', dirty);
+  // console.log('dirth ::', dirty);
 
   return (
     <S.UserInfoContainer>
