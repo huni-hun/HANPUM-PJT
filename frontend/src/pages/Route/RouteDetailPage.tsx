@@ -50,6 +50,7 @@ function RouteDetailPage() {
   const [linePath, setLinePath] = useState<MapLinePathProps[]>([]);
   const [se, setSe] = useState<LineStartEndProps[]>([]);
   const [marker, setMarker] = useState<LineStartEndProps[]>([]);
+  const [attmarker, setAttMarker] = useState<LineStartEndProps[]>([]);
   const [bsType, setBsType] = useState<string>('설정');
   const [reviewType, setReviewType] = useState<string>('최신순');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -111,6 +112,7 @@ function RouteDetailPage() {
   useEffect(() => {
     setSe([]);
     setMarker([]);
+    setAttMarker([]);
     getRouteDayDetail(routeid as string, selectedDay).then((result) => {
       if (result.status === 200) {
         let arr: DaysOfRouteProps[] = [];
@@ -164,6 +166,12 @@ function RouteDetailPage() {
             img: ele.img,
           };
           attArr.push(attData);
+
+          let markerData: LineStartEndProps = {
+            x: ele.lat,
+            y: ele.lon,
+          };
+          setAttMarker((pre) => [...pre, markerData]);
         });
         setAttractions(attArr);
       }
@@ -443,6 +451,7 @@ function RouteDetailPage() {
               setIsOpen={setIsOpenSorting}
               setBsType={setBsType}
               reviewType={reviewType}
+              attmarker={attmarker}
             />
           </R.RouteDetailInfoContainer>
         </R.Overflow>

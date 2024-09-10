@@ -233,9 +233,7 @@ function RouteAddDetailPage() {
             setWayPoints(curWay);
           }
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => {});
 
       let route: AddRouteProps = {
         courseName: data.routeTitle,

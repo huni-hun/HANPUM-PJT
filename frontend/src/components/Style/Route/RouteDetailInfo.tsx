@@ -43,6 +43,7 @@ interface RouteDetailInfoProps {
   setSelectedIdx: React.Dispatch<React.SetStateAction<number>>;
   deleteHandler: (name: string) => void;
   marker: any[];
+  attmarker?: any[];
   isSchedule?: boolean;
   state?: number;
   turnGreen?: boolean[];
@@ -137,6 +138,7 @@ function RouteDetailInfo({
                 longitude={props.latitude}
                 marker={props.marker}
                 infoBtn
+                attrationmarker={props.attmarker}
               />
             </R.MapBox>
             <R.DetailHeader>
@@ -282,6 +284,7 @@ function RouteDetailInfo({
                 latitude={props.longitude}
                 longitude={props.latitude}
                 marker={props.marker}
+                attrationmarker={props.attmarker}
               />
             </R.MapBox>
             <R.DetailHeader>
