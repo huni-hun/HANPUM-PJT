@@ -55,7 +55,7 @@ import { useEffect } from 'react';
 
 export default function Router() {
   const isAuth = useIsAuth();
-  console.log(isAuth);
+  // console.log(isAuth);
 
   return (
     <BrowserRouter>
@@ -65,6 +65,10 @@ export default function Router() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/find/:account" element={<FindPage />} />
+            <Route
+              path="/config/:category/detail/:id"
+              element={<ConfigDetailPage />}
+            />
             <Route path="/" element={<Navigate to="/login" />} />
           </>
         ) : (

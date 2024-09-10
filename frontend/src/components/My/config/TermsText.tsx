@@ -5,6 +5,9 @@ import styled from 'styled-components';
 function TermsText() {
   return (
     <TermsContainer>
+      <Text $typography="t20" $bold={true} style={{ marginBottom: '15px' }}>
+        서비스 이용약관
+      </Text>
       <div className="section">
         <Text $typography="t14" $bold={true}>
           제 1조 목적
