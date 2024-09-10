@@ -905,13 +905,15 @@ function ScheduleMainPage() {
                     />
                   )}
                 </R.RouteDetailInfoContainer>
-                <S.ScheduleMainContainer>
-                  <MeetMember
-                    memberCount={memberData.length}
-                    members={memberData || []}
-                  />
-                </S.ScheduleMainContainer>
                 {/* 모임멤버 */}
+                <S.ScheduleMainContainer>
+                  <div className="marginBottom">
+                    <MeetMember
+                      memberCount={memberData.length}
+                      members={memberData || []}
+                    />
+                  </div>
+                </S.ScheduleMainContainer>
               </>
             ) : (
               <S.NoData>일정이 없습니다.</S.NoData>
