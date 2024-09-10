@@ -55,7 +55,7 @@ import { useEffect } from 'react';
 
 export default function Router() {
   const isAuth = useIsAuth();
-  // console.log(isAuth);
+  console.log(isAuth);
 
   return (
     <BrowserRouter>
@@ -69,6 +69,7 @@ export default function Router() {
           </>
         ) : (
           <>
+            <Route path="/signup" element={<SignupPage />} />
             <Route path="/home" element={<MainPage />} />
             {/* 기본 경로를 /home으로 리다이렉트 */}
             <Route path="/" element={<Navigate to="/home" />} />
