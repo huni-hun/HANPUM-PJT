@@ -330,7 +330,7 @@ function MainPage() {
           ))}
         <BottomTab />
       </div>
-      <Loading />
+      {/* <Loading /> */}
     </MainPageContainer>
   );
 }
