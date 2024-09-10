@@ -89,12 +89,13 @@ function BottomSheet(props: BottomSheetProps) {
 
     switch (option) {
       case '수정':
-        if (props.onEdit) props.onEdit();
-        // if (props.onEdit && props.writeState)
-        // else {
-        //   props.setIsOpen(false);
-        //   toast.error('수정권한이 없습니다.');
-        // }
+        // if (props.onEdit) props.onEdit();
+        if (props.onEdit && props.writeState) {
+          props.onEdit();
+        } else {
+          props.setIsOpen(false);
+          toast.error('수정권한이 없습니다.');
+        }
         break;
       case '삭제':
         if (props.onDelete && props.writeState) props.onDelete();

@@ -142,7 +142,7 @@ function RouteDetailInfo({
               {location.pathname.includes('retouch') ? (
                 <R.RetouchHeaderOverflow>
                   {props.dayData.map((ele) => (
-                    <R.DayContainer>
+                    <R.DayContainer key={ele.dayNum}>
                       <R.DayBox
                         selected={ele.dayNum === props.selectedDay}
                         onClick={() => {
@@ -155,7 +155,7 @@ function RouteDetailInfo({
               ) : (
                 <R.HeaderOverflow>
                   {props.dayData.map((ele) => (
-                    <R.DayContainer>
+                    <R.DayContainer key={ele.dayNum}>
                       <R.DayBox
                         selected={ele.dayNum === props.selectedDay}
                         onClick={() => {

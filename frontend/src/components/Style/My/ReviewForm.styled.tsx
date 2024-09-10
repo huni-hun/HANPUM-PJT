@@ -17,8 +17,10 @@ export const ReviewFormContainer = styled.div`
 
   .stars-box {
     width: 100%;
-    height: 3rem;
-    background-color: skyblue;
+    height: 4rem;
+    display: flex;
+    justify-content: center;
+    align-items: start;
     margin: 12px 0 16px;
   }
 

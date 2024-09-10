@@ -202,7 +202,7 @@ function AddSchedulePage() {
                 <S.RouteMapContent
                   onClick={() => {
                     if (!isMapReady) {
-                      navigate('/route/list');
+                      navigate('/route/list', { state: { type: 'schedule' } });
                       localStorage.setItem(
                         'startDate',
                         JSON.stringify(dates.startDate),

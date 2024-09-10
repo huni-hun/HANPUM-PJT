@@ -7,10 +7,12 @@ import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 import NoHave from '../NoHave';
 import CardLong from '@/components/common/CardLong/CardLong';
+import { useNavigate } from 'react-router-dom';
 
 function Interest() {
   const [tab, setTab] = useState('경로');
   const [swipedId, setSwipedId] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   const setTabvalue = (e: React.MouseEvent<HTMLElement>) => {
     setTab(e.currentTarget.innerText);
@@ -23,43 +25,6 @@ function Interest() {
   const handleClickOutside = () => {
     setSwipedId(null);
   };
-
-  const root = [
-    {
-      routeName: '대전에서 서울까지',
-      routeContent: '서울에서 대전까지 가는 초보자용 코스입니다.',
-      routeScore: 3.25,
-      routeComment: 2,
-      routeId: 1,
-      img: 'testurl',
-      writeState: false,
-      openState: true,
-      memberId: 1,
-      writeDate: '2024-08-27',
-      start: '서울',
-      end: '대전',
-      totalDistance: 76,
-      totalDays: 6,
-      interestFlag: false,
-    },
-    {
-      routeName: '대전에서 서울까지',
-      routeContent: '서울에서 대전까지 가는 초보자용 코스입니다.',
-      routeScore: 3.25,
-      routeComment: 2,
-      routeId: 2,
-      img: 'testurl',
-      writeState: false,
-      openState: true,
-      memberId: 1,
-      writeDate: '2024-08-27',
-      start: '서울',
-      end: '대전',
-      totalDistance: 76,
-      totalDays: 6,
-      interestFlag: false,
-    },
-  ];
 
   const { data: interestMeet } = useQuery(
     'getInterestMeet', // Query Key
@@ -79,11 +44,11 @@ function Interest() {
   );
 
   const { data: interesRoot } = useQuery(
-    'getInterestMeet', // Query Key
+    'getInterestRoute', // Query Key
     GetInterestRouteList,
     {
       onSuccess: (res) => {
-        console.log('res ::', res.data);
+        // console.log('res ::', res.data);
         if (res.status === STATUS.success) {
         } else if (res.status === STATUS.error) {
           toast.error(res.message);
@@ -94,6 +59,10 @@ function Interest() {
       },
     },
   );
+
+  const onClickCard = (id: number) => {
+    navigate(`/route/detail/${id}`);
+  };
 
   return (
     <S.InterestContainer>
@@ -115,18 +84,19 @@ function Interest() {
       {/*  경로 */}
       {tab === '경로' &&
         interesRoot &&
-        (interesRoot.data.groupResDtoList.length === 0 ? (
+        (interesRoot.data.length === 0 ? (
           <NoHave category="root" />
         ) : (
           <div className="card-container">
-            {interesRoot.data.groupResDtoList.map((item: any) => (
+            {interesRoot.data.map((item: any) => (
               <CardLong
-                key={item.routeId}
+                key={item.courseId}
                 hasHeart={true}
                 item={item}
-                isSwiped={swipedId === item.routeId}
+                isSwiped={swipedId === item.courseId}
                 onSwipe={handleSwipe}
                 onClickOutside={handleClickOutside}
+                onClickCard={() => onClickCard(item.courseId)}
               />
             ))}
           </div>
@@ -140,7 +110,14 @@ function Interest() {
         ) : (
           <div className="card-container">
             {interestMeet.data.groupResDtoList.map((item: any) => (
-              <CardLong key={item.id} item={item} />
+              <CardLong
+                key={item.groupId}
+                item={item}
+                hasHeart={true}
+                isSwiped={swipedId === item.groupId}
+                onSwipe={handleSwipe}
+                onClickOutside={handleClickOutside}
+              />
             ))}
           </div>
         ))}

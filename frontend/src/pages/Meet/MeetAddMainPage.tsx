@@ -6,7 +6,12 @@ import Header from '@/components/common/Header/Header';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ToggleSlider from '@/components/common/ToggleSlider/ToggleSlider';
-import { CreateMeetRequestDto } from '@/models/meet';
+import {
+  CreateMeetProps,
+  CreateMeetRequestDto,
+  groupPostReqDtoProps,
+  schedulePostReqDto,
+} from '@/models/meet';
 import Text from '@/components/common/Text';
 import BaseButton from '@/components/common/BaseButton';
 import { PostGroup } from '@/api/meet/POST';
@@ -17,14 +22,15 @@ function MeetAddMainPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { compressImage, compressedImage } = useImageCompression();
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [previewImage, setPreviewImage] = useState<string>(null!);
   const [meetRequest, setMeetRequest] = useState<Partial<CreateMeetRequestDto>>(
     {},
   );
 
-  const { courseId, startDate, endDate, recruitmentPeriod } =
-    location.state || {};
+  const [meetData, setMeetData] = useState<CreateMeetProps>(null!);
 
+  const { courseId, startDate, endDate, recruitmentPeriod, start, end } =
+    location.state || {};
   useEffect(() => {
     const savedMeetRequest = localStorage.getItem('meetRequest');
     if (savedMeetRequest) {
@@ -40,6 +46,23 @@ function MeetAddMainPage() {
   /** 로컬 스토리지로 input value + 이미지 저장 */
   useEffect(() => {
     localStorage.setItem('meetRequest', JSON.stringify(meetRequest));
+    const schedulePostReqDto: schedulePostReqDto = {
+      courseId: Number(courseId),
+      startDate: startDate,
+    };
+    const groupPostReqDto: groupPostReqDtoProps = {
+      title: meetRequest.title || '',
+      description: meetRequest.description || '',
+      recruitmentCount: meetRequest.recruitmentCount || 0,
+      recruitmentPeriod: recruitmentPeriod,
+      /** 일정쪽 */
+      schedulePostReqDto: schedulePostReqDto,
+    };
+    const meetdata: CreateMeetProps = {
+      multipartFile: previewImage,
+      groupPostReqDto: groupPostReqDto,
+    };
+    setMeetData(meetdata);
   }, [meetRequest]);
 
   /** location state로 관리 */
@@ -53,24 +76,19 @@ function MeetAddMainPage() {
   }, [location.state]);
 
   /** 이미지 핸들링 */
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
+      const compressedFile = (await compressImage(file)) ?? file;
 
-      reader.onloadend = () => {
-        if (reader.result) {
-          const imageUrl = reader.result as string;
-          setPreviewImage(imageUrl);
-          localStorage.setItem('previewImage', imageUrl);
-          setMeetRequest((prevValue) => ({
-            ...prevValue,
-            multipartFile: file,
-          }));
-        }
-      };
+      const url = URL.createObjectURL(compressedFile);
 
-      reader.readAsDataURL(file);
+      setPreviewImage(url);
+      localStorage.setItem('previewImage', url);
+      setMeetRequest((prevValue) => ({
+        ...prevValue,
+        multipartFile: file,
+      }));
     }
   };
 
@@ -117,20 +135,29 @@ function MeetAddMainPage() {
   /** 모임 생성 post api */
   const handleCreateGroup = async () => {
     try {
-      const multipartFile = previewImage;
-      const groupPostReqDto = {
-        title: meetRequest.title || '',
-        description: meetRequest.description || '',
-        recruitmentCount: meetRequest.recruitmentCount || 0,
-        recruitmentPeriod: recruitmentPeriod || '',
-        /** 일정쪽 */
-        schedulePostReqDto: {
-          courseId: courseId || 0,
-          startDate: startDate || '',
-        },
-      };
+      // const multipartFile = previewImage;
+      // const schedulePostReqDto: schedulePostReqDto = {
+      //   courseId: Number(courseId),
+      //   startDate: startDate,
+      // };
+      // const groupPostReqDto: groupPostReqDtoProps = {
+      //   title: meetRequest.title || '',
+      //   description: meetRequest.description || '',
+      //   recruitmentCount: meetRequest.recruitmentCount || 0,
+      //   recruitmentPeriod: recruitmentPeriod,
+      //   /** 일정쪽 */
+      //   schedulePostReqDto: schedulePostReqDto,
+      // };
 
-      const response = await PostGroup(multipartFile || '', groupPostReqDto);
+      // const data: CreateMeetProps = {
+      //   multipartFile: multipartFile,
+      //   groupPostReqDto: groupPostReqDto,
+      // };
+
+      // if (data.groupPostReqDto.title !== '') {
+
+      // }
+      const response = await PostGroup(meetData);
 
       if (response && response.status === 'SUCCESS') {
         toast.success('모임 생성이 완료되었습니다!');
@@ -138,9 +165,11 @@ function MeetAddMainPage() {
         localStorage.removeItem('meetRequest');
         localStorage.removeItem('previewImage');
       } else {
+        console.log(response);
         toast.error('모임 생성에 실패했습니다.');
       }
     } catch (error) {
+      console.log(error);
       toast.error('모임 생성 중 오류가 발생했습니다.');
     }
   };
@@ -228,16 +257,25 @@ function MeetAddMainPage() {
             <Text $bold={true} $typography="t12">
               일정
             </Text>
-            <M.ScheduleTextWrap>
-              {/* 일정에서 날짜를 선택안했을 때 (여기에 조건 추가해서 경로 붙이면 될듯 합니다) */}
-              {startDate !== undefined && (
-                <M.ScheduleText>
-                  {startDate} - {endDate}
-                </M.ScheduleText>
-              )}
+            <div className="schedule-info">
+              <M.ScheduleTextWrap>
+                {/* 일정에서 날짜를 선택안했을 때 (여기에 조건 추가해서 경로 붙이면 될듯 합니다) */}
+                {startDate !== undefined && (
+                  <M.ScheduleText>
+                    {startDate} - {endDate}
+                  </M.ScheduleText>
+                )}
 
-              <Icon name="IconArrowRight" />
-            </M.ScheduleTextWrap>
+                <Icon name="IconArrowRight" />
+              </M.ScheduleTextWrap>
+              <M.ScheduleTextWrap>
+                {start !== undefined && (
+                  <M.ScheduleText>
+                    {start} - {end}
+                  </M.ScheduleText>
+                )}
+              </M.ScheduleTextWrap>
+            </div>
           </div>
 
           <div className="btn-box">

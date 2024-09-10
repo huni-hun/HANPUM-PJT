@@ -6,44 +6,28 @@ import Text from '../../common/Text';
 import Flex from '../../common/Flex';
 import Icon from '../../common/Icon/Icon';
 import CardLong from '../../common/CardLong/CardLong';
+import { useQuery } from 'react-query';
+import { GetSelfRouteList } from '@/api/mypage/GET';
+import { STATUS } from '@/constants';
+import { toast } from 'react-toastify';
+import { AxiosError } from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function MyRoot() {
-  const root = [
-    {
-      routeName: '대전에서 서울까지',
-      routeContent: '서울에서 대전까지 가는 초보자용 코스입니다.',
-      routeScore: 3.25,
-      routeComment: 2,
-      routeId: 1,
-      img: 'testurl',
-      writeState: false,
-      openState: true,
-      memberId: 1,
-      writeDate: '2024-08-27',
-      start: '서울',
-      end: '대전',
-      totalDistance: 76,
-      totalDays: 6,
-      interestFlag: false,
+  const navigate = useNavigate();
+
+  const { data: userRoute } = useQuery('getUserRoute', GetSelfRouteList, {
+    onSuccess: (res) => {
+      // console.log('res ::', res.data);
+      if (res.status === STATUS.success) {
+      } else if (res.status === STATUS.error) {
+        toast.error(res.message);
+      }
     },
-    {
-      routeName: '대전에서 서울까지',
-      routeContent: '서울에서 대전까지 가는 초보자용 코스입니다.',
-      routeScore: 3.25,
-      routeComment: 2,
-      routeId: 2,
-      img: 'testurl',
-      writeState: false,
-      openState: true,
-      memberId: 1,
-      writeDate: '2024-08-27',
-      start: '서울',
-      end: '대전',
-      totalDistance: 76,
-      totalDays: 6,
-      interestFlag: false,
+    onError: (error: AxiosError) => {
+      toast.error(error.message);
     },
-  ];
+  });
 
   const [swipedCard, setSwipedCard] = useState<number | null>(null);
 
@@ -55,20 +39,26 @@ function MyRoot() {
     setSwipedCard(null);
   };
 
+  const onClickCard = (id: number) => {
+    navigate(`/route/detail/${id}`);
+  };
+
   return (
     <S.MyRootContainer>
       <div className="card-container">
-        {root.map((item) => (
-          <CardLong
-            key={item.routeId}
-            item={item}
-            hasLock={true}
-            canDelete={true}
-            isSwiped={swipedCard === item.routeId}
-            onSwipe={handleSwipe}
-            onClickOutside={handleClickOutside}
-          />
-        ))}
+        {userRoute &&
+          userRoute.data.map((item: any) => (
+            <CardLong
+              key={item.courseId}
+              item={item}
+              hasLock={true}
+              canDelete={true}
+              isSwiped={swipedCard === item.courseId}
+              onSwipe={handleSwipe}
+              onClickOutside={handleClickOutside}
+              onClickCard={() => onClickCard(item.courseId)}
+            />
+          ))}
       </div>
     </S.MyRootContainer>
   );

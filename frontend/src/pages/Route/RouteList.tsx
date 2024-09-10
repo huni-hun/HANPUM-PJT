@@ -7,7 +7,7 @@ import BottomTab from '@/components/common/BottomTab/BottomTab';
 import { useEffect, useState } from 'react';
 import { getRouteList } from '@/api/route/GET';
 import { RouteListProps } from '@/models/route';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import CardLong from '@/components/common/CardLong/CardLong';
 import { GetUser } from '@/api/mypage/GET';
 import { useQuery } from 'react-query';
@@ -21,6 +21,9 @@ function RouteList() {
   const [arrD, setArrD] = useState<RouteListProps[]>([]);
   const [morePageOpen, setMoreOpenPage] = useState<boolean>(false);
   const navigator = useNavigate();
+
+  const location = useLocation();
+  const { startDate, recruitmentPeriod, type } = location.state || {};
 
   const { data: userInfo } = useQuery('getUser', GetUser, {
     onSuccess: (res) => {
@@ -37,83 +40,95 @@ function RouteList() {
 
   useEffect(() => {
     const data: RouteListProps[] = [];
-    getRouteList('해안길', 4).then((result) => {
-      if (result.status === 200) {
-        result.data.data.courseListMap['해안길'].map((ele: any) => {
-          let data: RouteListProps = {
-            routeName: ele.courseName,
-            routeContent: ele.content,
-            routeScore: ele.scoreAvg,
-            routeComment: ele.commentCnt,
-            routeId: ele.courseId,
-            img: ele.backgroundImg,
-            writeState: ele.writeState,
-            openState: ele.openState,
-            memberId: ele.memberId,
-            writeDate: ele.writeDate,
-            start: ele.startPoint,
-            end: ele.endPoint,
-            totalDistance: Math.round(ele.totalDistance),
-            totalDays: ele.totalDays,
-            interestFlag: ele.interestFlag,
-          };
+    getRouteList('해안길', 4)
+      .then((result) => {
+        if (result.status === 200) {
+          result.data.data.courseListMap['해안길'].map((ele: any) => {
+            let data: RouteListProps = {
+              routeName: ele.courseName,
+              routeContent: ele.content,
+              routeScore: ele.scoreAvg,
+              routeComment: ele.commentCnt,
+              routeId: ele.courseId,
+              img: ele.backgroundImg,
+              writeState: ele.writeState,
+              openState: ele.openState,
+              memberId: ele.memberId,
+              writeDate: ele.writeDate,
+              start: ele.startPoint,
+              end: ele.endPoint,
+              totalDistance: Math.round(ele.totalDistance),
+              totalDays: ele.totalDays,
+              interestFlag: ele.interestFlag,
+            };
 
-          setArr((pre) => [...pre, data]);
-        });
-      }
-    });
+            setArr((pre) => [...pre, data]);
+          });
+        }
+      })
+      .catch((err) => {
+        toast.error('경로를 가져오지 못 했습니다.');
+      });
 
-    getRouteList('초보자', 4).then((result) => {
-      if (result.status === 200) {
-        result.data.data.courseListMap['초보자'].map((ele: any) => {
-          let data: RouteListProps = {
-            routeName: ele.courseName,
-            routeContent: ele.content,
-            routeScore: ele.scoreAvg,
-            routeComment: ele.commentCnt,
-            routeId: ele.courseId,
-            img: ele.backgroundImg,
-            writeState: ele.writeState,
-            openState: ele.openState,
-            memberId: ele.memberId,
-            writeDate: ele.writeDate,
-            start: ele.startPoint,
-            end: ele.endPoint,
-            totalDistance: Math.round(ele.totalDistance),
-            totalDays: ele.totalDays,
-            interestFlag: ele.interestFlag,
-          };
+    getRouteList('초보자', 4)
+      .then((result) => {
+        if (result.status === 200) {
+          result.data.data.courseListMap['초보자'].map((ele: any) => {
+            let data: RouteListProps = {
+              routeName: ele.courseName,
+              routeContent: ele.content,
+              routeScore: ele.scoreAvg,
+              routeComment: ele.commentCnt,
+              routeId: ele.courseId,
+              img: ele.backgroundImg,
+              writeState: ele.writeState,
+              openState: ele.openState,
+              memberId: ele.memberId,
+              writeDate: ele.writeDate,
+              start: ele.startPoint,
+              end: ele.endPoint,
+              totalDistance: Math.round(ele.totalDistance),
+              totalDays: ele.totalDays,
+              interestFlag: ele.interestFlag,
+            };
 
-          setArrC((pre) => [...pre, data]);
-        });
-      }
-    });
+            setArrC((pre) => [...pre, data]);
+          });
+        }
+      })
+      .catch((err) => {
+        toast.error('경로를 가져오지 못 했습니다.');
+      });
 
-    getRouteList('숙련자', 4).then((result) => {
-      if (result.status === 200) {
-        result.data.data.courseListMap['숙련자'].map((ele: any) => {
-          let data: RouteListProps = {
-            routeName: ele.courseName,
-            routeContent: ele.content,
-            routeScore: ele.scoreAvg,
-            routeComment: ele.commentCnt,
-            routeId: ele.courseId,
-            img: ele.backgroundImg,
-            writeState: ele.writeState,
-            openState: ele.openState,
-            memberId: ele.memberId,
-            writeDate: ele.writeDate,
-            start: ele.startPoint,
-            end: ele.endPoint,
-            totalDistance: Math.round(ele.totalDistance),
-            totalDays: ele.totalDays,
-            interestFlag: ele.interestFlag,
-          };
+    getRouteList('숙련자', 4)
+      .then((result) => {
+        if (result.status === 200) {
+          result.data.data.courseListMap['숙련자'].map((ele: any) => {
+            let data: RouteListProps = {
+              routeName: ele.courseName,
+              routeContent: ele.content,
+              routeScore: ele.scoreAvg,
+              routeComment: ele.commentCnt,
+              routeId: ele.courseId,
+              img: ele.backgroundImg,
+              writeState: ele.writeState,
+              openState: ele.openState,
+              memberId: ele.memberId,
+              writeDate: ele.writeDate,
+              start: ele.startPoint,
+              end: ele.endPoint,
+              totalDistance: Math.round(ele.totalDistance),
+              totalDays: ele.totalDays,
+              interestFlag: ele.interestFlag,
+            };
 
-          setArrD((pre) => [...pre, data]);
-        });
-      }
-    });
+            setArrD((pre) => [...pre, data]);
+          });
+        }
+      })
+      .catch((err) => {
+        toast.error('경로를 가져오지 못 했습니다.');
+      });
   }, []);
 
   const clickMoreBtn = (keyword: string) => {
@@ -154,7 +169,13 @@ function RouteList() {
             <R.BlankBox />
             <R.OverFlow>
               {arr.map((ele) => (
-                <RouteCard {...ele} key={ele.routeId} />
+                <RouteCard
+                  ele={ele}
+                  startDate={startDate}
+                  type={type}
+                  recruitmentPeriod={recruitmentPeriod}
+                  key={ele.routeId}
+                />
               ))}
             </R.OverFlow>
             <R.BlankBox />
@@ -176,7 +197,13 @@ function RouteList() {
             <R.BlankBox />
             <R.OverFlow>
               {arr.map((ele) => (
-                <RouteCard {...ele} key={ele.routeId} />
+                <RouteCard
+                  ele={ele}
+                  startDate={startDate}
+                  type={type}
+                  recruitmentPeriod={recruitmentPeriod}
+                  key={ele.routeId}
+                />
               ))}
             </R.OverFlow>
           </R.CardContainer>
@@ -199,7 +226,13 @@ function RouteList() {
             <R.BlankBox />
             <R.OverFlow>
               {arrC.map((ele) => (
-                <RouteCard {...ele} />
+                <RouteCard
+                  ele={ele}
+                  startDate={startDate}
+                  type={type}
+                  recruitmentPeriod={recruitmentPeriod}
+                  key={ele.routeId}
+                />
               ))}
             </R.OverFlow>
           </R.CardContainer>
@@ -222,7 +255,13 @@ function RouteList() {
             <R.BlankBox />
             <R.OverFlow>
               {arrD.map((ele) => (
-                <RouteCard {...ele} />
+                <RouteCard
+                  ele={ele}
+                  startDate={startDate}
+                  type={type}
+                  recruitmentPeriod={recruitmentPeriod}
+                  key={ele.routeId}
+                />
               ))}
             </R.OverFlow>
           </R.CardContainer>
