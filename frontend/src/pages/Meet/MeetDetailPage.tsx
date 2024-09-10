@@ -357,6 +357,8 @@ function MeetDetailPage() {
       if (response && response.status === 'SUCCESS') {
         toast.success('모임 삭제 완료되었습니다.');
         setIsDeleteModalOpen(false);
+        localStorage.removeItem('groupId');
+        navigate('/meet/list');
       } else {
         toast.error('모임 삭제 실패했습니다.');
       }

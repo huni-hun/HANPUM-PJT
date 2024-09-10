@@ -30,6 +30,9 @@ function MeetSmallCard({
           .then((res) => {
             if (res.status === 'SUCCESS') {
               toast.done(res.message);
+              navigate(`/meet/detail`, {
+                state: { groupId: data.groupId },
+              });
             }
           })
           .catch((err) => {
