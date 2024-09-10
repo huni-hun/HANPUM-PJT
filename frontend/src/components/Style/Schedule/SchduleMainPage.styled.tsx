@@ -5,6 +5,13 @@ interface ProgressProps {
   percentage: number;
 }
 
+interface StyleProps {
+  isScheduleHeight?: boolean;
+}
+interface MeetStyleProps {
+  isMeetFeed?: string;
+}
+
 export const Container = styled.div`
   width: 100%;
   /* height: 100vh; */
@@ -118,9 +125,10 @@ export const ScheduleWeatherContainer = styled.div`
   padding-bottom: 2rem;
 `;
 
-export const SchduleProgressWrap = styled.div`
+export const SchduleProgressWrap = styled.div<StyleProps>`
   width: 85vw;
-  /* height: 22vh; */
+  height: ${(props) => (props.isScheduleHeight ? '22vh' : '0')};
+
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -614,4 +622,46 @@ export const SchduleCardContainer = styled.div`
   height: 100%;
   margin-top: 13vw;
   /* padding-bottom: 8vh; */
+`;
+
+/** feed */
+export const RouteNameInfo = styled.div<MeetStyleProps>`
+  width: 85vw;
+  height: ${(props) => props.isMeetFeed || '20.2rem'};
+  display: flex;
+  flex-direction: column;
+  /* border-bottom: 0.1rem solid #d9d9d9; */
+  padding: 1.4rem 0 1rem 0;
+  position: relative;
+`;
+
+export const RouteNameInfoContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+`;
+
+export const RouteName = styled.p`
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.2rem;
+`;
+
+export const RouteInfo = styled.p`
+  color: #c9c9c9;
+  font-size: 1.4rem;
+`;
+
+export const TagsWrap = styled.div`
+  display: flex;
+  justify-content: left;
+  gap: 1rem;
+  /* width: 60%; */
+  align-items: center;
+  height: 2.8rem;
+  /* border: 1px solid red; */
+  position: absolute;
+  bottom: 1rem;
 `;

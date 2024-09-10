@@ -850,12 +850,12 @@ public class CourseServiceImpl implements CourseService {
                     .endPoint(course.getEndPoint())
                     .totalDistance(course.getTotalDistance())
                     .memberId(course.getMember().getMemberId())
+                    .commentCnt(reviews.size())
                     .scoreAvg(scoreAvg)
                     .totalDays(course.getTotalDays())
                     .build()
             );
         }
-
 
         return courseResDtoList;
     }
