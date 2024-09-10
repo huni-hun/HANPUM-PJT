@@ -74,7 +74,7 @@ export interface MeetPageAble {
 }
 
 export interface CreateMeetRequestDto {
-  multipartFile: File;
+  multipartFile: File | null;
   title: string;
   description: string;
   recruitmentCount: number;

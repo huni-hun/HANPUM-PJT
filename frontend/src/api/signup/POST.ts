@@ -41,6 +41,8 @@ export async function SignUp(signupReq: SignupRequestValues) {
   const formData = new FormData();
 
   const { multipartFile, ...rest } = signupReq;
+  console.log(signupReq);
+  console.log(multipartFile);
 
   // 비밀번호 hash화
   // const hashedPassword = CryptoJS.SHA256(password).toString();
@@ -52,6 +54,10 @@ export async function SignUp(signupReq: SignupRequestValues) {
 
   formData.append('signUpReqDto', signUpReqDto);
   formData.append('multipartFile', multipartFile);
+
+  formData.forEach((value, key) => {
+    console.log(key, value);
+  });
 
   const { data } = await api.post('/api/auth/sign-up', formData, {
     headers: {
