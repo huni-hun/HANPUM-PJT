@@ -11,10 +11,13 @@ import { WithdrawMembership } from '@/api/mypage/Delete';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
+import { isAuthEnticatedAtom } from '@/atoms/isAuthEnticatedAtom';
 
 function Withdraw() {
   const { data } = useQuery('getUser', GetUser);
   const navigate = useNavigate();
+  const setAuthEnticate = useSetRecoilState(isAuthEnticatedAtom);
   // console.log(data);
 
   const [agree, setAgree] = useState(true);
@@ -27,6 +30,7 @@ function Withdraw() {
         toast.success(res.message);
         localStorage.removeItem('token');
         navigate('/login');
+        setAuthEnticate(false);
       }
       if (res.status === STATUS.error) {
         toast.error(res.message);

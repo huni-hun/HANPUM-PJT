@@ -26,8 +26,10 @@ function LoginPage() {
       if (accessToken) {
         const token = encodeToken(accessToken.split('+')[1]);
 
-        localStorage.setItem('token', JSON.stringify(token));
-        Cookies.remove('accessToken', { path: '/' });
+        if (token) {
+          localStorage.setItem('token', token);
+          Cookies.remove('accessToken', { path: '/' });
+        }
       }
 
       if (memberType === 'KAKAO_INCOMPLETE') {
@@ -36,7 +38,7 @@ function LoginPage() {
         navigate('/home');
       }
     }
-  }, [tryKakao]);
+  }, []);
 
   return (
     <LoginPageContainer>

@@ -34,7 +34,7 @@ function App() {
   // console.log('로그인 되어있는지 ::', temp);
   return (
     <Container>
-      <ToastContainer position="top-center" autoClose={800} />
+      <ToastContainer position="top-center" autoClose={500} />
       <Router />
     </Container>
   );
