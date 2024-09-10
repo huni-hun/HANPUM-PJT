@@ -80,6 +80,7 @@ function RouteDetailPage() {
             end: result.data.data.course.endPoint,
             img: result.data.data.course.backgroundImg,
             writeState: result.data.data.course.writeState,
+            openState: result.data.data.course.openState,
           };
           setRouteData(rd);
           setProfileImg(result.data.data.profilePicture);
@@ -260,13 +261,17 @@ function RouteDetailPage() {
       }
       setReviewLoading(true);
     });
-  }, []);
+  }, [isModalOpen]);
 
   const deleteHandler = () => {
     RouteDelete(routeid as string)
       .then((res) => {
-        if (res.status === 200 && res.data.status === 'SUCCESS') {
+        if (res.data.status === 'SUCCESS') {
+          navigate('/route/list');
           toast.done('경로 삭제에 성공했습니다.');
+        } else {
+          setIsOpenSetting(false);
+          toast.error('경로 삭제 권한이 없습니다.');
         }
       })
       .catch((err) => {
@@ -290,6 +295,7 @@ function RouteDetailPage() {
           }}
           onDelete={deleteHandler}
           writeState={routeData.writeState}
+          openState={routeData.openState}
         />
       );
     }

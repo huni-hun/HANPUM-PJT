@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Icon from '@/components/common/Icon/Icon';
 import * as R from '@/components/Style/Route/RouteBottom.styled';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -18,6 +18,7 @@ interface BottomSheetProps {
   onExport?: () => void;
   id?: number;
   writeState?: boolean;
+  openState?: boolean;
 }
 
 function BottomSheet(props: BottomSheetProps) {
@@ -28,6 +29,12 @@ function BottomSheet(props: BottomSheetProps) {
   /** 모임 - 그룹아이디 */
   const location = useLocation();
   const { groupId } = location.state || {};
+
+  useEffect(() => {
+    if (props.openState !== undefined) {
+      setIsToggleOpen(props.openState);
+    }
+  }, []);
 
   const handleClose = () => {
     setIsClosing(true);
@@ -98,11 +105,7 @@ function BottomSheet(props: BottomSheetProps) {
         }
         break;
       case '삭제':
-        if (props.onDelete && props.writeState) props.onDelete();
-        else {
-          props.setIsOpen(false);
-          toast.error('삭제권한이 없습니다.');
-        }
+        if (props.onDelete) props.onDelete();
 
         break;
       case '공개 여부':
@@ -211,13 +214,13 @@ function BottomSheet(props: BottomSheetProps) {
                       isSelected && <Icon name="IconGreenChecked" size={20} />}
                   </R.SettingIconBox>
                   {ele === '공개 여부' && (
-                    <R.SwitchLabel isOpen={isToggleOpen}>
+                    <R.SwitchLabel $isOpen={isToggleOpen}>
                       <R.SwitchInput
                         type="checkbox"
                         checked={isToggleOpen}
                         onChange={() => setIsToggleOpen(!isToggleOpen)}
                       />
-                      <R.SwitchButton isOpen={isToggleOpen} />
+                      <R.SwitchButton $isOpen={isToggleOpen} />
                     </R.SwitchLabel>
                   )}
                 </R.SettingBox>

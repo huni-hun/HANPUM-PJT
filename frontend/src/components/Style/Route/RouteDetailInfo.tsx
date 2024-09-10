@@ -49,6 +49,7 @@ interface RouteDetailInfoProps {
   isMeetPage?: boolean;
   memberData?: MemberInfo[];
   memberCount?: number;
+  setReviewOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function RouteDetailInfo({
@@ -264,7 +265,7 @@ function RouteDetailInfo({
                 <R.DetailMain>
                   <R.DetailMainOverflow>
                     {props.reviews.map((ele: RouteReviewProps) => (
-                      <ReviewCard {...ele} />
+                      <ReviewCard ele={ele} setIsOpen={props.setReviewOpen} />
                     ))}
                   </R.DetailMainOverflow>
                 </R.DetailMain>

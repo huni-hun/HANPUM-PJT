@@ -369,6 +369,7 @@ function ScheduleMainPage() {
             end: result.data.data.course.endPoint,
             img: result.data.data.course.backgroundImg,
             writeState: result.data.data.course.writeState,
+            openState: result.data.data.course.openState,
           };
           setRouteData(rd);
           result.data.data.courseDays.forEach((ele: any) => {
@@ -443,6 +444,7 @@ function ScheduleMainPage() {
               end: result.data.data.course.endPoint,
               img: result.data.data.course.backgroundImg,
               writeState: result.data.data.course.writeState,
+              openState: result.data.data.course.openState,
             };
             setRouteData(rd);
             result.data.data.courseDays.forEach((ele: any) => {
