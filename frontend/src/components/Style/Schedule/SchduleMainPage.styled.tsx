@@ -13,8 +13,8 @@ interface MeetStyleProps {
 }
 
 export const Container = styled.div`
-  width: 100%;
-  /* height: 100vh; */
+  width: 100vw;
+  height: 100vh;
   .grayBox {
     height: 35.8rem;
     background-color: ${colors.grey1};
@@ -22,13 +22,11 @@ export const Container = styled.div`
 `;
 
 export const Main = styled.div`
-  width: 100vw;
+  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: row;
   overflow-y: auto;
-
-  padding-bottom: 8vh;
 `;
 
 export const Overflow = styled.div`
@@ -112,6 +110,9 @@ export const ScheduleMainContainer = styled.div`
   box-sizing: border-box;
   margin-top: 2rem;
   padding-bottom: 2rem;
+  .marginBottom {
+    margin-bottom: 7vh;
+  }
 `;
 
 export const ScheduleWeatherContainer = styled.div`
@@ -623,11 +624,14 @@ export const MeetMemberNodata = styled.div`
 export const SchduleCardContainer = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 1.5rem;
   justify-content: flex-start;
+  align-items: center;
   width: 100vw;
-  height: 100%;
-  margin-top: 13vw;
-  /* padding-bottom: 8vh; */
+  height: auto;
+  padding-top: 7vh;
+  padding-bottom: 8vh;
+  margin: 0 auto;
 `;
 
 /** feed */
