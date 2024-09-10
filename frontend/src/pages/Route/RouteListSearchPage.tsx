@@ -226,8 +226,9 @@ function RouteListSearchPage() {
             <R.SliderText>경로 타입</R.SliderText>
           </R.SliderTextBox>
           <R.TypeBox>
-            {typeArr.map((ele) => (
+            {typeArr.map((ele, idx: number) => (
               <R.Type
+                key={idx}
                 onClick={() => {
                   if (selectType.includes(ele)) {
                     let arr: string[] = [];
@@ -241,7 +242,7 @@ function RouteListSearchPage() {
                     setSelectType((pre) => [...pre, ele]);
                   }
                 }}
-                isSelect={selectType.includes(ele)}
+                $isSelect={selectType.includes(ele)}
               >
                 {ele}
               </R.Type>

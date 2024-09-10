@@ -210,7 +210,7 @@ function RouteAddMainPage() {
               <R.TypeClosedCard>
                 {typeChecked.length > 0 &&
                   typeChecked.map((ele) => (
-                    <R.CheckedTypeCard isLong={ele.length > 3}>
+                    <R.CheckedTypeCard $isLong={ele.length > 3}>
                       <R.TypeTextBox>
                         <R.TypeText>{ele}</R.TypeText>
                       </R.TypeTextBox>
@@ -238,7 +238,7 @@ function RouteAddMainPage() {
 
                         setTypeChecked(newArr);
                       }}
-                      isLong={ele.length > 3}
+                      $isLong={ele.length > 3}
                     >
                       <R.TypeTextBox>
                         <R.TypeText>{ele}</R.TypeText>
@@ -300,14 +300,14 @@ function RouteAddMainPage() {
         <R.ButtonBox>
           <R.SwitchBtnBox>
             <R.SwitchBtnText>공개 여부</R.SwitchBtnText>
-            <R.SwitchLabel isOpen={isOpen}>
+            <R.SwitchLabel $isOpen={isOpen}>
               <R.SwitchInput
                 type="checkbox"
                 onClick={() => {
                   setIsOpen(!isOpen);
                 }}
               />
-              <R.SwitchButton isOpen={isOpen} />
+              <R.SwitchButton $isOpen={isOpen} />
             </R.SwitchLabel>
           </R.SwitchBtnBox>
           <Button

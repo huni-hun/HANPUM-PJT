@@ -77,7 +77,6 @@ function RouteListSearchResult(props: RouteListSearchResultProps) {
 
   useEffect(() => {
     if (observerRef.current) observerRef.current.disconnect();
-    console.log(RouteMoreList);
     observerRef.current = new IntersectionObserver(handleObserver, {
       root: null,
       rootMargin: '0px',
@@ -101,7 +100,11 @@ function RouteListSearchResult(props: RouteListSearchResultProps) {
         clickBack={() => {
           props.setSearchSucess(false);
         }}
+        clickOption={() => {
+          props.setSearchSucess(false);
+        }}
         searchValue={props.keyword}
+        readonly={true}
       />
       <R.RouteTypeContainer>
         <R.ReviewHeaderTextBox
@@ -124,6 +127,7 @@ function RouteListSearchResult(props: RouteListSearchResultProps) {
         {RouteMoreList?.pages.map((pages) =>
           pages.data.data.courseListMap['searchResult'].map((ele: any) => (
             <RouteListMoreCard
+              key={ele.courseId}
               id={ele.courseId}
               title={ele.courseName}
               start={ele.startPoint}
