@@ -19,6 +19,8 @@ interface BottomSheetProps {
   id?: number;
   writeState?: boolean;
   openState?: boolean;
+
+  groupJoinStatus?: string;
 }
 
 function BottomSheet(props: BottomSheetProps) {
@@ -96,17 +98,30 @@ function BottomSheet(props: BottomSheetProps) {
 
     switch (option) {
       case '수정':
-        // if (props.onEdit) props.onEdit();
-        if (props.onEdit && props.writeState) {
-          props.onEdit();
+        if (props.route === '경로설정') {
+          if (props.onEdit && props.writeState) {
+            props.onEdit();
+          } else {
+            props.setIsOpen(false);
+            toast.error('수정권한이 없습니다.');
+          }
         } else {
-          props.setIsOpen(false);
-          toast.error('수정권한이 없습니다.');
+          if (props.onEdit) {
+            props.onEdit();
+          }
         }
         break;
-      case '삭제':
-        if (props.onDelete) props.onDelete();
 
+      case '삭제':
+        if (props.route === '경로설정') {
+          if (props.onDelete) {
+            props.onDelete();
+          }
+        } else {
+          if (props.onDelete) {
+            props.onDelete();
+          }
+        }
         break;
       case '공개 여부':
         break;

@@ -15,6 +15,7 @@ import Flex from '../common/Flex';
 import BaseButton from '../common/BaseButton';
 import { CertificationEmail } from '@/api/signup/POST';
 import Icon from '../common/Icon/Icon';
+import Loading from '../common/Loading';
 
 function FindPwComponent({
   param,
@@ -148,7 +149,7 @@ function FindPwComponent({
   }, [time, sendMail]);
 
   if (isLoading) {
-    return <div>메일 전송중...</div>;
+    return <Loading />;
   }
 
   return (

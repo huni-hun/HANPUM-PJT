@@ -65,10 +65,15 @@ export default function Router() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/find/:account" element={<FindPage />} />
-            <Route path="*" element={<Navigate to="/login" />} />
+            <Route
+              path="/config/:category/detail/:id"
+              element={<ConfigDetailPage />}
+            />
+            <Route path="/" element={<Navigate to="/login" />} />
           </>
         ) : (
           <>
+            <Route path="/signup" element={<SignupPage />} />
             <Route path="/home" element={<MainPage />} />
             {/* 기본 경로를 /home으로 리다이렉트 */}
             <Route path="/" element={<Navigate to="/home" />} />

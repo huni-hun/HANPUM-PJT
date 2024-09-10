@@ -59,25 +59,25 @@ function ProfileConfig({
   const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      console.log(
-        '압축 전 ::',
-        `${file.size}바이트`,
-        (file.size / 1024 / 1024).toFixed(2),
-      );
+      // console.log(
+      //   '압축 전 ::',
+      //   `${file.size}바이트`,
+      //   (file.size / 1024 / 1024).toFixed(2),
+      // );
       const compressedFile = (await compressImage(file)) ?? file;
-      console.log(
-        '압축 후 ::',
-        `${compressedFile.size}바이트`,
-        (compressedFile.size / 1024 / 1024).toFixed(2),
-      );
+      // console.log(
+      //   '압축 후 ::',
+      //   `${compressedFile.size}바이트`,
+      //   (compressedFile.size / 1024 / 1024).toFixed(2),
+      // );
       const imageUrl = URL.createObjectURL(compressedFile || file);
       setPreviewImage(imageUrl);
 
       // console.log(file.size, SIZEMB);
 
-      if (file.size >= SIZEMB) {
-        console.log('파일커요');
-      }
+      // if (file.size >= SIZEMB) {
+      //   console.log('파일커요');
+      // }
 
       setFormValues((prevValue) => ({
         ...prevValue,
@@ -238,7 +238,8 @@ function ProfileConfig({
       console.log('res ::', res);
       if (res.status === STATUS.success) {
         toast.success(res.message);
-        sessionStorage.removeItem('send');
+        console.log(res);
+        sessionStorage.setItem('send', 'true');
         clickNext();
       }
       if (res.status === STATUS.error) {
