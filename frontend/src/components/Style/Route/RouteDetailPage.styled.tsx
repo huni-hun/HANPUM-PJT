@@ -135,8 +135,8 @@ export const RouteTypeContainer = styled.div`
   overflow: auto;
 `;
 
-export const RouteType = styled.div<{ isLong?: boolean }>`
-  width: ${(props) => (props ? '7.5rem' : '6.4rem')};
+export const RouteType = styled.div<{ $isLong?: boolean }>`
+  width: ${(props) => (props.$isLong ? '7.5rem' : '6.4rem')};
   height: 2.5rem;
   display: flex;
   align-items: center;

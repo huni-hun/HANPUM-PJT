@@ -17,6 +17,7 @@ import {
 import RoutePlaceCard from '@/components/Style/Route/RoutePlaceCard';
 import { colors } from '@/styles/colorPalette';
 import { AddRoute, GetDistance } from '@/api/route/POST';
+import { toast } from 'react-toastify';
 
 function RouteAddDetailPage() {
   const [curLatitude, setCurLatitude] = useState<number>(0);
@@ -280,13 +281,12 @@ function RouteAddDetailPage() {
               ) {
                 AddRoute(addRoute)
                   .then((res) => {
-                    console.log(res);
                     if (res.status === 200) {
                       navigate('/route/add/complete');
                     }
                   })
                   .catch((err) => {
-                    console.log(err);
+                    toast.error('경로 생성에 실패했습니다.');
                   });
               }
             }}

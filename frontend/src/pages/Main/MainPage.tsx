@@ -33,6 +33,7 @@ import { deleteInterestRoute } from '@api/route/Delete';
 import { GetUser } from '@api/mypage/GET';
 import { RouteListProps } from '@models/route';
 import useQueryHandling from '@/hooks/global/useQueryHandling';
+import Loading from '@/components/common/Loading';
 
 function MainPage() {
   const navigator = useNavigate();
@@ -173,6 +174,8 @@ function MainPage() {
     // console.log(`${groupId} 눌림`);
   };
 
+  const loading = true;
+
   useEffect(() => {
     getRouteList('해안길', 2).then((result) => {
       if (result.status === 200) {
@@ -237,7 +240,7 @@ function MainPage() {
           </Flex>
           <Flex>
             {routes &&
-              routes.map((ele) => <RouteCard {...ele} key={ele.routeId} />)}
+              routes.map((ele) => <RouteCard ele={ele} key={ele.routeId} />)}
           </Flex>
         </div>
 
@@ -327,6 +330,7 @@ function MainPage() {
           ))}
         <BottomTab />
       </div>
+      {/* <Loading /> */}
     </MainPageContainer>
   );
 }
