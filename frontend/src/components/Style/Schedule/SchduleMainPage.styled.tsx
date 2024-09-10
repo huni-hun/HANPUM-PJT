@@ -127,7 +127,7 @@ export const ScheduleWeatherContainer = styled.div`
 
 export const SchduleProgressWrap = styled.div<StyleProps>`
   width: 85vw;
-  height: ${(props) => (props.isScheduleHeight ? '22vh' : '0')};
+  height: ${(props) => (props.isScheduleHeight ? '22vh' : '20vh')};
 
   display: flex;
   flex-direction: column;
@@ -285,7 +285,8 @@ export const EmergenyNotice = styled.div`
 export const MemberTitle = styled.p`
   font-size: 2rem;
   font-weight: bold;
-  margin-bottom: 1.2rem;
+  margin-bottom: 2rem;
+
   .sub_title {
     font-size: 1.2rem;
     color: #707070;
@@ -295,6 +296,11 @@ export const MemberTitle = styled.p`
 export const MembersWrap = styled.div`
   display: flex;
   gap: 1rem;
+  justify-content: flex-start;
+  width: 100%;
+  height: fit-content;
+  height: 100%;
+  overflow-x: auto;
 `;
 
 export const Members = styled.div`
@@ -304,11 +310,12 @@ export const Members = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
+  /* flex: 0 0 auto; */
   .sub_title {
     font-size: 1.2rem;
     color: ${colors.grey1};
   }
+
   .member_img {
     width: 20vw;
     height: 19vw;
@@ -317,7 +324,6 @@ export const Members = styled.div`
     border-radius: 50%;
   }
 `;
-
 export const Hr = styled.div`
   height: 0.1rem;
   background-color: #d9d9d9;

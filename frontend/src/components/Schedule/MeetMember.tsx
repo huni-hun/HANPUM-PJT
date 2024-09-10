@@ -10,7 +10,7 @@ const MeetMember = ({ memberCount, members }: MeetMemberProps) => {
         모임 멤버 <span className="sub_title">인원 {memberCount}</span>
       </S.MemberTitle>
       <S.MembersWrap>
-        {members.slice(0, memberCount).map((member, index) => (
+        {members.map((member, index) => (
           <S.Members key={index}>
             <img
               src={member.profilePicture}

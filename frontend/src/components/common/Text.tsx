@@ -11,6 +11,7 @@ interface TextProps {
   textAlign?: CSSProperties['textAlign'];
   fontWeight?: CSSProperties['fontWeight'];
   $bold?: boolean;
+  onClick?: () => void;
 }
 
 /**
@@ -21,14 +22,14 @@ interface TextProps {
  * @param {CSSProperties['fontWeight']} [fontWeight] 텍스트의 굵기
  * @param {boolean} [bold] 텍스트를 굵게 표시할지 `fontWeight`보다 우선 적용
  */
-const Text = styled.span<TextProps>(
-  ({ color = 'black', display, textAlign, fontWeight, $bold }) => ({
-    color: colors[color],
-    textAlign,
-    fontWeight: $bold ? 'bold' : fontWeight,
-    display,
-  }),
-  ({ $typography = 't10' }) => typographyMap[$typography],
-);
+const Text = styled.span<TextProps>`
+  color: ${({ color = 'black' }) => colors[color]};
+  text-align: ${({ textAlign }) => textAlign};
+  font-weight: ${({ $bold, fontWeight }) => ($bold ? 'bold' : fontWeight)};
+  display: ${({ display }) => display};
+  ${({ $typography = 't10' }) => typographyMap[$typography]};
+
+  cursor: ${({ onClick }) => (onClick ? 'pointer' : 'default')};
+`;
 
 export default Text;
