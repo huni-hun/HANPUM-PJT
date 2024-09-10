@@ -473,6 +473,7 @@ function RouteDetailPage() {
                     ready: true,
                     start: routeData.start,
                     end: routeData.end,
+                    totalDays: dayData.length,
                   },
                 });
               }
@@ -487,6 +488,7 @@ function RouteDetailPage() {
                     ready: true,
                     start: routeData.start,
                     end: routeData.end,
+                    totalDays: dayData.length,
                   },
                 });
               }
