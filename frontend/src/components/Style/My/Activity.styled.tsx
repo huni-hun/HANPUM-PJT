@@ -5,6 +5,7 @@ export const ActivityContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  margin-bottom: 29px;
 
   .activity_container {
     padding: 16px 20px 16px 26px;

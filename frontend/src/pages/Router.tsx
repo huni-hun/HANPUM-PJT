@@ -37,7 +37,6 @@ import {
   MyProfilePage,
   CategoryLayout,
   MeetAddMainPage,
-  ConfigPage,
   EditMySchedulePage,
   ConfigLayout,
   RouteDetailRetouchPage,
@@ -148,7 +147,6 @@ export default function Router() {
             <Route path="/mypage/review/:course_id" element={<ReviewPage />} />
             <Route path="/myprofile" element={<MyProfilePage />} />
             <Route path="/myprofile/:category" element={<CategoryLayout />} />
-            <Route path="/config" element={<ConfigPage />} />
             <Route path="/config/:category" element={<ConfigLayout />} />
             <Route
               path="/config/:category/detail/:id"
