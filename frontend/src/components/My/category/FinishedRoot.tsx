@@ -24,6 +24,7 @@ function FinishedRoot() {
     <S.FinishedRootContainer>
       <div className="card-list">
         {finishedRoute &&
+          finishedRoute.status === 'SUCCESS' &&
           finishedRoute.data.map((ele: any) => <RootCard {...ele} />)}
       </div>
     </S.FinishedRootContainer>

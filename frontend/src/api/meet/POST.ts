@@ -18,7 +18,8 @@ export const PostMeetLike = async (groupId: number) => {
 export const PostGroup = async (props: CreateMeetProps) => {
   const formData = new FormData();
   const { multipartFile, ...rest } = props;
-  console.log(props);
+  console.log(multipartFile);
+  console.log(rest);
 
   const groupPostReqDto = new Blob([JSON.stringify(rest)], {
     type: 'application/json',

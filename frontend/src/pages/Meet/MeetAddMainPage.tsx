@@ -6,7 +6,12 @@ import Header from '@/components/common/Header/Header';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ToggleSlider from '@/components/common/ToggleSlider/ToggleSlider';
-import { CreateMeetProps, CreateMeetRequestDto } from '@/models/meet';
+import {
+  CreateMeetProps,
+  CreateMeetRequestDto,
+  groupPostReqDtoProps,
+  schedulePostReqDto,
+} from '@/models/meet';
 import Text from '@/components/common/Text';
 import BaseButton from '@/components/common/BaseButton';
 import { PostGroup } from '@/api/meet/POST';
@@ -21,6 +26,8 @@ function MeetAddMainPage() {
   const [meetRequest, setMeetRequest] = useState<Partial<CreateMeetRequestDto>>(
     {},
   );
+
+  const [meetData, setMeetData] = useState<CreateMeetProps>(null!);
 
   const { courseId, startDate, endDate, recruitmentPeriod, start, end } =
     location.state || {};
@@ -39,6 +46,23 @@ function MeetAddMainPage() {
   /** 로컬 스토리지로 input value + 이미지 저장 */
   useEffect(() => {
     localStorage.setItem('meetRequest', JSON.stringify(meetRequest));
+    const schedulePostReqDto: schedulePostReqDto = {
+      courseId: Number(courseId),
+      startDate: startDate,
+    };
+    const groupPostReqDto: groupPostReqDtoProps = {
+      title: meetRequest.title || '',
+      description: meetRequest.description || '',
+      recruitmentCount: meetRequest.recruitmentCount || 0,
+      recruitmentPeriod: recruitmentPeriod,
+      /** 일정쪽 */
+      schedulePostReqDto: schedulePostReqDto,
+    };
+    const meetdata: CreateMeetProps = {
+      multipartFile: previewImage,
+      groupPostReqDto: groupPostReqDto,
+    };
+    setMeetData(meetdata);
   }, [meetRequest]);
 
   /** location state로 관리 */
@@ -111,28 +135,29 @@ function MeetAddMainPage() {
   /** 모임 생성 post api */
   const handleCreateGroup = async () => {
     try {
-      const multipartFile = previewImage;
-      const groupPostReqDto = {
-        title: meetRequest.title || '',
-        description: meetRequest.description || '',
-        recruitmentCount: meetRequest.recruitmentCount || 0,
-        recruitmentPeriod: recruitmentPeriod,
-        /** 일정쪽 */
-        schedulePostReqDto: {
-          courseId: Number(courseId),
-          startDate: startDate.split('-').join(''),
-        },
-      };
+      // const multipartFile = previewImage;
+      // const schedulePostReqDto: schedulePostReqDto = {
+      //   courseId: Number(courseId),
+      //   startDate: startDate,
+      // };
+      // const groupPostReqDto: groupPostReqDtoProps = {
+      //   title: meetRequest.title || '',
+      //   description: meetRequest.description || '',
+      //   recruitmentCount: meetRequest.recruitmentCount || 0,
+      //   recruitmentPeriod: recruitmentPeriod,
+      //   /** 일정쪽 */
+      //   schedulePostReqDto: schedulePostReqDto,
+      // };
 
-      const data: CreateMeetProps = {
-        multipartFile: multipartFile,
-        groupPostReqDto: groupPostReqDto,
-      };
+      // const data: CreateMeetProps = {
+      //   multipartFile: multipartFile,
+      //   groupPostReqDto: groupPostReqDto,
+      // };
 
       // if (data.groupPostReqDto.title !== '') {
 
       // }
-      const response = await PostGroup(data);
+      const response = await PostGroup(meetData);
 
       if (response && response.status === 'SUCCESS') {
         toast.success('모임 생성이 완료되었습니다!');

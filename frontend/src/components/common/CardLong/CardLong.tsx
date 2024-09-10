@@ -29,6 +29,7 @@ function CardLong({
   // const [isSwiped, setIsSwiped] = useState(false);
   const [startX, setStartX] = useState<number | null>(null);
   const [canDeleted, setCanDeleted] = useState(false);
+  const [img, setImg] = useState<string>('');
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setStartX(e.touches[0].clientX);
@@ -67,7 +68,6 @@ function CardLong({
   // 삭제 버튼 누르기
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log('삭제 눌림');
   };
 
   useEffect(() => {
@@ -81,6 +81,26 @@ function CardLong({
       document.removeEventListener('click', handleClickOutside);
     };
   }, [isSwiped]);
+
+  useEffect(() => {
+    if (isUserRouteProps(item)) {
+      if (item.backgroundImg !== null) {
+        if (item.backgroundImg.includes('test')) {
+          setImg(image);
+        } else {
+          setImg(item.backgroundImg);
+        }
+      } else {
+        setImg(image);
+      }
+    } else {
+      if (item.groupImg.includes('test') || item.groupImg === '') {
+        setImg(image);
+      } else {
+        setImg(item.groupImg);
+      }
+    }
+  }, []);
 
   const isUserRouteProps = (
     item: UserRouteProps | MeetInfo,
@@ -104,10 +124,7 @@ function CardLong({
           transition: 'width 0.3s ease',
         }}
       >
-        <img
-          src={isUserRouteProps(item) ? item.backgroundImg : item.groupImg}
-          alt=""
-        />
+        <img src={img} alt="" />
         <div className="info-box">
           <div className="review">
             {/* <Icon name="IconStar" /> */}
