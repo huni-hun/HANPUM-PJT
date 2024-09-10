@@ -18,6 +18,7 @@ function ProfileItem({
   memberType?: string;
 }) {
   const navigate = useNavigate();
+  const temp = false;
   return (
     <S.ProfileItemContainer className="info-item">
       <Text $typography="t15" color="grey2" style={{ width: '7.7rem' }}>
@@ -35,11 +36,17 @@ function ProfileItem({
         <div className="kakao">
           <Text $typography="t16">{value}</Text>
           {memberType === 'KAKAO' && (
-            <Flex $align="center" $justify="end">
+            <Flex $align="center">
               <img src={kakao} alt="kakao" />
               <Text $typography="t12">카카오</Text>
             </Flex>
           )}
+          {/* {temp === false && (
+            <Flex $align="center">
+              <img src={kakao} alt="kakao" />
+              <Text $typography="t12">카카오 연동 계정</Text>
+            </Flex>
+          )} */}
         </div>
       </div>
     </S.ProfileItemContainer>

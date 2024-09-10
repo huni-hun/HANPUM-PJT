@@ -19,7 +19,7 @@ function LoginPage() {
 
   useEffect(() => {
     if (tryKakao === 'true') {
-      // console.log('여기임?');
+      console.log('여기임?');
       const memberType = Cookies.get('memberType');
       const accessToken = Cookies.get('accessToken');
 
@@ -33,8 +33,10 @@ function LoginPage() {
       }
 
       if (memberType === 'KAKAO_INCOMPLETE') {
+        console.log('회원가입 해야해요');
         navigate('/signup');
       } else {
+        console.log('회원가입 이미 되어있어요.');
         navigate('/home');
       }
     }
