@@ -1,19 +1,47 @@
 import { GetUser } from '@/api/mypage/GET';
 import { Logout } from '@/api/signup/POST';
+import { isAuthEnticatedAtom } from '@/atoms/isAuthEnticatedAtom';
 import Flex from '@/components/common/Flex';
 import Header from '@/components/common/Header/Header';
 import Text from '@/components/common/Text';
 import Activity from '@/components/My/Activity';
 import ConfigItem from '@/components/My/config/ConfigItem';
+import { STATUS } from '@/constants';
 import { colors } from '@/styles/colorPalette';
-import { useQuery } from 'react-query';
+import { AxiosError } from 'axios';
+import { useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 
 function MyPage() {
   const navigate = useNavigate();
+  const setAuthEnticate = useSetRecoilState(isAuthEnticatedAtom);
 
   const { data } = useQuery('getUser', GetUser);
+
+  const { mutate: logout } = useMutation(Logout, {
+    onSuccess: (res) => {
+      if (res.status === STATUS.success) {
+        toast.success(res.message);
+        localStorage.removeItem('token');
+        navigate('/login');
+        setAuthEnticate(false);
+        sessionStorage.removeItem('send');
+      }
+      if (res.status === STATUS.error) {
+        toast.error(res.message);
+      }
+    },
+    onError: (error: AxiosError) => {
+      toast.error(error.message);
+    },
+  });
+
+  const clickLogout = () => {
+    logout();
+  };
 
   return (
     <MyPageContainer>
@@ -80,7 +108,7 @@ function MyPage() {
             </div>
 
             <div className="logout-container">
-              <Text $typography="t16" onClick={() => Logout()}>
+              <Text $typography="t16" onClick={clickLogout}>
                 로그아웃
               </Text>
             </div>

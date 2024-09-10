@@ -29,6 +29,7 @@ import BaseButton from '../../common/BaseButton';
 import { CheckNickname } from '@/api/signup/POST';
 import { useAlert } from '@/hooks/global/useAlert';
 import Calender from '../../Signup/Calender';
+import Loading from '@/components/common/Loading';
 
 function CategoryLayout() {
   const param = useParams().category?.split(
@@ -183,7 +184,7 @@ function CategoryLayout() {
   }, [param, memberInfoReq, data]);
 
   if (isLoading) {
-    return <div>로딩중..</div>;
+    return <Loading />;
   }
 
   return (

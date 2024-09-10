@@ -2,6 +2,7 @@ import { styled } from 'styled-components';
 import { useEffect, useState } from 'react';
 import { colors } from '@/styles/colorPalette';
 import markersrc from '@/assets/img/Marker.png';
+import attmarkersrc from '@/assets/img/AttMarker.png';
 import Icon from '../Icon/Icon';
 
 declare global {
@@ -15,6 +16,7 @@ interface MapProps {
   longitude: number;
   linePath?: any[];
   marker?: any[];
+  attrationmarker?: any[];
   infoBtn?: boolean;
 }
 
@@ -23,7 +25,7 @@ function Map(props: MapProps) {
   const [kakaoMap, setKakaoMap] = useState<any>(null);
   const [polyLine, setPolyLine] = useState<any>(null);
   const [markers, setMarkers] = useState<any[]>([]); // 마커 배열을 상태로 관리
-
+  const [attmarkers, setAttMarkers] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const setMap = () => {
@@ -115,6 +117,35 @@ function Map(props: MapProps) {
       setMarkers(newMarkers); // 새로운 마커 배열을 상태로 저장
     }
   }, [kakaoMap, props.marker]);
+
+  useEffect(() => {
+    if (props.attrationmarker !== undefined && kakaoMap) {
+      // 기존 마커 제거
+      attmarkers.forEach((marker) => marker.setMap(null));
+
+      const newMarkers = props.attrationmarker.map((mar) => {
+        const imgSrc = attmarkersrc;
+        const imgSize = new window.kakao.maps.Size(32, 32);
+        const imgOption = { offset: new window.kakao.maps.Point(10, 10) };
+        const markerImg = new window.kakao.maps.MarkerImage(
+          imgSrc,
+          imgSize,
+          imgOption,
+        );
+        const markerPosition = new window.kakao.maps.LatLng(mar.y, mar.x);
+
+        const kakaoMarker = new window.kakao.maps.Marker({
+          position: markerPosition,
+          image: markerImg,
+        });
+
+        kakaoMarker.setMap(kakaoMap);
+        return kakaoMarker;
+      });
+
+      setAttMarkers(newMarkers); // 새로운 마커 배열을 상태로 저장
+    }
+  }, [kakaoMap, props.attrationmarker]);
 
   return (
     <MapContainer id="kakaoMap">

@@ -98,6 +98,7 @@ export interface RouteDetailProps {
   end: string;
   img: string;
   writeState: boolean;
+  openState: boolean;
 }
 
 export interface RouteDetailDayProps {

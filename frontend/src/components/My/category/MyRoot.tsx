@@ -40,7 +40,7 @@ function MyRoot() {
   };
 
   const onClickCard = (id: number) => {
-    navigate(`/route/detail/${id}`);
+    navigate(`/route/detail/${id}`, { state: { type: 'schedule' } });
   };
 
   return (

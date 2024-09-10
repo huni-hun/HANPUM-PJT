@@ -174,8 +174,6 @@ function MainPage() {
     // console.log(`${groupId} 눌림`);
   };
 
-  const loading = true;
-
   useEffect(() => {
     getRouteList('해안길', 2).then((result) => {
       if (result.status === 200) {

@@ -22,6 +22,7 @@ import FixedBottomButton from '@common/FixedBottomButton';
 
 import { CertificationEmail, CheckEmail, CheckId } from '@api/signup/POST';
 import { SignupRequestValues, UserSignupFormValues } from '@models/signup';
+import Loading from '../common/Loading';
 
 function UserInfo({
   clickNext,
@@ -44,7 +45,7 @@ function UserInfo({
     string | null
   >(null);
 
-  console.log('인증번호 발송', checkEmailMessage);
+  // console.log('인증번호 발송', checkEmailMessage);
 
   // 초기 진입시 error message 뜨는 것 dirty로 분기처리
   const [dirty, setDirty] = useState<
@@ -125,7 +126,7 @@ function UserInfo({
       errors.inputAuthCode = checkInputCodeMessage;
     }
 
-    console.log('errors ::', errors);
+    // console.log('errors ::', errors);
 
     return errors;
   }, [
@@ -248,10 +249,10 @@ function UserInfo({
 
   if (checkEmailLoading) {
     // TODO UI 수정
-    return <div>...메일 전송중</div>;
+    return <Loading />;
   }
 
-  console.log('dirth ::', dirty);
+  // console.log('dirth ::', dirty);
 
   return (
     <S.UserInfoContainer>

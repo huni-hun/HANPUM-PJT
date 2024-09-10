@@ -64,7 +64,13 @@ function RouteListMoreCard(props: RouteListMoreCardProps) {
       }}
     >
       <R.ContentBox>
-        <R.Img src={props.img.includes('test') ? defaultImg : props.img} />
+        <R.Img
+          src={
+            props.img !== null && props.img.includes('test')
+              ? defaultImg
+              : props.img
+          }
+        />
         <R.TextBox>
           <R.Title>{props.title}</R.Title>
           <R.RouteTextBox>

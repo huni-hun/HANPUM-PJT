@@ -138,18 +138,18 @@ export const SwitchInput = styled.input`
   visibility: hidden;
 `;
 
-export const SwitchLabel = styled.label<{ isOpen: boolean }>`
+export const SwitchLabel = styled.label<{ $isOpen: boolean }>`
   display: flex;
   position: relative;
   width: 7.5rem;
   height: 3.1rem;
   border-radius: 10rem 10rem 10rem 10rem;
-  background-color: ${({ isOpen }) => (isOpen ? '#1A823B' : '#d9d9d9')};
+  background-color: ${({ $isOpen }) => ($isOpen ? '#1A823B' : '#d9d9d9')};
   align-items: center;
   transition: background-color 0.5s;
 `;
 
-export const SwitchButton = styled.span<{ isOpen: boolean }>`
+export const SwitchButton = styled.span<{ $isOpen: boolean }>`
   width: 2.7rem;
   height: 2.7rem;
   background-color: #ffffff;
@@ -157,6 +157,6 @@ export const SwitchButton = styled.span<{ isOpen: boolean }>`
   border-radius: 50%;
   left: 0.2rem;
   transition: all 0.5s ease-in-out;
-  ${({ isOpen }) =>
-    isOpen ? 'transform: translateX(2.4rem)' : 'transform: translateX(0.2rem)'}
+  ${({ $isOpen }) =>
+    $isOpen ? 'transform: translateX(2.4rem)' : 'transform: translateX(0.2rem)'}
 `;

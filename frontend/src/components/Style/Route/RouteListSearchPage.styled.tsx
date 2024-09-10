@@ -50,7 +50,7 @@ export const TypeContainer = styled.div`
   height: 21rem;
 `;
 
-export const Type = styled.div<{ isSelect: boolean }>`
+export const Type = styled.div<{ $isSelect: boolean }>`
   width: 7.5rem;
   height: 2.8rem;
   display: flex;
@@ -58,9 +58,9 @@ export const Type = styled.div<{ isSelect: boolean }>`
   align-items: center;
   font-size: 1.2rem;
   font-weight: bold;
-  color: ${(props) => (props.isSelect ? colors.main : colors.grey2)};
+  color: ${(props) => (props.$isSelect ? colors.main : colors.grey2)};
   border: 0.1rem solid
-    ${(props) => (props.isSelect ? colors.main : colors.grey2)};
+    ${(props) => (props.$isSelect ? colors.main : colors.grey2)};
   border-radius: 10rem;
   white-space: nowrap;
   overflow: hidden;

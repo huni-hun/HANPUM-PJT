@@ -5,6 +5,9 @@ import styled from 'styled-components';
 function PersonalInformationText() {
   return (
     <PersonalInformationContainer>
+      <Text $typography="t20" $bold={true} style={{ marginBottom: '15px' }}>
+        개인 정보 처리 방침
+      </Text>
       <div className="section">
         <Text $typography="t14" $bold={true}>
           제1조(목적)

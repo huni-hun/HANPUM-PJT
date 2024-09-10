@@ -6,10 +6,12 @@ import * as S from '../Style/Signup/Finish.styled';
 import { useSetRecoilState } from 'recoil';
 import { signupStepAtom } from '@/atoms/signupStepAtom';
 import { useNavigate } from 'react-router-dom';
+import { isAuthEnticatedAtom } from '@/atoms/isAuthEnticatedAtom';
 
 function Finish({ nickname }: { nickname: string }) {
   const setStep = useSetRecoilState(signupStepAtom);
   const navigate = useNavigate();
+  const setAuthEnticate = useSetRecoilState(isAuthEnticatedAtom);
   return (
     <S.FinishContainer>
       <img src={finishImg} alt="" />
@@ -26,7 +28,12 @@ function Finish({ nickname }: { nickname: string }) {
       <FixedBottomButton
         label="시작하기"
         onClick={() => {
-          navigate('/login');
+          if (sessionStorage.getItem('send') === 'true') {
+            setAuthEnticate(false);
+            navigate('/home');
+          } else {
+            navigate('/login');
+          }
           setStep((prevStep) => ({
             ...prevStep,
             currStep: 0,

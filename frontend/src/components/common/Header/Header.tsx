@@ -24,6 +24,7 @@ interface HeaderProps {
   plusBtnclick?: () => void;
   /** 일정 & 모임 구분 */
   isSchedule?: boolean;
+  readonly?: boolean;
 }
 
 const Header = ({
@@ -44,6 +45,7 @@ const Header = ({
   plusBtnclick,
   $isGrey = false,
   isSchedule,
+  readonly = false,
 }: HeaderProps) => {
   const navigate = useNavigate();
   const onClickHandler = (to: string) => {
@@ -100,25 +102,33 @@ const Header = ({
 
       case 'meet':
         return (
-          <Flex $justify="end" $gap={16}>
-            <Icon
-              name="IconFilter"
-              onClick={() => onClickHandler('meet/filter')}
-              size={20}
+          <Flex $justify="space-between" $align="center">
+            <img
+              onClick={() => navigate('/')}
+              src={logo}
+              alt="logo"
+              style={{ width: '3.1rem', height: '3rem' }}
             />
-            <Icon
-              name="IconHeaderPlus"
-              // onClick={() => onClickHandler('mypage')}
-              onClick={() => {
-                onClickHandler('meet/addMain');
-              }}
-              size={20}
-            />
-            <Icon
-              name="IconUser"
-              onClick={() => onClickHandler('mypage')}
-              size={20}
-            />
+            <Flex $gap={16} style={{ width: 'auto' }}>
+              <Icon
+                name="IconFilter"
+                onClick={() => onClickHandler('meet/filter')}
+                size={20}
+              />
+              <Icon
+                name="IconHeaderPlus"
+                // onClick={() => onClickHandler('mypage')}
+                onClick={() => {
+                  onClickHandler('meet/addMain');
+                }}
+                size={20}
+              />
+              <Icon
+                name="IconUser"
+                onClick={() => onClickHandler('mypage')}
+                size={20}
+              />
+            </Flex>
           </Flex>
         );
 
@@ -163,17 +173,23 @@ const Header = ({
       case 'merge':
         return (
           <Flex $align="center" $justify="space-between">
-            {!isSchedule && (
+            {!isSchedule ? (
               <div className="search-bar" onClick={clickOption}>
                 <Icon name="IconSearch" size={14} />
                 <input type="text" />
               </div>
+            ) : (
+              <img
+                onClick={() => navigate('/')}
+                src={logo}
+                alt="logo"
+                style={{ width: '3.1rem', height: '3rem' }}
+              />
             )}
             <Flex
               $gap={20}
               style={{
                 width: 'auto',
-                marginLeft: isSchedule ? '280px' : '9px',
               }}
             >
               <Icon name="IconHeaderPlus" onClick={plusBtnclick} size={14} />
@@ -207,6 +223,8 @@ const Header = ({
                 onChange={changeEven}
                 onKeyDown={keyDownEven}
                 value={searchValue}
+                onClick={clickOption}
+                readOnly={readonly}
               />
             </div>
           </Flex>
@@ -287,6 +305,7 @@ const Header = ({
         return (
           <Flex $justify="space-between" $align="center">
             <img
+              onClick={() => navigate('/')}
               src={logo}
               alt="logo"
               style={{ width: '3.1rem', height: '3rem' }}
