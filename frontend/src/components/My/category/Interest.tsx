@@ -61,7 +61,11 @@ function Interest() {
   );
 
   const onClickCard = (id: number) => {
-    navigate(`/route/detail/${id}`);
+    navigate(`/route/detail/${id}`, { state: { type: 'schedule' } });
+  };
+
+  const onClickCardMeet = (id: number) => {
+    navigate(`/meet/detail`, { state: { groupId: id } });
   };
 
   return (
@@ -117,6 +121,7 @@ function Interest() {
                 isSwiped={swipedId === item.groupId}
                 onSwipe={handleSwipe}
                 onClickOutside={handleClickOutside}
+                onClickCard={() => onClickCardMeet(item.groupId)}
               />
             ))}
           </div>

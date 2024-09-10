@@ -326,11 +326,7 @@ function RouteDetailPage() {
         <R.Overflow>
           <R.RouteInfoContainer>
             <R.ImgBox>
-              <img
-                src={
-                  routeData.img.includes('test') ? defaultImg : routeData.img
-                }
-              />
+              <img src={routeData.img !== null ? routeData.img : defaultImg} />
             </R.ImgBox>
             <R.UserContainer>
               <R.UserImgBox>
