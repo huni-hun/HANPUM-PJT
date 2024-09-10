@@ -120,6 +120,7 @@ function MeetDetailPage() {
               end: result.data.data.course.endPoint,
               img: result.data.data.course.backgroundImg,
               writeState: result.data.data.course.writeState,
+              openState: result.data.data.course.openState,
             };
             setRouteData(rd);
             result.data.data.courseDays.map((ele: any) => {
@@ -357,6 +358,8 @@ function MeetDetailPage() {
       if (response && response.status === 'SUCCESS') {
         toast.success('모임 삭제 완료되었습니다.');
         setIsDeleteModalOpen(false);
+        localStorage.removeItem('groupId');
+        navigate('/meet/list');
       } else {
         toast.error('모임 삭제 실패했습니다.');
       }

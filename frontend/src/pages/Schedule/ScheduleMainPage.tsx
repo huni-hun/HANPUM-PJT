@@ -56,6 +56,7 @@ import {
 } from '@/api/route/GET';
 import { GetLineData } from '@/api/route/POST';
 import { PutScheduleArrive } from '@/api/schedule/PUT';
+import NoHave from '@/components/Schedule/NoHave';
 
 function ScheduleMainPage() {
   const BtnClick = () => {};
@@ -369,6 +370,7 @@ function ScheduleMainPage() {
             end: result.data.data.course.endPoint,
             img: result.data.data.course.backgroundImg,
             writeState: result.data.data.course.writeState,
+            openState: result.data.data.course.openState,
           };
           setRouteData(rd);
           result.data.data.courseDays.forEach((ele: any) => {
@@ -443,6 +445,7 @@ function ScheduleMainPage() {
               end: result.data.data.course.endPoint,
               img: result.data.data.course.backgroundImg,
               writeState: result.data.data.course.writeState,
+              openState: result.data.data.course.openState,
             };
             setRouteData(rd);
             result.data.data.courseDays.forEach((ele: any) => {
@@ -807,7 +810,7 @@ function ScheduleMainPage() {
                 </>
               ) : (
                 <>
-                  <S.NoData>일정이 없습니다.</S.NoData>
+                  <NoHave category="schedule" />
                 </>
               )}
             </>
@@ -860,9 +863,7 @@ function ScheduleMainPage() {
       {isSelected === 'Class' && (
         <S.Main>
           <S.Overflow>
-            {myScheduleListData &&
-            Array.isArray(myScheduleListData) &&
-            myScheduleListData.length > 0 ? (
+            {meetListData ? (
               <>
                 <R.RouteInfoContainer>
                   <Feed routeData={meetFeedData} isUserContainer />
@@ -879,35 +880,39 @@ function ScheduleMainPage() {
                 </R.RouteInfoContainer>
                 {/* 지도 및 하위 컴포넌트 container */}
                 <R.RouteDetailInfoContainer>
-                  <RouteDetailInfo
-                    marker={marker}
-                    deleteHandler={(name: string) => {}}
-                    setSelectedIdx={setSelectedIdx}
-                    reviews={reviews}
-                    setDayOfRoute={setDayOfRoute}
-                    dayOfRoute={dayOfRoute}
-                    linePath={mapLines}
-                    selected={selected}
-                    selectedDay={selectedDay}
-                    latitude={lat || 0}
-                    longitude={lon || 0}
-                    dayData={routeDayData}
-                    attractions={attractions}
-                    setLoading={setLoading}
-                    setSelectedDay={setSelectedDay}
-                    setIsOpen={setIsOpen}
-                    setBsType={setBsType}
-                    reviewType={reviewType}
-                    turnGreen={arriveGreen}
-                    isSchedule={true}
-                  />
+                  {lat !== null && lon !== null && (
+                    <RouteDetailInfo
+                      marker={marker}
+                      deleteHandler={(name: string) => {}}
+                      setSelectedIdx={setSelectedIdx}
+                      reviews={reviews}
+                      setDayOfRoute={setDayOfRoute}
+                      dayOfRoute={dayOfRoute}
+                      linePath={mapLines}
+                      selected={selected}
+                      selectedDay={selectedDay}
+                      latitude={lat}
+                      longitude={lon}
+                      dayData={routeDayData}
+                      attractions={attractions}
+                      setLoading={setLoading}
+                      setSelectedDay={setSelectedDay}
+                      setIsOpen={setIsOpen}
+                      setBsType={setBsType}
+                      reviewType={reviewType}
+                      turnGreen={arriveGreen}
+                      isSchedule={true}
+                    />
+                  )}
                 </R.RouteDetailInfoContainer>
                 {/* 모임멤버 */}
                 <S.ScheduleMainContainer>
-                  <MeetMember
-                    memberCount={memberData.length}
-                    members={memberData || []}
-                  />
+                  <div className="marginBottom">
+                    <MeetMember
+                      memberCount={memberData.length}
+                      members={memberData || []}
+                    />
+                  </div>
                 </S.ScheduleMainContainer>
               </>
             ) : (

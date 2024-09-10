@@ -11,8 +11,10 @@ import {
   CourseDayReqDto,
   searchPlaceProps,
   WayPointReqDto,
+  LineStartEndProps,
 } from '@/models/route';
 import { toast } from 'react-toastify';
+import { useEffect, useState } from 'react';
 
 interface RouteAddPagePlaceProps {
   selectedPlace: searchPlaceProps;
@@ -35,6 +37,8 @@ interface RouteAddPagePlaceProps {
 
 function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
   const navigator = useNavigate();
+
+  const [marker, setMarker] = useState<LineStartEndProps[]>([]);
 
   const setWayPoint = () => {
     if (props.wayPoints.length < 10) {
@@ -109,6 +113,14 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
     props.setSearchOpen(false);
   };
 
+  useEffect(() => {
+    let markerData: LineStartEndProps = {
+      x: props.selectedPlace.latitude,
+      y: props.selectedPlace.longitude,
+    };
+    setMarker((pre) => [...pre, markerData]);
+  }, []);
+
   // console.log(placeInfo);
   return (
     <Ra.Container>
@@ -120,11 +132,22 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
         }}
       />
       <Ra.MapContainer>
-        <Map
-          latitude={props.selectedPlace.longitude}
-          longitude={props.selectedPlace.latitude}
-          infoBtn
-        />
+        {marker.length > 0 &&
+          (props.pointType === 'wp' ? (
+            <Map
+              latitude={props.selectedPlace.longitude}
+              longitude={props.selectedPlace.latitude}
+              infoBtn
+              marker={marker}
+            />
+          ) : (
+            <Map
+              latitude={props.selectedPlace.longitude}
+              longitude={props.selectedPlace.latitude}
+              infoBtn
+              attrationmarker={marker}
+            />
+          ))}
       </Ra.MapContainer>
       <Ra.PlaceBottomContainer>
         <Ra.PlaceContainer>

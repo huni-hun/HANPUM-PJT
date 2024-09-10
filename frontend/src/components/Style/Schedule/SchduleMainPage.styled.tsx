@@ -13,8 +13,8 @@ interface MeetStyleProps {
 }
 
 export const Container = styled.div`
-  width: 100%;
-  /* height: 100vh; */
+  width: 100vw;
+  height: 100vh;
   .grayBox {
     height: 35.8rem;
     background-color: ${colors.grey1};
@@ -22,13 +22,11 @@ export const Container = styled.div`
 `;
 
 export const Main = styled.div`
-  width: 100vw;
+  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: row;
   overflow-y: auto;
-
-  padding-bottom: 8vh;
 `;
 
 export const Overflow = styled.div`
@@ -112,6 +110,9 @@ export const ScheduleMainContainer = styled.div`
   box-sizing: border-box;
   margin-top: 2rem;
   padding-bottom: 2rem;
+  .marginBottom {
+    margin-bottom: 7vh;
+  }
 `;
 
 export const ScheduleWeatherContainer = styled.div`
@@ -127,7 +128,7 @@ export const ScheduleWeatherContainer = styled.div`
 
 export const SchduleProgressWrap = styled.div<StyleProps>`
   width: 85vw;
-  height: ${(props) => (props.isScheduleHeight ? '22vh' : '0')};
+  height: ${(props) => (props.isScheduleHeight ? '22vh' : '20vh')};
 
   display: flex;
   flex-direction: column;
@@ -285,7 +286,8 @@ export const EmergenyNotice = styled.div`
 export const MemberTitle = styled.p`
   font-size: 2rem;
   font-weight: bold;
-  margin-bottom: 1.2rem;
+  margin-bottom: 2rem;
+
   .sub_title {
     font-size: 1.2rem;
     color: #707070;
@@ -295,6 +297,11 @@ export const MemberTitle = styled.p`
 export const MembersWrap = styled.div`
   display: flex;
   gap: 1rem;
+  justify-content: flex-start;
+  width: 100%;
+  height: fit-content;
+  height: 100%;
+  overflow-x: auto;
 `;
 
 export const Members = styled.div`
@@ -304,11 +311,12 @@ export const Members = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
+  /* flex: 0 0 auto; */
   .sub_title {
     font-size: 1.2rem;
     color: ${colors.grey1};
   }
+
   .member_img {
     width: 20vw;
     height: 19vw;
@@ -317,7 +325,6 @@ export const Members = styled.div`
     border-radius: 50%;
   }
 `;
-
 export const Hr = styled.div`
   height: 0.1rem;
   background-color: #d9d9d9;
@@ -617,11 +624,14 @@ export const MeetMemberNodata = styled.div`
 export const SchduleCardContainer = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 1.5rem;
   justify-content: flex-start;
+  align-items: center;
   width: 100vw;
-  height: 100%;
-  margin-top: 13vw;
-  /* padding-bottom: 8vh; */
+  height: auto;
+  padding-top: 7vh;
+  padding-bottom: 8vh;
+  margin: 0 auto;
 `;
 
 /** feed */

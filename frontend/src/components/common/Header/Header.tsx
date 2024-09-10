@@ -24,6 +24,7 @@ interface HeaderProps {
   plusBtnclick?: () => void;
   /** 일정 & 모임 구분 */
   isSchedule?: boolean;
+  readonly?: boolean;
 }
 
 const Header = ({
@@ -44,6 +45,7 @@ const Header = ({
   plusBtnclick,
   $isGrey = false,
   isSchedule,
+  readonly = false,
 }: HeaderProps) => {
   const navigate = useNavigate();
   const onClickHandler = (to: string) => {
@@ -221,6 +223,8 @@ const Header = ({
                 onChange={changeEven}
                 onKeyDown={keyDownEven}
                 value={searchValue}
+                onClick={clickOption}
+                readOnly={readonly}
               />
             </div>
           </Flex>

@@ -253,14 +253,25 @@ function MainPage() {
                 </Text>
 
                 <Flex $align="center" style={{ width: 'auto' }}>
-                  <Text $typography="t10">더 보기</Text>
+                  <Text
+                    $typography="t10"
+                    onClick={() => {
+                      navigator('/meet/list');
+                    }}
+                  >
+                    더 보기
+                  </Text>
                   <Icon name="IconLeftBlackArrow" width={6} height={4} />
                 </Flex>
               </Flex>
 
               <div
                 className="main-longCard"
-                onClick={() => navigator(`/meet/:${meet.groupId}`)}
+                onClick={() => {
+                  navigator('/meet/detail', {
+                    state: { groupId: meet.groupId },
+                  });
+                }}
               >
                 <img src={meet.groupImg} alt="" />
                 <DateBadge
