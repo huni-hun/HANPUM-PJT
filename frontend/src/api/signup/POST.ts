@@ -68,7 +68,7 @@ export async function KaKaoLogin(
     'multipartFile' | 'nickname' | 'gender' | 'phoneNumber' | 'birthDate'
   >,
 ) {
-  console.log('signupKaKaoReq ::', signupKaKaoReq);
+  // console.log('signupKaKaoReq ::', signupKaKaoReq);
   const formData = new FormData();
 
   const { multipartFile, ...rest } = signupKaKaoReq;

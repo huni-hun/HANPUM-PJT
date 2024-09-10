@@ -238,7 +238,8 @@ function ProfileConfig({
       console.log('res ::', res);
       if (res.status === STATUS.success) {
         toast.success(res.message);
-        sessionStorage.removeItem('send');
+        console.log(res);
+        sessionStorage.setItem('send', 'true');
         clickNext();
       }
       if (res.status === STATUS.error) {
