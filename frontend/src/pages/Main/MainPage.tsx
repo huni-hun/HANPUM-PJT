@@ -33,6 +33,7 @@ import { deleteInterestRoute } from '@api/route/Delete';
 import { GetUser } from '@api/mypage/GET';
 import { RouteListProps } from '@models/route';
 import useQueryHandling from '@/hooks/global/useQueryHandling';
+import Loading from '@/components/common/Loading';
 
 function MainPage() {
   const navigator = useNavigate();
@@ -172,6 +173,8 @@ function MainPage() {
     addMeetInterestToggle(groupId);
     // console.log(`${groupId} 눌림`);
   };
+
+  const loading = true;
 
   useEffect(() => {
     getRouteList('해안길', 2).then((result) => {
@@ -327,6 +330,7 @@ function MainPage() {
           ))}
         <BottomTab />
       </div>
+      {/* <Loading /> */}
     </MainPageContainer>
   );
 }

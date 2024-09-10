@@ -111,3 +111,5 @@ export { ReactComponent as IconRightArrowGrey } from './rightArrow_grey.svg';
 // 하트 최종
 export { ReactComponent as IconModiHeartFill } from './lastModiHeart_fill.svg';
 export { ReactComponent as IconModiHeartNonFill } from './lastModiHeart_nonFill.svg';
+
+export { ReactComponent as IconLoading } from './loading.svg';
