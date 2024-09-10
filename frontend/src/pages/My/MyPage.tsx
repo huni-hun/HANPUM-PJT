@@ -28,6 +28,7 @@ function MyPage() {
         localStorage.removeItem('token');
         navigate('/login');
         setAuthEnticate(false);
+        sessionStorage.removeItem('send');
       }
       if (res.status === STATUS.error) {
         toast.error(res.message);
