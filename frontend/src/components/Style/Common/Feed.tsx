@@ -13,6 +13,7 @@ const FeedContainer = ({
   meetRouter,
   isMeetFeed,
 }: FeedProps) => {
+  console.log(routeData?.routeUserImg, '?');
   return (
     <>
       {meetRouter ? (

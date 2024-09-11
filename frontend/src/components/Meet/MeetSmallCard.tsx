@@ -12,6 +12,8 @@ import { PostMeetLike } from '@/api/meet/POST';
 import { toast } from 'react-toastify';
 import { useRecoilValue } from 'recoil';
 import { isAuthEnticatedAtom } from '@/atoms/isAuthEnticatedAtom';
+import { useState } from 'react';
+import { DeleteMeetLike } from '@/api/meet/Delete';
 
 function MeetSmallCard({
   data,
@@ -22,25 +24,43 @@ function MeetSmallCard({
 }) {
   const navigate = useNavigate();
   const isAuth = useRecoilValue(isAuthEnticatedAtom);
+  const [like, setLike] = useState(data.like);
 
-  const likeHandler = () => {
+  const likeHandler = (e: React.MouseEvent) => {
+    e.stopPropagation(); // 클릭 이벤트가 부모로 전파되지 않게 막음
+
     if (isAuth) {
-      if (!data.like) {
-        PostMeetLike(data.groupId)
+      if (like) {
+        DeleteMeetLike(data.groupId)
           .then((res) => {
             if (res.status === 'SUCCESS') {
-              toast.done(res.message);
-              navigate(`/meet/detail`, {
-                state: { groupId: data.groupId },
-              });
+              toast.success('관심 모임에서 제거되었습니다.');
+              setLike(false);
             }
           })
           .catch((err) => {
-            toast.error('관심 모임등록에 실패했습니다.');
+            toast.error('관심 모임 해제에 실패했습니다.');
           });
       } else {
-        toast.info('이미 관심 모임으로 등록된 모임입니다.');
+        // 관심 모임 등록 (PostMeetLike 호출)
+        PostMeetLike(data.groupId)
+          .then((res) => {
+            if (res.status === 'SUCCESS') {
+              toast.success('관심 모임으로 등록되었습니다.');
+              setLike(true);
+              navigate(`/meet/detail`, {
+                state: { groupId: data.groupId },
+              });
+            } else if (res.status === 'ERROR') {
+              toast.error(res.message);
+            }
+          })
+          .catch((err) => {
+            toast.error('관심 모임 등록에 실패했습니다.');
+          });
       }
+    } else {
+      toast.info('로그인이 필요합니다.');
     }
   };
 
@@ -49,17 +69,14 @@ function MeetSmallCard({
       <img src={data.groupImg} alt="그룹 이미지" />
       <DateBadge totalDays={3} style={{ top: '12px', left: '12px' }} />
       <Icon
-        name={data.like ? 'IconModiHeartFill' : 'IconModiHeartNonFill'}
+        name={like ? 'IconModiHeartFill' : 'IconModiHeartNonFill'}
         size={20}
         style={{
           position: 'absolute',
           top: '14px',
           right: '12px',
         }}
-        onClick={(e) => {
-          e.stopPropagation();
-          likeHandler();
-        }}
+        onClick={likeHandler}
       />
       <InfoBadge
         recruitmentCount={10}
