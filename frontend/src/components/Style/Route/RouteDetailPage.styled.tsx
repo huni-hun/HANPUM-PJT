@@ -71,7 +71,8 @@ export const ImgBox = styled.div<StyledProps>`
   background-size: cover;
   background-position: center;
   position: relative;
-
+  background-image: ${({ backgroundImg }) => `url(${backgroundImg})`};
+  border: 1px solid red;
   img {
     width: 100%;
     height: 100%;
@@ -88,7 +89,7 @@ export const UserContainer = styled.div`
   padding: 1.5rem;
 `;
 
-export const UserImgBox = styled.div`
+export const UserImgBox = styled.div<StyledProps>`
   width: 5rem;
   height: 5rem;
   border-radius: 50%;
@@ -96,6 +97,7 @@ export const UserImgBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+
   img {
     width: 100%;
     height: 100%;

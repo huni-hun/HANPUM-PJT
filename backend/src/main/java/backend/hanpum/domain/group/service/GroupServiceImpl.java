@@ -80,7 +80,7 @@ public class GroupServiceImpl implements GroupService {
         member.updateGroupMember(groupMember);
         groupRepository.save(group);
 
-        if(!multipartFile.isEmpty()) {
+        if(multipartFile != null) {
             group.updateGroupImg(s3ImageService.uploadImage(multipartFile));
         }
 
@@ -104,7 +104,7 @@ public class GroupServiceImpl implements GroupService {
                 groupUpdateReqDto.getRecruitmentPeriod()
         );
 
-        if(!multipartFile.isEmpty()) {
+        if(multipartFile != null) {
             String currentImage = group.getGroupImg();
             String updateImage = s3ImageService.uploadImage(multipartFile);
             group.updateGroupImg(updateImage);
@@ -259,23 +259,27 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional
-    public boolean likeGroup(Long memberId, Long groupId) {
+    public void likeGroup(Long memberId, Long groupId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
 
-        LikeGroup likeGroup = likeGroupRepository.findByMemberAndGroup(member, group);
-
-        if (likeGroup == null) {
-            likeGroup = LikeGroup.builder().member(member).group(group).build();
-            group.updateLikeCount(group.getLikeCount() + 1);
-            member.getLikeGroups().add(likeGroup);
-            memberRepository.save(member);
-            return true;
+        if(likeGroupRepository.findByMemberAndGroup(member, group).isPresent()){
+            throw new GroupAlreadyLikeException();
         } else {
-            group.updateLikeCount(group.getLikeCount() - 1);
-            likeGroupRepository.delete(likeGroup);
-            return false;
+            member.getLikeGroups().add(LikeGroup.builder().member(member).group(group).build());
+            group.updateLikeCount(group.getLikeCount() + 1);
+            memberRepository.save(member);
         }
+    }
+
+    @Override
+    @Transactional
+    public void dislikeGroup(Long memberId, Long groupId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
+        Group group = groupRepository.findById(groupId).orElseThrow(GroupNotFoundException::new);
+        LikeGroup likeGroup = likeGroupRepository.findByMemberAndGroup(member, group).orElseThrow(GroupLikeNotFoundException::new);
+        group.updateLikeCount(group.getLikeCount() - 1);
+        likeGroupRepository.delete(likeGroup);
     }
 
     @Override

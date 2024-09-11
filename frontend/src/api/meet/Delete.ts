@@ -36,3 +36,9 @@ export const DeleteMeet = async (groupId: number) => {
 
   return response.data;
 };
+
+// 모임 관심 취소
+export async function DeleteMeetLike(groupId: number) {
+  const { data } = await api.delete(`/api/group/${groupId}/dislike`);
+  return data;
+}

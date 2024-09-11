@@ -753,8 +753,10 @@ public class CourseServiceImpl implements CourseService {
         for (MultiWaypointSearchReqDto waypoint : waypoints) {
             sb.append(waypoint.getX()).append(",").append(waypoint.getY()).append("_");
         }
-        sb.deleteCharAt(sb.length() - 1);
-        requestBody.put("passList", sb.toString());
+        if(waypoints.size() != 0) {
+            sb.deleteCharAt(sb.length() - 1);
+            requestBody.put("passList", sb.toString());
+        }
 
         String jsonBody = null;
         try {

@@ -149,35 +149,12 @@ function MeetAddMainPage() {
 
   /** 모임 생성 post api */
   const handleCreateGroup = async () => {
-    // console.log('그래서 데이터는? ::', meetData);
     try {
-      // const multipartFile = previewImage;
-      // const schedulePostReqDto: schedulePostReqDto = {
-      //   courseId: Number(courseId),
-      //   startDate: startDate,
-      // };
-      // const groupPostReqDto: groupPostReqDtoProps = {
-      //   title: meetRequest.title || '',
-      //   description: meetRequest.description || '',
-      //   recruitmentCount: meetRequest.recruitmentCount || 0,
-      //   recruitmentPeriod: recruitmentPeriod,
-      //   /** 일정쪽 */
-      //   schedulePostReqDto: schedulePostReqDto,
-      // };
-
-      // const data: CreateMeetProps = {
-      //   multipartFile: multipartFile,
-      //   groupPostReqDto: groupPostReqDto,
-      // };
-
-      // if (data.groupPostReqDto.title !== '') {
-
-      // }
       if (multipartImg) {
         const response = await PostGroup(multipartImg, meetData);
         if (response && response.status === 'SUCCESS') {
           toast.success('모임 생성이 완료되었습니다!');
-          navigate('/schedule/success');
+          navigate('/meet/addMain/complete');
           localStorage.removeItem('meetRequest');
           localStorage.removeItem('previewImage');
         } else {

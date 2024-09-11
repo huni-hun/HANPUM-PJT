@@ -121,10 +121,6 @@ function MeetAddSchedulePage() {
     }
   }, [ready]);
 
-  useEffect(() => {
-    console.log(dates, '날짜들');
-  }, [dates]);
-
   /** 하위 컴포넌트 클릭시 vh 변경되는 이벤트 막기 */
   const handleStopEvent = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();

@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import Entry from '@/components/Login/Entry';
 import { useEffect } from 'react';
 import Form from '@/components/Login/Form';
-import { useRecoilValue } from 'recoil';
-import { isInitAtom } from '@/atoms/isAuthEnticatedAtom';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { isAuthEnticatedAtom, isInitAtom } from '@/atoms/isAuthEnticatedAtom';
 import Cookies from 'js-cookie';
 import { encodeToken } from '@/utils/util';
 import { useNavigate } from 'react-router-dom';
@@ -16,6 +16,8 @@ function LoginPage() {
   const navigate = useNavigate();
 
   const tryKakao = sessionStorage.getItem('send');
+
+  const setAuthEnticate = useSetRecoilState(isAuthEnticatedAtom);
 
   useEffect(() => {
     if (tryKakao === 'true') {
@@ -29,15 +31,17 @@ function LoginPage() {
         if (token) {
           localStorage.setItem('token', token);
           Cookies.remove('accessToken', { path: '/' });
-        }
-      }
 
-      if (memberType === 'KAKAO_INCOMPLETE') {
-        console.log('회원가입 해야해요');
-        navigate('/signup');
-      } else {
-        console.log('회원가입 이미 되어있어요.');
-        navigate('/home');
+          // window.dispatchEvent(new Event('storage')); // 강제로 storage 이벤트 발생
+        }
+        if (memberType === 'KAKAO_INCOMPLETE') {
+          console.log('회원가입 해야해요');
+          navigate('/signup');
+        } else {
+          console.log('회원가입 이미 되어있어요.');
+          setAuthEnticate(true);
+          navigate('/home');
+        }
       }
     }
   }, [tryKakao]);

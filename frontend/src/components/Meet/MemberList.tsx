@@ -8,7 +8,7 @@ const MemberList = ({ memberInfo = [], onClick }: MemberListProps) => {
       {memberInfo.map((member, index) => (
         <M.ListItem
           key={index}
-          onClick={() => onClick && onClick(member.memberId ?? 0)}
+          onClick={() => onClick && onClick(member.groupMemberId ?? 0)}
         >
           <M.MemberImg>
             <img src={member.profilePicture} alt={`${member.nickname}`} />

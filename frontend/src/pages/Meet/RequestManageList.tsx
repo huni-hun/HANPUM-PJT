@@ -25,14 +25,14 @@ function RequestManageList() {
   /** 아이디  넘겨받기 */
   const location = useLocation();
   const savedGroupId = localStorage.getItem('groupId');
-  const groupIdNumber = savedGroupId ? Number(JSON.parse(savedGroupId)) : null;
+  const groupId = savedGroupId ? Number(JSON.parse(savedGroupId)) : null;
 
   /** 신청관리 리스트 */
   useEffect(() => {
     const fetchData = async () => {
-      if (groupIdNumber) {
+      if (groupId) {
         try {
-          const response = await GetMeetApplyList(groupIdNumber);
+          const response = await GetMeetApplyList(groupId);
           if (response && response.status === 'SUCCESS') {
             setListData(response.data.groupApplyResList || []);
           } else if (response.status === 'ERROR') {
@@ -50,13 +50,13 @@ function RequestManageList() {
     fetchData();
   }, []);
 
-  const clickMember = (memberId: number) => {
-    navigate('/meet/accept', { state: { groupIdNumber, memberId } });
+  const clickMember = (groupIdNumber: number) => {
+    navigate('/meet/accept', { state: { groupId, groupIdNumber } });
   };
 
   const clickBack = () => {
     navigate('/meet/detail', {
-      state: { groupId: groupIdNumber ? Number(groupIdNumber) : '' },
+      state: { groupId: groupId ? Number(groupId) : '' },
     });
   };
 

@@ -12,7 +12,10 @@ function App() {
 
   const checkAuth = useCallback(() => {
     const token = localStorage.getItem('token');
-    setAuthEnticate(!!token);
+    console.log('checkAuth App에서', token, !!token);
+    if (token) {
+      setAuthEnticate(true);
+    }
   }, [setAuthEnticate]);
 
   useEffect(() => {

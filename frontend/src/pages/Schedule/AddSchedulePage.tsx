@@ -31,6 +31,8 @@ function AddSchedulePage() {
   const [isMapReady, setIsMapReady] = useState<boolean>(false);
   const [latitude, setLatitude] = useState<number>(0);
   const [longitude, setLongitude] = useState<number>(0);
+  /** 경로 있을 때만 달력 확성화 */
+  const [isRouteValid, setIsRouteValid] = useState(true);
 
   /** 날짜 선택 시 vh 늘어나면서 data picker,map 활성화 */
   const [isExpanded, setIsExpanded] = useState(false);
@@ -74,9 +76,14 @@ function AddSchedulePage() {
   };
 
   const handlerExpanded = () => {
-    setIsExpanded((prevState) => !prevState);
+    if (routedata && Object.keys(routedata).length === 0) {
+      setIsRouteValid(false); // 경로가 유효하지 않으면 상태를 업데이트
+      toast.error('경로를 먼저 선택해주세요!');
+    } else {
+      setIsRouteValid(true); // 경로가 유효하면 상태를 true로
+      setIsExpanded((prevState) => !prevState); // 달력 확장
+    }
   };
-
   /** 임시 데이터 */
   const dummyData = {
     date: [
@@ -133,7 +140,8 @@ function AddSchedulePage() {
         {/* 일정 선택 박스 */}
         <S.DateWrap $isExpanded={isExpanded} onClick={handlerExpanded}>
           {/* vh 활성화 되었을 때 캘린더 */}
-          {isExpanded ? (
+
+          {isExpanded && isRouteValid ? (
             <div onClick={handleStopEvent}>
               <S.H3>출발일을 선택해주세요.</S.H3>
               <S.DatePicker>
@@ -147,7 +155,7 @@ function AddSchedulePage() {
               <S.NextBtn>
                 <Button
                   width={20}
-                  height={4}
+                  height={4.8}
                   fc="ffffff"
                   bc={colors.main}
                   radius={0.7}

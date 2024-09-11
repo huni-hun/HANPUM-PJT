@@ -123,6 +123,7 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(MemberNotFoundException::new);
         checkNicknameAuthenticated(kakaoSignUpCompleteReqDto.getNickname());
         member.kakaoSingUpComplete(
+                kakaoSignUpCompleteReqDto.getName(),
                 kakaoSignUpCompleteReqDto.getNickname(),
                 kakaoSignUpCompleteReqDto.getGender(),
                 kakaoSignUpCompleteReqDto.getBirthDate(),

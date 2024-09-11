@@ -2,9 +2,11 @@ import Header from '@/components/common/Header/Header';
 import Icon from '@/components/common/Icon/Icon';
 import Button from '@/components/common/Button/Button';
 import * as R from '@/components/Style/Route/RouteAddCompletePage.styled';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function MeetAddCompletePage() {
+  const location = useLocation();
+  const category = location.state?.category;
   const navigator = useNavigate();
   return (
     <R.Container>
@@ -17,7 +19,11 @@ function MeetAddCompletePage() {
       <R.MainContainer>
         <Icon name="IconMeetComplete" height={212} width={206} />
         <R.TextBox>
-          <R.Text>모임이 생성되었어요!</R.Text>
+          <R.Text>
+            {category === 'edit'
+              ? '모임이 수정되었어요!'
+              : '모임이 생성되었어요!'}
+          </R.Text>
         </R.TextBox>
       </R.MainContainer>
       <R.BtnContainer>

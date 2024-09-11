@@ -153,9 +153,16 @@ public class GroupController {
     @PostMapping("/{groupId}/like")
     public ResponseEntity<?> likeGroup(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                        @PathVariable Long groupId) {
-        boolean isLike = groupService.likeGroup(userDetails.getMember().getMemberId(), groupId);
-        if (isLike) return response.success(ResponseCode.GROUP_LIKE_SUCCESS);
-        else return response.success(ResponseCode.GROUP_UNLIKE_SUCCESS);
+        groupService.likeGroup(userDetails.getMember().getMemberId(), groupId);
+        return response.success(ResponseCode.GROUP_LIKE_SUCCESS);
+    }
+
+    @Operation(summary = "모임 관심 목록 삭제", description = "모임 관심 목록 삭제 API")
+    @DeleteMapping("/{groupId}/dislike")
+    public ResponseEntity<?> dislikeGroup(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                          @PathVariable Long groupId) {
+        groupService.dislikeGroup(userDetails.getMember().getMemberId(), groupId);
+        return response.success(ResponseCode.GROUP_UNLIKE_SUCCESS);
     }
 
     @Operation(summary = "모임 탈퇴", description = "모임 탈퇴 API")

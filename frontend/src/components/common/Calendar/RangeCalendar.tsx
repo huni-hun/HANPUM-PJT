@@ -35,7 +35,6 @@ const RangeCalendar = ({
   startDate,
   endDate,
   onDateChange,
-  isPickDate,
   totalDays,
 }: RangeCalendarProps) => {
   const [internalRange, setInternalRange] = useState<Range>({
@@ -48,28 +47,20 @@ const RangeCalendar = ({
     let start: Date | null = null;
     let end: Date | null = null;
 
-    if (isPickDate) {
-      start = value ? new Date(value) : null;
-      end = null;
-    } else {
-      start = value && value[0] ? new Date(value[0]) : null;
-      end = value && value[1] ? new Date(value[1]) : null;
-    }
+    // 출발일 선택
+    start = value ? new Date(value) : null;
 
-    if (isPickDate) {
-      start = value ? new Date(value) : null;
-      // totalDays가 있을 경우 출발일을 기준으로 endDate 계산
-      if (start && totalDays) {
-        const calculatedEndDate = new Date(start);
-        calculatedEndDate.setDate(calculatedEndDate.getDate() + totalDays - 1);
-        end = calculatedEndDate;
-      }
+    // 출발일이 선택되고 totalDays가 있을 경우 도착일 계산
+    if (start && totalDays) {
+      const calculatedEndDate = new Date(start);
+      calculatedEndDate.setDate(calculatedEndDate.getDate() + totalDays - 1);
+      end = calculatedEndDate;
     }
 
     const formattedStart = formatDate(start);
     const formattedEnd = formatDate(end);
 
-    // 선택된 날짜가 변경되었을 때만 state 업데이트
+    // 날짜가 변경되었을 때 업데이트
     if (
       formattedStart !== internalRange.startDate ||
       formattedEnd !== internalRange.endDate
@@ -79,7 +70,6 @@ const RangeCalendar = ({
         endDate: formattedEnd,
       });
 
-      // 부모 컴포넌트로 변경된 날짜 전달
       onDateChange({
         startDate: formattedStart,
         endDate: formattedEnd,
@@ -87,29 +77,31 @@ const RangeCalendar = ({
     }
   };
 
+  // 오늘 날짜를 자정으로 설정(오늘날짜 선택 안되는 버그)
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   return (
     <CustomCalendarWrapper>
       <Datepicker
         display="inline"
-        select={isPickDate ? 'date' : 'range'}
+        select="range"
         touchUi={true}
         controls={['calendar']}
         onChange={handleChange}
-        value={
-          isPickDate
-            ? [startDate ? new Date(startDate) : undefined]
-            : [
-                startDate ? new Date(startDate) : undefined,
-                endDate ? new Date(endDate) : undefined,
-              ]
-        }
+        value={[
+          startDate ? new Date(startDate) : undefined,
+          endDate ? new Date(endDate) : undefined,
+        ]}
         min={today}
         invalid={[
           {
             start: new Date(1900, 0, 1),
-            end: today,
+            end: new Date(
+              today.getFullYear(),
+              today.getMonth(),
+              today.getDate() - 1,
+            ),
           },
         ]}
       />

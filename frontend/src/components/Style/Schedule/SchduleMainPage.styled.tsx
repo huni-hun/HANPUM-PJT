@@ -43,7 +43,7 @@ export const Overflow = styled.div`
 `;
 export const RouteInfoContainer = styled.div`
   width: 100vw;
-  /* height: 80vh; */
+  height: 80vh;
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
