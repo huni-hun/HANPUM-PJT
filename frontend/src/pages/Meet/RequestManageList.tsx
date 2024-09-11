@@ -67,7 +67,7 @@ function RequestManageList() {
       {listData.length > 0 ? (
         <MemberList memberInfo={listData} onClick={clickMember} />
       ) : (
-        <>인원이 없습니다.</>
+        <div style={{ padding: '1rem 2rem' }}>인원이 없습니다.</div>
       )}
     </MainPageContainer>
   );
