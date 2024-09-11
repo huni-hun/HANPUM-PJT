@@ -353,13 +353,35 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     /* */
 
     @Override
-    public int activateScheduleForToday(String startDate) {
+    public long activateScheduleForToday(String today) {
         long updatedCount = query.update(schedule)
                 .set(schedule.state, 1)
                 .where(schedule.state.eq(0)
-                        .and(schedule.startDate.eq(startDate)))
+                        .and(schedule.startDate.eq(today)))
                 .execute();
-        return (int) updatedCount;
+        return updatedCount;
+    }
+
+    @Override
+    public long deactivateScheduleForToday(String today, String yesterday) {
+        long count1 = query.update(schedule)
+                .set(schedule.state, 2)
+                .where(schedule.state.eq(1)
+                        .and(schedule.endDate.eq(today)))
+                .execute();
+        long count2 = query.update(scheduleDay)
+                .set(scheduleDay.visit, true)
+                .where(scheduleDay.date.eq(yesterday)
+                        .and(scheduleDay.visit.eq(false)))
+                .execute();
+
+        long count3 = query.update(scheduleWayPoint)
+                .set(scheduleWayPoint.state, 2)
+                .where(scheduleWayPoint.scheduleDay.date.eq(yesterday)
+                        .and(scheduleWayPoint.state.in(0, 1)))
+                .execute();
+
+        return count1 + count2 + count3;
     }
 
     @Override
