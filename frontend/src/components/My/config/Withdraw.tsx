@@ -13,6 +13,7 @@ import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { isAuthEnticatedAtom } from '@/atoms/isAuthEnticatedAtom';
+import Cookies from 'js-cookie';
 
 function Withdraw() {
   const { data } = useQuery('getUser', GetUser);
@@ -32,6 +33,9 @@ function Withdraw() {
         navigate('/login');
         sessionStorage.removeItem('send');
         setAuthEnticate(false);
+        Cookies.remove('memberType', { path: '/' });
+        Cookies.remove('memberId', { path: '/' });
+        Cookies.remove('JSESSIONID', { path: '/' });
       }
       if (res.status === STATUS.error) {
         toast.error(res.message);
