@@ -32,7 +32,6 @@ function MemberManageList() {
         const response = await GetMeetMemberList(groupId || 0);
         if (response && response.status === 'SUCCESS') {
           setListData(response.data.groupMemberResList || []);
-          console.log(listData, '리스트');
         } else if (response.status === 'ERROR') {
           toast.error(response.message);
           navigate('/meet/detail');
@@ -62,7 +61,7 @@ function MemberManageList() {
       {listData.length > 0 ? (
         <MemberList memberInfo={listData} onClick={clickMember} />
       ) : (
-        <>인원이 없습니다.</>
+        <div style={{ padding: '1rem 2rem' }}>인원이 없습니다.</div>
       )}
     </MainPageContainer>
   );

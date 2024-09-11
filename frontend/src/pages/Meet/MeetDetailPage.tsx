@@ -506,6 +506,7 @@ function MeetDetailPage() {
           bsTypeText={'설정'}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          isWrite={meetDetail.data?.groupJoinStatus === 'GROUP_LEADER'}
         />
       )}
 

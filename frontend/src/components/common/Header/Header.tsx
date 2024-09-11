@@ -243,7 +243,6 @@ const Header = ({
               className="back-arrow"
               size={15}
               onClick={() => {
-                console.log('눌림');
                 clickBack();
               }}
             />
