@@ -23,15 +23,16 @@ function MemberManageList() {
   const [loading, setLoading] = useState<boolean>(false);
   /** 아이디  넘겨받기 */
   const savedGroupId = localStorage.getItem('groupId');
-  const groupIdNumber = savedGroupId ? Number(JSON.parse(savedGroupId)) : null;
+  const groupId = savedGroupId ? Number(JSON.parse(savedGroupId)) : null;
 
   /** 신청관리 리스트 */
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await GetMeetMemberList(groupIdNumber || 0);
+        const response = await GetMeetMemberList(groupId || 0);
         if (response && response.status === 'SUCCESS') {
           setListData(response.data.groupMemberResList || []);
+          console.log(listData, '리스트');
         } else if (response.status === 'ERROR') {
           toast.error(response.message);
           navigate('/meet/detail');
@@ -46,8 +47,9 @@ function MemberManageList() {
     fetchData();
   }, []);
 
-  const clickMember = (memberId: number) => {
-    navigate('/meet/memberDetail', { state: { groupIdNumber, memberId } });
+  const clickMember = (groupIdNumber: number) => {
+    navigate('/meet/memberDetail', { state: { groupId, groupIdNumber } });
+    console.log(groupIdNumber, '?');
   };
 
   return (

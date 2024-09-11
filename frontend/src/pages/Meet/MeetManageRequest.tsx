@@ -22,7 +22,7 @@ function MeetManageRequest() {
   );
   /** 멤버 아이디 넘겨받기 */
   const savedGroupId = localStorage.getItem('groupId');
-  const groupIdNumber = savedGroupId ? Number(JSON.parse(savedGroupId)) : null;
+  const groupId = savedGroupId ? Number(JSON.parse(savedGroupId)) : null;
 
   /** 회원 정보 가져오기 */
   useEffect(() => {
@@ -46,10 +46,10 @@ function MeetManageRequest() {
 
   /** post - 모임 신청 */
   const handleApply = async () => {
-    if (groupIdNumber) {
+    if (groupId) {
       try {
         setLoading(true);
-        const response = await PostMeetApply(groupIdNumber, applyPost);
+        const response = await PostMeetApply(groupId, applyPost);
         if (response && response.status === 'SUCCESS') {
           toast.success('신청이 완료되었습니다.');
         } else if (response.status === 'ERROR') {
