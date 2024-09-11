@@ -40,10 +40,12 @@ function MeetAddSchedulePage() {
     ready,
     lat,
     lon,
+    totalDays,
   } = location.state || {};
   /** 날짜 선택 시 vh 늘어나면서 data picker,map 활성화 */
   const [isExpanded, setIsExpanded] = useState(false);
-
+  /** 경로 있을 때만 달력 확성화 */
+  const [isRouteValid, setIsRouteValid] = useState(true);
   /** 달력 선택 start, endData 쓸 수 있는거 */
   const [dates, setDates] = useState({
     startDate: '',
@@ -84,7 +86,14 @@ function MeetAddSchedulePage() {
   };
 
   const handlerExpanded = () => {
-    setIsExpanded((prevState) => !prevState);
+    console.log(totalDays, '?');
+    if (totalDays === 0) {
+      setIsRouteValid(false);
+      toast.error('경로를 먼저 선택해주세요!');
+    } else {
+      setIsRouteValid(true);
+      setIsExpanded((prevState) => !prevState);
+    }
   };
 
   /** 일정 + 경로 제목 데이터 (선택 후 들어가는 부분), 걍 귀찮아서 더미데이터라고 썼어요 */
@@ -162,6 +171,7 @@ function MeetAddSchedulePage() {
                   startDate={dates.startDate}
                   endDate={dates.endDate}
                   onDateChange={handleDateChange}
+                  totalDays={totalDays}
                 />
               </S.DatePicker>
               <S.NextBtn>

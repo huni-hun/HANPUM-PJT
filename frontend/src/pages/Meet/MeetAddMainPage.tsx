@@ -33,10 +33,9 @@ function MeetAddMainPage() {
 
   const [meetData, setMeetData] = useState<CreateMeetProps>(null!);
 
-  console.log('meetData ::', meetData);
-
   const { courseId, startDate, endDate, recruitmentPeriod, start, end } =
     location.state || {};
+
   useEffect(() => {
     const savedMeetRequest = localStorage.getItem('meetRequest');
     if (savedMeetRequest) {
@@ -50,7 +49,6 @@ function MeetAddMainPage() {
   }, []);
 
   /** 로컬 스토리지로 input value + 이미지 저장 */
-
   useEffect(() => {
     localStorage.setItem('meetRequest', JSON.stringify(meetRequest));
     const schedulePostReqDto: schedulePostReqDto = {
@@ -71,7 +69,6 @@ function MeetAddMainPage() {
       // schedulePostReqDto,
     };
 
-    console.log('meetData 생성할 때 ::::', meetData);
     setMeetData(meetdata);
   }, [meetRequest]);
 
@@ -88,7 +85,6 @@ function MeetAddMainPage() {
   /** 이미지 핸들링 */
   const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    console.log('file ::', file);
     if (file) {
       const compressedFile = (await compressImage(file)) ?? file;
       console.log(compressedFile);
@@ -99,7 +95,7 @@ function MeetAddMainPage() {
       // localStorage.setItem('previewImage', url);
 
       setMultipartImg(compressedFile);
-
+      localStorage.setItem('previewImage', url);
       setMeetRequest((prevValue) => ({
         ...prevValue,
         multipartFile: compressedFile || file,
@@ -132,6 +128,7 @@ function MeetAddMainPage() {
         courseId,
         startDate,
         recruitmentPeriod,
+        previewImage,
       },
     });
   };
@@ -143,6 +140,7 @@ function MeetAddMainPage() {
         courseId,
         startDate,
         recruitmentPeriod,
+        previewImage,
       },
     });
   };
@@ -253,7 +251,6 @@ function MeetAddMainPage() {
             </Text>
             <div className="schedule-info">
               <M.ScheduleTextWrap>
-                {/* 일정에서 날짜를 선택안했을 때 (여기에 조건 추가해서 경로 붙이면 될듯 합니다) */}
                 {startDate !== undefined && (
                   <M.ScheduleText>
                     {startDate} - {endDate}

@@ -404,7 +404,7 @@ function ScheduleMainPage() {
 
       fetchData();
     }
-  }, [isSelected, isLocationReady]);
+  }, [isSelected]);
 
   useEffect(() => {
     /* 맵에 마커, 선 초기화 */
