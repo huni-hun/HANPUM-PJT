@@ -27,7 +27,7 @@ function MeetSmallCard({
   const [like, setLike] = useState(data.like);
 
   const likeHandler = (e: React.MouseEvent) => {
-    e.stopPropagation(); // 클릭 이벤트가 부모로 전파되지 않게 막음
+    e.stopPropagation();
 
     if (isAuth) {
       if (like) {
@@ -42,7 +42,6 @@ function MeetSmallCard({
             toast.error('관심 모임 해제에 실패했습니다.');
           });
       } else {
-        // 관심 모임 등록 (PostMeetLike 호출)
         PostMeetLike(data.groupId)
           .then((res) => {
             if (res.status === 'SUCCESS') {
