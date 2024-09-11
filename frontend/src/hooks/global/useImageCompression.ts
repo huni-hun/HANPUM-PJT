@@ -7,7 +7,7 @@ const useImageCompression = () => {
   const [loading, setLoading] = useState(false);
 
   const compressImage = async (imageFile: File) => {
-    console.log('imageFile ::::', imageFile);
+    // console.log('imageFile ::::', imageFile);
     setLoading(true);
     setError(null);
 
@@ -35,7 +35,7 @@ const useImageCompression = () => {
     }
   };
 
-  console.log('compressedImage ::', compressedImage);
+  // console.log('compressedImage ::', compressedImage);
   return { compressedImage, compressImage };
 };
 

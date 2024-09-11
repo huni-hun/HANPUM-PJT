@@ -239,7 +239,7 @@ function ProfileConfig({
       if (res.status === STATUS.success) {
         toast.success(res.message);
         console.log(res);
-        sessionStorage.setItem('send', 'true');
+
         clickNext();
       }
       if (res.status === STATUS.error) {

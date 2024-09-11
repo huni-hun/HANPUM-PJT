@@ -29,6 +29,8 @@ function LoginPage() {
         if (token) {
           localStorage.setItem('token', token);
           Cookies.remove('accessToken', { path: '/' });
+
+          window.dispatchEvent(new Event('storage')); // 강제로 storage 이벤트 발생
         }
       }
 
@@ -40,7 +42,7 @@ function LoginPage() {
         navigate('/home');
       }
     }
-  }, [tryKakao]);
+  }, [tryKakao, navigate]);
 
   return (
     <LoginPageContainer>
