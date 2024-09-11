@@ -47,6 +47,8 @@ public enum ErrorCode {
     GROUP_MEMBER_FULL(HttpStatus.BAD_REQUEST, "해당 모임에 인원수가 초과하였습니다."),
     GROUP_PERMISSION(HttpStatus.BAD_REQUEST, "해당 모임에 허가되지 않은 접근입니다."),
     GROUP_DELETE_FAILED(HttpStatus.BAD_REQUEST, "신청 중인 회원 또는 가입 중인 멤버가 있습니다."),
+    GROUP_ALREADY_LIKE(HttpStatus.BAD_REQUEST, "이미 관심 목록에 등록된 모임 입니다."),
+    GROUP_LIKE_NOT_FOUND(HttpStatus.BAD_REQUEST, "관심 목록에 등록된 모임이 아닙니다."),
 
     /* 이미지 업로드 */
     FILE_FORMAT_UNSUPPORTED(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "지원하지 않는 파일 형식입니다."),
