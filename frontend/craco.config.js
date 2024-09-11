@@ -1,5 +1,4 @@
 const CracoAlias = require("craco-alias");
-const { InjectManifest } = require("workbox-webpack-plugin");
 
 module.exports = {
   plugins: [
@@ -29,15 +28,5 @@ module.exports = {
         },
       ],
     ],
-  },
-  webpack: {
-    plugins: {
-      add: [
-        new InjectManifest({
-          swSrc: "./src/service-worker.js",
-          swDest: "service-worker.js",
-        }),
-      ],
-    },
   },
 };
