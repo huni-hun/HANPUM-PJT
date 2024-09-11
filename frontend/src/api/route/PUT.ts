@@ -24,3 +24,26 @@ export const RetouchRoute = async (data: RetouchRouteProps) => {
 
   return response;
 };
+
+export const UpdateReview = async (
+  id: string,
+  content: string,
+  score: number,
+  reviewId: number,
+) => {
+  const response = api.put(
+    `/api/course/${id}/reviews`,
+    {
+      content: content,
+      score: score,
+      reviewId: reviewId,
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+
+  return response;
+};

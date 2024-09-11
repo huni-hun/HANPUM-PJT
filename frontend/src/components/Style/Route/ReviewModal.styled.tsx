@@ -59,6 +59,13 @@ export const CloseBox = styled.div`
   left: 0;
 `;
 
+export const ReviewDeleteBox = styled.div`
+  width: 2rem;
+  height: 100%;
+  position: absolute;
+  right: 0;
+`;
+
 export const RatingBox = styled.div`
   width: 100%;
   height: 7rem;
