@@ -13,7 +13,7 @@ const FeedContainer = ({
   meetRouter,
   isMeetFeed,
 }: FeedProps) => {
-  console.log(routeData?.routeUserImg, '?');
+  console.log(routeData?.routeFeedImg, '백그라운드 이미지');
   return (
     <>
       {meetRouter ? (

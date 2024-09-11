@@ -56,7 +56,8 @@ import {
 } from '@/api/route/GET';
 import { GetLineData } from '@/api/route/POST';
 import { PutScheduleArrive } from '@/api/schedule/PUT';
-import NoHave from '@/components/Schedule/NoHave';
+import ScheduleNoHave from '@/components/Schedule/ScheduleNoHave';
+import NoHave from '@/components/My/NoHave';
 
 function ScheduleMainPage() {
   const BtnClick = () => {};
@@ -200,8 +201,6 @@ function ScheduleMainPage() {
     routeContent: meetListData?.content,
     routeTypes: meetListData?.courseTypes || [],
   };
-
-  console.log(meetListData?.backgroundImg, '백그라운드이미지');
 
   const clickCard = (scheduleId?: number, dDay?: string) => {
     if (scheduleId !== undefined) {
@@ -812,7 +811,7 @@ function ScheduleMainPage() {
                 </>
               ) : (
                 <>
-                  <NoHave category="schedule" />
+                  <ScheduleNoHave category="schedule" />
                 </>
               )}
             </>
@@ -854,7 +853,7 @@ function ScheduleMainPage() {
                 );
               })
             ) : (
-              <S.NoData>일정이 없습니다.</S.NoData>
+              <ScheduleNoHave category="schedule" />
             )}
             {/* </S.Overflow> */}
           </S.SchduleCardContainer>
@@ -918,7 +917,7 @@ function ScheduleMainPage() {
                 </S.ScheduleMainContainer>
               </>
             ) : (
-              <S.NoData>일정이 없습니다.</S.NoData>
+              <NoHave category="" />
             )}
           </S.Overflow>
         </S.Main>
