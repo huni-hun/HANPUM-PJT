@@ -45,7 +45,6 @@ function ProfileConfig({
   const { compressImage, compressedImage } = useImageCompression();
 
   const setStep = useSetRecoilState(signupStepAtom);
-  const setAuthEnticate = useSetRecoilState(isAuthEnticatedAtom);
 
   const [dirty, setDirty] = useState<
     Partial<Record<keyof UserSignupFormValues, boolean>>
@@ -243,7 +242,6 @@ function ProfileConfig({
         console.log(res);
         sessionStorage.setItem('send', 'true');
         clickNext();
-        setAuthEnticate(true);
       }
       if (res.status === STATUS.error) {
         toast.error(res.message);
