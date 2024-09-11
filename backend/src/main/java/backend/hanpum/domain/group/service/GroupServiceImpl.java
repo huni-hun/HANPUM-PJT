@@ -80,7 +80,7 @@ public class GroupServiceImpl implements GroupService {
         member.updateGroupMember(groupMember);
         groupRepository.save(group);
 
-        if(!multipartFile.isEmpty()) {
+        if(multipartFile != null) {
             group.updateGroupImg(s3ImageService.uploadImage(multipartFile));
         }
 
@@ -104,7 +104,7 @@ public class GroupServiceImpl implements GroupService {
                 groupUpdateReqDto.getRecruitmentPeriod()
         );
 
-        if(!multipartFile.isEmpty()) {
+        if(multipartFile != null) {
             String currentImage = group.getGroupImg();
             String updateImage = s3ImageService.uploadImage(multipartFile);
             group.updateGroupImg(updateImage);
