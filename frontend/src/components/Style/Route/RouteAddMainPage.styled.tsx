@@ -163,9 +163,9 @@ export const CheckedTypeContainer = styled.div`
   margin-top: 1rem;
 `;
 
-export const CheckedTypeCard = styled.div<{ isLong: boolean }>`
+export const CheckedTypeCard = styled.div<{ $isLong: boolean }>`
   height: 4.3rem;
-  width: ${(props) => (props.isLong ? '9.7rem' : '8.3rem')};
+  width: ${(props) => (props.$isLong ? '9.7rem' : '8.3rem')};
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -269,7 +269,7 @@ export const RouteCardMain = styled.div`
 `;
 
 export const RouteExplane = styled.textarea`
-  width: 70%;
+  width: 90%;
   height: 90%;
   border-radius: 1.2rem;
   border: 0.2rem solid #d9d9d9;
@@ -311,18 +311,18 @@ export const SwitchInput = styled.input`
   visibility: hidden;
 `;
 
-export const SwitchLabel = styled.label<{ isOpen: boolean }>`
+export const SwitchLabel = styled.label<{ $isOpen: boolean }>`
   display: flex;
   position: relative;
   width: 5.6rem;
   height: 3.1rem;
   border-radius: 10rem 10rem 10rem 10rem;
-  background-color: ${({ isOpen }) => (isOpen ? '#1A823B' : '#d9d9d9')};
+  background-color: ${({ $isOpen }) => ($isOpen ? '#1A823B' : '#d9d9d9')};
   align-items: center;
   transition: background-color 0.5s;
 `;
 
-export const SwitchButton = styled.span<{ isOpen: boolean }>`
+export const SwitchButton = styled.span<{ $isOpen: boolean }>`
   width: 2.7rem;
   height: 2.7rem;
   background-color: #ffffff;
@@ -330,8 +330,8 @@ export const SwitchButton = styled.span<{ isOpen: boolean }>`
   border-radius: 50%;
   left: 0.2rem;
   transition: all 0.5s ease-in-out;
-  ${({ isOpen }) =>
-    isOpen ? 'transform: translateX(2.4rem)' : 'transform: translateX(0.2rem)'}
+  ${({ $isOpen }) =>
+    $isOpen ? 'transform: translateX(2.4rem)' : 'transform: translateX(0.2rem)'}
 `;
 
 export const ButtonBox = styled.div`

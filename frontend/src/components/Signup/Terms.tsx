@@ -4,6 +4,7 @@ import { MouseEvent, useState } from 'react';
 import FixedBottomButton from '../common/FixedBottomButton';
 import { useSetRecoilState } from 'recoil';
 import { signupStepAtom } from '@/atoms/signupStepAtom';
+import { useNavigate } from 'react-router-dom';
 
 function Terms({
   clickNext,
@@ -12,6 +13,7 @@ function Terms({
   clickNext: () => void;
   pagenation: () => React.ReactNode;
 }) {
+  const navigate = useNavigate();
   // 약관 동의 체크를 위한 객체 생성
   // {01: false, 02: false, 03: true}
   const [termsAgreements, setTermsAgreements] = useState(() => {
@@ -102,7 +104,14 @@ function Terms({
               onClick={() => handleAgree(apply.id, !termsAgreements[apply.id])}
             />
             <div className="apply_item-title">{apply.title}</div>
-            <div className="apply_item-link">보기</div>
+            {apply.url && (
+              <div
+                className="apply_item-link"
+                onClick={() => navigate(`${apply.url}`)}
+              >
+                보기
+              </div>
+            )}
           </div>
         ))}
       </div>

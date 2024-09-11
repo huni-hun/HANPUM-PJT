@@ -20,6 +20,7 @@ interface RangeCalendarProps {
   endDate: string | null;
   onDateChange: (range: Range) => void;
   isPickDate?: boolean;
+  totalDays?: number;
 }
 
 const formatDate = (date: Date | null): string | null => {
@@ -35,6 +36,7 @@ const RangeCalendar = ({
   endDate,
   onDateChange,
   isPickDate,
+  totalDays,
 }: RangeCalendarProps) => {
   const [internalRange, setInternalRange] = useState<Range>({
     startDate,
@@ -54,10 +56,20 @@ const RangeCalendar = ({
       end = value && value[1] ? new Date(value[1]) : null;
     }
 
+    if (isPickDate) {
+      start = value ? new Date(value) : null;
+      // totalDays가 있을 경우 출발일을 기준으로 endDate 계산
+      if (start && totalDays) {
+        const calculatedEndDate = new Date(start);
+        calculatedEndDate.setDate(calculatedEndDate.getDate() + totalDays - 1);
+        end = calculatedEndDate;
+      }
+    }
+
     const formattedStart = formatDate(start);
     const formattedEnd = formatDate(end);
 
-    // Prevent unnecessary state updates
+    // 선택된 날짜가 변경되었을 때만 state 업데이트
     if (
       formattedStart !== internalRange.startDate ||
       formattedEnd !== internalRange.endDate
@@ -67,6 +79,7 @@ const RangeCalendar = ({
         endDate: formattedEnd,
       });
 
+      // 부모 컴포넌트로 변경된 날짜 전달
       onDateChange({
         startDate: formattedStart,
         endDate: formattedEnd,

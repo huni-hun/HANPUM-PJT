@@ -174,8 +174,6 @@ function MainPage() {
     // console.log(`${groupId} 눌림`);
   };
 
-  const loading = true;
-
   useEffect(() => {
     getRouteList('해안길', 2).then((result) => {
       if (result.status === 200) {
@@ -240,7 +238,7 @@ function MainPage() {
           </Flex>
           <Flex>
             {routes &&
-              routes.map((ele) => <RouteCard {...ele} key={ele.routeId} />)}
+              routes.map((ele) => <RouteCard ele={ele} key={ele.routeId} />)}
           </Flex>
         </div>
 
@@ -255,14 +253,25 @@ function MainPage() {
                 </Text>
 
                 <Flex $align="center" style={{ width: 'auto' }}>
-                  <Text $typography="t10">더 보기</Text>
+                  <Text
+                    $typography="t10"
+                    onClick={() => {
+                      navigator('/meet/list');
+                    }}
+                  >
+                    더 보기
+                  </Text>
                   <Icon name="IconLeftBlackArrow" width={6} height={4} />
                 </Flex>
               </Flex>
 
               <div
                 className="main-longCard"
-                onClick={() => navigator(`/meet/:${meet.groupId}`)}
+                onClick={() => {
+                  navigator('/meet/detail', {
+                    state: { groupId: meet.groupId },
+                  });
+                }}
               >
                 <img src={meet.groupImg} alt="" />
                 <DateBadge
@@ -330,7 +339,7 @@ function MainPage() {
           ))}
         <BottomTab />
       </div>
-      <Loading />
+      {/* <Loading /> */}
     </MainPageContainer>
   );
 }

@@ -26,6 +26,7 @@ function MeetEditPage() {
     recruitmentPeriod,
     isEdit,
   } = location.state || {};
+  const { state } = location;
 
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [multipartFile, setMultipartFile] = useState<File | string | undefined>(
@@ -38,16 +39,20 @@ function MeetEditPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const [groupId, setGroupId] = useState<number | null>(stateGroupId || null);
 
-  // 초기 로딩 시 groupId와 meetRequest를 로컬 스토리지에서 불러옴
   useEffect(() => {
-    if (!stateGroupId) {
-      const savedGroupId = localStorage.getItem('groupId');
-      if (savedGroupId) {
-        setGroupId(JSON.parse(savedGroupId));
+    if (state && state.meetEditRequest) {
+      setMeetRequest(state.meetEditRequest);
+    } else {
+      const savedMeetRequest = localStorage.getItem('meetEditRequest');
+      if (savedMeetRequest) {
+        setMeetRequest(JSON.parse(savedMeetRequest));
       }
     }
+  }, [state]);
 
-    const savedMeetRequest = localStorage.getItem('meetRequest');
+  useEffect(() => {
+    // 로컬 스토리지에서 데이터 로드
+    const savedMeetRequest = localStorage.getItem('meetEditRequest');
     if (savedMeetRequest) {
       setMeetRequest(JSON.parse(savedMeetRequest));
     }
@@ -56,18 +61,27 @@ function MeetEditPage() {
     if (savedImage) {
       setPreviewImage(savedImage);
     }
-  }, [stateGroupId]);
 
-  // meetRequest가 변경될 때 로컬 스토리지에 저장
+    if (!stateGroupId) {
+      const savedGroupId = localStorage.getItem('groupId');
+      if (savedGroupId) {
+        setGroupId(JSON.parse(savedGroupId));
+      }
+    }
+
+    if (groupId && !detailData) {
+      fetchData();
+    }
+  }, [stateGroupId, groupId, detailData]);
+
   useEffect(() => {
-    localStorage.setItem('meetRequest', JSON.stringify(meetRequest));
-  }, [meetRequest, groupId]);
+    // `meetRequest`가 변경될 때 로컬 스토리지 업데이트
+    localStorage.setItem('meetEditRequest', JSON.stringify(meetRequest));
+  }, [meetRequest]);
 
-  // 모임 상세 정보 가져오기
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!groupId) return;
-
+  const fetchData = async () => {
+    if (!groupId) return;
+    if (!isEdit) {
       try {
         setLoading(true);
         const response = await GetMeetDetailList(groupId);
@@ -81,6 +95,17 @@ function MeetEditPage() {
             recruitmentCount: response.data.recruitmentCount,
             recruitmentPeriod: response.data.recruitmentPeriod,
           });
+          // 로컬 스토리지에 초기값 저장
+          localStorage.setItem(
+            'meetEditRequest',
+            JSON.stringify({
+              multipartFile: response.data.groupImg,
+              title: response.data.title,
+              description: response.data.description,
+              recruitmentCount: response.data.recruitmentCount,
+              recruitmentPeriod: response.data.recruitmentPeriod,
+            }),
+          );
         } else if (response?.status === 'ERROR') {
           toast.error(response.message);
         }
@@ -89,10 +114,8 @@ function MeetEditPage() {
       } finally {
         setLoading(false);
       }
-    };
-
-    fetchData();
-  }, [groupId]);
+    }
+  };
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -116,20 +139,22 @@ function MeetEditPage() {
   const handleInfoChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    setMeetRequest({
-      ...meetRequest,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setMeetRequest((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleRecruitmentCountChange = (count: number) => {
-    setMeetRequest({
-      ...meetRequest,
+    setMeetRequest((prev) => ({
+      ...prev,
       recruitmentCount: count,
-    });
+    }));
   };
 
   const clickAddDeadline = () => {
+    localStorage.setItem('meetEditRequest', JSON.stringify(meetRequest));
     navigate('/meet/addMain/AddDeadline', {
       state: {
         courseId,
@@ -148,7 +173,7 @@ function MeetEditPage() {
         title: meetRequest.title || '',
         description: meetRequest.description || '',
         recruitmentCount: meetRequest.recruitmentCount || 0,
-        recruitmentPeriod: recruitmentPeriod || '',
+        recruitmentPeriod: meetRequest.recruitmentPeriod || '',
       };
 
       const response = await PutGroup(
@@ -156,14 +181,16 @@ function MeetEditPage() {
         previewImage || '',
         groupPostReqDto,
       );
+
       if (response?.status === 'SUCCESS') {
         toast.success('모임 수정이 완료되었습니다!');
         navigate('/schedule/success');
-        localStorage.removeItem('meetRequest');
+        // 수정 완료 후, 로컬 스토리지에서 관련 항목 제거
+        localStorage.removeItem('meetEditRequest');
         localStorage.removeItem('previewImage');
         localStorage.removeItem('groupId');
-      } else {
-        toast.error('모임 수정에 실패했습니다.');
+      } else if (response.status === 'ERROR') {
+        toast.error(response.message);
       }
     } catch (error) {
       toast.error('모임 수정 중 오류가 발생했습니다.');
@@ -173,7 +200,7 @@ function MeetEditPage() {
   const handleBackClick = () => {
     const groupId = localStorage.getItem('groupId');
 
-    localStorage.removeItem('meetRequest');
+    localStorage.removeItem('meetEditRequest');
     localStorage.removeItem('previewImage');
     navigate('/meet/detail', {
       state: { groupId: groupId ? Number(groupId) : '' },
@@ -201,7 +228,6 @@ function MeetEditPage() {
                 ) : (
                   <Icon name="IconCameraGrey" width={52} height={38} />
                 )}
-
                 <input
                   type="file"
                   accept="image/*"
@@ -229,7 +255,7 @@ function MeetEditPage() {
               <textarea
                 placeholder="내용을 작성해 주세요."
                 name="description"
-                value={meetRequest?.description || ''}
+                value={meetRequest.description || ''}
                 onChange={handleInfoChange}
               />
             </div>
@@ -239,7 +265,7 @@ function MeetEditPage() {
                 unit="인"
                 min={0}
                 max={15}
-                value={meetRequest?.recruitmentCount || 0}
+                value={meetRequest.recruitmentCount || 0}
                 onChange={handleRecruitmentCountChange}
               />
             </M.ToggleSliderBox>
@@ -250,7 +276,7 @@ function MeetEditPage() {
               모집 마감일
             </Text>
             <M.ScheduleTextWrap>
-              <M.ScheduleText>{recruitmentPeriod}</M.ScheduleText>
+              <M.ScheduleText>{meetRequest.recruitmentPeriod}</M.ScheduleText>
               <Icon name="IconArrowRight" />
             </M.ScheduleTextWrap>
           </div>

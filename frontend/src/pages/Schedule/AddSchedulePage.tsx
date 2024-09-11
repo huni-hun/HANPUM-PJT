@@ -90,10 +90,6 @@ function AddSchedulePage() {
   };
 
   useEffect(() => {
-    console.log(dates, '날짜들');
-  }, [dates]);
-
-  useEffect(() => {
     if (
       localStorage.getItem('startDate') !== null &&
       localStorage.getItem('endDate') !== null
@@ -145,6 +141,7 @@ function AddSchedulePage() {
                   startDate={dates.startDate}
                   endDate={dates.endDate}
                   onDateChange={handleDateChange}
+                  totalDays={routedata.totalDays}
                 />
               </S.DatePicker>
               <S.NextBtn>
@@ -202,7 +199,7 @@ function AddSchedulePage() {
                 <S.RouteMapContent
                   onClick={() => {
                     if (!isMapReady) {
-                      navigate('/route/list');
+                      navigate('/route/list', { state: { type: 'schedule' } });
                       localStorage.setItem(
                         'startDate',
                         JSON.stringify(dates.startDate),

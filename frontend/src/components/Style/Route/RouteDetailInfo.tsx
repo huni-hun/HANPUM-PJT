@@ -43,12 +43,14 @@ interface RouteDetailInfoProps {
   setSelectedIdx: React.Dispatch<React.SetStateAction<number>>;
   deleteHandler: (name: string) => void;
   marker: any[];
+  attmarker?: any[];
   isSchedule?: boolean;
   state?: number;
   turnGreen?: boolean[];
   isMeetPage?: boolean;
   memberData?: MemberInfo[];
   memberCount?: number;
+  setReviewOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function RouteDetailInfo({
@@ -136,13 +138,14 @@ function RouteDetailInfo({
                 longitude={props.latitude}
                 marker={props.marker}
                 infoBtn
+                attrationmarker={props.attmarker}
               />
             </R.MapBox>
             <R.DetailHeader>
               {location.pathname.includes('retouch') ? (
                 <R.RetouchHeaderOverflow>
                   {props.dayData.map((ele) => (
-                    <R.DayContainer>
+                    <R.DayContainer key={ele.dayNum}>
                       <R.DayBox
                         selected={ele.dayNum === props.selectedDay}
                         onClick={() => {
@@ -155,7 +158,7 @@ function RouteDetailInfo({
               ) : (
                 <R.HeaderOverflow>
                   {props.dayData.map((ele) => (
-                    <R.DayContainer>
+                    <R.DayContainer key={ele.dayNum}>
                       <R.DayBox
                         selected={ele.dayNum === props.selectedDay}
                         onClick={() => {
@@ -264,7 +267,7 @@ function RouteDetailInfo({
                 <R.DetailMain>
                   <R.DetailMainOverflow>
                     {props.reviews.map((ele: RouteReviewProps) => (
-                      <ReviewCard {...ele} />
+                      <ReviewCard ele={ele} setIsOpen={props.setReviewOpen} />
                     ))}
                   </R.DetailMainOverflow>
                 </R.DetailMain>
@@ -281,6 +284,7 @@ function RouteDetailInfo({
                 latitude={props.longitude}
                 longitude={props.latitude}
                 marker={props.marker}
+                attrationmarker={props.attmarker}
               />
             </R.MapBox>
             <R.DetailHeader>

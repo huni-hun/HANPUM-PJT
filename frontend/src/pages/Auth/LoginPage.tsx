@@ -26,13 +26,17 @@ function LoginPage() {
       if (accessToken) {
         const token = encodeToken(accessToken.split('+')[1]);
 
-        localStorage.setItem('token', JSON.stringify(token));
-        Cookies.remove('accessToken', { path: '/' });
+        if (token) {
+          localStorage.setItem('token', token);
+          Cookies.remove('accessToken', { path: '/' });
+        }
       }
 
       if (memberType === 'KAKAO_INCOMPLETE') {
+        console.log('회원가입 해야해요');
         navigate('/signup');
       } else {
+        console.log('회원가입 이미 되어있어요.');
         navigate('/home');
       }
     }

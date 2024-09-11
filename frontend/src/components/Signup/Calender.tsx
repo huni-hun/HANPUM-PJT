@@ -41,7 +41,8 @@ function Calender({ onChange }: { onChange: (date: string) => void }) {
           <Datepicker
             theme="ios"
             min="1970-01-01"
-            max={`${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`}
+            // min={`${today.getFullYear() - 14}-${today.getMonth() + 1}-${today.getDate()}`}
+            max={`${today.getFullYear() - 14}-${today.getMonth() + 1}-${today.getDate()}`}
             controls={['date']}
             display="inline"
             touchUi={true}

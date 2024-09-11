@@ -70,6 +70,24 @@ export interface RouteListProps {
   interestFlag: boolean;
 }
 
+export interface UserRouteProps {
+  courseName: string;
+  content: string;
+  scoreAvg: number;
+  commentCnt: number;
+  courseId: number;
+  backgroundImg: string;
+  writeState: boolean;
+  openState: boolean;
+  memberId: number;
+  writeDate: string;
+  startPoint: string;
+  endPoint: string;
+  totalDistance: number;
+  totalDays: number;
+  interestFlag: boolean;
+}
+
 export interface RouteDetailProps {
   routeName: string;
   routeContent: string;
@@ -80,6 +98,7 @@ export interface RouteDetailProps {
   end: string;
   img: string;
   writeState: boolean;
+  openState: boolean;
 }
 
 export interface RouteDetailDayProps {

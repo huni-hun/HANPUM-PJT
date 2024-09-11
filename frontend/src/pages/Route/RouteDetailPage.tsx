@@ -1,7 +1,7 @@
 import Icon from '@/components/common/Icon/Icon';
 import * as R from '@/components/Style/Route/RouteDetailPage.styled';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
   getRouteDayAttraction,
   getRouteDayDetail,
@@ -28,10 +28,14 @@ import { toast } from 'react-toastify';
 
 import defaultImg from '@/assets/img/mountain.jpg';
 import { GetUser } from '@/api/mypage/GET';
+import useQueryHandling from '@/hooks/global/useQueryHandling';
 
 function RouteDetailPage() {
   const { routeid } = useParams();
   const navigate = useNavigate();
+
+  const location = useLocation();
+  const { startDate, recruitmentPeriod, type } = location.state || {};
 
   const [selected, setSelected] = useState<string>('course');
   const [selectedDay, setSelectedDay] = useState<number>(1);
@@ -47,6 +51,7 @@ function RouteDetailPage() {
   const [linePath, setLinePath] = useState<MapLinePathProps[]>([]);
   const [se, setSe] = useState<LineStartEndProps[]>([]);
   const [marker, setMarker] = useState<LineStartEndProps[]>([]);
+  const [attmarker, setAttMarker] = useState<LineStartEndProps[]>([]);
   const [bsType, setBsType] = useState<string>('설정');
   const [reviewType, setReviewType] = useState<string>('최신순');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -65,7 +70,6 @@ function RouteDetailPage() {
   useEffect(() => {
     if (dayData.length === 0) {
       getRouteDetail(routeid as string).then((result) => {
-        console.log(result);
         if (result.data.status !== 'ERROR' && result.status === 200) {
           let num = 0;
           let rd: RouteDetailProps = {
@@ -78,6 +82,7 @@ function RouteDetailPage() {
             end: result.data.data.course.endPoint,
             img: result.data.data.course.backgroundImg,
             writeState: result.data.data.course.writeState,
+            openState: result.data.data.course.openState,
           };
           setRouteData(rd);
           setProfileImg(result.data.data.profilePicture);
@@ -108,6 +113,7 @@ function RouteDetailPage() {
   useEffect(() => {
     setSe([]);
     setMarker([]);
+    setAttMarker([]);
     getRouteDayDetail(routeid as string, selectedDay).then((result) => {
       if (result.status === 200) {
         let arr: DaysOfRouteProps[] = [];
@@ -161,6 +167,12 @@ function RouteDetailPage() {
             img: ele.img,
           };
           attArr.push(attData);
+
+          let markerData: LineStartEndProps = {
+            x: ele.lat,
+            y: ele.lon,
+          };
+          setAttMarker((pre) => [...pre, markerData]);
         });
         setAttractions(attArr);
       }
@@ -258,17 +270,40 @@ function RouteDetailPage() {
       }
       setReviewLoading(true);
     });
-  }, []);
+  }, [isModalOpen]);
 
   const deleteHandler = () => {
     RouteDelete(routeid as string)
       .then((res) => {
-        console.log(res);
+        if (res.data.status === 'SUCCESS') {
+          navigate('/route/list');
+          toast.done('경로 삭제에 성공했습니다.');
+        } else {
+          setIsOpenSetting(false);
+          toast.error('경로 삭제 권한이 없습니다.');
+        }
       })
       .catch((err) => {
-        console.log(err);
+        toast.error('경로 삭제에 실패했습니다.');
       });
   };
+
+  const { data: userInfo } = useQueryHandling(
+    'getUser',
+    GetUser,
+    //   {
+    //   onSuccess: (res) => {
+    //     // console.log('res ::', res.data);
+    //     if (res.status === STATUS.success) {
+    //     } else if (res.status === STATUS.error) {
+    //       toast.error(res.message);
+    //     }
+    //   },
+    //   onError: (error: AxiosError) => {
+    //     // toast.error(error.message);
+    //   },
+    // }
+  );
 
   const renderBottomSheet = () => {
     if (isOpenSetting) {
@@ -286,6 +321,8 @@ function RouteDetailPage() {
           }}
           onDelete={deleteHandler}
           writeState={routeData.writeState}
+          openState={routeData.openState}
+          isWrite={memberName === userInfo.data.nickname}
         />
       );
     }
@@ -322,11 +359,7 @@ function RouteDetailPage() {
         <R.Overflow>
           <R.RouteInfoContainer>
             <R.ImgBox>
-              <img
-                src={
-                  routeData.img.includes('test') ? defaultImg : routeData.img
-                }
-              />
+              <img src={routeData.img !== null ? routeData.img : defaultImg} />
             </R.ImgBox>
             <R.UserContainer>
               <R.UserImgBox>
@@ -345,7 +378,9 @@ function RouteDetailPage() {
               </R.RouteNameInfoContainer>
               <R.RouteTypeContainer>
                 {routeType.map((ele: string) => (
-                  <R.RouteType isLong={ele.length > 3}>{ele}</R.RouteType>
+                  <R.RouteType $isLong={ele.length > 3} key={ele}>
+                    {ele}
+                  </R.RouteType>
                 ))}
               </R.RouteTypeContainer>
               <R.RouteReviewContainer>
@@ -435,6 +470,7 @@ function RouteDetailPage() {
               setIsOpen={setIsOpenSorting}
               setBsType={setBsType}
               reviewType={reviewType}
+              attmarker={attmarker}
             />
           </R.RouteDetailInfoContainer>
         </R.Overflow>
@@ -458,16 +494,34 @@ function RouteDetailPage() {
             children="일정 생성"
             color="#ffffff"
             onClick={() => {
-              navigate('/schedule/addSchedule', {
-                state: {
-                  id: routeid,
-                  latitude: latitude,
-                  longitude: longitude,
-                  ready: true,
-                  start: routeData.start,
-                  end: routeData.end,
-                },
-              });
+              if (type === 'schedule') {
+                navigate('/schedule/addSchedule', {
+                  state: {
+                    id: routeid,
+                    latitude: latitude,
+                    longitude: longitude,
+                    ready: true,
+                    start: routeData.start,
+                    end: routeData.end,
+                    totalDays: dayData.length,
+                  },
+                });
+              }
+              if (type === 'meet') {
+                navigate('/meet/addMain/addSchedule', {
+                  state: {
+                    courseId: routeid,
+                    startDate: startDate,
+                    recruitmentPeriod: recruitmentPeriod,
+                    lat: latitude,
+                    lon: longitude,
+                    ready: true,
+                    start: routeData.start,
+                    end: routeData.end,
+                    totalDays: dayData.length,
+                  },
+                });
+              }
             }}
           />
         </R.ButtonBox>

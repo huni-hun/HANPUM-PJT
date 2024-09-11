@@ -13,10 +13,13 @@ import {
   AttractionsProps,
   CourseDayReqDto,
   WayPointReqDto,
+  LineStartEndProps,
+  MapLinePathProps,
 } from '@/models/route';
 import RoutePlaceCard from '@/components/Style/Route/RoutePlaceCard';
 import { colors } from '@/styles/colorPalette';
-import { AddRoute, GetDistance } from '@/api/route/POST';
+import { AddRoute, GetDistance, GetLineData } from '@/api/route/POST';
+import { toast } from 'react-toastify';
 
 function RouteAddDetailPage() {
   const [curLatitude, setCurLatitude] = useState<number>(0);
@@ -34,6 +37,11 @@ function RouteAddDetailPage() {
     AttractionsAddCardProps[]
   >([]);
   const [pointType, setPointType] = useState<string>('wp');
+  const [colorValue, setColorValue] = useState<string>('');
+  const [marker, setMarker] = useState<LineStartEndProps[]>([]);
+  const [attmarker, setAttMarker] = useState<LineStartEndProps[]>([]);
+  const [linePath, setLinePath] = useState<MapLinePathProps[]>([]);
+  const [mapLines, setMapLines] = useState<any[]>([]);
 
   const location = useLocation();
   const data = { ...location.state };
@@ -67,7 +75,7 @@ function RouteAddDetailPage() {
       courseDayReqDtoList: [],
       multipartFile: data.imgSrc,
     };
-
+    setColorValue(colors.grey1);
     setAddRoute(route);
   }, []);
 
@@ -78,6 +86,108 @@ function RouteAddDetailPage() {
   // useEffect(() => {
   //   console.log(addRoute);
   // }, [addRoute]);
+
+  useEffect(() => {
+    setMarker([]);
+    let lines: MapLinePathProps[] = [];
+    wayPoints.map((ele: WayPointReqDto) => {
+      let markerData: LineStartEndProps = {
+        x: ele.lat,
+        y: ele.lon,
+      };
+      let line: MapLinePathProps = {
+        name: ele.name,
+        x: ele.lat,
+        y: ele.lon,
+      };
+      lines.push(line);
+      setMarker((pre) => [...pre, markerData]);
+    });
+
+    setLinePath(lines);
+  }, [wayPoints]);
+
+  useEffect(() => {
+    setAttMarker([]);
+    attractions.map((ele: AttractionReqDto) => {
+      console.log(ele);
+      let markerData: LineStartEndProps = {
+        x: ele.lon,
+        y: ele.lat,
+      };
+      setAttMarker((pre) => [...pre, markerData]);
+    });
+  }, [attractions]);
+
+  useEffect(() => {
+    if (linePath.length > 2) {
+      const mapLines: any[] = [];
+      if (linePath.length <= 5) {
+        GetLineData(linePath)
+          .then((res) => {
+            if (res.status === 200 && res.data.status === 'SUCCESS') {
+              res.data.data.forEach((ele: any) => {
+                ele.vertexes.forEach((vertex: any, index: number) => {
+                  if (index % 2 === 0) {
+                    mapLines.push(
+                      new window.kakao.maps.LatLng(
+                        ele.vertexes[index + 1],
+                        ele.vertexes[index],
+                      ),
+                    );
+                  }
+                });
+              });
+              setMapLines([...mapLines]); // 복사본으로 상태 업데이트
+            }
+          })
+          .catch((err) => {
+            toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+          });
+      } else {
+        let arr: MapLinePathProps[] = [];
+        const promises: Promise<any>[] = []; // 비동기 작업을 저장할 배열
+
+        linePath.forEach((ele: MapLinePathProps, idx: number) => {
+          arr.push(ele);
+
+          if (arr.length === 5 || idx === linePath.length - 1) {
+            // 배열이 5개가 되었거나 마지막 요소일 때 GetLineData 호출
+            promises.push(
+              GetLineData(arr)
+                .then((res) => {
+                  if (res.status === 200 && res.data.status === 'SUCCESS') {
+                    res.data.data.forEach((ele: any) => {
+                      ele.vertexes.forEach((vertex: any, index: number) => {
+                        if (index % 2 === 0) {
+                          mapLines.push(
+                            new window.kakao.maps.LatLng(
+                              ele.vertexes[index + 1],
+                              ele.vertexes[index],
+                            ),
+                          );
+                        }
+                      });
+                    });
+                  }
+                })
+                .catch((err) => {
+                  toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+                }),
+            );
+
+            // 배열 초기화
+            arr = [];
+          }
+        });
+
+        // 모든 비동기 작업이 완료된 후에 setMapLines 호출
+        Promise.all(promises).then(() => {
+          setMapLines([...mapLines]);
+        });
+      }
+    }
+  }, [linePath]);
 
   useEffect(() => {
     if (dateDetail.length < route.length) {
@@ -92,6 +202,8 @@ function RouteAddDetailPage() {
 
   useEffect(() => {
     if (wayPoints.length >= 2) {
+      setColorValue(colors.main);
+
       let startlat = wayPoints[wayPoints.length - 2].lon;
       let startlon = wayPoints[wayPoints.length - 2].lat;
       let endlat = wayPoints[wayPoints.length - 1].lon;
@@ -121,9 +233,7 @@ function RouteAddDetailPage() {
             setWayPoints(curWay);
           }
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => {});
 
       let route: AddRouteProps = {
         courseName: data.routeTitle,
@@ -211,7 +321,14 @@ function RouteAddDetailPage() {
             </R.MapSearchBox>
             <R.MapBox>
               {loading ? (
-                <Map latitude={curLatitude} longitude={curLongtitude} infoBtn />
+                <Map
+                  latitude={curLatitude}
+                  longitude={curLongtitude}
+                  infoBtn
+                  marker={marker}
+                  linePath={mapLines}
+                  attrationmarker={attmarker}
+                />
               ) : null}
             </R.MapBox>
             <R.PlaceContainer>
@@ -268,7 +385,7 @@ function RouteAddDetailPage() {
             width={30}
             height={6}
             fc="ffffff"
-            bc={colors.main}
+            bc={colorValue}
             radius={0.7}
             fontSize={1.6}
             children="경로완성"
@@ -280,13 +397,12 @@ function RouteAddDetailPage() {
               ) {
                 AddRoute(addRoute)
                   .then((res) => {
-                    console.log(res);
                     if (res.status === 200) {
                       navigate('/route/add/complete');
                     }
                   })
                   .catch((err) => {
-                    console.log(err);
+                    toast.error('경로 생성에 실패했습니다.');
                   });
               }
             }}
