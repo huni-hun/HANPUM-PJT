@@ -28,6 +28,7 @@ import Spacing from '@common/Spacing';
 import { useSetRecoilState } from 'recoil';
 import { signupStepAtom } from '@/atoms/signupStepAtom';
 import useImageCompression from '@/hooks/global/useImageCompression';
+import { isAuthEnticatedAtom } from '@/atoms/isAuthEnticatedAtom';
 
 function ProfileConfig({
   pagenation,
@@ -44,6 +45,7 @@ function ProfileConfig({
   const { compressImage, compressedImage } = useImageCompression();
 
   const setStep = useSetRecoilState(signupStepAtom);
+  const setAuthEnticate = useSetRecoilState(isAuthEnticatedAtom);
 
   const [dirty, setDirty] = useState<
     Partial<Record<keyof UserSignupFormValues, boolean>>
@@ -239,8 +241,9 @@ function ProfileConfig({
       if (res.status === STATUS.success) {
         toast.success(res.message);
         console.log(res);
-
+        sessionStorage.setItem('send', 'true');
         clickNext();
+        setAuthEnticate(true);
       }
       if (res.status === STATUS.error) {
         toast.error(res.message);
