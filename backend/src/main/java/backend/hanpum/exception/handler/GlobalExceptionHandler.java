@@ -229,6 +229,20 @@ public class GlobalExceptionHandler {
         return response.error(e.getErrorCode());
     }
 
+    @ExceptionHandler(GroupLikeNotFoundException.class)
+    protected ResponseEntity<?> handle(GroupLikeNotFoundException e) {
+        log.error("GroupLikeNotFoundException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(GroupAlreadyLikeException.class)
+    protected ResponseEntity<?> handle(GroupAlreadyLikeException e) {
+        log.error("GroupAlreadyLikeException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
     /* 이미지 업로드 */
     @ExceptionHandler(FileFormatUnsupportedException.class)
     protected ResponseEntity<?> handle(FileFormatUnsupportedException e) {

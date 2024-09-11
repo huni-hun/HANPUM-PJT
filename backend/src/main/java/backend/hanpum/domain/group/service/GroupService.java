@@ -23,7 +23,8 @@ public interface GroupService {
     GroupMemberListGetResDto getGroupMemberList(Long memberId, Long groupId);
     GroupMemberDetailGetResDto getGroupMemberDetail(Long memberId, Long groupId, Long groupMemberId);
     void exileGroupMember(Long memberId, Long groupMemberId);
-    boolean likeGroup(Long memberId, Long groupId);
+    void likeGroup(Long memberId, Long groupId);
+    void dislikeGroup(Long memberId, Long groupId);
     void quitJoinGroup(Long memberId, Long groupId);
     LikeGroupListGetResDto getMemberLikeGroupList(Long memberId);
     GroupResDto getMemberJoinGroup(Long memberId);
