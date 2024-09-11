@@ -392,6 +392,19 @@ function MeetDetailPage() {
     }
   }, [selected]);
 
+  /**n박 n일 계산 */
+  const formatDaysToNights = (totalDays: number) => {
+    if (totalDays < 1) return '';
+
+    const nights = totalDays - 1;
+    return `${nights}박 ${totalDays}일`;
+  };
+
+  // dayData를 배열로 변환
+  const formatDayData = meetDetail?.data?.totalDays
+    ? [{ dayNum: meetDetail.data.totalDays }]
+    : [];
+
   return loading && meetDetail !== undefined ? (
     <MainPageContainer>
       <Header
@@ -420,7 +433,7 @@ function MeetDetailPage() {
               startDate={formatDate(meetDetail?.data?.startDate)}
               endDate={formatDate(meetDetail?.data?.endDate)}
               totalDistance={totalDistance}
-              dayData={meetDetail?.data?.totalDays}
+              dayData={formatDayData}
               isMeetFeed="18rem"
             />
             <R.ContentSelecContainer>

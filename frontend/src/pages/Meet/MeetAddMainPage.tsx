@@ -156,7 +156,6 @@ function MeetAddMainPage() {
           localStorage.removeItem('meetRequest');
           localStorage.removeItem('previewImage');
         } else {
-          console.log(response);
           toast.error(response.message);
         }
       }
