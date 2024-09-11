@@ -12,6 +12,7 @@ function App() {
 
   const checkAuth = useCallback(() => {
     const token = localStorage.getItem('token');
+    console.log('checkAuth App에서', token, !!token);
     setAuthEnticate(!!token);
   }, [setAuthEnticate]);
 
