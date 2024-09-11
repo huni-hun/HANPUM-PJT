@@ -13,6 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class KakaoSignUpCompleteReqDto {
+    private String name;
     private String nickname;
     private Gender gender;
     private Date birthDate;
