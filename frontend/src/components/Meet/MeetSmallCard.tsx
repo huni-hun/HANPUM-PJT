@@ -78,9 +78,9 @@ function MeetSmallCard({
         onClick={likeHandler}
       />
       <InfoBadge
-        recruitmentCount={10}
-        recruitedCount={5}
-        likeCount={7}
+        recruitmentCount={data.recruitmentCount}
+        recruitedCount={data.recruitedCount}
+        likeCount={data.likeCount}
         style={{
           left: '14px',
           top: '120px',
@@ -90,7 +90,7 @@ function MeetSmallCard({
       <RouteBadge
         startPoint={data.startPoint}
         endPoint={data.endPoint}
-        totalDistance={23.5}
+        totalDistance={data.totalDistance}
         style={{
           left: '12px',
           top: '142px',

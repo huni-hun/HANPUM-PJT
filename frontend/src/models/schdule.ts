@@ -60,57 +60,61 @@ export interface SchduleCardProps {
 
 /** 진행중 */
 export interface RunningScheduleProps {
-  backgroundImg: string;
-  title: string;
-  content: string;
-  courseTypes: string[];
-  scheduleDayId: number;
+  backgroundImg?: string;
+  title?: string;
+  content?: string;
+  courseTypes?: string[];
   startDate?: string;
   endDate?: string;
-  date: string;
-  visit: boolean;
-  running: boolean;
   totalDistance: number;
-  totalDuration: string;
-  totalCalories: string;
-  scheduleWayPointList: WayPoint[];
-  attractionList: Attraction[];
   scheduleDayResDtoList: ScheduleDayResDto[];
-  rate: number;
+  scheduleWayPointList?: WayPoint[];
+  attractionList?: Attraction[];
+  groupMemberResDtoList?: groupMemberResDto[];
+  rate?: number;
   startPoint?: string;
   endPoint?: string;
 }
 
 export interface WayPoint {
-  name: string;
-  type: string;
-  address: string;
-  lat: number;
-  lon: number;
-  state: number;
-  scheduleWayPointId: number;
+  name?: string;
+  type?: string;
+  address?: string;
+  lat?: number;
+  lon?: number;
+  state?: number;
+  scheduleWayPointId?: number;
 }
 
 export interface Attraction {
-  attractionId: number;
-  name: string;
-  type: string;
-  address: string;
-  lat: number;
-  lon: number | null;
-  img: string;
+  dayNumber?: number;
+  attractionId?: number;
+  name?: string;
+  type?: string;
+  address?: string;
+  lat?: number;
+  lon?: number;
+  img?: string;
 }
 
 export interface ScheduleDayResDto {
-  scheduleDayId: number;
-  date: string;
-  visit: boolean;
-  running: boolean;
-  totalDistance: string;
-  totalDuration: string;
-  totalCalories: string;
-  scheduleWayPointList: WayPoint[];
-  attractionList: Attraction[];
+  scheduleDayId?: number;
+  date?: string;
+  visit?: boolean;
+  running?: boolean;
+  totalDistance?: string;
+  totalDuration?: string;
+  totalCalories?: string;
+  scheduleWayPointList?: WayPoint[];
+  attractionList?: Attraction[];
+}
+
+export interface groupMemberResDto {
+  memberId: number;
+  groupMemberId: number;
+  joinType: string;
+  nickname: string;
+  profilePicture: string;
 }
 
 /** 관광지  */
