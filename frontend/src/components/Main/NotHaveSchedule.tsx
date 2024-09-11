@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 function NotHaveSchedule() {
   const navigate = useNavigate();
   return (
-    <NotHaveScheduleContainer>
+    <NotHaveScheduleContainer onClick={() => navigate('/schedule/addSchedule')}>
       <Flex $justify="space-between">
         <p>아직 일정이 없으시다면?</p>
         <img src={noScheduleImg} alt="" />

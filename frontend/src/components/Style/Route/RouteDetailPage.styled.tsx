@@ -72,6 +72,7 @@ export const ImgBox = styled.div<StyledProps>`
   background-position: center;
   position: relative;
   background-image: ${({ backgroundImg }) => `url(${backgroundImg})`};
+  border: 1px solid red;
   img {
     width: 100%;
     height: 100%;

@@ -5,7 +5,7 @@ import BaseButton from '../common/BaseButton';
 import * as S from '../Style/My/NoHave.styled';
 import { useNavigate } from 'react-router-dom';
 
-function NoHave({ category }: { category: string }) {
+function ScheduleNoHave({ category }: { category: string }) {
   const navigate = useNavigate();
   return (
     <S.NoHaveContainer>
@@ -50,4 +50,4 @@ function NoHave({ category }: { category: string }) {
   );
 }
 
-export default NoHave;
+export default ScheduleNoHave;
