@@ -311,7 +311,7 @@ function ScheduleMainPage() {
             setCourseId(response.data.courseId);
             setScheduleId(response.data.scheduleId);
           } else if (response.status === 'ERROR') {
-            toast.error(response.message);
+            console.log(response.message);
           }
         } catch (error: unknown) {
           console.error('Fetch Error:', error);
@@ -367,7 +367,7 @@ function ScheduleMainPage() {
           if (response && response.status === 'SUCCESS') {
             setMyScheduleListData(response.data);
           } else if (response.status === 'ERROR') {
-            toast.error(response.message);
+            console.log(response.message);
           }
         } catch (error) {
           console.error('Fetch Error:', error);
@@ -392,7 +392,7 @@ function ScheduleMainPage() {
             setCourseId(response.data.courseId);
             setScheduleId(response.data.scheduleId);
           } else if (response.status === 'ERROR') {
-            toast.error(response.message);
+            console.log(response.message);
           }
         } catch (error: unknown) {
           console.error('Fetch Error:', error);
@@ -588,7 +588,7 @@ function ScheduleMainPage() {
           if (response && response.status === 'SUCCESS') {
             setWeatherData(response.data);
           } else if (response.status === 'ERROR') {
-            toast.error(response.message);
+            console.log(response.message);
           }
         } catch (error) {
           console.error('Fetch Error:', error);
@@ -640,7 +640,7 @@ function ScheduleMainPage() {
           if (response && response.status === 'SUCCESS') {
             setAttractionsCard(response.data);
           } else if (response.status === 'ERROR') {
-            toast.error(response.message);
+            console.log(response.message);
           }
         } catch (error: unknown) {
           console.error('Fetch Error:', error);
