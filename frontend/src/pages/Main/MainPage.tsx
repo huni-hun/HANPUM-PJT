@@ -34,12 +34,15 @@ import { GetUser } from '@api/mypage/GET';
 import { RouteListProps } from '@models/route';
 import useQueryHandling from '@/hooks/global/useQueryHandling';
 import Loading from '@/components/common/Loading';
+import useIsAuth from '@/hooks/auth/useIsAuth';
 
 function MainPage() {
   const navigator = useNavigate();
   const type = '초보자';
 
   const meetFilterInfo = useRecoilValue(meetFilterInfoAtom);
+
+  const isAuth = useIsAuth();
 
   const queryClient = useQueryClient();
 
