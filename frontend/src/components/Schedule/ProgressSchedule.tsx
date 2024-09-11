@@ -7,9 +7,9 @@ import { FeedInfoProps } from '@/models/route';
 const ProgressSchedule = ({
   /** n일차 진행상황 */
   proceessDay,
-  /** 출발, 도착일 */
-  departuresPlace,
-  arrivalsPlace,
+  /** 출발, 도착 */
+  endPoint,
+  startPoint,
   /** 현재 거리, 전체 거리 계산 */
   totalDuration,
   totalDistance,
@@ -23,10 +23,10 @@ const ProgressSchedule = ({
         <R.StartDateBox>
           <R.PlaceBox>
             <R.PlaceText>
-              출발지 <span className="bold-text">{departuresPlace}</span>
+              출발지 <span className="bold-text">{startPoint}</span>
             </R.PlaceText>
             <R.PlaceText>
-              도착지 <span className="bold-text">{arrivalsPlace}</span>
+              도착지 <span className="bold-text">{endPoint}</span>
             </R.PlaceText>
           </R.PlaceBox>
           <R.DistanceBox>
@@ -44,10 +44,10 @@ const ProgressSchedule = ({
         <R.StartDateBox>
           <R.PlaceBox>
             <R.PlaceText>
-              출발지 <span className="bold-text">{departuresPlace}</span>
+              출발지 <span className="bold-text">{startPoint}</span>
             </R.PlaceText>
             <R.PlaceText>
-              도착지 <span className="bold-text">{arrivalsPlace}</span>
+              도착지 <span className="bold-text">{endPoint}</span>
             </R.PlaceText>
           </R.PlaceBox>
 

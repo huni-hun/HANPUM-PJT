@@ -184,7 +184,6 @@ function ScheduleMainPage() {
   };
 
   /** 진행중 feed */
-  /** === useState (routeData) */
   const runningFeedData = {
     routeFeedImg: runningScheduleData?.backgroundImg || goyuMY,
     routeUserImg: memberImg,
@@ -613,13 +612,12 @@ function ScheduleMainPage() {
   }, [isSelected, isLocationReady]);
 
   /** 지도 및 하위 컴포넌트  */
-
   const firstDayData = runningScheduleData?.scheduleDayResDtoList[0];
 
-  const departuresPlace =
+  const startPoint =
     firstDayData?.scheduleWayPointList?.find((point) => point.type === '출발지')
       ?.address || '';
-  const arrivalsPlace =
+  const endPoint =
     firstDayData?.scheduleWayPointList?.find((point) => point.type === '도착지')
       ?.address || '';
 
@@ -632,13 +630,44 @@ function ScheduleMainPage() {
   /** 진행중 feed */
   const feedInfoProps: FeedInfoProps = {
     feedInfoTitle: '일정 정보',
-    departuresPlace,
-    arrivalsPlace,
+    endPoint: endPoint || '',
+    startPoint: startPoint || '',
     startDate: '-',
     endDate: '-',
     totalDuration: parseFloat(firstDayData?.totalDuration || '0'),
     totalDistance: parseFloat(firstDayData?.totalDistance || '0'),
     dayData: dayData || [],
+    percentage: undefined,
+    rate: undefined,
+  };
+
+  /** 모임 데이터 때려넣기 */
+
+  const meetDayData = meetListData?.scheduleDayResDtoList[0];
+
+  const meetStartPoint =
+    meetDayData?.scheduleWayPointList?.find((point) => point.type === '출발지')
+      ?.address || '';
+  const meetEndPoint =
+    meetDayData?.scheduleWayPointList?.find((point) => point.type === '도착지')
+      ?.address || '';
+
+  const meetscheduleDayResDtoList = meetListData?.scheduleDayResDtoList.map(
+    (day, index) => ({
+      dayNum: index + 1,
+    }),
+  );
+
+  /** 모임 feed */
+  const feedMeetInfoProps: FeedInfoProps = {
+    feedInfoTitle: '모임 일정 정보',
+    endPoint: meetStartPoint || '',
+    startPoint: meetEndPoint || '',
+    startDate: '-',
+    endDate: '-',
+    totalDuration: parseFloat(meetDayData?.totalDuration || '0'),
+    totalDistance: parseFloat(meetDayData?.totalDistance || '0'),
+    dayData: meetscheduleDayResDtoList || [],
     percentage: undefined,
     rate: undefined,
   };
@@ -720,8 +749,8 @@ function ScheduleMainPage() {
                       <Feed routeData={runningFeedData} />
                       <FeedInfo
                         feedInfoTitle={feedInfoProps.feedInfoTitle}
-                        departuresPlace={feedInfoProps.departuresPlace}
-                        arrivalsPlace={feedInfoProps.arrivalsPlace}
+                        startPoint={feedInfoProps.startPoint}
+                        endPoint={feedInfoProps.endPoint}
                         startDate={formatDate(
                           runningScheduleData.startDate || '',
                         )}
@@ -739,8 +768,8 @@ function ScheduleMainPage() {
                       proceessDay={calculateDayNumber(
                         runningScheduleData.startDate || '',
                       )}
-                      departuresPlace={feedInfoProps.departuresPlace}
-                      arrivalsPlace={feedInfoProps.arrivalsPlace}
+                      startPoint={feedInfoProps.startPoint}
+                      endPoint={feedInfoProps.endPoint}
                       totalDuration={feedInfoProps.totalDuration}
                       totalDistance={feedInfoProps.totalDistance}
                       dayData={feedInfoProps.dayData}
@@ -870,13 +899,12 @@ function ScheduleMainPage() {
                   <Feed routeData={meetFeedData} isUserContainer />
                   <FeedInfo
                     feedInfoTitle="모임 일정 정보"
-                    departuresPlace={feedInfoProps.departuresPlace}
-                    arrivalsPlace={feedInfoProps.arrivalsPlace}
+                    startPoint={feedMeetInfoProps.startPoint}
+                    endPoint={feedMeetInfoProps.endPoint}
                     startDate={formatDate(meetListData?.startDate || '')}
                     endDate={formatDate(meetListData?.endDate || '-')}
-                    totalDistance={feedInfoProps.totalDistance}
-                    dayData={feedInfoProps.dayData}
-                    percentage={feedInfoProps.percentage}
+                    totalDistance={feedMeetInfoProps.totalDistance}
+                    dayData={feedMeetInfoProps.dayData}
                   />
                 </R.RouteInfoContainer>
                 {/* 지도 및 하위 컴포넌트 container */}
