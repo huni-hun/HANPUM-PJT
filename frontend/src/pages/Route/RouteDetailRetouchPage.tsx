@@ -237,15 +237,17 @@ function RouteDetailRetouchPage() {
   }, [selectedDay]);
 
   useEffect(() => {
-    if (selectedIdx >= 0) {
-      let newWay: WayPointReqDto[] = [];
-      wayPoints.map((ele: WayPointReqDto, idx: number) => {
-        if (selectedIdx !== idx) {
-          newWay.push(ele);
+    if (selectedIdx > 0) {
+      console.log(dayOfRoute);
+      let newWay: DaysOfRouteProps[] = [];
+      dayOfRoute.map((ele: DaysOfRouteProps, idx: number) => {
+        if (selectedIdx !== idx + 1) {
+          let data = { ...ele };
+          data.routePoint = String(newWay.length + 1);
+          newWay.push(data);
         }
       });
-      dateDetail[selectedDay - 1].wayPointReqDtoList = newWay;
-      setWayPoints(newWay);
+      setDayOfRoute(newWay);
     }
   }, [selectedIdx]);
 
@@ -511,8 +513,10 @@ function RouteDetailRetouchPage() {
                 <R.RouteInfo>{routeData.routeContent}</R.RouteInfo>
               </R.RouteNameInfoContainer>
               <R.RouteTypeContainer>
-                {routeType.map((ele: string) => (
-                  <R.RouteType $isLong={ele.length > 3}>{ele}</R.RouteType>
+                {routeType.map((ele: string, idx: number) => (
+                  <R.RouteType key={idx} $isLong={ele.length > 3}>
+                    {ele}
+                  </R.RouteType>
                 ))}
               </R.RouteTypeContainer>
               <R.RouteReviewContainer>

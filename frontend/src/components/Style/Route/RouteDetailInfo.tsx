@@ -178,6 +178,7 @@ function RouteDetailInfo({
                   ? props.dayOfRoute.map((ele, idx) =>
                       location.pathname.includes('retouch') ? (
                         <RouteRetouchPlaceCard
+                          key={idx}
                           selectHandler={selectHandler}
                           handleTouchMove={handleTouchMove}
                           handleTouchEnd={handleTouchEnd}
@@ -185,7 +186,7 @@ function RouteDetailInfo({
                           data={ele}
                           dragEndHandler={handleDragEnter}
                           dragStartHandler={handleDragStart}
-                          idx={idx}
+                          idx={idx + 1}
                         />
                       ) : (
                         <RoutePlaceCard
