@@ -70,7 +70,7 @@ export default function Router() {
               element={<ConfigDetailPage />}
             />
             <Route path="/" element={<Navigate to="/login" />} />
-            <Route path="/home" element={<MainPage />} />
+            {/* <Route path="/home" element={<MainPage />} /> */}
           </>
         ) : (
           <>
@@ -78,8 +78,6 @@ export default function Router() {
             <Route path="/home" element={<MainPage />} />
             {/* 기본 경로를 /home으로 리다이렉트 */}
             <Route path="/" element={<Navigate to="/home" />} />
-            <Route path="/home" element={<MainPage />} />
-            {/* 일정 */}
             <Route path="/schedule/main" element={<ScheduleMainPage />} />
             <Route path="/schedule/addSchedule" element={<AddSchedulePage />} />
             <Route

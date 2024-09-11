@@ -61,6 +61,12 @@ function MainPage() {
     navigator('/route/list/more', { state: { keyword: keyword } });
   };
 
+  useEffect(() => {
+    if (isAuth === false) {
+      window.location.reload();
+    }
+  }, []);
+
   const { data: userInfo } = useQueryHandling(
     'getUser',
     GetUser,
