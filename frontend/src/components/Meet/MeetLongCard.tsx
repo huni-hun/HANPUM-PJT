@@ -13,8 +13,6 @@ function MeetLongCard({
   onClick?: () => void;
   data: MeetInfo;
 }) {
-  console.log(data);
-
   if (!data) {
     return null;
   }

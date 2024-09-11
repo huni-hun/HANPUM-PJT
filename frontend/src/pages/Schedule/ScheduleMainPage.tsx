@@ -52,6 +52,7 @@ import { GetLineData } from '@/api/route/POST';
 import { PutScheduleArrive } from '@/api/schedule/PUT';
 import ScheduleNoHave from '@/components/Schedule/ScheduleNoHave';
 import NoHave from '@/components/My/NoHave';
+import Loading from '@/components/common/Loading';
 
 function ScheduleMainPage() {
   const BtnClick = () => {};
@@ -353,7 +354,7 @@ function ScheduleMainPage() {
             setRouteDayData((prev) => [...prev, data]);
           });
         }
-        setLoading(true);
+        // setLoading(true);
       });
     }
   }, [courseId]);
@@ -583,6 +584,7 @@ function ScheduleMainPage() {
     if (lat !== null && lon !== null && isLocationReady) {
       const fetchData = async () => {
         try {
+          setLoading(true);
           const response = await getWeather(lat, lon);
 
           if (response && response.status === 'SUCCESS') {
@@ -596,7 +598,6 @@ function ScheduleMainPage() {
           setLoading(false);
         }
       };
-
       fetchData();
     }
   }, [isSelected, isLocationReady]);
@@ -659,6 +660,10 @@ function ScheduleMainPage() {
       state: { attractionIndex: index, attractionsCard },
     });
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <ScheduleMainPageContainer>
