@@ -134,7 +134,6 @@ function MeetList() {
   };
 
   const clickMeetCard = (groupId: number) => {
-    console.log(groupId, '클릭 그룹');
     navigate(`/meet/detail`, { state: { groupId } });
   };
 

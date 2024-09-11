@@ -201,6 +201,8 @@ function ScheduleMainPage() {
     routeTypes: meetListData?.courseTypes || [],
   };
 
+  console.log(meetListData?.backgroundImg, '백그라운드이미지');
+
   const clickCard = (scheduleId?: number, dDay?: string) => {
     if (scheduleId !== undefined) {
       navigate(`/schedule/detail/mine`, {

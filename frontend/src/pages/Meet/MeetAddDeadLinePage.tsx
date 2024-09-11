@@ -34,8 +34,9 @@ function MeetAddSchedulePage() {
     useState<Partial<CreateMeetRequestDto> | null>(null);
   /** 날짜 선택 시 vh 늘어나면서 data picker,map 활성화 */
   const [isExpanded, setIsExpanded] = useState(false);
+  // 기존 recruitmentPeriod가 있으면 사용하고 없으면 빈 문자열로 초기화
   const [selectedDate, setSelectedDate] = useState<string>(
-    startDate || recruitmentPeriod || '',
+    meetRequest?.recruitmentPeriod || startDate || recruitmentPeriod || '',
   );
 
   /** 달력 선택 start, endData 쓸 수 있는거 */
@@ -50,15 +51,15 @@ function MeetAddSchedulePage() {
     }
   }, [recruitmentPeriod]);
 
-  useEffect(() => {
-    if (isEdit) {
-      // isEdit일 때만 로컬 스토리지에서 데이터 읽기
-      const savedMeetRequest = localStorage.getItem('meetEditRequest');
-      if (savedMeetRequest) {
-        setMeetRequest(JSON.parse(savedMeetRequest));
-      }
-    }
-  }, [isEdit]);
+  // useEffect(() => {
+  //   if (isEdit) {
+  //     // isEdit일 때만 로컬 스토리지에서 데이터 읽기
+  //     const savedMeetRequest = localStorage.getItem('meetEditRequest');
+  //     if (savedMeetRequest) {
+  //       setMeetRequest(JSON.parse(savedMeetRequest));
+  //     }
+  //   }
+  // }, [isEdit]);
 
   // 날짜가 변경될 때 호출되는 함수
   const handleDateChange = (range: {
@@ -79,13 +80,15 @@ function MeetAddSchedulePage() {
       };
 
       if (isEdit) {
-        const savedMeetRequest = localStorage.getItem('meetEditRequest');
+        const savedMeetRequest = localStorage.getItem('meetRequest');
         const state = {
           ...baseState,
-          meetEditRequest: savedMeetRequest ? JSON.parse(savedMeetRequest) : {},
+          meetEditRequest: savedMeetRequest
+            ? JSON.parse(savedMeetRequest)
+            : meetRequest,
         };
         navigate('/meet/edit', { state });
-        console.log(state, '바뀐것듪');
+        // console.log(state, '바뀐것듪');
       } else {
         navigate('/meet/addMain', { state: baseState });
       }

@@ -93,7 +93,7 @@ export interface groupPostReqDtoProps {
   description: string;
   recruitmentCount: number;
   recruitmentPeriod: string;
-  schedulePostReqDto: schedulePostReqDto;
+  schedulePostReqDto?: schedulePostReqDto;
 }
 
 export interface CreateMeetProps {
