@@ -263,7 +263,7 @@ function BottomSheet(props: BottomSheetProps) {
       }}
     >
       <R.BottomSheetContainer
-        isClosing={isClosing}
+        $isClosing={isClosing}
         onClick={(e) => {
           e.stopPropagation();
         }}

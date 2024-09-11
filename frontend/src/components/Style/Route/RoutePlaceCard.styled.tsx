@@ -2,9 +2,9 @@ import { colors } from '@/styles/colorPalette';
 import styled from 'styled-components';
 
 interface ScheduleProps {
-  isSchedule?: boolean;
+  $isSchedule?: boolean;
   state?: number;
-  turnGreen?: boolean;
+  $turnGreen?: boolean;
 }
 
 export const Card = styled.div`
@@ -50,16 +50,16 @@ export const PlaceNumberBox = styled.div<ScheduleProps>`
   justify-content: center;
   left: -0.85rem;
   background-color: ${(props) => {
-    if (props.isSchedule) {
+    if (props.$isSchedule) {
       /** 일정 페이지일때  */
-      return props.state === 2 || props.turnGreen ? colors.main : colors.grey2;
+      return props.state === 2 || props.$turnGreen ? colors.main : colors.grey2;
     }
     return colors.main; /** !일정 페이지 */
   }};
 
   color: ${(props) => {
-    if (props.isSchedule) {
-      if (props.state === 2 || props.turnGreen) {
+    if (props.$isSchedule) {
+      if (props.state === 2 || props.$turnGreen) {
         return colors.white; // state가 2이거나 turnGreen이 true일 때
       } else {
         return colors.black;

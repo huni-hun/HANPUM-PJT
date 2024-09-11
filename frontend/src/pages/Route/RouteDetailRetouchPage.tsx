@@ -428,7 +428,7 @@ function RouteDetailRetouchPage() {
           }
         })
         .catch((err) => {
-          console.log(err);
+          toast.info('거리를 가져오지 못 했습니다.');
         });
 
       let route: RetouchRouteProps = {
@@ -523,7 +523,7 @@ function RouteDetailRetouchPage() {
                 <R.IconContainer>
                   <R.IconBox>
                     <Icon name="IconGrenStar" size={13} />
-                    {routeData.routeScore}
+                    {Math.round(routeData.routeScore)}
                   </R.IconBox>
                   {`(${routeData.routeComment})`}
                 </R.IconContainer>

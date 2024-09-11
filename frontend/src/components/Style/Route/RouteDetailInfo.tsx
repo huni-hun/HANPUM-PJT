@@ -190,6 +190,7 @@ function RouteDetailInfo({
                         />
                       ) : (
                         <RoutePlaceCard
+                          key={idx}
                           {...ele}
                           isSchedule={isSchedule}
                           state={ele.state}
