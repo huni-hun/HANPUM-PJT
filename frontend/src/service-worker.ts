@@ -47,6 +47,10 @@ registerRoute(
       return false;
     }
 
+    new StaleWhileRevalidate({
+      cacheName: 'images-cache',
+    });
+
     // Return true to signal that we want to use the handler.
     return true;
   },
