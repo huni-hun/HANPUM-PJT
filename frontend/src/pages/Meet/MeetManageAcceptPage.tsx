@@ -26,24 +26,24 @@ function MeetManageAcceptPage() {
   /** 멤버 아이디 넘겨받기 */
   const location = useLocation();
   const savedGroupId = localStorage.getItem('groupId');
-  const groupIdNumber = savedGroupId ? Number(JSON.parse(savedGroupId)) : null;
-  const { groupId, memberId } = location.state || {};
+  const groupId = savedGroupId ? Number(JSON.parse(savedGroupId)) : null;
+  const { groupIdNumber } = location.state || {};
 
   useEffect(() => {
     const fetchData = async () => {
-      if (groupIdNumber) {
+      if (groupId) {
         try {
           const response = await GetMeetMemberDetailList(
+            groupId,
             groupIdNumber,
-            memberId,
           );
           if (response && response.status === 'SUCCESS') {
             setMemberData(response.data || null);
           } else if (response.status === 'ERROR') {
-            console.error(response.message);
+            toast.error(response.message);
           }
         } catch (error) {
-          toast.error('에러');
+          toast.error('조회 실패했습니다.');
         } finally {
           setLoading(false);
         }
@@ -63,7 +63,7 @@ function MeetManageAcceptPage() {
     }
   };
 
-  const dummyMemberData = memberData
+  const MemberData = memberData
     ? [
         {
           img: memberData.profilePicture || memberImg,
@@ -77,11 +77,11 @@ function MeetManageAcceptPage() {
     : [];
 
   const profileDetails =
-    dummyMemberData.length > 0
+    MemberData.length > 0
       ? [
-          { title: '이름', content: dummyMemberData[0].name },
-          { title: '성별', content: dummyMemberData[0].gender },
-          { title: '생년월일', content: dummyMemberData[0].birth },
+          { title: '이름', content: MemberData[0].name },
+          { title: '성별', content: MemberData[0].gender },
+          { title: '생년월일', content: MemberData[0].birth },
         ]
       : [];
 
@@ -149,13 +149,13 @@ function MeetManageAcceptPage() {
         clickBack={() => navigate(-1)}
       />
       <M.InfoWrap>
-        {dummyMemberData.length > 0 && (
+        {MemberData.length > 0 && (
           <>
             <M.ProfileBox>
               <M.Img>
-                <img src={dummyMemberData[0].img} alt="프로필 이미지" />
+                <img src={MemberData[0].img} alt="프로필 이미지" />
               </M.Img>
-              <M.Name>{dummyMemberData[0].nickname}</M.Name>
+              <M.Name>{MemberData[0].nickname}</M.Name>
             </M.ProfileBox>
             <M.ProfileInfo>
               {profileDetails.map((detail, index) => (
@@ -167,9 +167,7 @@ function MeetManageAcceptPage() {
             </M.ProfileInfo>
             <M.InfoInputBox>
               <M.InfoText>지원글</M.InfoText>
-              <M.InfoInput disabled>
-                {dummyMemberData[0].applyContent}
-              </M.InfoInput>
+              <M.InfoInput disabled>{MemberData[0].applyContent}</M.InfoInput>
               <M.ButtonWrap>
                 <BaseButton
                   size="large"

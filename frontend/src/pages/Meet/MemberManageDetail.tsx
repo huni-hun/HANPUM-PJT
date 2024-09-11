@@ -16,37 +16,41 @@ function MemberManageDetail() {
     null,
   );
   const [isRejectModalOpen, setIsRejectModalOpen] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true); // 로딩 상태 추가
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [bsType, setBsType] = useState<string>('설정');
   const [reviewType, setReviewType] = useState<string>('공개 여부');
-  /** 멤버 아이디 넘겨받기 */
+
   const savedGroupId = localStorage.getItem('groupId');
-  const groupIdNumber = savedGroupId ? Number(JSON.parse(savedGroupId)) : null;
+  const groupId = savedGroupId ? Number(JSON.parse(savedGroupId)) : null;
   const location = useLocation();
-  const { groupId, memberId } = location.state || {};
+  const { memberId, groupIdNumber } = location.state || {};
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await GetMeetMemberDetailList(
-          groupIdNumber || 0,
-          memberId,
-        );
-        if (response && response.status === 'SUCCESS') {
-          setMemberData(response.data || null);
-        } else {
-          console.error('error');
+    if (groupId) {
+      const fetchData = async () => {
+        console.log(groupId);
+        try {
+          const response = await GetMeetMemberDetailList(
+            groupId,
+            groupIdNumber || 0,
+          );
+          if (response && response.status === 'SUCCESS') {
+            setMemberData(response.data || null);
+          } else {
+            console.error('error');
+            toast.error('데이터를 불러오는데 실패했습니다.');
+          }
+        } catch (error) {
+          toast.error('에러가 발생했습니다.');
+        } finally {
+          setLoading(false); // 로딩 완료 후 로딩 상태 해제
         }
-      } catch (error) {
-        toast.error('에러');
-      } finally {
-        setLoading(false);
-      }
-    };
+      };
 
-    fetchData();
-  }, []);
+      fetchData();
+    }
+  }, [groupId, groupIdNumber]);
 
   const getGenderText = (gender: 'MAN' | 'WOMAN' | undefined): string => {
     if (gender === 'MAN') {
@@ -58,7 +62,7 @@ function MemberManageDetail() {
     }
   };
 
-  const dummyMemberData = memberData
+  const MemberData = memberData
     ? [
         {
           img: memberData.profilePicture || '',
@@ -72,15 +76,14 @@ function MemberManageDetail() {
     : [];
 
   const profileDetails =
-    dummyMemberData.length > 0
+    MemberData.length > 0
       ? [
-          { title: '이름', content: dummyMemberData[0].name },
-          { title: '성별', content: dummyMemberData[0].gender },
-          { title: '생년월일', content: dummyMemberData[0].birth },
+          { title: '이름', content: MemberData[0].name },
+          { title: '성별', content: MemberData[0].gender },
+          { title: '생년월일', content: MemberData[0].birth },
         ]
       : [];
 
-  /** 내보내기 */
   const deleteMemeber = async () => {
     try {
       setLoading(true);
@@ -100,6 +103,14 @@ function MemberManageDetail() {
     }
   };
 
+  if (loading) {
+    return <div>로딩 중...</div>; // 로딩 중 상태 표시
+  }
+
+  if (!memberData) {
+    return <div>멤버 데이터를 불러오지 못했습니다.</div>; // 데이터가 없을 때 표시
+  }
+
   return (
     <MainPageContainer>
       <Header
@@ -115,18 +126,12 @@ function MemberManageDetail() {
         <M.ProfileBox>
           <M.Img>
             <img
-              src={
-                dummyMemberData.length > 0
-                  ? dummyMemberData[0].img.trim()
-                  : memberImg
-              }
+              src={MemberData.length > 0 ? MemberData[0].img.trim() : memberImg}
               alt="프로필 이미지"
             />
           </M.Img>
           <M.Name>
-            {dummyMemberData.length > 0
-              ? dummyMemberData[0].nickname
-              : '정보 없음'}
+            {MemberData.length > 0 ? MemberData[0].nickname : '정보 없음'}
           </M.Name>
         </M.ProfileBox>
         <M.ProfileInfo>
@@ -140,7 +145,7 @@ function MemberManageDetail() {
         <M.InfoInputBox>
           <M.InfoText>지원글</M.InfoText>
           <M.InfoInput disabled>
-            {dummyMemberData.length > 0 ? dummyMemberData[0].applyContent : '-'}
+            {MemberData.length > 0 ? MemberData[0].applyContent : '-'}
           </M.InfoInput>
         </M.InfoInputBox>
       </M.InfoWrap>
