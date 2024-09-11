@@ -140,6 +140,7 @@ export interface RouteReviewProps {
   writeDate: string;
   like: number;
   memberNickname: string;
+  reviewId: number;
 }
 
 export interface searchPlaceProps {

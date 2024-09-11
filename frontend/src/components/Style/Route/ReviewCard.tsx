@@ -4,7 +4,7 @@ import { RouteReviewProps } from '@/models/route';
 
 interface ReviewCardProps {
   ele: RouteReviewProps;
-  setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  clickEven?: (ele: RouteReviewProps) => void;
 }
 
 function ReviewCard(props: ReviewCardProps) {
@@ -32,8 +32,16 @@ function ReviewCard(props: ReviewCardProps) {
           </R.ReviewDateBox>
         </R.ReviewTextcontainer>
         <R.HeartBox>
-          <Icon name="IconHeartGrey" size={15} />
-          <R.HeartText>{props.ele.like}</R.HeartText>
+          <Icon
+            name="IconOption"
+            size={15}
+            style={{ transform: 'rotate(90deg)' }}
+            onClick={() => {
+              if (props.clickEven !== undefined) {
+                props.clickEven(props.ele);
+              }
+            }}
+          />
         </R.HeartBox>
       </R.ReviewCard>
     </R.ReviewCardBox>

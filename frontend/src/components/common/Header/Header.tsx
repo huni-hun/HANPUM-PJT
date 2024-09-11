@@ -190,7 +190,9 @@ const Header = ({
               $gap={20}
               style={{
                 width: 'auto',
+                marginLeft: 8,
               }}
+              $justify="space-around"
             >
               <Icon name="IconHeaderPlus" onClick={plusBtnclick} size={14} />
               <Icon
