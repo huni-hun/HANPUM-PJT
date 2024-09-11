@@ -30,7 +30,7 @@ function LoginPage() {
           localStorage.setItem('token', token);
           Cookies.remove('accessToken', { path: '/' });
 
-          window.dispatchEvent(new Event('storage')); // 강제로 storage 이벤트 발생
+          // window.dispatchEvent(new Event('storage')); // 강제로 storage 이벤트 발생
         }
       }
 
@@ -39,7 +39,7 @@ function LoginPage() {
         navigate('/signup');
       } else {
         console.log('회원가입 이미 되어있어요.');
-        navigate('/home');
+        // navigate('/home');
       }
     }
   }, [tryKakao, navigate]);
