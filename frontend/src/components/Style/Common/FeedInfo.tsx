@@ -8,8 +8,8 @@ import Icon from '@/components/common/Icon/Icon';
 
 const FeedInfo = ({
   feedInfoTitle,
-  departuresPlace,
-  arrivalsPlace,
+  endPoint,
+  startPoint,
   startDate,
   endDate,
   totalDistance,
@@ -23,10 +23,10 @@ const FeedInfo = ({
       <R.StartDateBox>
         <R.PlaceBox>
           <R.PlaceText>
-            출발지 <span className="bold-text">{departuresPlace}</span>
+            출발지 <span className="bold-text">{startPoint}</span>
           </R.PlaceText>
           <R.PlaceText>
-            도착지 <span className="bold-text">{arrivalsPlace}</span>
+            도착지 <span className="bold-text">{endPoint}</span>
           </R.PlaceText>
         </R.PlaceBox>
         <R.DistanceBox>

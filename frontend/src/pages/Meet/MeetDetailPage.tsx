@@ -415,8 +415,8 @@ function MeetDetailPage() {
             />
             <FeedInfo
               feedInfoTitle="모임 일정 정보"
-              departuresPlace={meetDetail?.data?.startPoint}
-              arrivalsPlace={meetDetail?.data?.endPoint}
+              startPoint={meetDetail?.data?.startPoint}
+              endPoint={meetDetail?.data?.endPoint}
               startDate={formatDate(meetDetail?.data?.startDate)}
               endDate={formatDate(meetDetail?.data?.endDate)}
               totalDistance={totalDistance}

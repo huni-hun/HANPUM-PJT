@@ -39,8 +39,8 @@ export interface FeedInfoProps {
   /** n일차 진행상황 */
   proceessDay?: number;
   feedInfoTitle?: string;
-  departuresPlace?: string;
-  arrivalsPlace?: string;
+  startPoint?: string;
+  endPoint?: string;
   startDate?: string;
   endDate?: string;
   totalDuration?: number;

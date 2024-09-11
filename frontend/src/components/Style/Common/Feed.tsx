@@ -13,7 +13,6 @@ const FeedContainer = ({
   meetRouter,
   isMeetFeed,
 }: FeedProps) => {
-  console.log(routeData?.routeFeedImg, '백그라운드 이미지');
   return (
     <>
       {meetRouter ? (
@@ -25,7 +24,7 @@ const FeedContainer = ({
           </R.ImgBox>
         </>
       ) : (
-        <></>
+        <R.ImgBox backgroundImg={routeData?.routeFeedImg}></R.ImgBox>
       )}
 
       {/** 작성자 있을 경우 boolean으로 받아 쓰세요 ! */}

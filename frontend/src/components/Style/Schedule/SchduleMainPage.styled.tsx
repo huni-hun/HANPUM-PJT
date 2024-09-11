@@ -14,7 +14,7 @@ interface MeetStyleProps {
 
 export const Container = styled.div`
   width: 100vw;
-  height: 100vh;
+  /* height: 100vh; */
   .grayBox {
     height: 35.8rem;
     background-color: ${colors.grey1};
