@@ -14,7 +14,7 @@ function App() {
     const token = localStorage.getItem('token');
     console.log('checkAuth App에서', token, !!token);
     if (token) {
-      setAuthEnticate(!!token);
+      setAuthEnticate(true);
     }
   }, [setAuthEnticate]);
 

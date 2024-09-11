@@ -75,13 +75,15 @@ const SignupPage = () => {
           }
         })()}
         clickBack={() => {
-          if (step.currStep > 0) {
-            setStep((prevStep) => ({
-              ...prevStep,
-              currStep: prevStep.currStep - 1,
-            }));
-          } else {
-            navigate(-1);
+          if (sessionStorage.getItem('send') !== 'true') {
+            if (step.currStep > 0) {
+              setStep((prevStep) => ({
+                ...prevStep,
+                currStep: prevStep.currStep - 1,
+              }));
+            } else {
+              navigate(-1);
+            }
           }
         }}
       />
