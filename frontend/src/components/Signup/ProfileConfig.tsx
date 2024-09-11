@@ -339,7 +339,7 @@ function ProfileConfig({
             $weak={!formValues.sendNickname}
             style={{ marginLeft: '8px' }}
             onClick={() => {
-              if (formValues.nickname?.length !== 0) {
+              if (formValues.nickname?.length !== 0 && !validate.nickname) {
                 checkNickname(formValues.nickname as string);
               }
             }}
@@ -435,6 +435,7 @@ function ProfileConfig({
         onClick={() => {
           // 기존은 쿠키의 memberType으로만 분기 처리하면 카카오로 로그인 한 후에 취소하고 로컬로 하게되면 오류가 생길수 밖에 없음. 쿠키에 이미 있기 때문
           if (Cookies.get('memberType') === 'KAKAO_INCOMPLETE') {
+            console.log('카카오로 ');
             submitKaKao();
           } else {
             submitLocal();
