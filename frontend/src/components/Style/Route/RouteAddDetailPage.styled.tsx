@@ -230,6 +230,7 @@ export const AttractionCard = styled.div<{ img: string }>`
   margin-right: 0.4rem;
   border-radius: 1.2rem;
   background-image: url(${(props) => props.img});
+  background-size: cover;
 `;
 
 export const AttractionAddCard = styled.div`
