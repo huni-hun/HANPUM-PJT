@@ -55,7 +55,7 @@ import { useEffect } from 'react';
 
 export default function Router() {
   const isAuth = useIsAuth();
-  console.log(isAuth);
+  // console.log(isAuth);
 
   return (
     <BrowserRouter>

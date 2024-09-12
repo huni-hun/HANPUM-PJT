@@ -60,7 +60,7 @@ function SearchPlacePage(props: SearchPlacePageProps) {
           }
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
         });
     } else {
       setSearchedPlace([]);
@@ -88,7 +88,7 @@ function SearchPlacePage(props: SearchPlacePageProps) {
           }
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
         });
     } else {
       setSearchedPlace([]);

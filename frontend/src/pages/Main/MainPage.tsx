@@ -92,7 +92,7 @@ function MainPage() {
     getRunningScheduleData,
     {
       onSuccess: (data) => {
-        console.log('일정 불러오기 성공:', data);
+        // console.log('일정 불러오기 성공:', data);
       },
       onError: (error: AxiosError) => {},
     },
@@ -250,7 +250,7 @@ function MainPage() {
               $align="center"
               style={{ width: 'auto' }}
               onClick={() => {
-                console.log('clic');
+                // console.log('clic');
                 navigator('/route/list');
               }}
             >

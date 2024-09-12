@@ -33,7 +33,7 @@ function RouteCard(props: RouteCardProps) {
             }
           })
           .catch((err) => {
-            console.log(err);
+            // console.log(err);
           });
       } else {
         RouteLikeDelete(String(props.ele.routeId))
@@ -43,7 +43,7 @@ function RouteCard(props: RouteCardProps) {
             }
           })
           .catch((err) => {
-            console.log(err);
+            // console.log(err);
           });
       }
     } else {

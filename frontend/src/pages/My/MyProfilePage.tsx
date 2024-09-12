@@ -20,7 +20,7 @@ function MyProfilePage() {
   const { data } = useQuery('getUser', GetUser);
   const cachedData = queryClient.getQueryData('getUser');
 
-  console.log(cachedData);
+  // console.log(cachedData);
 
   const { mutate: changeProfileImg } = useMutation(ChangeProfileImg, {
     onSuccess: (res) => {

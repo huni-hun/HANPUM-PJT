@@ -426,7 +426,7 @@ function RouteDetailRetouchPage() {
           }
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
         });
 
       let route: RetouchRouteProps = {

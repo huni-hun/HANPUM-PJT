@@ -121,8 +121,6 @@ function EditMySchedulePage() {
     event.stopPropagation();
   };
 
-  console.log(scheduleId, '??');
-
   /** 임시 데이터 */
   const dummyData = {
     date: [
