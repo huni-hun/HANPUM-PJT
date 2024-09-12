@@ -37,6 +37,7 @@ import backend.hanpum.exception.exception.schedule.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -51,6 +52,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
@@ -333,9 +335,22 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public void activateSchedules() {
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        int updatedCount = scheduleRepository.activateScheduleForToday(today);
+
+        long updatedCount = scheduleRepository.activateScheduleForToday(today);
         if (updatedCount == 0) {
-            throw new ValidScheduleNotFoundException();
+            log.info("활성화된 스케줄 없음");
+        }
+    }
+
+    @Scheduled(cron = "0 0 0 * * *")
+    @Transactional
+    @Override
+    public void deactivateSchedules() {
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String yesterday = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        long updatedCount = scheduleRepository.deactivateScheduleForToday(today, yesterday);
+        if (updatedCount == 0) {
+            log.info("비활성화된 스케줄 없음");
         }
     }
 

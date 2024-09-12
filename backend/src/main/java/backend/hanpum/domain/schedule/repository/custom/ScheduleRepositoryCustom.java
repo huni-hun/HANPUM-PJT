@@ -22,7 +22,9 @@ public interface ScheduleRepositoryCustom {
 
     Optional<List<ScheduleDayResDto>> getScheduleDayResDtoList(Long memberId, Long scheduleId);
 
-    int activateScheduleForToday(String startDate);
+    long activateScheduleForToday(String today);
+
+    long deactivateScheduleForToday(String today, String yesterday);
 
     Optional<ScheduleTempResDto> getScheduleTempResDto(Long memberId);
 

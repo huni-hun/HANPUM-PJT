@@ -56,7 +56,6 @@ public class WeatherServiceImpl implements WeatherService {
         try {
             URI uri = new URI(url);
             ResponseEntity<String> response = restTemplate.getForEntity(uri, String.class);
-            System.out.println(response);
             return parseDayWeatherResponse(response.getBody(), now);
         } catch (Exception e) {
             throw new WeatherParsingException(e.getMessage());
