@@ -30,7 +30,7 @@ export const DeleteMeetCancle = async (groupId: number) => {
   return response.data;
 };
 
-/** 모임 - 신청 취소 */
+/** 모임 - 모임 삭제 */
 export const DeleteMeet = async (groupId: number) => {
   const response = await api.delete(`/api/group/${groupId}`);
 
