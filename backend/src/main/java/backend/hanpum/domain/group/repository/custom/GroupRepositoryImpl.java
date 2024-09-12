@@ -231,8 +231,7 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                 .leftJoin(group.schedule, schedule)
                 .leftJoin(schedule.course, course)
                 .leftJoin(likeGroup).on(likeGroup.group.groupId.eq(group.groupId).and(likeGroup.member.memberId.eq(memberId)))
-                .where(groupMember.member.memberId.eq(memberId)
-                        .and(groupMember.joinType.ne(JoinType.APPLY)))
+                .where(groupMember.member.memberId.eq(memberId))
                 .groupBy(group.groupId, course.startPoint, course.endPoint, course.totalDistance, course.totalDays,
                         schedule.startDate, schedule.endDate)
                 .fetchOne();
