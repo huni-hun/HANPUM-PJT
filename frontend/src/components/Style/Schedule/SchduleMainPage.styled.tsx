@@ -36,6 +36,7 @@ export const Overflow = styled.div`
   height: 100%;
   overflow-y: auto;
   margin-top: 13vw;
+  overflow-x: hidden;
 
   &::-webkit-scrollbar {
     display: none;

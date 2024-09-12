@@ -13,14 +13,16 @@ function MeetNoHave({ category }: { category?: string }) {
       case 'memberList':
         return '인원이 없습니다.';
       case 'tabMemberList':
-        return '탭 인원이 없습니다.';
+        return '해당 모임에 허가되지 않은 접근입니다.';
       default:
         return '데이터가 없습니다.';
     }
   };
 
   return (
-    <S.NoHaveContainer>
+    <S.NoHaveContainer
+      marginTop={category === 'tabMemberList' ? '50px' : '144px'}
+    >
       <img src={noImage} alt="" />
       <Text
         $bold={true}
@@ -31,9 +33,11 @@ function MeetNoHave({ category }: { category?: string }) {
         {getMessage()}
       </Text>
       <Flex direction="column" style={{ textAlign: 'center' }}>
-        <Text $typography="t14" color="grey2" style={{ marginBottom: '4px' }}>
-          조금 더 기다려볼까요?
-        </Text>
+        {category !== 'tabMemberList' && (
+          <Text $typography="t14" color="grey2" style={{ marginBottom: '4px' }}>
+            조금 더 기다려볼까요?
+          </Text>
+        )}
       </Flex>
     </S.NoHaveContainer>
   );
