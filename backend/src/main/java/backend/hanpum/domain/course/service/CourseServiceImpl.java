@@ -288,6 +288,14 @@ public class CourseServiceImpl implements CourseService {
         courseRepository.save(course);
     }
 
+    @Override
+    @Transactional
+    public void editCourseOpenState(Long memberId, Long courseId) {
+        Course course = courseRepository.findByMember_MemberIdAndCourseId(memberId, courseId).orElseThrow(CourseNotFoundException::new);
+
+        course.updateCourseOpenState(!course.isOpenState());
+    }
+
     private void updateCourseDay(CourseDay existDay, CourseDayReqDto newDay, Double totalCalorie, Double totalDuration, Double totalDistance) {
         // CourseDay 정보 업데이트
         existDay.updateCourseDayTotal(String.format("%.1f", totalCalorie), String.format("%.1f", totalDuration), totalDistance);
