@@ -16,7 +16,7 @@ import { meetCreateImage, meetRequestState } from '@/atoms/meetRequestAtom';
 import { GetMeetDetailList } from '@/api/meet/GET';
 import { PutGroup } from '@/api/meet/PUT';
 
-function MeetAddMainPage() {
+function MeetEditPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { compressImage } = useImageCompression();
@@ -43,7 +43,8 @@ function MeetAddMainPage() {
   const savedGroupId = localStorage.getItem('groupId');
   const groupIdNumber = savedGroupId ? Number(JSON.parse(savedGroupId)) : null;
 
-  const { courseId, startDate, recruitmentPeriod } = location.state || {};
+  const { groupId, courseId, startDate, endDate, recruitmentPeriod } =
+    location.state || {};
 
   useEffect(() => {
     if (location.state) {
@@ -62,10 +63,8 @@ function MeetAddMainPage() {
   }, [location.state, detailData, multipartImg]);
 
   useEffect(() => {
-    if (!meetRequest?.title) {
-      fetchData();
-    }
-  }, []);
+    fetchData();
+  }, [groupId]);
 
   useEffect(() => {
     if (location.state?.recruitmentPeriod) {
@@ -77,18 +76,27 @@ function MeetAddMainPage() {
   }, [location.state?.recruitmentPeriod]);
 
   useEffect(() => {
+    if (!meetRequest?.recruitmentPeriod && recruitmentPeriod) {
+      setMeetRequest((prevState) => ({
+        ...prevState,
+        recruitmentPeriod: recruitmentPeriod,
+      }));
+    }
+  }, [meetRequest?.recruitmentPeriod, recruitmentPeriod]);
+
+  useEffect(() => {
     const groupPostReqDto: groupPostReqDtoProps = {
       title: meetRequest.title || '',
       description: meetRequest.description || '',
       recruitmentCount: meetRequest.recruitmentCount || 0,
-      recruitmentPeriod: recruitmentPeriod,
+      recruitmentPeriod: meetRequest.recruitmentPeriod || '',
     };
     const meetdata: CreateMeetProps = {
       multipartFile: previewImage,
       groupPostReqDto: groupPostReqDto,
     };
     setMeetData(meetdata);
-  }, [meetRequest]);
+  }, [meetRequest, groupId]);
 
   /** 이미지 핸들링 */
   const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -127,16 +135,51 @@ function MeetAddMainPage() {
 
   /** 모임 수정 put api */
   const handleEditGroup = async () => {
-    if (groupIdNumber) {
+    if (groupId) {
       try {
+        if (!previewImage) {
+          toast.info('모임 이미지를 업로드해주세요!');
+          return;
+        }
+
+        if (!meetRequest.title) {
+          toast.info('모임 이름을 작성해주세요!');
+          return;
+        }
+
+        if (!meetRequest.description) {
+          toast.info('모임 내용을 작성해주세요!');
+          return;
+        }
+
+        if (
+          !meetRequest.recruitmentCount ||
+          meetRequest.recruitmentCount === 0
+        ) {
+          toast.info('모집인원을 설정해주세요!');
+          return;
+        }
+
+        const recruitmentPeriodValue =
+          recruitmentPeriod || meetRequest?.recruitmentPeriod;
+        if (!recruitmentPeriodValue) {
+          toast.info('모집 마감일을 설정해주세요!');
+          return;
+        }
+
         const response = await PutGroup(
-          groupIdNumber,
+          groupId,
           meetData,
           multipartImg || undefined,
         );
         if (response && response.status === 'SUCCESS') {
           toast.success('모임 수정이 완료되었습니다!');
-          navigate('/meet/addMain/complete', { state: { category: 'edit' } });
+          navigate('/meet/addMain/complete', {
+            state: {
+              category: 'edit',
+              groupId: groupId,
+            },
+          });
           setMeetRequest({});
           setMultipartImg(null);
         } else {
@@ -169,10 +212,10 @@ function MeetAddMainPage() {
 
   /** 모임 상세 페이지에서 수정버튼 클릭 시 해당 상세 데이터 가져옴 */
   const fetchData = async () => {
-    if (!groupIdNumber) return;
+    if (!groupId) return;
     try {
       setLoading(true);
-      const response = await GetMeetDetailList(groupIdNumber);
+      const response = await GetMeetDetailList(groupId);
       if (response?.status === 'SUCCESS') {
         setDetailData(response.data);
         setPreviewImage(response.data.groupImg);
@@ -203,7 +246,11 @@ function MeetAddMainPage() {
         clickBack={() => {
           setMeetRequest({});
           setMultipartImg(null);
-          navigate('/meet/detail');
+          navigate('/meet/detail', {
+            state: {
+              groupId: groupId,
+            },
+          });
         }}
       />
       <MainPageContainer>
@@ -233,7 +280,7 @@ function MeetAddMainPage() {
                 모임 이름
               </Text>
               <Input
-                placeholder="김동산"
+                placeholder="제목을 작성해주세요."
                 name="title"
                 value={meetRequest?.title || ''}
                 onChange={handleInfoChange}
@@ -286,7 +333,7 @@ function MeetAddMainPage() {
   );
 }
 
-export default MeetAddMainPage;
+export default MeetEditPage;
 
 const MainPageContainer = styled.div`
   width: 100vw;
