@@ -18,7 +18,7 @@ import DateBadge from '@components/common/Badge/DateBadge';
 import InfoBadge from '@components/common/Badge/InfoBadge';
 import RouteBadge from '@components/common/Badge/RouteBadge';
 import Flex from '@components/common/Flex';
-import { getMySchedule } from '@api/schedule/GET';
+import { getMySchedule, getRunningScheduleData } from '@api/schedule/GET';
 import { STATUS } from '@constants';
 import {
   addInterestRoute,
@@ -89,13 +89,13 @@ function MainPage() {
   // const { data: mySchedule } = useQuery('getMySchedule', getMySchedule);
   const { data: mySchedule } = useQueryHandling(
     'getMySchedule',
-    getMySchedule,
-    // {
-    //   onSuccess: (data) => {
-    //     console.log('일정 불러오기 성공:', data);
-    //   },
-    //   onError: (error: AxiosError) => {},
-    // },
+    getRunningScheduleData,
+    {
+      onSuccess: (data) => {
+        console.log('일정 불러오기 성공:', data);
+      },
+      onError: (error: AxiosError) => {},
+    },
   );
 
   // 경로(초보자 코스)
@@ -230,10 +230,10 @@ function MainPage() {
       <Header purpose="main" $isborder={true} clickBack={() => {}} />
       <div className="container">
         {mySchedule &&
-          (mySchedule.message === '조회된 일정이 없습니다.' ? (
+          (mySchedule.message === '유효한 일정이 없습니다.' ? (
             <NotHaveSchedule />
           ) : (
-            <Schedule />
+            <Schedule data={mySchedule} />
           ))}
 
         <div className="spacing" />
