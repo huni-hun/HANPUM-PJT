@@ -29,7 +29,6 @@ function MemberManageDetail() {
   useEffect(() => {
     if (groupId) {
       const fetchData = async () => {
-        console.log(groupId);
         try {
           const response = await GetMeetMemberDetailList(groupId, groupId || 0);
           if (response && response.status === 'SUCCESS') {

@@ -87,7 +87,7 @@ function MeetAddMainPage() {
     const file = e.target.files?.[0];
     if (file) {
       const compressedFile = (await compressImage(file)) ?? file;
-      console.log(compressedFile);
+      // console.log(compressedFile);
 
       const url = URL.createObjectURL(compressedFile || file);
 
@@ -194,7 +194,7 @@ function MeetAddMainPage() {
         }
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error('모임 생성 중 오류가 발생했습니다.');
     }
   };
