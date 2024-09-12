@@ -87,9 +87,9 @@ function MeetDetailPage() {
   const navigate = useNavigate();
 
   const { data: meetDetail } = useQuery(
-    ['id', groupIdNumber],
+    ['id', groupId],
 
-    () => GetMeetDetailList(groupIdNumber || 0),
+    () => GetMeetDetailList(groupId || 0),
     {
       onSuccess: (res) => {
         if (res.status === STATUS.success) {
@@ -318,15 +318,18 @@ function MeetDetailPage() {
   };
 
   // const dayData = [{ dayNum: dayNum }];
-
+  console.log(meetDetail, '이거 안나오는거야?');
   /** 바텀탭 - 수정 클릭시 */
   const handleEdit = () => {
-    if (meetDetail.data?.groupJoinStatus === 'GROUP_LEADER') {
-      navigate(`/meet/edit`, {
-        state: { groupIdNumber },
-      });
-    } else {
-      toast.error('권한이 없습니다.');
+    if (meetDetail.data.groupJoinStatus) {
+      if (meetDetail.data.groupJoinStatus === 'GROUP_LEADER') {
+        navigate(`/meet/edit`, {
+          state: { groupId },
+        });
+        console.log(groupId, '?');
+      } else {
+        toast.error('권한이 없습니다.');
+      }
     }
   };
 
@@ -354,7 +357,7 @@ function MeetDetailPage() {
   const deleteSchedule = async () => {
     try {
       setLoading(true);
-      const response = await DeleteMeet(groupIdNumber || 0);
+      const response = await DeleteMeet(groupId || 0);
       if (response && response.status === 'SUCCESS') {
         toast.success('모임 삭제 완료되었습니다.');
         setIsDeleteModalOpen(false);
@@ -373,10 +376,10 @@ function MeetDetailPage() {
 
   /** 멤버 정보 */
   useEffect(() => {
-    if (selected === 'review' && groupIdNumber) {
+    if (selected === 'review' && groupId) {
       const fetchData = async () => {
         try {
-          const response = await GetMeetMemberList(groupIdNumber);
+          const response = await GetMeetMemberList(groupId);
           if (response && response.status === 'SUCCESS') {
             setMemberData(response.data.groupMemberResList);
           } else if (response.status === 'ERROR') {
@@ -415,6 +418,7 @@ function MeetDetailPage() {
           setBsType('모임필터');
           localStorage.removeItem('groupId');
         }}
+        notAuth={meetDetail.data.groupJoinStatus !== 'GROUP_LEADER'}
       />
 
       <R.Main>

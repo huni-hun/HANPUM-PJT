@@ -6,8 +6,21 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 function MeetAddCompletePage() {
   const location = useLocation();
-  const category = location.state?.category;
+  const { category, groupIdNumber, groupId } = location.state || {};
   const navigator = useNavigate();
+
+  const getMessage = () => {
+    switch (category) {
+      case 'edit':
+        return '모임이 수정되었어요!';
+      case 'create':
+        return '모임이 생성되었어요!';
+
+      default:
+        return '알 수 없는 상태입니다.';
+    }
+  };
+
   return (
     <R.Container>
       <Header
@@ -19,11 +32,7 @@ function MeetAddCompletePage() {
       <R.MainContainer>
         <Icon name="IconMeetComplete" height={212} width={206} />
         <R.TextBox>
-          <R.Text>
-            {category === 'edit'
-              ? '모임이 수정되었어요!'
-              : '모임이 생성되었어요!'}
-          </R.Text>
+          <R.Text>{getMessage()}</R.Text>
         </R.TextBox>
       </R.MainContainer>
       <R.BtnContainer>
@@ -37,7 +46,20 @@ function MeetAddCompletePage() {
           children="확인"
           color="#ffffff"
           onClick={() => {
-            navigator('/meet/list');
+            switch (category) {
+              case 'edit':
+                navigator('/meet/detail', {
+                  state: {
+                    groupId: groupId,
+                  },
+                });
+                break;
+              case 'create':
+                navigator('/meet/list');
+                break;
+              default:
+                navigator('/meet/list');
+            }
           }}
           fontWeight="bold"
         />

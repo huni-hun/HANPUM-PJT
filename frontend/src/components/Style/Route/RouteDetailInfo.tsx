@@ -21,6 +21,7 @@ import Button from '@/components/common/Button/Button';
 import MeetMember from '@/components/Schedule/MeetMember';
 import { Member } from '@/models/schdule';
 import { MemberInfo } from '@/models/meet';
+import MeetNoHave from '@/components/Meet/MeetNoHave';
 
 interface RouteDetailInfoProps {
   selected: string;
@@ -235,9 +236,7 @@ function RouteDetailInfo({
                     />
                   </S.MeetMemeberContainer>
                 ) : (
-                  <S.MeetMemberNodata>
-                    해당 모임에 허가되지 않은 접근입니다.
-                  </S.MeetMemberNodata>
+                  <MeetNoHave category="tabMemberList" />
                 )}
               </>
             ) : (

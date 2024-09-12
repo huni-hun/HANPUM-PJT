@@ -17,6 +17,7 @@ import { GetMeetApplyList } from '@/api/meet/GET';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 import { MemberInfo, MemberListProps } from '@/models/meet';
+import MeetNoHave from '@/components/Meet/MeetNoHave';
 
 function RequestManageList() {
   const navigate = useNavigate();
@@ -50,8 +51,8 @@ function RequestManageList() {
     fetchData();
   }, []);
 
-  const clickMember = (groupIdNumber: number) => {
-    navigate('/meet/accept', { state: { groupId, groupIdNumber } });
+  const clickMember = (groupMemberId: number) => {
+    navigate('/meet/accept', { state: { groupId, groupMemberId } });
   };
 
   const clickBack = () => {
@@ -67,7 +68,7 @@ function RequestManageList() {
       {listData.length > 0 ? (
         <MemberList memberInfo={listData} onClick={clickMember} />
       ) : (
-        <div style={{ padding: '1rem 2rem' }}>인원이 없습니다.</div>
+        <MeetNoHave category="requestList" />
       )}
     </MainPageContainer>
   );

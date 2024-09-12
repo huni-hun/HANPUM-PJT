@@ -86,7 +86,6 @@ function MeetAddSchedulePage() {
   };
 
   const handlerExpanded = () => {
-    console.log(totalDays, '?');
     if (totalDays === 0) {
       setIsRouteValid(false);
       toast.error('경로를 먼저 선택해주세요!');

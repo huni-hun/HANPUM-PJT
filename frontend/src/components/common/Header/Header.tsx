@@ -25,6 +25,7 @@ interface HeaderProps {
   /** 일정 & 모임 구분 */
   isSchedule?: boolean;
   readonly?: boolean;
+  notAuth?: boolean;
 }
 
 const Header = ({
@@ -46,6 +47,7 @@ const Header = ({
   $isGrey = false,
   isSchedule,
   readonly = false,
+  notAuth = false,
 }: HeaderProps) => {
   const navigate = useNavigate();
   const onClickHandler = (to: string) => {
@@ -167,7 +169,11 @@ const Header = ({
               size={15}
               onClick={clickBack}
             />
-            <Icon name="IconOption" size={15} onClick={clickOption} />
+            {notAuth ? (
+              <></>
+            ) : (
+              <Icon name="IconOption" size={15} onClick={clickOption} />
+            )}
           </Flex>
         );
       case 'merge':

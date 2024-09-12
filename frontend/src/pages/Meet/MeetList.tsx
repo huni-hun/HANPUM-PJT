@@ -58,6 +58,7 @@ function MeetList() {
     hasNextPage,
     isFetching,
     isFetchingNextPage,
+    refetch,
   } = useInfiniteQuery(
     ['getGroupList', requestDto.pageable.sort],
     ({ pageParam = 0 }) => {
@@ -195,6 +196,7 @@ function MeetList() {
                     key={groupData.groupId}
                     data={groupData}
                     onClick={() => clickMeetCard(groupData.groupId)}
+                    refetchGroupList={refetch}
                   />
                 )),
               )
