@@ -166,15 +166,15 @@ function RouteDetailPage() {
             type: ele.type,
             attractionId: ele.attractionId,
             address: ele.address,
-            latitude: ele.lat,
-            longitude: ele.lon,
+            latitude: ele.lon,
+            longitude: ele.lat,
             img: ele.img,
           };
           attArr.push(attData);
 
           let markerData: LineStartEndProps = {
-            x: ele.lat,
-            y: ele.lon,
+            x: ele.lon,
+            y: ele.lat,
           };
           setAttMarker((pre) => [...pre, markerData]);
         });

@@ -107,14 +107,19 @@ function RouteDetailInfo({
 
     const newItems = [...props.dayOfRoute];
     const draggingItem = newItems[draggingPos.current];
-
+    const reorderedItems: DaysOfRouteProps[] = [];
     newItems.splice(draggingPos.current, 1);
     newItems.splice(dragOverPos.current, 0, draggingItem);
+    console.log(newItems);
+    newItems.map((ele: DaysOfRouteProps, idx: number) => {
+      ele.routePoint = String(idx + 1);
+      reorderedItems.push(ele);
+    });
 
-    const reorderedItems = newItems.map((item, index) => ({
-      ...item,
-      order: index,
-    }));
+    // const reorderedItems = newItems.map((item, index) => ({
+    //   ...item,
+    //   order: index,
+    // }));
 
     draggingPos.current = null;
     dragOverPos.current = null;
@@ -186,7 +191,7 @@ function RouteDetailInfo({
                           data={ele}
                           dragEndHandler={handleDragEnter}
                           dragStartHandler={handleDragStart}
-                          idx={idx + 1}
+                          idx={idx}
                         />
                       ) : (
                         <RoutePlaceCard

@@ -238,10 +238,9 @@ function RouteDetailRetouchPage() {
 
   useEffect(() => {
     if (selectedIdx > 0) {
-      console.log(dayOfRoute);
       let newWay: DaysOfRouteProps[] = [];
       dayOfRoute.map((ele: DaysOfRouteProps, idx: number) => {
-        if (selectedIdx !== idx + 1) {
+        if (selectedIdx !== idx) {
           let data = { ...ele };
           data.routePoint = String(newWay.length + 1);
           newWay.push(data);
@@ -454,6 +453,7 @@ function RouteDetailRetouchPage() {
       setLatitude(dayOfRoute[0].latitude);
       setLongitude(dayOfRoute[0].longitude);
     }
+    console.log(wayPoints);
   }, [dayOfRoute]);
 
   const clickWayBtn = () => {
