@@ -3,6 +3,7 @@ import * as S from '../../components/Style/Schedule/AddSchdulePage.styled';
 import * as R from '../../components/Style/Route/RouteAddDetailPage.styled';
 import Header from '@/components/common/Header/Header';
 import { useLocation, useNavigate } from 'react-router-dom';
+import noImage from '../../assets/img/noInterest.png';
 
 import Calendar from '../../components/common/Calendar/RangeCalendar';
 import BaseButton from '@/components/common/BaseButton';
@@ -14,6 +15,7 @@ import BottomTab from '@/components/common/BottomTab/BottomTab';
 import Button from '@/components/common/Button/Button';
 import { colors } from '@/styles/colorPalette';
 import Map from '@/components/common/Map/Map';
+import Text from '@/components/common/Text';
 
 interface ScheduleData {
   courseId: number;
@@ -232,7 +234,19 @@ function MeetAddSchedulePage() {
                 <S.MapBox>
                   {isMapReady ? (
                     <Map latitude={longitude} longitude={latitude} />
-                  ) : null}
+                  ) : (
+                    <S.NoDataRouteWrap>
+                      <img src={noImage} alt="" />
+                      <Text
+                        $bold={true}
+                        $typography="t14"
+                        color="grey2"
+                        style={{ marginTop: '24px' }}
+                      >
+                        클릭해서 경로를 설정하세요.
+                      </Text>
+                    </S.NoDataRouteWrap>
+                  )}
                 </S.MapBox>
               </S.RouteMapWrap>
             </>
