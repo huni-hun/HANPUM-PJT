@@ -110,7 +110,6 @@ function RouteAddDetailPage() {
   useEffect(() => {
     setAttMarker([]);
     attractions.map((ele: AttractionReqDto) => {
-      // console.log(ele);
       let markerData: LineStartEndProps = {
         x: ele.lon,
         y: ele.lat,
@@ -120,7 +119,7 @@ function RouteAddDetailPage() {
   }, [attractions]);
 
   useEffect(() => {
-    if (linePath.length > 2) {
+    if (linePath.length > 1) {
       const mapLines: any[] = [];
       if (linePath.length <= 5) {
         GetLineData(linePath)

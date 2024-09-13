@@ -11,9 +11,9 @@ function RoutePlaceCard(
         <R.PlaceAddressBox>{props.routeAddress}</R.PlaceAddressBox>
       </R.PlaceInfoBox>
       <R.PlaceNumberBox
-        isSchedule={props.isSchedule}
+        $isSchedule={props.isSchedule}
         state={props.state}
-        turnGreen={props.turnGreen}
+        $turnGreen={props.turnGreen}
       >
         {props.routePoint}
       </R.PlaceNumberBox>
