@@ -29,6 +29,7 @@ import { useSetRecoilState } from 'recoil';
 import { signupStepAtom } from '@/atoms/signupStepAtom';
 import useImageCompression from '@/hooks/global/useImageCompression';
 import { isAuthEnticatedAtom } from '@/atoms/isAuthEnticatedAtom';
+import defaultImg from '@imgs/default.png';
 
 function ProfileConfig({
   pagenation,
@@ -59,6 +60,10 @@ function ProfileConfig({
   // 프로필 이미지
   const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    // console.log(file);
+    // const temp = new File([defaultImg], 'default.png', { type: 'image/png' });
+    // console.log(defaultImg);
+    // console.log(temp);
     if (file) {
       // console.log(
       //   '압축 전 ::',
@@ -257,7 +262,9 @@ function ProfileConfig({
       loginId: formValues.loginId || '',
       password: formValues.password || '',
       email: formValues.email || '',
-      multipartFile: formValues.multipartFile || '',
+      multipartFile:
+        formValues.multipartFile ||
+        new File([defaultImg], 'default.png', { type: 'image/png' }),
       name: formValues.name || '',
       birthDate: formValues.birthDate || '',
       gender: formValues.gender || '',
@@ -266,6 +273,7 @@ function ProfileConfig({
       memberType: 'COMMON',
     };
 
+    console.log(signupReq);
     // console.log(signupReq);
     localLogin({ ...signupReq });
   };
@@ -296,8 +304,10 @@ function ProfileConfig({
           프로필 이미지
         </Text>
         <div className="profile-prev_img">
-          {previewImage && (
+          {previewImage ? (
             <img src={previewImage} alt="프로필 이미지 미리보기" />
+          ) : (
+            <img src={defaultImg} alt="기본 이미지" />
           )}
         </div>
 

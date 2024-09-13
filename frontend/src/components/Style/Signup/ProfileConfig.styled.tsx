@@ -19,7 +19,7 @@ export const ProfileConfigContainer = styled.div`
       width: 10.3rem;
       height: 10.3rem;
       border-radius: 50%;
-      background-color: ${colors.grey1};
+      /* background-color: ${colors.grey1}; */
       overflow: hidden;
       img {
         width: 100%;

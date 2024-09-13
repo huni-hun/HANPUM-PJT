@@ -54,7 +54,9 @@ export function decodeToken(accessToken: string) {
 export const handleTokenExpiration = async (originalRequest?: any) => {
   // 토큰 재발급 로직
   const newToken = await GetRefreshToken();
+  console.log(newToken);
   const encodeNewToken = encodeToken(newToken.data.accessToken.split('+')[1]);
+  console.log(encodeNewToken);
   if (encodeNewToken) {
     localStorage.setItem('token', encodeNewToken);
 
