@@ -6,6 +6,7 @@ import { GetUseRouteList } from '@/api/mypage/GET';
 import { STATUS } from '@/constants';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
+import MyRouteNoHave from './MyORFinishedNoHave';
 
 function FinishedRoot() {
   const { data: finishedRoute } = useQuery('GetUseRouteList', GetUseRouteList, {
@@ -23,9 +24,11 @@ function FinishedRoot() {
   return (
     <S.FinishedRootContainer>
       <div className="card-list">
-        {finishedRoute &&
-          finishedRoute.status === 'SUCCESS' &&
-          finishedRoute.data.map((ele: any) => <RootCard {...ele} />)}
+        {finishedRoute && finishedRoute.status === 'SUCCESS' ? (
+          finishedRoute.data.map((ele: any) => <RootCard {...ele} />)
+        ) : (
+          <MyRouteNoHave category="" />
+        )}
       </div>
     </S.FinishedRootContainer>
   );
