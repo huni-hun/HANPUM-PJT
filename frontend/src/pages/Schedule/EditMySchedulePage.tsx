@@ -121,8 +121,6 @@ function EditMySchedulePage() {
     event.stopPropagation();
   };
 
-  console.log(scheduleId, '??');
-
   /** 임시 데이터 */
   const dummyData = {
     date: [
@@ -177,8 +175,8 @@ function EditMySchedulePage() {
           <Feed routeData={feedData} isUserContainer />
           <FeedInfo
             feedInfoTitle="일정 정보"
-            departuresPlace={myScheduleListData?.startPoint}
-            arrivalsPlace={myScheduleListData?.endPoint}
+            startPoint={myScheduleListData?.startPoint}
+            endPoint={myScheduleListData?.endPoint}
             startDate={formatDate(myScheduleListData?.startDate || '')}
             endDate={formatDate(myScheduleListData?.endDate || '-')}
             totalDistance={formattedDistance}

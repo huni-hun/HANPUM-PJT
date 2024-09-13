@@ -33,7 +33,7 @@ function RouteCard(props: RouteCardProps) {
             }
           })
           .catch((err) => {
-            console.log(err);
+            // console.log(err);
           });
       } else {
         RouteLikeDelete(String(props.ele.routeId))
@@ -43,7 +43,7 @@ function RouteCard(props: RouteCardProps) {
             }
           })
           .catch((err) => {
-            console.log(err);
+            // console.log(err);
           });
       }
     } else {
@@ -85,7 +85,9 @@ function RouteCard(props: RouteCardProps) {
         <C.RouteNTitleBox>
           <C.RouteContentBox>
             <Icon name="IconGrenStar" size={15} />
-            <C.RouteScoreText>{props.ele.routeScore}</C.RouteScoreText>
+            <C.RouteScoreText>
+              {Math.floor(props.ele.routeScore)}
+            </C.RouteScoreText>
             <C.RouteScoreText>{`(${props.ele.routeComment})`}</C.RouteScoreText>
           </C.RouteContentBox>
           <C.TitleBox>{props.ele.routeName}</C.TitleBox>

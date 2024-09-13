@@ -51,16 +51,6 @@ function MeetAddSchedulePage() {
     }
   }, [recruitmentPeriod]);
 
-  // useEffect(() => {
-  //   if (isEdit) {
-  //     // isEdit일 때만 로컬 스토리지에서 데이터 읽기
-  //     const savedMeetRequest = localStorage.getItem('meetEditRequest');
-  //     if (savedMeetRequest) {
-  //       setMeetRequest(JSON.parse(savedMeetRequest));
-  //     }
-  //   }
-  // }, [isEdit]);
-
   // 날짜가 변경될 때 호출되는 함수
   const handleDateChange = (range: {
     startDate: string | null;

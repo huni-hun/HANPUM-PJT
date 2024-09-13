@@ -13,8 +13,6 @@ function MeetLongCard({
   onClick?: () => void;
   data: MeetInfo;
 }) {
-  console.log(data);
-
   if (!data) {
     return null;
   }
@@ -25,7 +23,8 @@ function MeetLongCard({
         style={{ top: '16px', left: '20px' }}
         totalDays={data.totalDays}
       />
-      {data.like ? (
+      {/* 내 모임이니까 하트 없앰 */}
+      {/* {data.like ? (
         <Icon
           name="IconHeartWhiteFill"
           size={20}
@@ -47,7 +46,7 @@ function MeetLongCard({
             zIndex: '3',
           }}
         />
-      )}
+      )} */}
 
       <Text
         $typography="t14"

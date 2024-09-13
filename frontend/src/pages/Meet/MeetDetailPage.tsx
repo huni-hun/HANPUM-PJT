@@ -36,7 +36,11 @@ import { GetLineData } from '@/api/route/POST';
 import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
 import BottomSheet from '@/components/Style/Route/BottomSheet';
 import MeetModal from '@/components/Meet/MeetModal';
-import { DeleteMeet } from '@/api/meet/Delete';
+import {
+  DeleteMeet,
+  DeleteMeetCancle,
+  DeleteMeetQuit,
+} from '@/api/meet/Delete';
 import { MemberInfo } from '@/models/meet';
 import Button from '@/components/common/Button/Button';
 import { colors } from '@/styles/colorPalette';
@@ -87,9 +91,9 @@ function MeetDetailPage() {
   const navigate = useNavigate();
 
   const { data: meetDetail } = useQuery(
-    ['id', groupIdNumber],
+    ['id', groupId],
 
-    () => GetMeetDetailList(groupIdNumber || 0),
+    () => GetMeetDetailList(groupId || 0),
     {
       onSuccess: (res) => {
         if (res.status === STATUS.success) {
@@ -317,24 +321,69 @@ function MeetDetailPage() {
     meetTypes: meetDetail?.data?.courseTypes || [],
   };
 
-  // const dayData = [{ dayNum: dayNum }];
-
   /** 바텀탭 - 수정 클릭시 */
   const handleEdit = () => {
-    if (meetDetail.data?.groupJoinStatus === 'GROUP_LEADER') {
-      navigate(`/meet/edit`, {
-        state: { groupIdNumber },
-      });
-    } else {
-      toast.error('권한이 없습니다.');
+    if (meetDetail.data.groupJoinStatus) {
+      if (meetDetail.data.groupJoinStatus === 'GROUP_LEADER') {
+        navigate(`/meet/edit`, {
+          state: { groupId },
+        });
+      } else {
+        toast.error('권한이 없습니다.');
+      }
     }
   };
 
   /** 신청하기 */
   const clickApply = () => {
-    navigate(`/meet/request`);
-  };
+    switch (meetDetail.data.groupJoinStatus) {
+      case 'NOT_JOINED_GROUP':
+        // 신청하기 -> 모임 신청 페이지로 이동
+        navigate(`/meet/request`);
+        break;
 
+      case 'ANOTHER_GROUP':
+        // 참여 불가 -> 클릭 불가능 및 안내 메시지
+        toast.info('이미 가입한 모임이 있습니다!');
+        break;
+
+      case 'GROUP_APPLY':
+        // 신청 취소 -> 신청 취소 API 호출
+        DeleteMeetCancle(groupId)
+          .then(() => {
+            toast.success('모임 신청이 취소되었습니다.');
+            navigate('/meet/list');
+          })
+          .catch((error) => {
+            toast.error('모임 신청 취소에 실패했습니다.');
+          });
+        break;
+
+      case 'GROUP_MEMBER':
+        // 모임 탈퇴 -> 멤버 탈퇴 API 호출
+        DeleteMeetQuit(groupId)
+          .then(() => {
+            toast.success('모임에서 탈퇴하였습니다.');
+            navigate('/meet/list');
+          })
+          .catch((error) => {
+            toast.error('모임 탈퇴에 실패했습니다.');
+            console.error(error);
+          });
+        break;
+
+      case 'GROUP_LEADER':
+        // 신청 관리 -> 신청 관리 페이지로 이동
+        navigate('/meet/requestManageList', {
+          state: { groupId: meetDetail.data.groupId },
+        });
+        break;
+
+      default:
+        toast.error('잘못된 접근입니다.');
+        break;
+    }
+  };
   /** 모달 끄는 함수 */
   const delteModalClose = () => {
     setIsDeleteModalOpen(false);
@@ -354,7 +403,7 @@ function MeetDetailPage() {
   const deleteSchedule = async () => {
     try {
       setLoading(true);
-      const response = await DeleteMeet(groupIdNumber || 0);
+      const response = await DeleteMeet(groupId || 0);
       if (response && response.status === 'SUCCESS') {
         toast.success('모임 삭제 완료되었습니다.');
         setIsDeleteModalOpen(false);
@@ -373,10 +422,10 @@ function MeetDetailPage() {
 
   /** 멤버 정보 */
   useEffect(() => {
-    if (selected === 'review' && groupIdNumber) {
+    if (selected === 'review' && groupId) {
       const fetchData = async () => {
         try {
-          const response = await GetMeetMemberList(groupIdNumber);
+          const response = await GetMeetMemberList(groupId);
           if (response && response.status === 'SUCCESS') {
             setMemberData(response.data.groupMemberResList);
           } else if (response.status === 'ERROR') {
@@ -392,6 +441,19 @@ function MeetDetailPage() {
     }
   }, [selected]);
 
+  /**n박 n일 계산 */
+  const formatDaysToNights = (totalDays: number) => {
+    if (totalDays < 1) return '';
+
+    const nights = totalDays - 1;
+    return `${nights}박 ${totalDays}일`;
+  };
+
+  // dayData를 배열로 변환
+  const formatDayData = meetDetail?.data?.totalDays
+    ? [{ dayNum: meetDetail.data.totalDays }]
+    : [];
+
   return loading && meetDetail !== undefined ? (
     <MainPageContainer>
       <Header
@@ -402,6 +464,7 @@ function MeetDetailPage() {
           setBsType('모임필터');
           localStorage.removeItem('groupId');
         }}
+        notAuth={meetDetail.data.groupJoinStatus !== 'GROUP_LEADER'}
       />
 
       <R.Main>
@@ -415,12 +478,12 @@ function MeetDetailPage() {
             />
             <FeedInfo
               feedInfoTitle="모임 일정 정보"
-              departuresPlace={meetDetail?.data?.startPoint}
-              arrivalsPlace={meetDetail?.data?.endPoint}
+              startPoint={meetDetail?.data?.startPoint}
+              endPoint={meetDetail?.data?.endPoint}
               startDate={formatDate(meetDetail?.data?.startDate)}
               endDate={formatDate(meetDetail?.data?.endDate)}
               totalDistance={totalDistance}
-              dayData={meetDetail?.data?.totalDays}
+              dayData={formatDayData}
               isMeetFeed="18rem"
             />
             <R.ContentSelecContainer>
@@ -493,6 +556,7 @@ function MeetDetailPage() {
           bsTypeText={'설정'}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          isWrite={meetDetail.data?.groupJoinStatus === 'GROUP_LEADER'}
         />
       )}
 
@@ -510,13 +574,33 @@ function MeetDetailPage() {
             width={30}
             height={6}
             fc="ffffff"
-            bc={colors.main}
+            bc={
+              meetDetail.data.groupJoinStatus === 'ANOTHER_GROUP'
+                ? colors.grey1
+                : colors.main
+            } // ANOTHER_GROUP일 때는 비활성화 색상 적용
             radius={0.7}
             fontSize={1.6}
-            children="신청하기"
             color="#ffffff"
             onClick={clickApply}
-          />
+          >
+            {(() => {
+              switch (meetDetail.data.groupJoinStatus) {
+                case 'NOT_JOINED_GROUP':
+                  return '신청하기';
+                case 'ANOTHER_GROUP':
+                  return '참여 불가';
+                case 'GROUP_APPLY':
+                  return '신청 취소';
+                case 'GROUP_MEMBER':
+                  return '모임 탈퇴';
+                case 'GROUP_LEADER':
+                  return '신청 관리';
+                default:
+                  return '알 수 없는 상태';
+              }
+            })()}
+          </Button>
         </R.ButtonBox>
       </R.BottomContainer>
     </MainPageContainer>

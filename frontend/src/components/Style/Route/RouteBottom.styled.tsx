@@ -33,7 +33,7 @@ export const Container = styled.div`
   z-index: 99;
 `;
 
-export const BottomSheetContainer = styled.div<{ isClosing: boolean }>`
+export const BottomSheetContainer = styled.div<{ $isClosing: boolean }>`
   width: 100%;
   height: 26.3rem;
   background-color: ${colors.white};
@@ -41,7 +41,7 @@ export const BottomSheetContainer = styled.div<{ isClosing: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: ${({ isClosing }) => (isClosing ? slideDown : slideUp)} 0.3s
+  animation: ${({ $isClosing }) => ($isClosing ? slideDown : slideUp)} 0.3s
     ease-out;
   cursor: pointer;
 `;

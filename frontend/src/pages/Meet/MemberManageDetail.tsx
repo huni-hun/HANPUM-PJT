@@ -22,19 +22,15 @@ function MemberManageDetail() {
   const [reviewType, setReviewType] = useState<string>('공개 여부');
 
   const savedGroupId = localStorage.getItem('groupId');
-  const groupId = savedGroupId ? Number(JSON.parse(savedGroupId)) : null;
+  // const groupId = savedGroupId ? Number(JSON.parse(savedGroupId)) : null;
   const location = useLocation();
-  const { memberId, groupIdNumber } = location.state || {};
+  const { memberId, groupId } = location.state || {};
 
   useEffect(() => {
     if (groupId) {
       const fetchData = async () => {
-        console.log(groupId);
         try {
-          const response = await GetMeetMemberDetailList(
-            groupId,
-            groupIdNumber || 0,
-          );
+          const response = await GetMeetMemberDetailList(groupId, groupId || 0);
           if (response && response.status === 'SUCCESS') {
             setMemberData(response.data || null);
           } else {
@@ -50,7 +46,7 @@ function MemberManageDetail() {
 
       fetchData();
     }
-  }, [groupId, groupIdNumber]);
+  }, [groupId]);
 
   const getGenderText = (gender: 'MAN' | 'WOMAN' | undefined): string => {
     if (gender === 'MAN') {
@@ -114,7 +110,7 @@ function MemberManageDetail() {
   return (
     <MainPageContainer>
       <Header
-        purpose="meet-detail"
+        purpose="result"
         title="모임 인원관리"
         clickBack={() => navigate(-1)}
         clickOption={() => {

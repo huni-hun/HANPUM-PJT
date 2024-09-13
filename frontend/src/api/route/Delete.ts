@@ -25,3 +25,13 @@ export const RouteLikeDelete = async (id: string) => {
 
   return response;
 };
+
+export const ReviewDelete = async (id: string) => {
+  const response = await api.delete(`/api/course/${id}/reviews`, {
+    headers: {
+      Accept: '*/*',
+    },
+  });
+
+  return response;
+};

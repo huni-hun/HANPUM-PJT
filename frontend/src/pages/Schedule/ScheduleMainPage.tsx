@@ -19,7 +19,6 @@ import SchduleCard from '@/components/Schedule/SchduleCard';
 import scheduleBackgroundImg from '../../assets/img/scheduleBackground.png';
 import goyuMY from '../../assets/img/goyuMY.png';
 import {
-  MeetMemberProps,
   Member,
   RunningScheduleProps,
   SchduleCardProps,
@@ -29,7 +28,6 @@ import {
 import BottomTab from '@/components/common/BottomTab/BottomTab';
 import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
 import {
-  AttractionsAddCardProps,
   AttractionsProps,
   DaysOfRouteProps,
   FeedInfoProps,
@@ -49,15 +47,12 @@ import {
 } from '@/api/schedule/GET';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
-import {
-  getRouteDayAttraction,
-  getRouteDayDetail,
-  getRouteDetail,
-} from '@/api/route/GET';
+import { getRouteDetail } from '@/api/route/GET';
 import { GetLineData } from '@/api/route/POST';
 import { PutScheduleArrive } from '@/api/schedule/PUT';
 import ScheduleNoHave from '@/components/Schedule/ScheduleNoHave';
 import NoHave from '@/components/My/NoHave';
+import Loading from '@/components/common/Loading';
 
 function ScheduleMainPage() {
   const BtnClick = () => {};
@@ -65,17 +60,22 @@ function ScheduleMainPage() {
   const [isSelected, setIsSelected] = useState<'Proceeding' | 'Mine' | 'Class'>(
     'Proceeding',
   );
-
-  /** 진행중 */
+  /** 진행중 , 내일정, 모임 일정 데이터 state*/
   const [runningScheduleData, setRunningScheduleData] =
     useState<RunningScheduleProps | null>(null);
-  /** 내일정 */
   const [myScheduleListData, setMyScheduleListData] =
     useState<SchduleCardProps | null>(null);
-  /** 모임 일정 */
   const [meetListData, setMeetListData] = useState<RunningScheduleProps | null>(
     null,
   );
+  const [weatherWarning, setWeatherWarning] = useState<{
+    weatherIcon: string;
+    message: string;
+  }>({
+    weatherIcon: Error,
+    message: 'warning massage',
+  });
+
   /** 관광지 */
   const [attractionsCard, setAttractionsCard] = useState<
     ScheduleAttractionsProps[]
@@ -87,19 +87,10 @@ function ScheduleMainPage() {
   const [lon, setLon] = useState<number | null>(null);
   const [weatherData, setWeatherData] = useState<WeatherProps[]>([]);
   const [isLocationReady, setIsLocationReady] = useState(false);
-  const [weatherWarning, setWeatherWarning] = useState<{
-    weatherIcon: string;
-    message: string;
-  }>({
-    weatherIcon: Error,
-    message: 'warning massage',
-  });
-
   const [selected, setSelected] = useState<string>('course');
   const [selectedDay, setSelectedDay] = useState<number>(1);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [routeData, setRouteData] = useState<RouteDetailProps>(null!);
-  // const [dayData, setDayData] = useState<RouteDetailDayProps[]>([]);
   const [routeType, setRouteType] = useState<string[]>([]);
   const [totalDistance, setTotalDistance] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
@@ -127,6 +118,10 @@ function ScheduleMainPage() {
   const [currentWaypoint, setCurrentWaypoint] = useState(0); // 현재 경유지 인덱스
   const DISTANCE_THRESHOLD = 0.01; // 거리 기준 (1km 정도)
   const [arriveGreen, setArriveGreen] = useState<boolean[]>([]);
+  const location = useLocation();
+  const navigator = useNavigate();
+  const data = { ...location };
+
   /** 내일정 - card 컴포넌트 'n박 n일' 계산 */
   const formatDate = (dateStr: string): string => {
     // Convert "YYYYMMDD" to "YYYY-MM-DD"
@@ -140,25 +135,6 @@ function ScheduleMainPage() {
     const formattedDate = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}(${weekday})`;
 
     return formattedDate;
-  };
-
-  /** n박 n일 */
-  const calculateTripDay = (startDate: string, endDate: string): string => {
-    const formattedStartDate = formatDate(startDate);
-    const formattedEndDate = formatDate(endDate);
-
-    const start = new Date(formattedStartDate);
-    const end = new Date(formattedEndDate);
-
-    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-      return 'Invalid dates';
-    }
-
-    const diffTime = Math.abs(end.getTime() - start.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    const nights = diffDays > 0 ? diffDays - 1 : 0; // 날짜가 같은 경우 0박으로 처리
-    return `${nights}박 ${diffDays === 0 ? 1 : diffDays}일`; // 같은 날짜일 경우 1일로 처리
   };
 
   /** 내일정 - card 컴포넌트 'd-day' 계산 */
@@ -183,8 +159,26 @@ function ScheduleMainPage() {
         : `D+${Math.abs(diffDays)}`;
   };
 
-  /** 진행중 feed */
-  /** === useState (routeData) */
+  /** n박 n일 */
+  const calculateTripDay = (startDate: string, endDate: string): string => {
+    const formattedStartDate = formatDate(startDate);
+    const formattedEndDate = formatDate(endDate);
+
+    const start = new Date(formattedStartDate);
+    const end = new Date(formattedEndDate);
+
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      return 'Invalid dates';
+    }
+
+    const diffTime = Math.abs(end.getTime() - start.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    const nights = diffDays > 0 ? diffDays - 1 : 0; // 날짜가 같은 경우 0박으로 처리
+    return `${nights}박 ${diffDays === 0 ? 1 : diffDays}일`; // 같은 날짜일 경우 1일로 처리
+  };
+
+  /** 진행중 feed안에 들어가는 데이터 */
   const runningFeedData = {
     routeFeedImg: runningScheduleData?.backgroundImg || goyuMY,
     routeUserImg: memberImg,
@@ -193,7 +187,7 @@ function ScheduleMainPage() {
     routeTypes: runningScheduleData?.courseTypes || [],
   };
 
-  /** 모임 feed */
+  /** 모임일정 feed안에 들어가는 데이터 */
   const meetFeedData = {
     routeFeedImg: meetListData?.backgroundImg || goyuMY,
     routeUserImg: memberImg,
@@ -202,6 +196,7 @@ function ScheduleMainPage() {
     routeTypes: meetListData?.courseTypes || [],
   };
 
+  /** 내카드 선택 시 -> 내일정 상세 페이지로 */
   const clickCard = (scheduleId?: number, dDay?: string) => {
     if (scheduleId !== undefined) {
       navigate(`/schedule/detail/mine`, {
@@ -211,10 +206,6 @@ function ScheduleMainPage() {
       console.error('스케줄 아이디 없음');
     }
   };
-
-  const location = useLocation();
-  const navigator = useNavigate();
-  const data = { ...location };
 
   /** 경유지 도착 시 해당 waypointId state 2 로 처리 */
   const arriveSchedule = async (waypointId: number) => {
@@ -275,11 +266,12 @@ function ScheduleMainPage() {
           setCurrentWaypoint((prev) => prev + 1);
         }
       } else {
-        console.error('nextWaypoint is undefined');
+        console.error('다음 경유지가 없음');
       }
     }
   };
 
+  /** 실시간 위치 가져오기 */
   useEffect(() => {
     const geo = window.navigator.geolocation;
 
@@ -308,29 +300,7 @@ function ScheduleMainPage() {
     }
   }, []);
 
-  /** 주변 관광지 가져오기 */
-  useEffect(() => {
-    if (lat !== null && lon !== null && isLocationReady) {
-      const nearByData = async () => {
-        try {
-          const response = await getNearbyLocData(lat || 0, lon || 0);
-          if (response && response.status === 'SUCCESS') {
-            setAttractionsCard(response.data);
-          } else {
-            console.error('Error:', response.error);
-          }
-        } catch (error: unknown) {
-          console.error('Fetch Error:', error);
-          toast.error((error as AxiosError).message);
-        } finally {
-          setLoading(false);
-        }
-      };
-      nearByData();
-    }
-  }, [isLocationReady]);
-
-  /** 진행중 */
+  /** 진행중 get 데이터 가져오기 */
   useEffect(() => {
     if (isSelected === 'Proceeding') {
       /** 진행중 data */
@@ -341,8 +311,8 @@ function ScheduleMainPage() {
             setRunningScheduleData(response.data);
             setCourseId(response.data.courseId);
             setScheduleId(response.data.scheduleId);
-          } else {
-            console.error('Error:', response.error);
+          } else if (response.status === 'ERROR') {
+            // console.log(response.message);
           }
         } catch (error: unknown) {
           console.error('Fetch Error:', error);
@@ -384,7 +354,7 @@ function ScheduleMainPage() {
             setRouteDayData((prev) => [...prev, data]);
           });
         }
-        setLoading(true);
+        // setLoading(true);
       });
     }
   }, [courseId]);
@@ -397,8 +367,8 @@ function ScheduleMainPage() {
           const response = await getMyScheduleData();
           if (response && response.status === 'SUCCESS') {
             setMyScheduleListData(response.data);
-          } else {
-            console.error('Error:', response.error);
+          } else if (response.status === 'ERROR') {
+            // console.log(response.message);
           }
         } catch (error) {
           console.error('Fetch Error:', error);
@@ -420,8 +390,10 @@ function ScheduleMainPage() {
           if (response && response.status === 'SUCCESS') {
             setMeetListData(response.data);
             setMemberData(response.data.groupMemberResDtoList);
-          } else {
-            console.error('Error:', response.error);
+            setCourseId(response.data.courseId);
+            setScheduleId(response.data.scheduleId);
+          } else if (response.status === 'ERROR') {
+            // console.log(response.message);
           }
         } catch (error: unknown) {
           console.error('Fetch Error:', error);
@@ -432,38 +404,8 @@ function ScheduleMainPage() {
       };
 
       fetchData();
-
-      if (routeDayData.length === 0) {
-        getRouteDetail(courseId.toString()).then((result) => {
-          if (result.data.status !== 'ERROR' && result.status === 200) {
-            let rd = {
-              routeName: result.data.data.course.courseName,
-              routeContent: result.data.data.course.content,
-              writeDate: result.data.data.course.writeDate,
-              routeComment: result.data.data.course.commentCnt,
-              routeScore: result.data.data.course.scoreAvg,
-              start: result.data.data.course.startPoint,
-              end: result.data.data.course.endPoint,
-              img: result.data.data.course.backgroundImg,
-              writeState: result.data.data.course.writeState,
-              openState: result.data.data.course.openState,
-            };
-            setRouteData(rd);
-            result.data.data.courseDays.forEach((ele: any) => {
-              let data = {
-                dayNum: ele.dayNumber,
-                totalDistance: ele.total_distance,
-                totalCalorie: ele.total_calorie,
-                totalDuration: ele.total_duration,
-              };
-              setRouteDayData((prev) => [...prev, data]);
-            });
-          }
-          setLoading(true);
-        });
-      }
     }
-  }, [isSelected, isLocationReady]);
+  }, [isSelected]);
 
   useEffect(() => {
     /* 맵에 마커, 선 초기화 */
@@ -589,37 +531,13 @@ function ScheduleMainPage() {
     }
   }, [linePath, isLocationReady]);
 
-  /** 날씨 */
-  useEffect(() => {
-    if (lat !== null && lon !== null && isLocationReady) {
-      const fetchData = async () => {
-        try {
-          const response = await getWeather(lat, lon);
-
-          if (response && response.status === 'SUCCESS') {
-            setWeatherData(response.data);
-          } else {
-            console.error('Error:', response.error);
-          }
-        } catch (error) {
-          console.error('Fetch Error:', error);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchData();
-    }
-  }, [isSelected, isLocationReady]);
-
-  /** 지도 및 하위 컴포넌트  */
-
+  /** 진행중 데이터 때려넣기  */
   const firstDayData = runningScheduleData?.scheduleDayResDtoList[0];
 
-  const departuresPlace =
+  const startPoint =
     firstDayData?.scheduleWayPointList?.find((point) => point.type === '출발지')
       ?.address || '';
-  const arrivalsPlace =
+  const endPoint =
     firstDayData?.scheduleWayPointList?.find((point) => point.type === '도착지')
       ?.address || '';
 
@@ -632,8 +550,8 @@ function ScheduleMainPage() {
   /** 진행중 feed */
   const feedInfoProps: FeedInfoProps = {
     feedInfoTitle: '일정 정보',
-    departuresPlace,
-    arrivalsPlace,
+    endPoint: endPoint || '',
+    startPoint: startPoint || '',
     startDate: '-',
     endDate: '-',
     totalDuration: parseFloat(firstDayData?.totalDuration || '0'),
@@ -661,12 +579,91 @@ function ScheduleMainPage() {
     return differenceInDays >= 0 ? differenceInDays + 1 : 0;
   };
 
+  /** 진행중 - 날씨 */
+  /*  useEffect(() => {
+    if (lat !== null && lon !== null && isLocationReady) {
+      const fetchData = async () => {
+        try {
+          setLoading(true);
+          const response = await getWeather(lat, lon);
+
+          if (response && response.status === 'SUCCESS') {
+            setWeatherData(response.data);
+          } else if (response.status === 'ERROR') {
+            console.log(response.message);
+          }
+        } catch (error) {
+          console.error('Fetch Error:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchData();
+    }
+  }, [isSelected, isLocationReady]); */
+
+  /** 모임 데이터 때려넣기 */
+  const meetDayData = meetListData?.scheduleDayResDtoList[0];
+
+  const meetStartPoint =
+    meetDayData?.scheduleWayPointList?.find((point) => point.type === '출발지')
+      ?.address || '';
+  const meetEndPoint =
+    meetDayData?.scheduleWayPointList?.find((point) => point.type === '도착지')
+      ?.address || '';
+
+  const meetscheduleDayResDtoList = meetListData?.scheduleDayResDtoList.map(
+    (day, index) => ({
+      dayNum: index + 1,
+    }),
+  );
+
+  /** 모임 feed */
+  const feedMeetInfoProps: FeedInfoProps = {
+    feedInfoTitle: '모임 일정 정보',
+    endPoint: meetStartPoint || '',
+    startPoint: meetEndPoint || '',
+    startDate: '-',
+    endDate: '-',
+    totalDuration: parseFloat(meetDayData?.totalDuration || '0'),
+    totalDistance: parseFloat(meetDayData?.totalDistance || '0'),
+    dayData: meetscheduleDayResDtoList || [],
+    percentage: undefined,
+    rate: undefined,
+  };
+
+  /** 주변 관광지 가져오기 */
+  useEffect(() => {
+    if (lat !== null && lon !== null && isLocationReady) {
+      const nearByData = async () => {
+        try {
+          const response = await getNearbyLocData(lat || 0, lon || 0);
+          if (response && response.status === 'SUCCESS') {
+            setAttractionsCard(response.data);
+          } else if (response.status === 'ERROR') {
+            // console.log(response.message);
+          }
+        } catch (error: unknown) {
+          console.error('Fetch Error:', error);
+          toast.error((error as AxiosError).message);
+        } finally {
+          setLoading(false);
+        }
+      };
+      nearByData();
+    }
+  }, [isLocationReady]);
+
   /** 관광지 클릭 */
   const clickAttraction = (index: number) => {
     navigate('/schedule/memo', {
       state: { attractionIndex: index, attractionsCard },
     });
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <ScheduleMainPageContainer>
@@ -720,8 +717,8 @@ function ScheduleMainPage() {
                       <Feed routeData={runningFeedData} />
                       <FeedInfo
                         feedInfoTitle={feedInfoProps.feedInfoTitle}
-                        departuresPlace={feedInfoProps.departuresPlace}
-                        arrivalsPlace={feedInfoProps.arrivalsPlace}
+                        startPoint={feedInfoProps.startPoint}
+                        endPoint={feedInfoProps.endPoint}
                         startDate={formatDate(
                           runningScheduleData.startDate || '',
                         )}
@@ -739,8 +736,8 @@ function ScheduleMainPage() {
                       proceessDay={calculateDayNumber(
                         runningScheduleData.startDate || '',
                       )}
-                      departuresPlace={feedInfoProps.departuresPlace}
-                      arrivalsPlace={feedInfoProps.arrivalsPlace}
+                      startPoint={feedInfoProps.startPoint}
+                      endPoint={feedInfoProps.endPoint}
                       totalDuration={feedInfoProps.totalDuration}
                       totalDistance={feedInfoProps.totalDistance}
                       dayData={feedInfoProps.dayData}
@@ -748,14 +745,14 @@ function ScheduleMainPage() {
                     />
                   </S.ScheduleMainContainer>
 
-                  {/* 날씨 + 날씨 메시지 container */}
+                  {/* 날씨 + 날씨 메시지 container 
                   <S.ScheduleWeatherContainer>
                     <WeatherSchedule
                       weatherData={weatherData}
                       weatherIcon={Error}
                       message={'warning message'}
                     />
-                  </S.ScheduleWeatherContainer>
+                  </S.ScheduleWeatherContainer>*/}
 
                   {/* 지도 및 하위 컴포넌트 container */}
                   <R.RouteDetailInfoContainer>
@@ -870,13 +867,12 @@ function ScheduleMainPage() {
                   <Feed routeData={meetFeedData} isUserContainer />
                   <FeedInfo
                     feedInfoTitle="모임 일정 정보"
-                    departuresPlace={feedInfoProps.departuresPlace}
-                    arrivalsPlace={feedInfoProps.arrivalsPlace}
+                    startPoint={feedMeetInfoProps.startPoint}
+                    endPoint={feedMeetInfoProps.endPoint}
                     startDate={formatDate(meetListData?.startDate || '')}
                     endDate={formatDate(meetListData?.endDate || '-')}
-                    totalDistance={feedInfoProps.totalDistance}
-                    dayData={feedInfoProps.dayData}
-                    percentage={feedInfoProps.percentage}
+                    totalDistance={feedMeetInfoProps.totalDistance}
+                    dayData={feedMeetInfoProps.dayData}
                   />
                 </R.RouteInfoContainer>
                 {/* 지도 및 하위 컴포넌트 container */}

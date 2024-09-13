@@ -16,6 +16,7 @@ import memberImg from '../../assets/img/memberImg.svg';
 import { MemberInfo } from '@/models/meet';
 import { GetMeetMemberList } from '@/api/meet/GET';
 import { toast } from 'react-toastify';
+import MeetNoHave from '@/components/Meet/MeetNoHave';
 
 function MemberManageList() {
   const navigate = useNavigate();
@@ -32,7 +33,6 @@ function MemberManageList() {
         const response = await GetMeetMemberList(groupId || 0);
         if (response && response.status === 'SUCCESS') {
           setListData(response.data.groupMemberResList || []);
-          console.log(listData, '리스트');
         } else if (response.status === 'ERROR') {
           toast.error(response.message);
           navigate('/meet/detail');
@@ -47,9 +47,8 @@ function MemberManageList() {
     fetchData();
   }, []);
 
-  const clickMember = (groupIdNumber: number) => {
-    navigate('/meet/memberDetail', { state: { groupId, groupIdNumber } });
-    console.log(groupIdNumber, '?');
+  const clickMember = (groupMemberId: number) => {
+    navigate('/meet/memberDetail', { state: { groupId, groupMemberId } });
   };
 
   return (
@@ -62,7 +61,7 @@ function MemberManageList() {
       {listData.length > 0 ? (
         <MemberList memberInfo={listData} onClick={clickMember} />
       ) : (
-        <>인원이 없습니다.</>
+        <MeetNoHave category="memberList" />
       )}
     </MainPageContainer>
   );

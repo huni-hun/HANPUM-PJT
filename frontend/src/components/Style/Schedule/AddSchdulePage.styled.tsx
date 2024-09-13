@@ -108,13 +108,14 @@ export const RouteMapWrap = styled.div<{ $isExpanded: boolean }>`
 `;
 
 export const RouteMapContent = styled.div`
-  background-color: #ccc;
+  /* background-color: #ccc; */
   border-radius: 1.5rem;
   text-align: center;
   font-size: 4rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  /* border: 1px solid #ccc; */
 `;
 
 export const MapBox = styled.div`
@@ -154,4 +155,15 @@ export const DatePickerEditWrap = styled.div`
   align-items: center;
   margin-top: 2rem;
   margin-bottom: 9rem;
+`;
+
+export const NoDataRouteWrap = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ccc;
+  border-radius: 1rem;
 `;

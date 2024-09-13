@@ -21,7 +21,7 @@ function LoginPage() {
 
   useEffect(() => {
     if (tryKakao === 'true') {
-      console.log('여기임?');
+      // console.log('여기임?');
       const memberType = Cookies.get('memberType');
       const accessToken = Cookies.get('accessToken');
 
@@ -35,10 +35,10 @@ function LoginPage() {
           // window.dispatchEvent(new Event('storage')); // 강제로 storage 이벤트 발생
         }
         if (memberType === 'KAKAO_INCOMPLETE') {
-          console.log('회원가입 해야해요');
+          // console.log('회원가입 해야해요');
           navigate('/signup');
         } else {
-          console.log('회원가입 이미 되어있어요.');
+          // console.log('회원가입 이미 되어있어요.');
           setAuthEnticate(true);
           navigate('/home');
         }

@@ -237,15 +237,16 @@ function RouteDetailRetouchPage() {
   }, [selectedDay]);
 
   useEffect(() => {
-    if (selectedIdx >= 0) {
-      let newWay: WayPointReqDto[] = [];
-      wayPoints.map((ele: WayPointReqDto, idx: number) => {
+    if (selectedIdx > 0) {
+      let newWay: DaysOfRouteProps[] = [];
+      dayOfRoute.map((ele: DaysOfRouteProps, idx: number) => {
         if (selectedIdx !== idx) {
-          newWay.push(ele);
+          let data = { ...ele };
+          data.routePoint = String(newWay.length + 1);
+          newWay.push(data);
         }
       });
-      dateDetail[selectedDay - 1].wayPointReqDtoList = newWay;
-      setWayPoints(newWay);
+      setDayOfRoute(newWay);
     }
   }, [selectedIdx]);
 
@@ -426,7 +427,9 @@ function RouteDetailRetouchPage() {
           }
         })
         .catch((err) => {
-          console.log(err);
+
+          toast.info('거리를 가져오지 못 했습니다.');
+
         });
 
       let route: RetouchRouteProps = {
@@ -452,6 +455,7 @@ function RouteDetailRetouchPage() {
       setLatitude(dayOfRoute[0].latitude);
       setLongitude(dayOfRoute[0].longitude);
     }
+    console.log(wayPoints);
   }, [dayOfRoute]);
 
   const clickWayBtn = () => {
@@ -511,15 +515,17 @@ function RouteDetailRetouchPage() {
                 <R.RouteInfo>{routeData.routeContent}</R.RouteInfo>
               </R.RouteNameInfoContainer>
               <R.RouteTypeContainer>
-                {routeType.map((ele: string) => (
-                  <R.RouteType $isLong={ele.length > 3}>{ele}</R.RouteType>
+                {routeType.map((ele: string, idx: number) => (
+                  <R.RouteType key={idx} $isLong={ele.length > 3}>
+                    {ele}
+                  </R.RouteType>
                 ))}
               </R.RouteTypeContainer>
               <R.RouteReviewContainer>
                 <R.IconContainer>
                   <R.IconBox>
                     <Icon name="IconGrenStar" size={13} />
-                    {routeData.routeScore}
+                    {Math.round(routeData.routeScore)}
                   </R.IconBox>
                   {`(${routeData.routeComment})`}
                 </R.IconContainer>

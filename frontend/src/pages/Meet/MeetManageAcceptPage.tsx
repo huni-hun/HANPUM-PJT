@@ -26,8 +26,8 @@ function MeetManageAcceptPage() {
   /** 멤버 아이디 넘겨받기 */
   const location = useLocation();
   const savedGroupId = localStorage.getItem('groupId');
-  const groupId = savedGroupId ? Number(JSON.parse(savedGroupId)) : null;
-  const { groupIdNumber } = location.state || {};
+  // const groupId = savedGroupId ? Number(JSON.parse(savedGroupId)) : null;
+  const { groupId, groupMemberId } = location.state || {};
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,7 +35,7 @@ function MeetManageAcceptPage() {
         try {
           const response = await GetMeetMemberDetailList(
             groupId,
-            groupIdNumber,
+            groupMemberId,
           );
           if (response && response.status === 'SUCCESS') {
             setMemberData(response.data || null);
@@ -105,39 +105,45 @@ function MeetManageAcceptPage() {
 
   /** 모임 신청 거절 */
   const declineGroup = async () => {
-    try {
-      setLoading(true);
-      const response = await DeleteMeetDecline(10);
-      if (response && response.status === 'SUCCESS') {
-        toast.success('거절 완료되었습니다.');
+    if (groupMemberId) {
+      try {
+        setLoading(true);
+        const response = await DeleteMeetDecline(groupMemberId);
+        if (response && response.status === 'SUCCESS') {
+          toast.success('거절 완료되었습니다.');
+          setIsRejectModalOpen(false);
+          navigate('/meet/requestManageList');
+        } else if (response.status === 'ERROR') {
+          toast.error(response.message);
+        }
+      } catch (error) {
+        // toast.error('에러 발생');
+      } finally {
         setIsRejectModalOpen(false);
-      } else if (response.status === 'ERROR') {
-        toast.error(response.message);
+        setLoading(false);
       }
-    } catch (error) {
-      toast.error('에러 발생');
-    } finally {
-      setIsRejectModalOpen(false);
-      setLoading(false);
     }
   };
 
   /** 모임 신청 수락 */
   const acceptGroup = async () => {
-    try {
-      setLoading(true);
-      const response = await PutAceeptGroup(10);
-      if (response && response.status === 'SUCCESS') {
-        toast.success('수락 완료되었습니다.');
+    if (groupMemberId) {
+      try {
+        setLoading(true);
+        const response = await PutAceeptGroup(groupMemberId);
+        if (response && response.status === 'SUCCESS') {
+          toast.success('수락 완료되었습니다.');
+          setIsAcceptModalOpen(false);
+          navigate('/meet/requestManageList');
+        } else if (response.status === 'ERROR') {
+          toast.error(response.message);
+        }
+      } catch (error) {
+        // toast.error('에러 발생');
+      } finally {
         setIsAcceptModalOpen(false);
-      } else if (response.status === 'ERROR') {
-        toast.error(response.message);
+        setLoading(false);
       }
-    } catch (error) {
-      toast.error('에러 발생');
-    } finally {
-      setIsAcceptModalOpen(false);
-      setLoading(false);
     }
   };
 

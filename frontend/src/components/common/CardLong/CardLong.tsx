@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 import Flex from '../Flex';
 import { RouteListProps, UserRouteProps } from '@/models/route';
 import { MeetInfo } from '@/models/meet';
+import { RouteDelete } from '@/api/route/Delete';
+import { toast } from 'react-toastify';
 
 function CardLong({
   item,
@@ -16,6 +18,7 @@ function CardLong({
   onSwipe,
   onClickOutside,
   onClickCard,
+  onDeleteHandler,
 }: {
   item: UserRouteProps | MeetInfo;
   hasHeart?: boolean;
@@ -25,6 +28,7 @@ function CardLong({
   onSwipe?: (id: number) => void;
   onClickOutside?: () => void;
   onClickCard?: () => void;
+  onDeleteHandler?: (item: UserRouteProps) => void;
 }) {
   // const [isSwiped, setIsSwiped] = useState(false);
   const [startX, setStartX] = useState<number | null>(null);
@@ -66,7 +70,13 @@ function CardLong({
   };
 
   // 삭제 버튼 누르기
-  const handleDeleteClick = (e: React.MouseEvent) => {
+  const deleteClick = (e: React.MouseEvent) => {
+    if (isUserRouteProps(item)) {
+      if (onDeleteHandler !== undefined) {
+        onDeleteHandler(item);
+      }
+    }
+
     e.stopPropagation();
   };
 
@@ -205,7 +215,7 @@ function CardLong({
           direction="column"
           $align="center"
           $gap="3px"
-          onClick={handleDeleteClick}
+          onClick={deleteClick}
           style={{ marginRight: '19px', width: 'auto' }}
         >
           <Icon name="IconDelete" />

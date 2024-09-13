@@ -133,7 +133,7 @@ function ProfileConfig({
       purpose: 'calender',
       onButtonClick: (cancel?: boolean) => {
         if (cancel) {
-          console.log('취소');
+          // console.log('취소');
           setFormValues((prev) => ({
             ...prev,
             birthDate: '',
@@ -216,7 +216,7 @@ function ProfileConfig({
 
   const { mutate: localLogin } = useMutation(SignUp, {
     onSuccess: (res) => {
-      console.log('res ::', res);
+      // console.log('res ::', res);
       if (res.status === STATUS.success) {
         toast.success(res.message);
         clickNext();
@@ -236,10 +236,10 @@ function ProfileConfig({
 
   const { mutate: kakaoLogin } = useMutation(KaKaoLogin, {
     onSuccess: (res) => {
-      console.log('res ::', res);
+      // console.log('res ::', res);
       if (res.status === STATUS.success) {
         toast.success(res.message);
-        console.log(res);
+        // console.log(res);
         sessionStorage.setItem('send', 'true');
         clickNext();
       }
@@ -272,7 +272,7 @@ function ProfileConfig({
 
   // 카카오 로그인
   const submitKaKao = () => {
-    console.log('kakao');
+    // console.log('kakao');
 
     const signupKaKaoReq: Pick<
       SignupRequestValues,
@@ -437,7 +437,7 @@ function ProfileConfig({
         onClick={() => {
           // 기존은 쿠키의 memberType으로만 분기 처리하면 카카오로 로그인 한 후에 취소하고 로컬로 하게되면 오류가 생길수 밖에 없음. 쿠키에 이미 있기 때문
           if (Cookies.get('memberType') === 'KAKAO_INCOMPLETE') {
-            console.log('카카오로 ');
+            // console.log('카카오로 ');
             submitKaKao();
           } else {
             submitLocal();

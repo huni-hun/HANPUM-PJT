@@ -18,7 +18,7 @@ function InfoBadge({
     <S.InfoBadgeContainer style={style}>
       <Flex $gap={4} $align="center">
         <Flex $gap={3.7} $align="center">
-          <Icon name="IconMember" width={8.25} height={11} />
+          <Icon name="IconMember" width={8.25} height={17} />
           <Text $typography="t12" color="white">
             {recruitedCount}/{recruitmentCount}
           </Text>

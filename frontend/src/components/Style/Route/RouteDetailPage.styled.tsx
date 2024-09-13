@@ -66,13 +66,13 @@ export const RouteInfoContainer = styled.div`
 
 export const ImgBox = styled.div<StyledProps>`
   width: 100%;
-  height: 30rem;
+  height: 30vh;
   background-color: #d9d9d9;
   background-size: cover;
   background-position: center;
   position: relative;
   background-image: ${({ backgroundImg }) => `url(${backgroundImg})`};
-  border: 1px solid red;
+
   img {
     width: 100%;
     height: 100%;
@@ -651,8 +651,8 @@ export const PlaceImg = styled.div`
 `;
 
 export const PlaceImage = styled.img`
-  width: 6.4rem;
-  height: 6.4rem;
+  width: 100%;
+  height: 100%;
   border-radius: 1.2rem;
 `;
 

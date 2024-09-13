@@ -1,9 +1,9 @@
 {
-  "short_name": "Hanpum",
-  "name": "Hanpum",
+  "short_name": "한품: 국토 대장정",
+  "name": "한품",
   "scope": "/",
   "display": "standalone",
-  "description": "국토 대장정을 한품과 함께 하세요!",
+  "description": "국토 대장정을 한품과 함께 하세요!  혼자 하기 싫은 사람 혼자가 좋은 사람 모두 가능합니다. 경로를 짜기 힘드시다고요?? 한품은 경로도 추천 해줍니다.",
   "icons": [
     {
       "src": "logo192.png",
@@ -19,8 +19,9 @@
     }
   ],
   "start_url": "/",
-  "display": "standalone",
   "theme_color": "#1A823B",
   "background_color": "#ffffff",
-  "appleMobileWebAppCapable": "yes"
+  "appleMobileWebAppCapable": "yes",
+  "id": "한품",
+  "categories": ["social", "travel"]
 }

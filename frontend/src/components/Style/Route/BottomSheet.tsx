@@ -126,20 +126,28 @@ function BottomSheet(props: BottomSheetProps) {
       case '공개 여부':
         break;
       case '멤버관리':
-        navigate('/meet/memberMangeList', {
-          state: { groupId },
-        });
+        if (props.isWrite) {
+          navigate('/meet/memberMangeList', {
+            state: { groupId },
+          });
+        } else {
+          toast.error('권한이 없습니다.');
+        }
+
         break;
 
       case '가입 신청 관리':
-        navigate('/meet/requestManageList', {
-          state: { groupId },
-        });
+        if (props.isWrite) {
+          navigate('/meet/requestManageList', {
+            state: { groupId },
+          });
+        } else {
+          toast.error('권한이 없습니다.');
+        }
         break;
       case '내보내기':
         if (props.onExport) props.onExport();
         else {
-          props.setIsOpen(false);
           toast.error('내보내기 권한이 없습니다.');
         }
         break;
@@ -255,7 +263,7 @@ function BottomSheet(props: BottomSheetProps) {
       }}
     >
       <R.BottomSheetContainer
-        isClosing={isClosing}
+        $isClosing={isClosing}
         onClick={(e) => {
           e.stopPropagation();
         }}

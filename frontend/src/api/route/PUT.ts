@@ -10,7 +10,7 @@ export const RetouchRoute = async (data: RetouchRouteProps) => {
     type: 'application/json',
   });
   editCourseReqDto.text().then((res) => {
-    console.log(res);
+    // console.log(res);
   });
 
   formData.append('editCourseReqDto', editCourseReqDto);
@@ -21,6 +21,29 @@ export const RetouchRoute = async (data: RetouchRouteProps) => {
       'Content-Type': 'multipart/form-data',
     },
   });
+
+  return response;
+};
+
+export const UpdateReview = async (
+  id: string,
+  content: string,
+  score: number,
+  reviewId: number,
+) => {
+  const response = api.put(
+    `/api/course/${id}/reviews`,
+    {
+      content: content,
+      score: score,
+      reviewId: reviewId,
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  );
 
   return response;
 };

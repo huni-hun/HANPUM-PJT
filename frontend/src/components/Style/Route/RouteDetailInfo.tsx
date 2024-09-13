@@ -21,6 +21,7 @@ import Button from '@/components/common/Button/Button';
 import MeetMember from '@/components/Schedule/MeetMember';
 import { Member } from '@/models/schdule';
 import { MemberInfo } from '@/models/meet';
+import MeetNoHave from '@/components/Meet/MeetNoHave';
 
 interface RouteDetailInfoProps {
   selected: string;
@@ -50,7 +51,7 @@ interface RouteDetailInfoProps {
   isMeetPage?: boolean;
   memberData?: MemberInfo[];
   memberCount?: number;
-  setReviewOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  reviewClickEven?: (ele: RouteReviewProps) => void;
 }
 
 function RouteDetailInfo({
@@ -107,14 +108,19 @@ function RouteDetailInfo({
 
     const newItems = [...props.dayOfRoute];
     const draggingItem = newItems[draggingPos.current];
-
+    const reorderedItems: DaysOfRouteProps[] = [];
     newItems.splice(draggingPos.current, 1);
     newItems.splice(dragOverPos.current, 0, draggingItem);
+    console.log(newItems);
+    newItems.map((ele: DaysOfRouteProps, idx: number) => {
+      ele.routePoint = String(idx + 1);
+      reorderedItems.push(ele);
+    });
 
-    const reorderedItems = newItems.map((item, index) => ({
-      ...item,
-      order: index,
-    }));
+    // const reorderedItems = newItems.map((item, index) => ({
+    //   ...item,
+    //   order: index,
+    // }));
 
     draggingPos.current = null;
     dragOverPos.current = null;
@@ -178,6 +184,7 @@ function RouteDetailInfo({
                   ? props.dayOfRoute.map((ele, idx) =>
                       location.pathname.includes('retouch') ? (
                         <RouteRetouchPlaceCard
+                          key={idx}
                           selectHandler={selectHandler}
                           handleTouchMove={handleTouchMove}
                           handleTouchEnd={handleTouchEnd}
@@ -189,6 +196,7 @@ function RouteDetailInfo({
                         />
                       ) : (
                         <RoutePlaceCard
+                          key={idx}
                           {...ele}
                           isSchedule={isSchedule}
                           state={ele.state}
@@ -235,9 +243,7 @@ function RouteDetailInfo({
                     />
                   </S.MeetMemeberContainer>
                 ) : (
-                  <S.MeetMemberNodata>
-                    해당 모임에 허가되지 않은 접근입니다.
-                  </S.MeetMemberNodata>
+                  <MeetNoHave category="tabMemberList" />
                 )}
               </>
             ) : (
@@ -267,7 +273,7 @@ function RouteDetailInfo({
                 <R.DetailMain>
                   <R.DetailMainOverflow>
                     {props.reviews.map((ele: RouteReviewProps) => (
-                      <ReviewCard ele={ele} setIsOpen={props.setReviewOpen} />
+                      <ReviewCard ele={ele} clickEven={props.reviewClickEven} />
                     ))}
                   </R.DetailMainOverflow>
                 </R.DetailMain>

@@ -63,6 +63,10 @@ function RouteDetailPage() {
   const [mapLines, setMapLines] = useState<any[]>([]);
   const [memberName, setMemberName] = useState<string>('');
   const [profileImg, setProfileImg] = useState<string>('');
+  const [reviewSet, setReviewSet] = useState<string>('생성');
+  const [beforeReview, setBeforeReview] = useState<string>('');
+  const [beforeRating, setBeforeRating] = useState<number>(0);
+  const [reviewId, setReviewId] = useState<number>(0);
   /** 바텀 sheet */
   const [isOpenSetting, setIsOpenSetting] = useState<boolean>(false); // 경로설정 BottomSheet 열림 상태
   const [isOpenSorting, setIsOpenSorting] = useState<boolean>(false); // 경로정렬 BottomSheet 열림 상태
@@ -162,15 +166,15 @@ function RouteDetailPage() {
             type: ele.type,
             attractionId: ele.attractionId,
             address: ele.address,
-            latitude: ele.lat,
-            longitude: ele.lon,
+            latitude: ele.lon,
+            longitude: ele.lat,
             img: ele.img,
           };
           attArr.push(attData);
 
           let markerData: LineStartEndProps = {
-            x: ele.lat,
-            y: ele.lon,
+            x: ele.lon,
+            y: ele.lat,
           };
           setAttMarker((pre) => [...pre, markerData]);
         });
@@ -262,6 +266,7 @@ function RouteDetailPage() {
             writeDate: ele.writeDate,
             like: ele.like,
             memberNickname: ele.memberNickname,
+            reviewId: ele.reviewId,
           };
           arr.push(data);
         });
@@ -342,6 +347,18 @@ function RouteDetailPage() {
     return null;
   };
 
+  const reviewCardHandler = (ele: RouteReviewProps) => {
+    if (userInfo.data.nickname === ele.memberNickname) {
+      setReviewSet('수정');
+      setBeforeRating(ele.score);
+      setBeforeReview(ele.content);
+      setIsModalOpen(true);
+      setReviewId(ele.reviewId);
+    } else {
+      toast.error('리뷰 삭제, 수정 권한이 없습니다.');
+    }
+  };
+
   return loading ? (
     <R.Container>
       <Header
@@ -387,7 +404,7 @@ function RouteDetailPage() {
                 <R.IconContainer>
                   <R.IconBox>
                     <Icon name="IconGrenStar" size={13} />
-                    {routeData.routeScore}
+                    {Math.floor(routeData.routeScore)}
                   </R.IconBox>
                   {`(${routeData.routeComment})`}
                 </R.IconContainer>
@@ -471,6 +488,7 @@ function RouteDetailPage() {
               setBsType={setBsType}
               reviewType={reviewType}
               attmarker={attmarker}
+              reviewClickEven={reviewCardHandler}
             />
           </R.RouteDetailInfoContainer>
         </R.Overflow>
@@ -478,6 +496,7 @@ function RouteDetailPage() {
       <R.BottomContainer>
         <R.WriteTextBox
           onClick={() => {
+            setReviewSet('생성');
             setIsModalOpen(true);
           }}
         >
@@ -532,6 +551,13 @@ function RouteDetailPage() {
           routeid={routeid as string}
           isVisible={isModalOpen}
           setIsOpen={setIsModalOpen}
+          type={reviewSet}
+          beforeRating={beforeRating}
+          beforeReview={beforeReview}
+          setBeforeRating={setBeforeRating}
+          setBeforeReview={setBeforeReview}
+          reviewId={reviewId}
+          setReviewId={setReviewId}
         />
       )}
     </R.Container>
