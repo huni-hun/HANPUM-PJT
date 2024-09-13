@@ -2,9 +2,16 @@ import Icon from '@common/Icon/Icon';
 import * as S from '../Style/Main/Schedule.styled';
 import Flex from '../common/Flex';
 import Text from '../common/Text';
+import { RunningScheduleProps } from '@/models/schdule'; // 타입 import
 
-function Schedule() {
-  const percentage = 68;
+function Schedule({ data }: { data: RunningScheduleProps }) {
+  const percentage = data.rate ? data.rate : 0;
+  const totalDistance = data.totalDistance ? data.totalDistance : 0;
+  const currentLocation = data.scheduleWayPointList?.[0]?.name || '알 수 없음';
+  const nextWaypoint = data.scheduleWayPointList?.[1]?.name || '알 수 없음';
+  const startPoint = data.startPoint || '알 수 없음';
+  const endPoint = data.endPoint || '알 수 없음';
+
   return (
     <S.Container>
       <Flex $justify="space-between">
@@ -13,7 +20,7 @@ function Schedule() {
             동동님의
           </Text>
           <Text $typography="t20" $bold={true}>
-            3일차 일정
+            {data.title || '일정'} {/* 일정 제목 */}
           </Text>
         </Flex>
         <div className="location-container">
@@ -22,7 +29,7 @@ function Schedule() {
               출발지
             </Text>
             <Text $typography="t12" $bold={true}>
-              부산역
+              {startPoint}
             </Text>
           </div>
 
@@ -30,14 +37,15 @@ function Schedule() {
 
           <div className="location-item">
             <Text $typography="t10" color="grey2" $bold={true}>
-              출발지
+              도착지
             </Text>
             <Text $typography="t12" $bold={true}>
-              부산역
+              {endPoint}
             </Text>
           </div>
         </div>
       </Flex>
+
       <div className="attainment-container">
         <Text $typography="t16" $bold={true} style={{ marginBottom: '13px' }}>
           오늘일정의 달성률
@@ -54,7 +62,7 @@ function Schedule() {
                 현재 위치
               </Text>
               <Text $typography="t12" color="grey2" $bold={true}>
-                태종대 전망대
+                {currentLocation}
               </Text>
             </Flex>
 
@@ -67,7 +75,7 @@ function Schedule() {
                 다음 경유지
               </Text>
               <Text $typography="t12" color="grey2" $bold={true}>
-                태종대 전망대
+                {nextWaypoint}
               </Text>
             </Flex>
           </Flex>
@@ -84,13 +92,13 @@ function Schedule() {
             }}
           >
             <Text $typography="t20" $bold={true} color="main">
-              0%
+              {percentage}%
             </Text>
             <Flex style={{ width: 'auto' }}>
               <Text $typography="t12" color="main">
                 0km
               </Text>
-              <Text $typography="t12">/52.8km</Text>
+              <Text $typography="t12">/{totalDistance}km</Text>
             </Flex>
           </Flex>
         </Flex>

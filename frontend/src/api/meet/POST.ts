@@ -54,7 +54,7 @@ export const PostGroup = async (
   return response.data;
 };
 
-// 모임 관심 등록 - 채운
+// 모임 관심 등록
 export async function addInterestMeetToggle(groupId: number) {
   const { data } = await api.post(`/api/group/${groupId}/like`);
   return data;

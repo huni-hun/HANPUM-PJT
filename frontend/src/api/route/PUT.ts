@@ -10,7 +10,7 @@ export const RetouchRoute = async (data: RetouchRouteProps) => {
     type: 'application/json',
   });
   editCourseReqDto.text().then((res) => {
-    console.log(res);
+    // console.log(res);
   });
 
   formData.append('editCourseReqDto', editCourseReqDto);

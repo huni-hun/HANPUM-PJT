@@ -52,9 +52,14 @@ function MeetManageRequest() {
         const response = await PostMeetApply(groupId, applyPost);
         if (response && response.status === 'SUCCESS') {
           toast.success('신청이 완료되었습니다.');
+          navigate('/meet/detail', {
+            state: { groupId },
+          });
         } else if (response.status === 'ERROR') {
           toast.error(response.message);
-          navigate('/meet/detail');
+          navigate('/meet/detail', {
+            state: { groupId },
+          });
         }
       } catch (error) {
         toast.error('에러 발생');

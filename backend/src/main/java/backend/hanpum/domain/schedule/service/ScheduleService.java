@@ -40,6 +40,8 @@ public interface ScheduleService {
     // 일정 활성화
     void activateSchedules();
 
+    void deactivateSchedules();
+
     // 진행중인 일정 표시
     ScheduleInProgressResDto getRunningSchedule(Long memberId);
 

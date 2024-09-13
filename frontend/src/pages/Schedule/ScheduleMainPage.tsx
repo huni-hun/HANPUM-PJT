@@ -580,7 +580,7 @@ function ScheduleMainPage() {
   };
 
   /** 진행중 - 날씨 */
-  useEffect(() => {
+  /*  useEffect(() => {
     if (lat !== null && lon !== null && isLocationReady) {
       const fetchData = async () => {
         try {
@@ -600,7 +600,7 @@ function ScheduleMainPage() {
       };
       fetchData();
     }
-  }, [isSelected, isLocationReady]);
+  }, [isSelected, isLocationReady]); */
 
   /** 모임 데이터 때려넣기 */
   const meetDayData = meetListData?.scheduleDayResDtoList[0];
@@ -745,14 +745,14 @@ function ScheduleMainPage() {
                     />
                   </S.ScheduleMainContainer>
 
-                  {/* 날씨 + 날씨 메시지 container */}
+                  {/* 날씨 + 날씨 메시지 container 
                   <S.ScheduleWeatherContainer>
                     <WeatherSchedule
                       weatherData={weatherData}
                       weatherIcon={Error}
                       message={'warning message'}
                     />
-                  </S.ScheduleWeatherContainer>
+                  </S.ScheduleWeatherContainer>*/}
 
                   {/* 지도 및 하위 컴포넌트 container */}
                   <R.RouteDetailInfoContainer>

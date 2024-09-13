@@ -87,7 +87,7 @@ function MeetAddMainPage() {
     const file = e.target.files?.[0];
     if (file) {
       const compressedFile = (await compressImage(file)) ?? file;
-      console.log(compressedFile);
+      // console.log(compressedFile);
 
       const url = URL.createObjectURL(compressedFile || file);
 
@@ -144,15 +144,49 @@ function MeetAddMainPage() {
       },
     });
   };
-
   /** 모임 생성 post api */
   const handleCreateGroup = async () => {
     try {
+      // 필수 데이터가 있는지 확인
+      if (!previewImage) {
+        toast.info('모임 이미지를 업로드해주세요!');
+        return;
+      }
+
+      if (!meetRequest.title) {
+        toast.info('모임 이름을 작성해주세요!');
+        return;
+      }
+
+      if (!meetRequest.description) {
+        toast.info('모임 내용을 작성해주세요!');
+        return;
+      }
+
+      if (!meetRequest.recruitmentCount || meetRequest.recruitmentCount === 0) {
+        toast.info('모집인원을 설정해주세요!');
+        return;
+      }
+
+      if (!recruitmentPeriod) {
+        toast.info('모집 마감일을 설정해주세요!');
+        return;
+      }
+
+      if (!startDate || !endDate) {
+        toast.info('일정을 설정해주세요!');
+        return;
+      }
+
       if (multipartImg) {
         const response = await PostGroup(multipartImg, meetData);
         if (response && response.status === 'SUCCESS') {
           toast.success('모임 생성이 완료되었습니다!');
-          navigate('/meet/addMain/complete');
+          navigate('/meet/addMain/complete', {
+            state: {
+              category: 'create',
+            },
+          });
           localStorage.removeItem('meetRequest');
           localStorage.removeItem('previewImage');
         } else {
@@ -160,7 +194,7 @@ function MeetAddMainPage() {
         }
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error('모임 생성 중 오류가 발생했습니다.');
     }
   };
@@ -204,7 +238,7 @@ function MeetAddMainPage() {
                 모임 이름
               </Text>
               <Input
-                placeholder="김동산"
+                placeholder="제목을 작성해주세요."
                 name="title"
                 value={meetRequest?.title || ''}
                 onChange={handleInfoChange}
@@ -220,6 +254,7 @@ function MeetAddMainPage() {
                 name="description"
                 value={meetRequest?.description || ''}
                 onChange={handleInfoChange}
+                style={{ fontSize: '1.4rem' }}
               />
             </div>
             <M.ToggleSliderBox>

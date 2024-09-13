@@ -41,8 +41,8 @@ export async function SignUp(signupReq: SignupRequestValues) {
   const formData = new FormData();
 
   const { multipartFile, ...rest } = signupReq;
-  console.log(signupReq);
-  console.log(multipartFile);
+  // console.log(signupReq);
+  // console.log(multipartFile);
 
   // 비밀번호 hash화
   // const hashedPassword = CryptoJS.SHA256(password).toString();
@@ -56,7 +56,7 @@ export async function SignUp(signupReq: SignupRequestValues) {
   formData.append('multipartFile', multipartFile);
 
   formData.forEach((value, key) => {
-    console.log(key, value);
+    // console.log(key, value);
   });
 
   const { data } = await api.post('/api/auth/sign-up', formData, {
@@ -113,7 +113,7 @@ export async function Logout() {
 
 // 토큰 재발급
 export async function GetRefreshToken() {
-  console.log('요청 호출');
+  // console.log('요청 호출');
   const { data } = await api.post('/api/auth/reissue-token');
   return data;
 }

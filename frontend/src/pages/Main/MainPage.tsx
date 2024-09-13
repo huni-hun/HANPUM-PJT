@@ -18,7 +18,7 @@ import DateBadge from '@components/common/Badge/DateBadge';
 import InfoBadge from '@components/common/Badge/InfoBadge';
 import RouteBadge from '@components/common/Badge/RouteBadge';
 import Flex from '@components/common/Flex';
-import { getMySchedule } from '@api/schedule/GET';
+import { getMySchedule, getRunningScheduleData } from '@api/schedule/GET';
 import { STATUS } from '@constants';
 import {
   addInterestRoute,
@@ -35,6 +35,7 @@ import { RouteListProps } from '@models/route';
 import useQueryHandling from '@/hooks/global/useQueryHandling';
 import Loading from '@/components/common/Loading';
 import useIsAuth from '@/hooks/auth/useIsAuth';
+import { DeleteMeetLike } from '@/api/meet/Delete';
 
 function MainPage() {
   const navigator = useNavigate();
@@ -88,13 +89,13 @@ function MainPage() {
   // const { data: mySchedule } = useQuery('getMySchedule', getMySchedule);
   const { data: mySchedule } = useQueryHandling(
     'getMySchedule',
-    getMySchedule,
-    // {
-    //   onSuccess: (data) => {
-    //     console.log('일정 불러오기 성공:', data);
-    //   },
-    //   onError: (error: AxiosError) => {},
-    // },
+    getRunningScheduleData,
+    {
+      onSuccess: (data) => {
+        // console.log('일정 불러오기 성공:', data);
+      },
+      onError: (error: AxiosError) => {},
+    },
   );
 
   // 경로(초보자 코스)
@@ -152,16 +153,11 @@ function MainPage() {
   );
 
   // 모임 관심 등록 토글
-  const { mutate: addMeetInterestToggle } = useMutation(addInterestMeetToggle, {
+  const { mutate: addLike } = useMutation(addInterestMeetToggle, {
     onSuccess: (res) => {
       if (res.status === STATUS.success) {
         toast.success(res.message);
-        queryClient.invalidateQueries({
-          queryKey: ['getGroupList', requestDto.pageable.sort],
-        });
-      }
-      if (res.status === STATUS.error) {
-        toast.error(res.message);
+        queryClient.invalidateQueries(['getGroupList']);
       }
     },
     onError: (error: AxiosError) => {
@@ -169,18 +165,35 @@ function MainPage() {
     },
   });
 
+  // 관심 취소
+  const { mutate: deleteLike } = useMutation(DeleteMeetLike, {
+    onSuccess: (res) => {
+      if (res.status === STATUS.success) {
+        toast.success(res.message);
+        queryClient.invalidateQueries(['getGroupList']);
+      }
+    },
+    onError: (error: AxiosError) => {
+      toast.error(error.message);
+    },
+  });
+
+  const handleLike = (groupId: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    deleteLike(groupId);
+  };
+
+  const handleDisLike = (groupId: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    addLike(groupId);
+  };
+
   const clickAddRouteInterest = (course_id: number) => {
     addRouteInterest(course_id);
   };
 
   const clickDeleteRouteInterest = (course_id: number) => {
     deleteRouteInterest(course_id);
-  };
-
-  const clickAddMeetInterest = (groupId: number, e: React.MouseEvent) => {
-    e.stopPropagation();
-    addMeetInterestToggle(groupId);
-    // console.log(`${groupId} 눌림`);
   };
 
   useEffect(() => {
@@ -217,10 +230,10 @@ function MainPage() {
       <Header purpose="main" $isborder={true} clickBack={() => {}} />
       <div className="container">
         {mySchedule &&
-          (mySchedule.message === '조회된 일정이 없습니다.' ? (
+          (mySchedule.message === '유효한 일정이 없습니다.' ? (
             <NotHaveSchedule />
           ) : (
-            <Schedule />
+            <Schedule data={mySchedule} />
           ))}
 
         <div className="spacing" />
@@ -237,7 +250,7 @@ function MainPage() {
               $align="center"
               style={{ width: 'auto' }}
               onClick={() => {
-                console.log('clic');
+                // console.log('clic');
                 navigator('/route/list');
               }}
             >
@@ -290,7 +303,7 @@ function MainPage() {
 
                 {meet.like ? (
                   <Icon
-                    onClick={(e) => clickAddMeetInterest(meet.groupId, e)}
+                    onClick={(e) => handleLike(meet.groupId, e)}
                     name="IconModiHeartFill"
                     size={20}
                     style={{
@@ -302,7 +315,7 @@ function MainPage() {
                   />
                 ) : (
                   <Icon
-                    onClick={(e) => clickAddMeetInterest(meet.groupId, e)}
+                    onClick={(e) => handleDisLike(meet.groupId, e)}
                     name="IconModiHeartNonFill"
                     size={20}
                     style={{

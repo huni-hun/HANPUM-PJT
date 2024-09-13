@@ -40,7 +40,7 @@ function RouteListMoreCard(props: RouteListMoreCardProps) {
             }
           })
           .catch((err) => {
-            console.log(err);
+            // console.log(err);
           });
       } else {
         RouteLikeDelete(String(props.routeId))
@@ -50,7 +50,7 @@ function RouteListMoreCard(props: RouteListMoreCardProps) {
             }
           })
           .catch((err) => {
-            console.log(err);
+            // console.log(err);
           });
       }
     } else {

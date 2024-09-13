@@ -18,9 +18,11 @@ import { DeleteMeetLike } from '@/api/meet/Delete';
 function MeetSmallCard({
   data,
   onClick,
+  refetchGroupList,
 }: {
   data: MeetInfo;
   onClick?: () => void;
+  refetchGroupList: () => void;
 }) {
   const navigate = useNavigate();
   const isAuth = useRecoilValue(isAuthEnticatedAtom);
