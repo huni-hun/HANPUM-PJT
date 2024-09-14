@@ -427,9 +427,7 @@ function RouteDetailRetouchPage() {
           }
         })
         .catch((err) => {
-
           toast.info('거리를 가져오지 못 했습니다.');
-
         });
 
       let route: RetouchRouteProps = {
