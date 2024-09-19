@@ -580,7 +580,7 @@ export const AttractionCardTitle = styled.p`
 `;
 
 export const AttractionCardDetail = styled.div`
-  width: 8.2rem;
+  width: 8rem;
   height: 2.2rem;
   display: flex;
   flex-direction: row;
