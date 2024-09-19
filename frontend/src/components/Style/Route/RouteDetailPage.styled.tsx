@@ -3,7 +3,7 @@ import { colors } from '@/styles/colorPalette';
 import styled, { keyframes } from 'styled-components';
 
 interface StyledProps {
-  backgroundImg?: string;
+  $backgroundImg?: string;
 }
 
 export const Container = styled.div`
@@ -71,7 +71,7 @@ export const ImgBox = styled.div<StyledProps>`
   background-size: cover;
   background-position: center;
   position: relative;
-  background-image: ${({ backgroundImg }) => `url(${backgroundImg})`};
+  background-image: ${({ $backgroundImg }) => `url(${$backgroundImg})`};
 
   img {
     width: 100%;
