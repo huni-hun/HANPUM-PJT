@@ -9,7 +9,7 @@ interface StyleProps {
   isScheduleHeight?: boolean;
 }
 interface MeetStyleProps {
-  isMeetFeed?: string;
+  $isMeetFeed?: string;
 }
 
 export const Container = styled.div`
@@ -556,6 +556,7 @@ export const AttractionCard = styled.div<{ img: string }>`
   margin-right: 0.4rem;
   border-radius: 1.2rem;
   background-image: url(${(props) => props.img});
+  background-size: cover;
 `;
 
 export const AttractionAddCard = styled.div`
@@ -638,7 +639,7 @@ export const SchduleCardContainer = styled.div`
 /** feed */
 export const RouteNameInfo = styled.div<MeetStyleProps>`
   width: 85vw;
-  height: ${(props) => props.isMeetFeed || '20.2rem'};
+  height: ${(props) => props.$isMeetFeed || '20.2rem'};
   display: flex;
   flex-direction: column;
   /* border-bottom: 0.1rem solid #d9d9d9; */

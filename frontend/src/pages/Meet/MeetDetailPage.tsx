@@ -319,6 +319,7 @@ function MeetDetailPage() {
     endDate: formatDate(meetDetail?.data?.endDate),
     meetDday: meetDetail?.data?.dday,
     meetTypes: meetDetail?.data?.courseTypes || [],
+    readerName: meetDetail?.data?.readerName,
   };
 
   /** 바텀탭 - 수정 클릭시 */
@@ -368,7 +369,6 @@ function MeetDetailPage() {
           })
           .catch((error) => {
             toast.error('모임 탈퇴에 실패했습니다.');
-            console.error(error);
           });
         break;
 
@@ -433,7 +433,6 @@ function MeetDetailPage() {
             // setSelected('course');
           }
         } catch (error) {
-          console.error('Fetch Error:', error);
         } finally {
         }
       };
