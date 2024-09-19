@@ -77,6 +77,7 @@ function MeetDetailPage() {
   const [linePath, setLinePath] = useState<MapLinePathProps[]>([]);
   const [se, setSe] = useState<LineStartEndProps[]>([]);
   const [marker, setMarker] = useState<LineStartEndProps[]>([]);
+  const [attmarker, setAttMarker] = useState<LineStartEndProps[]>([]);
   const [bsType, setBsType] = useState<string>('설정');
   const [reviewType, setReviewType] = useState<string>('최신순');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -205,6 +206,11 @@ function MeetDetailPage() {
             img: ele.img,
           };
           attArr.push(attData);
+          let markerData: LineStartEndProps = {
+            x: ele.lon,
+            y: ele.lat,
+          };
+          setAttMarker((pre) => [...pre, markerData]);
         });
         setAttractions(attArr);
       }
@@ -538,6 +544,7 @@ function MeetDetailPage() {
                 isMeetPage
                 memberData={memberData}
                 memberCount={memberData.length}
+                attmarker={attmarker}
               />
             ) : (
               <>로딩중입니다.</>
