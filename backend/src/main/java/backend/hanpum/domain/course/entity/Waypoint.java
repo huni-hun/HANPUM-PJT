@@ -56,6 +56,9 @@ public class Waypoint {
     @Column(name = "calorie", length = 10)
     private String calorie;
 
+    @Column(name = "polyline")
+    private String polyline;
+
     @OneToMany(mappedBy = "waypoint", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ScheduleWayPoint> scheduleWayPointList = new ArrayList<>();
 

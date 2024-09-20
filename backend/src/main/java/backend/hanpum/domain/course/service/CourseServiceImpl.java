@@ -12,7 +12,6 @@ import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleTempResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleWayPointResDto;
 import backend.hanpum.domain.schedule.repository.ScheduleRepository;
-import backend.hanpum.domain.schedule.service.ScheduleService;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.auth.MemberNotFoundException;
 import backend.hanpum.exception.exception.common.JsonBadMappingException;
@@ -25,7 +24,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.querydsl.core.types.Projections;
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
@@ -166,6 +165,9 @@ public class CourseServiceImpl implements CourseService {
             }
 
             for (WayPointReqDto waypointReqDto : courseDayReqDto.getWayPointReqDtoList()) {
+                Gson gson = new Gson();
+                String jsonPolyline = gson.toJson(waypointReqDto.getVertexes());
+
                 Waypoint waypoint = Waypoint.builder()
                         .courseDay(courseDay)
                         .type(waypointReqDto.getType())
@@ -177,6 +179,7 @@ public class CourseServiceImpl implements CourseService {
                         .distance(waypointReqDto.getDistance())
                         .duration(waypointReqDto.getDuration())
                         .calorie(waypointReqDto.getCalorie())
+                        .polyline(jsonPolyline)
                         .build();
                 waypointRepository.save(waypoint);
             }
