@@ -155,3 +155,12 @@ export function startDateEndDateStringFormat(
 
   return `${startStr} - ${endStr}`;
 }
+// 기본 이미지 File 객체로
+export const convertImageToFile = async (imageSrc: string) => {
+  const response = await fetch(imageSrc);
+  const blob = await response.blob();
+  return new File([blob], 'basic.png', {
+    type: 'image/png',
+    lastModified: Date.now(),
+  });
+};

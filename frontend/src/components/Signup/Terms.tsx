@@ -91,7 +91,6 @@ function Terms({
           />
           <div className="apply_item-title">
             <p className="apply_item-title-bold">전체 동의</p>
-            <span>(선택항목 포함)</span>
           </div>
         </div>
       </div>
