@@ -62,7 +62,7 @@ public class Waypoint {
     @OneToMany(mappedBy = "waypoint", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ScheduleWayPoint> scheduleWayPointList = new ArrayList<>();
 
-    public void updateWayPoint(String type, String name, String address, Double lat, Double lon, String pointNumber, String distance, String duration, String calorie) {
+    public void updateWayPoint(String type, String name, String address, Double lat, Double lon, String pointNumber, String distance, String duration, String calorie, String polyline) {
         this.type = type;
         this.name = name;
         this.address = address;
@@ -72,5 +72,6 @@ public class Waypoint {
         this.distance = distance;
         this.duration = duration;
         this.calorie = calorie;
+        this.polyline = polyline;
     }
 }
