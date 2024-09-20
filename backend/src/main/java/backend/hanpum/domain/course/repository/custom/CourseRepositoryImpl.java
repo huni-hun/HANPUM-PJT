@@ -6,8 +6,9 @@ import backend.hanpum.domain.course.enums.CourseTypes;
 import backend.hanpum.domain.course.repository.InterestCourseRepository;
 import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.repository.MemberRepository;
-import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.auth.MemberNotFoundException;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -17,10 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.lang.reflect.Type;
+import java.util.*;
 
 @RequiredArgsConstructor
 public class CourseRepositoryImpl implements CourseRepositoryCustom {
@@ -202,8 +201,8 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
                 .and(qCourseDay.dayNumber.eq(day)))
                 .fetchOne();
 
-        List<WayPointResDto> wayPoints = query
-                .select(Projections.constructor(WayPointResDto.class,
+        List<Waypoint> wayPoints = query
+                .select(Projections.constructor(Waypoint.class,
                         qWaypoint.waypointId,
                         qWaypoint.type,
                         qWaypoint.name,
@@ -213,15 +212,37 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
                         qWaypoint.pointNumber,
                         qWaypoint.distance,
                         qWaypoint.duration,
-                        qWaypoint.calorie))
+                        qWaypoint.calorie,
+                        qWaypoint.polyline))
                 .from(qWaypoint)
                 .where(qWaypoint.courseDay.course.courseId.eq(courseId)
                 .and(qWaypoint.courseDay.dayNumber.eq(day)))
                 .fetch();
 
+        List<WayPointResDto> wayPointResDtoList = new ArrayList<>();
+        for(Waypoint waypoint : wayPoints) {
+            Gson gson = new Gson();
+            Type listType = new TypeToken<List<Double>>() {}.getType();
+            List<Double> vertexes = gson.fromJson(waypoint.getPolyline(), listType);
+
+            wayPointResDtoList.add(WayPointResDto.builder()
+                    .waypointId(waypoint.getWaypointId())
+                    .type(waypoint.getType())
+                    .name(waypoint.getName())
+                    .address(waypoint.getAddress())
+                    .lat(waypoint.getLat())
+                    .lon(waypoint.getLon())
+                    .pointNumber(waypoint.getPointNumber())
+                    .distance(waypoint.getDistance())
+                    .duration(waypoint.getDuration())
+                    .calorie(waypoint.getCalorie())
+                    .vertexes(vertexes)
+                    .build());
+        }
+
         GetCourseDayResDto result = GetCourseDayResDto.builder().
                 courseDay(courseDay).
-                wayPoints(wayPoints).
+                wayPoints(wayPointResDtoList).
                 build();
 
         return Optional.of(result);
