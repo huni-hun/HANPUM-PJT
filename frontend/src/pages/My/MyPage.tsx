@@ -20,7 +20,7 @@ function MyPage() {
   const setAuthEnticate = useSetRecoilState(isAuthEnticatedAtom);
 
   const { data } = useQuery('getUser', GetUser);
-  console.log(data);
+  // console.log(data);
 
   const { mutate: logout } = useMutation(Logout, {
     onSuccess: (res) => {
