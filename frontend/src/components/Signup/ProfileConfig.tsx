@@ -15,7 +15,7 @@ import BaseButton from '@common/BaseButton';
 import { useAlert } from '@hooks/global/useAlert';
 import Calender from './Calender';
 import { SignupRequestValues, UserSignupFormValues } from '@models/signup';
-import { dateFormat, telnumberFormat } from '@utils/util';
+import { convertImageToFile, dateFormat, telnumberFormat } from '@utils/util';
 import { useMutation } from 'react-query';
 import { CheckNickname, KaKaoLogin, SignUp } from '@/api/signup/POST';
 import { toast } from 'react-toastify';
@@ -29,6 +29,7 @@ import { useSetRecoilState } from 'recoil';
 import { signupStepAtom } from '@/atoms/signupStepAtom';
 import useImageCompression from '@/hooks/global/useImageCompression';
 import { isAuthEnticatedAtom } from '@/atoms/isAuthEnticatedAtom';
+import defaultImg from '@imgs/default.png';
 
 function ProfileConfig({
   pagenation,
@@ -59,6 +60,10 @@ function ProfileConfig({
   // 프로필 이미지
   const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    // console.log(file);
+    // const temp = new File([defaultImg], 'default.png', { type: 'image/png' });
+    // console.log(defaultImg);
+    // console.log(temp);
     if (file) {
       // console.log(
       //   '압축 전 ::',
@@ -66,6 +71,7 @@ function ProfileConfig({
       //   (file.size / 1024 / 1024).toFixed(2),
       // );
       const compressedFile = (await compressImage(file)) ?? file;
+      // console.log(compressedFile);
       // console.log(
       //   '압축 후 ::',
       //   `${compressedFile.size}바이트`,
@@ -252,12 +258,15 @@ function ProfileConfig({
     },
   });
 
-  const submitLocal = () => {
+  const submitLocal = async () => {
+    // const
+
     const signupReq: SignupRequestValues = {
       loginId: formValues.loginId || '',
       password: formValues.password || '',
       email: formValues.email || '',
-      multipartFile: formValues.multipartFile || '',
+      multipartFile:
+        formValues.multipartFile || (await convertImageToFile(defaultImg)),
       name: formValues.name || '',
       birthDate: formValues.birthDate || '',
       gender: formValues.gender || '',
@@ -267,11 +276,12 @@ function ProfileConfig({
     };
 
     // console.log(signupReq);
+    // console.log(signupReq);
     localLogin({ ...signupReq });
   };
 
   // 카카오 로그인
-  const submitKaKao = () => {
+  const submitKaKao = async () => {
     // console.log('kakao');
 
     const signupKaKaoReq: Pick<
@@ -282,7 +292,8 @@ function ProfileConfig({
       gender: formValues.gender || '',
       nickname: formValues.nickname || '',
       phoneNumber: formValues.phoneNumber || '',
-      multipartFile: formValues.multipartFile || '',
+      multipartFile:
+        formValues.multipartFile || (await convertImageToFile(defaultImg)),
     };
 
     kakaoLogin({ ...signupKaKaoReq });
@@ -296,8 +307,10 @@ function ProfileConfig({
           프로필 이미지
         </Text>
         <div className="profile-prev_img">
-          {previewImage && (
+          {previewImage ? (
             <img src={previewImage} alt="프로필 이미지 미리보기" />
+          ) : (
+            <img src={defaultImg} alt="기본 이미지" />
           )}
         </div>
 

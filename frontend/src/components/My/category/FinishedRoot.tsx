@@ -11,15 +11,15 @@ import MyRouteNoHave from './MyORFinishedNoHave';
 function FinishedRoot() {
   const { data: finishedRoute } = useQuery('GetUseRouteList', GetUseRouteList, {
     onSuccess: (res) => {
-      // console.log('res ::', res.data);
-      if (res.status === STATUS.success) {
-      } else if (res.status === STATUS.error) {
-        toast.error(res.message);
-      }
+      console.log('res ::', res.data);
+      // if (res.status === STATUS.success) {
+      // } else if (res.status === STATUS.error) {
+      //   toast.error(res.message);
+      // }
     },
-    onError: (error: AxiosError) => {
-      toast.error(error.message);
-    },
+    // onError: (error: AxiosError) => {
+    //   toast.error(error.message);
+    // },
   });
   return (
     <S.FinishedRootContainer>

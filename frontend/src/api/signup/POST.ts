@@ -55,10 +55,6 @@ export async function SignUp(signupReq: SignupRequestValues) {
   formData.append('signUpReqDto', signUpReqDto);
   formData.append('multipartFile', multipartFile);
 
-  formData.forEach((value, key) => {
-    // console.log(key, value);
-  });
-
   const { data } = await api.post('/api/auth/sign-up', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -115,6 +111,7 @@ export async function Logout() {
 export async function GetRefreshToken() {
   // console.log('요청 호출');
   const { data } = await api.post('/api/auth/reissue-token');
+  console.log(data);
   return data;
 }
 

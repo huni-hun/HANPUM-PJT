@@ -70,7 +70,7 @@ export default function Router() {
               element={<ConfigDetailPage />}
             />
             <Route path="/" element={<Navigate to="/login" />} />
-            <Route path="/home" element={<MainPage />} />
+            {/* <Route path="/home" element={<MainPage />} /> */}
           </>
         ) : (
           <>

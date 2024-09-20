@@ -54,7 +54,9 @@ export function decodeToken(accessToken: string) {
 export const handleTokenExpiration = async (originalRequest?: any) => {
   // 토큰 재발급 로직
   const newToken = await GetRefreshToken();
+  console.log(newToken);
   const encodeNewToken = encodeToken(newToken.data.accessToken.split('+')[1]);
+  console.log(encodeNewToken);
   if (encodeNewToken) {
     localStorage.setItem('token', encodeNewToken);
 
@@ -166,3 +168,13 @@ export function cutAddress(address: string): string {
     return address;
   }
 }
+
+// 기본 이미지 File 객체로
+export const convertImageToFile = async (imageSrc: string) => {
+  const response = await fetch(imageSrc);
+  const blob = await response.blob();
+  return new File([blob], 'basic.png', {
+    type: 'image/png',
+    lastModified: Date.now(),
+  });
+};

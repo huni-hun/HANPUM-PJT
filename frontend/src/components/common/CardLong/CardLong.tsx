@@ -6,8 +6,11 @@ import { useEffect, useState } from 'react';
 import Flex from '../Flex';
 import { RouteListProps, UserRouteProps } from '@/models/route';
 import { MeetInfo } from '@/models/meet';
-import { RouteDelete } from '@/api/route/Delete';
+import { deleteInterestRoute, RouteDelete } from '@/api/route/Delete';
 import { toast } from 'react-toastify';
+import { useMutation, useQueryClient } from 'react-query';
+import { STATUS } from '@/constants';
+import { AxiosError } from 'axios';
 
 function CardLong({
   item,
@@ -34,6 +37,10 @@ function CardLong({
   const [startX, setStartX] = useState<number | null>(null);
   const [canDeleted, setCanDeleted] = useState(false);
   const [img, setImg] = useState<string>('');
+
+  const queryClient = useQueryClient();
+
+  // console.log(item);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setStartX(e.touches[0].clientX);
@@ -122,6 +129,26 @@ function CardLong({
     return (item as MeetInfo).groupId !== undefined;
   };
 
+  const { mutate: deleteRouteInterest } = useMutation(deleteInterestRoute, {
+    onSuccess: (res) => {
+      if (res.status === STATUS.success) {
+        toast.success(res.message);
+        queryClient.invalidateQueries({ queryKey: ['getInterestRoute'] });
+      }
+      if (res.status === STATUS.error) {
+        toast.error(res.message);
+      }
+    },
+    onError: (error: AxiosError) => {
+      toast.error(error.message);
+    },
+  });
+
+  // const releaseHeart = () => {
+  //   console.log('눌림');
+  //   // deleteRouteInterest( item.courseId);
+  // };
+
   return (
     <S.CardLongContainer onClick={onClickCard}>
       <div
@@ -177,6 +204,14 @@ function CardLong({
 
         {hasHeart && (
           <Icon
+            onClick={(event) => {
+              event.stopPropagation(); // 버블링 방지
+
+              const courseId = 'courseId' in item ? item.courseId : undefined;
+              if (courseId) {
+                deleteRouteInterest(courseId);
+              }
+            }}
             name="IconHeartWhiteFill"
             size={20}
             style={{
