@@ -16,6 +16,7 @@ public interface CourseService {
     CourseListMapResDto getCourseList(CourseTypes targetCourse, Double maxDistance, Integer maxDays, List<CourseTypes> selectedTypes, String keyword, Pageable pageable, Long memberId);
     void makeCourse(Long memberId, MultipartFile multipartFile, MakeCourseReqDto makeCourseReqDto);
     void editCourse(Long memberId, MultipartFile multipartFile, EditCourseReqDto editCourseReqDto);
+    void editCourseOpenState(Long memberId, Long courseId);
     void deleteCourse(Long memberId, Long courseId);
     CourseDetailResDto getCourseDetail(Long courseId);
     GetCourseDayResDto getCourseDay(Long courseId, Integer day);

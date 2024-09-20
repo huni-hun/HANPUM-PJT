@@ -66,6 +66,14 @@ public class CourseController {
         return response.success(ResponseCode.COURSE_EDIT_SUCCESS);
     }
 
+    @Operation(summary = "경로 공개여부 수정", description = "경로 공개여부 수정 API")
+    @PutMapping("/{course_id}/changeOpen")
+    public ResponseEntity<?> editCourse(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable("course_id") Long courseId) {
+        courseService.editCourseOpenState(userDetails.getMember().getMemberId(), courseId);
+
+        return response.success(ResponseCode.COURSE_EDIT_OPEN_STATE_SUCCESS);
+    }
+
     @Operation(summary = "경로 삭제", description = "경로 삭제 API")
     @DeleteMapping("/{course_id}")
     public ResponseEntity<?> deleteCourse(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable("course_id") Long courseId) {

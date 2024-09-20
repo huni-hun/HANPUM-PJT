@@ -233,7 +233,7 @@ function MainPage() {
           (mySchedule.message === '유효한 일정이 없습니다.' ? (
             <NotHaveSchedule />
           ) : (
-            <Schedule data={mySchedule} />
+            <Schedule data={mySchedule.data} />
           ))}
 
         <div className="spacing" />

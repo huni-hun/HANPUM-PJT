@@ -121,6 +121,7 @@ function Map(props: MapProps) {
   useEffect(() => {
     if (props.attrationmarker !== undefined && kakaoMap) {
       // 기존 마커 제거
+      console.log(props.attrationmarker);
       attmarkers.forEach((marker) => marker.setMap(null));
 
       const newMarkers = props.attrationmarker.map((mar) => {
@@ -132,7 +133,7 @@ function Map(props: MapProps) {
           imgSize,
           imgOption,
         );
-        const markerPosition = new window.kakao.maps.LatLng(mar.y, mar.x);
+        const markerPosition = new window.kakao.maps.LatLng(mar.x, mar.y);
 
         const kakaoMarker = new window.kakao.maps.Marker({
           position: markerPosition,
@@ -182,6 +183,16 @@ function Map(props: MapProps) {
           <InfoText>천안시, 공주시, 논산시, 아산시</InfoText>
           <InfoBoldText>충청북도</InfoBoldText>
           <InfoText>청주시, 충주시, 단양군 일부</InfoText>
+          <InfoLastText>
+            ※ 서비스 제공 지역은 지속적으로 확대 추진하고 있습니다.
+          </InfoLastText>
+          <CloseBox
+            onClick={() => {
+              setIsOpen(!isOpen);
+            }}
+          >
+            X
+          </CloseBox>
         </InfoModal>
       )}
     </MapContainer>
@@ -197,50 +208,66 @@ const MapContainer = styled.div`
 `;
 
 const InfoBox = styled.div`
-  width: 3.5rem;
-  height: 3.5rem;
+  width: 3.3rem;
+  height: 3.3rem;
   position: absolute;
   border-radius: 50%;
   z-index: 99;
   right: 1rem;
   top: 1rem;
-  color: ${colors.main};
+  color: ${colors.grey2};
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 3rem;
-  font-weight: bold;
-  border: 3px solid ${colors.main};
+  font-size: 1.4rem;
+  background-color: ${colors.white};
+  box-shadow: 0px 4px 4px 0 rgba(0, 0, 0, 0.25);
 `;
 
 const InfoModal = styled.div`
-  width: 50%;
-  height: 50%;
+  width: 21.8rem;
+  height: 23.4rem;
   position: absolute;
-  border: 1px solid ${colors.main};
   background-color: ${colors.white};
   display: flex;
   flex-direction: column;
-  top: 4rem;
-  right: 4rem;
+  top: 5rem;
+  right: 1rem;
   z-index: 99;
-  padding: 1rem 1rem 1rem 1rem;
+  padding: 1.2rem 1.6rem 1.2rem 1.6rem;
   overflow-y: auto;
+  box-shadow: 0px 4px 4px 0 rgba(0, 0, 0, 0.25);
+  border-radius: 1.2rem;
 `;
 
 const InfoTitle = styled.p`
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
 `;
 
 const InfoText = styled.p`
   font-size: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
 `;
 
 const InfoBoldText = styled.p`
   font-size: 1rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
+`;
+
+const InfoLastText = styled.p`
+  font-size: 1rem;
+  font-color: ${colors.grey2};
+`;
+
+const CloseBox = styled.div`
+  width: 1rem;
+  height: 1rem;
+  color: ${colors.black};
+  position: absolute;
+  font-weight: bold;
+  top: 1.2rem;
+  right: 1.2rem;
 `;

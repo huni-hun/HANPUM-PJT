@@ -17,14 +17,14 @@ const FeedContainer = ({
     <>
       {meetRouter ? (
         <>
-          <R.ImgBox backgroundImg={routeData?.routeFeedImg}>
+          <R.ImgBox $backgroundImg={routeData?.routeFeedImg}>
             <M.Badge>
               {routeData?.startDate} - {routeData?.endDate}
             </M.Badge>
           </R.ImgBox>
         </>
       ) : (
-        <R.ImgBox backgroundImg={routeData?.routeFeedImg}></R.ImgBox>
+        <R.ImgBox $backgroundImg={routeData?.routeFeedImg}></R.ImgBox>
       )}
 
       {/** 작성자 있을 경우 boolean으로 받아 쓰세요 ! */}
@@ -33,13 +33,13 @@ const FeedContainer = ({
           <R.UserImgBox>
             <img src={routeData?.routeUserImg} />
           </R.UserImgBox>
-          <R.UserName>작성자</R.UserName>
+          <R.UserName>{routeData?.readerName}</R.UserName>
         </R.UserContainer>
       ) : (
         <></>
       )}
 
-      <S.RouteNameInfo isMeetFeed={isMeetFeed}>
+      <S.RouteNameInfo $isMeetFeed={isMeetFeed}>
         <S.RouteNameInfoContainer>
           <S.RouteName>{routeData?.routeName || ''}</S.RouteName>
           <S.RouteInfo>{routeData?.routeContent || ''}</S.RouteInfo>

@@ -9,6 +9,7 @@ export interface FeedProps {
     routeComment?: string;
     routeTypes?: string[];
     meetTypes?: string[];
+    readerName?: string;
     /** badge */
     startDate?: string;
     endDate?: string;

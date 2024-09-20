@@ -155,6 +155,20 @@ export function startDateEndDateStringFormat(
 
   return `${startStr} - ${endStr}`;
 }
+
+/** 관광지 자르기 */
+export function cutAddress(address: string): string {
+  const addressPattern =
+    /^(.*?도|.*?특별시|.*?광역시|제주도)\s+(\S{2,}?[시|군|구])/;
+  const match = address.match(addressPattern);
+
+  if (match) {
+    return `${match[1]} ${match[2]}`;
+  } else {
+    return address;
+  }
+}
+
 // 기본 이미지 File 객체로
 export const convertImageToFile = async (imageSrc: string) => {
   const response = await fetch(imageSrc);

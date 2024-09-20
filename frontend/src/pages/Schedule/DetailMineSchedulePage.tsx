@@ -41,6 +41,7 @@ import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 import Icon from '@/components/common/Icon/Icon';
 import { PutScheduleArrive } from '@/api/schedule/PUT';
+import { cutAddress } from '@/utils/util';
 
 function DetailMineSchedulePage() {
   const BtnClick = () => {};
@@ -164,7 +165,13 @@ function DetailMineSchedulePage() {
         try {
           const response = await getNearbyLocData(lat || 0, lon || 0);
           if (response && response.status === 'SUCCESS') {
-            setAttractionsCard(response.data);
+            const processedData = response.data.map(
+              (item: ScheduleAttractionsProps) => ({
+                ...item,
+                address: cutAddress(item.address), // address 잘라주는 함수 적용
+              }),
+            );
+            setAttractionsCard(processedData);
           } else {
             console.error('Error:', response.error);
           }
@@ -566,12 +573,12 @@ function DetailMineSchedulePage() {
                     img={(ele as ScheduleAttractionsProps).image1}
                   >
                     <S.AttractionCardTitle>
-                      {(ele as ScheduleAttractionsProps).title}
+                      {(ele as ScheduleAttractionsProps).address}
                     </S.AttractionCardTitle>
                     <S.AttractionCardDetail>
                       <Icon name="IconFlag" size={20} />
                       <S.AttractionCardDetailText>
-                        {(ele as ScheduleAttractionsProps).name}
+                        {(ele as ScheduleAttractionsProps).title}
                       </S.AttractionCardDetailText>
                     </S.AttractionCardDetail>
                   </S.AttractionCard>

@@ -77,6 +77,7 @@ function MeetDetailPage() {
   const [linePath, setLinePath] = useState<MapLinePathProps[]>([]);
   const [se, setSe] = useState<LineStartEndProps[]>([]);
   const [marker, setMarker] = useState<LineStartEndProps[]>([]);
+  const [attmarker, setAttMarker] = useState<LineStartEndProps[]>([]);
   const [bsType, setBsType] = useState<string>('설정');
   const [reviewType, setReviewType] = useState<string>('최신순');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -205,6 +206,11 @@ function MeetDetailPage() {
             img: ele.img,
           };
           attArr.push(attData);
+          let markerData: LineStartEndProps = {
+            x: ele.lon,
+            y: ele.lat,
+          };
+          setAttMarker((pre) => [...pre, markerData]);
         });
         setAttractions(attArr);
       }
@@ -319,6 +325,7 @@ function MeetDetailPage() {
     endDate: formatDate(meetDetail?.data?.endDate),
     meetDday: meetDetail?.data?.dday,
     meetTypes: meetDetail?.data?.courseTypes || [],
+    readerName: meetDetail?.data?.readerName,
   };
 
   /** 바텀탭 - 수정 클릭시 */
@@ -368,7 +375,6 @@ function MeetDetailPage() {
           })
           .catch((error) => {
             toast.error('모임 탈퇴에 실패했습니다.');
-            console.error(error);
           });
         break;
 
@@ -433,7 +439,6 @@ function MeetDetailPage() {
             // setSelected('course');
           }
         } catch (error) {
-          console.error('Fetch Error:', error);
         } finally {
         }
       };
@@ -539,6 +544,7 @@ function MeetDetailPage() {
                 isMeetPage
                 memberData={memberData}
                 memberCount={memberData.length}
+                attmarker={attmarker}
               />
             ) : (
               <>로딩중입니다.</>

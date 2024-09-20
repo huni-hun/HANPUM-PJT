@@ -85,6 +85,10 @@ public class Course {
         this.totalDays = totalDays;
     }
 
+    public void updateCourseOpenState(boolean openState) {
+        this.openState = openState;
+    }
+
     public void updateBackgroundImg(String backgroundImg){
         this.backgroundImg = backgroundImg;
     }
