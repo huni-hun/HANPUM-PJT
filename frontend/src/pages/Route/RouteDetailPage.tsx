@@ -89,6 +89,7 @@ function RouteDetailPage() {
               writeState: result.data.data.course.writeState,
               openState: result.data.data.course.openState,
             };
+
             setRouteData(rd);
             setProfileImg(result.data.data.profilePicture);
             setMemberName(result.data.data.nickname);
@@ -148,6 +149,9 @@ function RouteDetailPage() {
       if (result.status === 200) {
         let arr: DaysOfRouteProps[] = [];
         let lines: MapLinePathProps[] = [];
+        result.data.data.wayPoints.sort(
+          (a: any, b: any) => a.pointNumber - b.pointNumber,
+        );
         result.data.data.wayPoints.map((ele: any) => {
           let data: DaysOfRouteProps = {
             routeName: ele.name,

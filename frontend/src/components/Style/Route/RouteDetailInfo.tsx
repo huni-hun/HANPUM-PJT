@@ -111,9 +111,18 @@ function RouteDetailInfo({
     const reorderedItems: DaysOfRouteProps[] = [];
     newItems.splice(draggingPos.current, 1);
     newItems.splice(dragOverPos.current, 0, draggingItem);
-    console.log(newItems);
+    // console.log(newItems);
     newItems.map((ele: DaysOfRouteProps, idx: number) => {
       ele.routePoint = String(idx + 1);
+
+      if (idx === 0) {
+        ele.routeType = '출발지';
+      } else if (idx === newItems.length - 1) {
+        ele.routeType = '도착지';
+      } else {
+        ele.routeType = '경유지';
+      }
+
       reorderedItems.push(ele);
     });
 

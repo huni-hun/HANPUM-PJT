@@ -165,6 +165,10 @@ function RouteDetailRetouchPage() {
                 };
                 arr.push(data);
               });
+              arr.sort(
+                (a: DaysOfRouteProps, b: DaysOfRouteProps) =>
+                  Number(a.routePoint) - Number(b.routePoint),
+              );
               setDayOfRoute(arr);
               copyDetail[idx].wayPointReqDtoList = wayPoints;
               setSelectedDay(idx + 1);
@@ -212,6 +216,9 @@ function RouteDetailRetouchPage() {
   useEffect(() => {
     let arr: DaysOfRouteProps[] = [];
     if (dateDetail.length > 0) {
+      dateDetail[selectedDay - 1].wayPointReqDtoList.sort(
+        (a: any, b: any) => a.pointNumber - b.pointNumber,
+      );
       dateDetail[selectedDay - 1].wayPointReqDtoList.map(
         (ele: WayPointReqDto, idx: number) => {
           let data: DaysOfRouteProps = {
@@ -257,6 +264,7 @@ function RouteDetailRetouchPage() {
     let lines: MapLinePathProps[] = [];
     if (dateDetail.length > 0) {
       if (dateDetail[selectedDay - 1].wayPointReqDtoList.length > 0) {
+        wayPoints.sort((a: any, b: any) => a.routePoint - b.routePoint);
         wayPoints.map((ele: WayPointReqDto, idx: number) => {
           let data: DaysOfRouteProps = {
             routeName: ele.name,
@@ -396,6 +404,7 @@ function RouteDetailRetouchPage() {
 
   useEffect(() => {
     if (wayPoints.length >= 2) {
+      // console.log(wayPoints);
       let startlat = wayPoints[wayPoints.length - 2].lat;
       let startlon = wayPoints[wayPoints.length - 2].lon;
       let endlat = wayPoints[wayPoints.length - 1].lat;
@@ -452,8 +461,12 @@ function RouteDetailRetouchPage() {
     if (dayOfRoute.length > 0) {
       setLatitude(dayOfRoute[0].latitude);
       setLongitude(dayOfRoute[0].longitude);
+      dayOfRoute.sort(
+        (a: DaysOfRouteProps, b: DaysOfRouteProps) =>
+          Number(a.routePoint) - Number(b.routePoint),
+      );
+      setWayPoints(dateDetail[selectedDay - 1].wayPointReqDtoList);
     }
-    console.log(wayPoints);
   }, [dayOfRoute]);
 
   const clickWayBtn = () => {
@@ -579,28 +592,30 @@ function RouteDetailRetouchPage() {
             </R.ContentSelecContainer>
           </R.RouteInfoContainer>
           <R.RouteDetailInfoContainer>
-            <RouteDetailInfo
-              marker={marker}
-              deleteHandler={deleteAttracHandler}
-              setSelectedIdx={setSelectedIdx}
-              dayOfRoute={dayOfRoute}
-              reviews={reviews}
-              setDayOfRoute={setDayOfRoute}
-              setIsOpen={setIsopen}
-              linePath={mapLines}
-              selected={selected}
-              selectedDay={selectedDay}
-              latitude={latitude}
-              longitude={longitude}
-              dayData={dayData}
-              attractions={attractions}
-              setLoading={setLoading}
-              setSelectedDay={setSelectedDay}
-              setBsType={setBsType}
-              reviewType={reviewType}
-              clickAttryBtn={clickAttryBtn}
-              clickWayBtn={clickWayBtn}
-            />
+            {loading && (
+              <RouteDetailInfo
+                marker={marker}
+                deleteHandler={deleteAttracHandler}
+                setSelectedIdx={setSelectedIdx}
+                dayOfRoute={dayOfRoute}
+                reviews={reviews}
+                setDayOfRoute={setDayOfRoute}
+                setIsOpen={setIsopen}
+                linePath={mapLines}
+                selected={selected}
+                selectedDay={selectedDay}
+                latitude={latitude}
+                longitude={longitude}
+                dayData={dayData}
+                attractions={attractions}
+                setLoading={setLoading}
+                setSelectedDay={setSelectedDay}
+                setBsType={setBsType}
+                reviewType={reviewType}
+                clickAttryBtn={clickAttryBtn}
+                clickWayBtn={clickWayBtn}
+              />
+            )}
           </R.RouteDetailInfoContainer>
         </R.Overflow>
       </R.Main>
