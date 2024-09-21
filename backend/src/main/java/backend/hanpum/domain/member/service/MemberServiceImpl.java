@@ -16,6 +16,7 @@ import backend.hanpum.domain.schedule.repository.ScheduleRepository;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.auth.NicknameExpiredException;
 import backend.hanpum.exception.exception.group.GroupAlreadyJoinedException;
+import backend.hanpum.exception.exception.member.DeleteMemberFailedByGroupException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -108,7 +109,7 @@ public class MemberServiceImpl implements MemberService{
     public void deleteMember(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         if (member.getGroupMember() != null) {
-            throw new GroupAlreadyJoinedException();
+            throw new DeleteMemberFailedByGroupException();
         }
         String profilePicture = member.getProfilePicture();
         member.deleteMember(null, null, null, null, null,
