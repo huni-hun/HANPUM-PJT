@@ -175,7 +175,7 @@ public class AuthServiceImpl implements AuthService {
     public void sendFindPasswordAuthCode(SendFindPasswordAuthCodeReqDto sendFindPasswordAuthCodeReqDto) {
         String loginId = sendFindPasswordAuthCodeReqDto.getLoginId();
         String email = sendFindPasswordAuthCodeReqDto.getEmail();
-        memberRepository.findByLoginIdAndEmail(loginId, email).orElseThrow(MemberInfoInvalidException::new);
+        memberRepository.findByLoginIdAndEmail(loginId, email).orElseThrow(MemberNotFoundException::new);
         String authCode = generateAuthCode();
         createFindPasswordMail(email, authCode);
         redisDao.setEmailAuthCode(email, authCode);
