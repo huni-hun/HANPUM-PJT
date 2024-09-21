@@ -262,6 +262,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = "runningSchedule", allEntries = true)
     @Override
     public Long startSchedule(Long memberId, ScheduleStartReqDto scheduleRunReqDto) {
         Schedule schedule = scheduleRepository.findById(scheduleRunReqDto.getScheduleId()).orElseThrow(ScheduleNotFoundException::new);
@@ -281,6 +282,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = "runningSchedule", allEntries = true)
     @Override
     public Long runAndStop(Long memberId, ScheduleRunReqDto scheduleRunReqDto) {
         ScheduleDay scheduleDay = scheduleDayRepository.findById(scheduleRunReqDto.getScheduleDayId()).orElseThrow(ScheduleDayNotFoundException::new);
