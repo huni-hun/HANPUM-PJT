@@ -114,10 +114,10 @@ public class MemberServiceImpl implements MemberService{
         member.deleteMember(null, null, null, null, null,
                 null, null, null, "탈퇴회원", MemberType.DELETE
         );
-        likeGroupRepository.deleteAllByMember_MemberId(memberId); // 관심모임 삭제
-        interestCourseRepository.deleteAllByMember_MemberId(memberId); // 관심 경로 삭제
-        courseUsageHistoryRepository.deleteAllByMember_MemberId(memberId); // 사용한 경로 삭제
-        scheduleRepository.deleteAllByMember_MemberId(memberId); // 일정 삭제
-        // 사진 삭제 로직 추가 예정
+        likeGroupRepository.deleteAllByMember_MemberId(memberId);
+        interestCourseRepository.deleteAllByMember_MemberId(memberId);
+        courseUsageHistoryRepository.deleteAllByMember_MemberId(memberId);
+        scheduleRepository.deleteAllByMember_MemberId(memberId);
+        s3ImageService.deleteImage(profilePicture);
     }
 }
