@@ -47,3 +47,13 @@ export const UpdateReview = async (
 
   return response;
 };
+
+export const UpdateOpenState = async (id: number) => {
+  const response = api.put(`/api/course/${id}/changeOpen`, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return response;
+};

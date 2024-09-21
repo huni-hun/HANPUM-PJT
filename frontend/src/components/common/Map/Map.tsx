@@ -120,8 +120,6 @@ function Map(props: MapProps) {
 
   useEffect(() => {
     if (props.attrationmarker !== undefined && kakaoMap) {
-      // 기존 마커 제거
-      console.log(props.attrationmarker);
       attmarkers.forEach((marker) => marker.setMap(null));
 
       const newMarkers = props.attrationmarker.map((mar) => {

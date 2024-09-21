@@ -396,7 +396,7 @@ function ScheduleMainPage() {
             // console.log(response.message);
           }
         } catch (error: unknown) {
-          console.error('Fetch Error:', error);
+          // console.error('Fetch Error:', error);
           toast.error((error as AxiosError).message);
         } finally {
           setLoading(false);
@@ -412,52 +412,102 @@ function ScheduleMainPage() {
     setSe([]);
     setMarker([]);
     /*경로 일차별 경유지 정보 가져오기 */
-    if (scheduleId > 0) {
-      getDayNumData(selectedDay, scheduleId).then((result) => {
-        if (result.status === 'SUCCESS') {
-          let arr: DaysOfRouteProps[] = [];
-          let lines: MapLinePathProps[] = [];
-          /** 경유지 turnGreen 상태관리 */
-          let greenStates: boolean[] = [];
-          result.data.scheduleWayPointList.map((ele: any, idx: number) => {
-            let data: DaysOfRouteProps = {
-              routeName: ele.name,
-              routeAddress: ele.address,
-              routeType: ele.type,
-              routeId: ele.scheduleWayPointId,
-              latitude: ele.lat,
-              longitude: ele.lon,
-              state: ele.state,
-              routePoint: (idx + 1).toString(),
-            };
-            arr.push(data);
-            /* 다중 경유지 정보, 시작점, 도착점 저장 */
+    if (isSelected !== 'Class') {
+      if (scheduleId > 0) {
+        getDayNumData(selectedDay, scheduleId).then((result) => {
+          if (result.status === 'SUCCESS') {
+            let arr: DaysOfRouteProps[] = [];
+            let lines: MapLinePathProps[] = [];
+            /** 경유지 turnGreen 상태관리 */
+            let greenStates: boolean[] = [];
+            result.data.scheduleWayPointList.map((ele: any, idx: number) => {
+              let data: DaysOfRouteProps = {
+                routeName: ele.name,
+                routeAddress: ele.address,
+                routeType: ele.type,
+                routeId: ele.scheduleWayPointId,
+                latitude: ele.lat,
+                longitude: ele.lon,
+                state: ele.state,
+                routePoint: (idx + 1).toString(),
+              };
+              arr.push(data);
+              /* 다중 경유지 정보, 시작점, 도착점 저장 */
 
-            let line: MapLinePathProps = {
-              name: ele.name,
-              x: ele.lat,
-              y: ele.lon,
-            };
+              let line: MapLinePathProps = {
+                name: ele.name,
+                x: ele.lat,
+                y: ele.lon,
+              };
 
-            lines.push(line);
+              lines.push(line);
 
-            let markerData: LineStartEndProps = {
-              x: ele.lat,
-              y: ele.lon,
-            };
-            setMarker((pre) => [...pre, markerData]);
-          });
-          arr.sort((a: any, b: any) => a.routePoint - b.routePoint);
-          setDayOfRoute(arr);
-          setLinePath(lines);
+              let markerData: LineStartEndProps = {
+                x: ele.lat,
+                y: ele.lon,
+              };
+              setMarker((pre) => [...pre, markerData]);
+            });
+            arr.sort((a: any, b: any) => a.routePoint - b.routePoint);
+            setDayOfRoute(arr);
+            setLinePath(lines);
 
-          setWayPoints(arr);
+            setWayPoints(arr);
 
-          /* 지도 중심점 잡기 */
-          setLatitude(arr[0].latitude);
-          setLongitude(arr[0].longitude);
+            /* 지도 중심점 잡기 */
+            setLatitude(arr[0].latitude);
+            setLongitude(arr[0].longitude);
+          }
+        });
+      }
+    } else {
+      let arr: DaysOfRouteProps[] = [];
+      let lines: MapLinePathProps[] = [];
+      meetListData?.scheduleDayResDtoList[
+        selectedDay - 1
+      ].scheduleWayPointList?.map((ele, idx: number) => {
+        if (
+          ele.name !== undefined &&
+          ele.address !== undefined &&
+          ele.type !== undefined &&
+          ele.scheduleWayPointId !== undefined &&
+          ele.lat !== undefined &&
+          ele.lon !== undefined
+        ) {
+          let data: DaysOfRouteProps = {
+            routeName: ele.name,
+            routeAddress: ele.address,
+            routeType: ele.type,
+            routeId: ele.scheduleWayPointId,
+            latitude: ele.lat,
+            longitude: ele.lon,
+            state: ele.state,
+            routePoint: (idx + 1).toString(),
+          };
+          arr.push(data);
         }
+
+        /* 다중 경유지 정보, 시작점, 도착점 저장 */
+
+        let line: MapLinePathProps = {
+          name: ele.name!,
+          x: ele.lat!,
+          y: ele.lon!,
+        };
+
+        lines.push(line);
+
+        let markerData: LineStartEndProps = {
+          x: ele.lat!,
+          y: ele.lon!,
+        };
+        setMarker((pre) => [...pre, markerData]);
       });
+
+      setDayOfRoute(arr);
+      setLinePath(lines);
+
+      setWayPoints(arr);
     }
   }, [selectedDay, scheduleId, arriveGreen]);
 

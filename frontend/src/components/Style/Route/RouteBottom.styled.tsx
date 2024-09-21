@@ -2,7 +2,7 @@ import { colors } from '@/styles/colorPalette';
 import styled, { keyframes } from 'styled-components';
 
 interface BottomSheetProps {
-  isNoIcon?: boolean;
+  $isNoIcon?: boolean;
 }
 
 const slideUp = keyframes`
@@ -111,7 +111,7 @@ export const SettingBox = styled.div`
 `;
 
 export const SettingIconBox = styled.div<BottomSheetProps>`
-  width: ${(props) => (props.isNoIcon ? '0%' : '10%')};
+  width: ${(props) => (props.$isNoIcon ? '0%' : '10%')};
   height: 100%;
   display: flex;
   flex-direction: row;
@@ -120,7 +120,7 @@ export const SettingIconBox = styled.div<BottomSheetProps>`
   cursor: pointer;
 `;
 
-export const SettingTextBox = styled.div<{ isDelete: boolean }>`
+export const SettingTextBox = styled.div<{ $isDelete: boolean }>`
   width: 90%;
   height: 100%;
   display: flex;
@@ -128,7 +128,7 @@ export const SettingTextBox = styled.div<{ isDelete: boolean }>`
   align-items: center;
   font-size: 1.4rem;
   /* justify-content: space-between; */
-  color: ${(props) => (props.isDelete ? colors.red : colors.black)};
+  color: ${(props) => (props.$isDelete ? colors.red : colors.black)};
   cursor: pointer;
 `;
 

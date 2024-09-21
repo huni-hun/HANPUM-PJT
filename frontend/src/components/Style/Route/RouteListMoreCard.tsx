@@ -19,6 +19,7 @@ interface RouteListMoreCardProps {
   totalDays: number;
   interestFlag: boolean;
   routeId: string;
+  distance: number;
 }
 
 function RouteListMoreCard(props: RouteListMoreCardProps) {
@@ -77,7 +78,7 @@ function RouteListMoreCard(props: RouteListMoreCardProps) {
             {props.start}
             <Icon name="IconGreyLeftArrow" size={10} />
             {props.end}
-            <R.RouteDistanceBox>76km</R.RouteDistanceBox>
+            <R.RouteDistanceBox>{props.distance}km</R.RouteDistanceBox>
           </R.RouteTextBox>
           <R.ScoreBox>
             <Icon name="IconGrenStar" size={10} />
