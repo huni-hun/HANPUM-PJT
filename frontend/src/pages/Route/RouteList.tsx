@@ -183,7 +183,7 @@ function RouteList() {
         </R.RouteCardContainer>
         <R.RouteCardContainer>
           <R.RouteTypeHeader>
-            <R.TypeTitle>지금 가장 인기 있는 코스</R.TypeTitle>
+            <R.TypeTitle>지금 가장 인기 있는 경로</R.TypeTitle>
             <R.MoreButton
               onClick={() => {
                 clickMoreBtn('해안길');
@@ -210,7 +210,7 @@ function RouteList() {
         </R.RouteCardContainer>
         <R.RouteCardContainer>
           <R.RouteTypeHeader>
-            <R.TypeTitle>초보자를 위한 코스</R.TypeTitle>
+            <R.TypeTitle>초보자를 위한 경로</R.TypeTitle>
             <R.MoreButton>
               <R.MoreText
                 onClick={() => {
@@ -239,7 +239,7 @@ function RouteList() {
         </R.RouteCardContainer>
         <R.RouteCardContainer>
           <R.RouteTypeHeader>
-            <R.TypeTitle>숙련자를 위한 코스</R.TypeTitle>
+            <R.TypeTitle>숙련자를 위한 경로</R.TypeTitle>
             <R.MoreButton>
               <R.MoreText
                 onClick={() => {

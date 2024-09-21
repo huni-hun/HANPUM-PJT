@@ -98,6 +98,7 @@ function RouteListMorePage() {
               interestFlag={ele.interestFlag}
               totalDays={ele.totalDays}
               routeId={String(ele.courseId)}
+              distance={ele.totalDistance}
             />
           )),
         )}

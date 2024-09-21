@@ -138,6 +138,7 @@ function RouteListSearchResult(props: RouteListSearchResultProps) {
               interestFlag={ele.interestFlag}
               totalDays={ele.totalDays}
               routeId={String(ele.courseId)}
+              distance={ele.totalDistance}
             />
           )),
         )}
