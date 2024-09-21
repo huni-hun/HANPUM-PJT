@@ -4,10 +4,7 @@ import backend.hanpum.domain.course.dto.responseDto.AttractionResDto;
 import backend.hanpum.domain.course.dto.responseDto.GetCourseDayResDto;
 import backend.hanpum.domain.course.enums.CourseTypes;
 import backend.hanpum.domain.weather.dto.WeatherResDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -15,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class ScheduleInProgressResDto {
     Long scheduleId;        // 일정 ID
     Long courseId;          // 경로 ID

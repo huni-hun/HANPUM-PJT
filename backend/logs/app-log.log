@@ -1,0 +1,81 @@
+[2024-09-21 16:36:31:8227] DEBUG 16038 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 82 mappings in 'requestMappingHandlerMapping'
+[2024-09-21 16:36:31:8539] DEBUG 16038 --- [           main] o.s.w.s.h.SimpleUrlHandlerMapping        : Patterns [/webjars/**, /**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+[2024-09-21 16:36:31:8664] DEBUG 16038 --- [           main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+[2024-09-21 16:36:31:8689] DEBUG 16038 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 2 @ExceptionHandler, 1 ResponseBodyAdvice
+[2024-09-21 16:36:34:11664] INFO  16038 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+[2024-09-21 16:36:34:11664] DEBUG 16038 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+[2024-09-21 16:36:34:11664] DEBUG 16038 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
+[2024-09-21 16:36:34:11664] DEBUG 16038 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
+[2024-09-21 16:36:34:11665] DEBUG 16038 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@7a986079
+[2024-09-21 16:36:34:11666] DEBUG 16038 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@6f215ff3
+[2024-09-21 16:36:34:11666] DEBUG 16038 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+[2024-09-21 16:36:34:11666] INFO  16038 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+[2024-09-21 16:36:43:20779] DEBUG 16038 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : POST "/api/auth/login", parameters={}
+[2024-09-21 16:36:43:20781] DEBUG 16038 --- [nio-8080-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to backend.hanpum.domain.auth.controller.AuthController#login(LoginReqDto)
+[2024-09-21 16:36:43:20805] DEBUG 16038 --- [nio-8080-exec-2] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [backend.hanpum.domain.auth.dto.requestDto.LoginReqDto@4e3113b0]
+[2024-09-21 16:36:44:21069] DEBUG 16038 --- [nio-8080-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/cbor]
+[2024-09-21 16:36:44:21070] DEBUG 16038 --- [nio-8080-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [backend.hanpum.exception.format.code.ApiResponse$SucceededBody@32bc5ab1]
+[2024-09-21 16:36:44:21077] DEBUG 16038 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+[2024-09-21 16:36:59:36153] DEBUG 16038 --- [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/api/schedule", parameters={}
+[2024-09-21 16:36:59:36154] DEBUG 16038 --- [nio-8080-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to backend.hanpum.domain.schedule.controller.ScheduleController#getMySchedule(UserDetailsImpl)
+[2024-09-21 16:36:59:36251] DEBUG 16038 --- [nio-8080-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/cbor]
+[2024-09-21 16:36:59:36252] DEBUG 16038 --- [nio-8080-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [backend.hanpum.exception.format.code.ApiResponse$SucceededBody@53322edd]
+[2024-09-21 16:36:59:36255] DEBUG 16038 --- [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+[2024-09-21 16:37:13:50133] DEBUG 16038 --- [nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : PUT "/api/schedule/start", parameters={}
+[2024-09-21 16:37:13:50134] DEBUG 16038 --- [nio-8080-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to backend.hanpum.domain.schedule.controller.ScheduleController#startAndStopSchedule(UserDetailsImpl, ScheduleStartReqDto)
+[2024-09-21 16:37:13:50142] DEBUG 16038 --- [nio-8080-exec-4] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [backend.hanpum.domain.schedule.dto.requestDto.ScheduleStartReqDto@7ebfedf0]
+[2024-09-21 16:37:13:50247] DEBUG 16038 --- [nio-8080-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/cbor]
+[2024-09-21 16:37:13:50248] DEBUG 16038 --- [nio-8080-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [backend.hanpum.exception.format.code.ApiResponse$SucceededBody@1ffbbc0d]
+[2024-09-21 16:37:13:50250] DEBUG 16038 --- [nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+[2024-09-21 16:37:18:55548] DEBUG 16038 --- [nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/api/schedule/running", parameters={}
+[2024-09-21 16:37:18:55549] DEBUG 16038 --- [nio-8080-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to backend.hanpum.domain.schedule.controller.ScheduleController#getRunningSchedule(UserDetailsImpl)
+[2024-09-21 16:37:18:55890] DEBUG 16038 --- [nio-8080-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/cbor]
+[2024-09-21 16:37:18:55891] DEBUG 16038 --- [nio-8080-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [backend.hanpum.exception.format.code.ApiResponse$SucceededBody@50f45b58]
+[2024-09-21 16:37:18:55899] DEBUG 16038 --- [nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+[2024-09-21 16:37:23:60065] DEBUG 16038 --- [nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/api/schedule/running", parameters={}
+[2024-09-21 16:37:23:60066] DEBUG 16038 --- [nio-8080-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to backend.hanpum.domain.schedule.controller.ScheduleController#getRunningSchedule(UserDetailsImpl)
+[2024-09-21 16:37:23:60229] DEBUG 16038 --- [nio-8080-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/cbor]
+[2024-09-21 16:37:23:60229] DEBUG 16038 --- [nio-8080-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [backend.hanpum.exception.format.code.ApiResponse$SucceededBody@3ded3bfb]
+[2024-09-21 16:37:23:60233] DEBUG 16038 --- [nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+[2024-09-21 16:40:30:247453] DEBUG 16038 --- [nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/api/schedule/running", parameters={}
+[2024-09-21 16:40:30:247454] DEBUG 16038 --- [nio-8080-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to backend.hanpum.domain.schedule.controller.ScheduleController#getRunningSchedule(UserDetailsImpl)
+[2024-09-21 16:40:31:248423] DEBUG 16038 --- [nio-8080-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/cbor]
+[2024-09-21 16:40:31:248423] DEBUG 16038 --- [nio-8080-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [backend.hanpum.exception.format.code.ApiResponse$SucceededBody@4d897a33]
+[2024-09-21 16:40:31:248426] DEBUG 16038 --- [nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+[2024-09-21 16:41:13:5752] DEBUG 16109 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 82 mappings in 'requestMappingHandlerMapping'
+[2024-09-21 16:41:13:6089] DEBUG 16109 --- [           main] o.s.w.s.h.SimpleUrlHandlerMapping        : Patterns [/webjars/**, /**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+[2024-09-21 16:41:14:6235] DEBUG 16109 --- [           main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+[2024-09-21 16:41:14:6263] DEBUG 16109 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 2 @ExceptionHandler, 1 ResponseBodyAdvice
+[2024-09-21 16:41:17:9630] INFO  16109 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+[2024-09-21 16:41:17:9630] DEBUG 16109 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+[2024-09-21 16:41:17:9630] DEBUG 16109 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
+[2024-09-21 16:41:17:9630] DEBUG 16109 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
+[2024-09-21 16:41:17:9631] DEBUG 16109 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@6fb9179e
+[2024-09-21 16:41:17:9631] DEBUG 16109 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@1be7b7de
+[2024-09-21 16:41:17:9632] DEBUG 16109 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+[2024-09-21 16:41:17:9632] INFO  16109 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+[2024-09-21 16:41:17:10013] DEBUG 16109 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/api/schedule/running", parameters={}
+[2024-09-21 16:41:17:10014] DEBUG 16109 --- [nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to backend.hanpum.domain.schedule.controller.ScheduleController#getRunningSchedule(UserDetailsImpl)
+[2024-09-21 16:41:17:10032] DEBUG 16109 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Failed to complete request: org.springframework.expression.spel.SpelEvaluationException: EL1008E: Property or field 'customKeyGenerator' cannot be found on object of type 'org.springframework.cache.interceptor.CacheExpressionRootObject' - maybe not public or not valid?
+[2024-09-21 16:42:17:5838] DEBUG 16133 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 82 mappings in 'requestMappingHandlerMapping'
+[2024-09-21 16:42:17:6149] DEBUG 16133 --- [           main] o.s.w.s.h.SimpleUrlHandlerMapping        : Patterns [/webjars/**, /**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+[2024-09-21 16:42:17:6278] DEBUG 16133 --- [           main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+[2024-09-21 16:42:17:6305] DEBUG 16133 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 2 @ExceptionHandler, 1 ResponseBodyAdvice
+[2024-09-21 16:42:22:10924] INFO  16133 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+[2024-09-21 16:42:22:10925] DEBUG 16133 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+[2024-09-21 16:42:22:10925] DEBUG 16133 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
+[2024-09-21 16:42:22:10925] DEBUG 16133 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
+[2024-09-21 16:42:22:10926] DEBUG 16133 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@3abe3f9a
+[2024-09-21 16:42:22:10926] DEBUG 16133 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@5b0ddbcf
+[2024-09-21 16:42:22:10926] DEBUG 16133 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+[2024-09-21 16:42:22:10927] INFO  16133 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+[2024-09-21 16:42:22:11323] DEBUG 16133 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/api/schedule/running", parameters={}
+[2024-09-21 16:42:22:11324] DEBUG 16133 --- [nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to backend.hanpum.domain.schedule.controller.ScheduleController#getRunningSchedule(UserDetailsImpl)
+[2024-09-21 16:42:23:11659] DEBUG 16133 --- [nio-8080-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/cbor]
+[2024-09-21 16:42:23:11660] DEBUG 16133 --- [nio-8080-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [backend.hanpum.exception.format.code.ApiResponse$SucceededBody@62fa5db9]
+[2024-09-21 16:42:23:11670] DEBUG 16133 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+[2024-09-21 16:42:27:15727] DEBUG 16133 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/api/schedule/running", parameters={}
+[2024-09-21 16:42:27:15727] DEBUG 16133 --- [nio-8080-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to backend.hanpum.domain.schedule.controller.ScheduleController#getRunningSchedule(UserDetailsImpl)
+[2024-09-21 16:42:27:15752] DEBUG 16133 --- [nio-8080-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/cbor]
+[2024-09-21 16:42:27:15752] DEBUG 16133 --- [nio-8080-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [backend.hanpum.exception.format.code.ApiResponse$SucceededBody@43bfe95f]
+[2024-09-21 16:42:27:15753] DEBUG 16133 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK

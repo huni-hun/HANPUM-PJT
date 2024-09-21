@@ -39,6 +39,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -354,6 +355,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
     }
 
+    @Cacheable(value = "runningSchedule", keyGenerator = "customKeyGenerator", cacheManager = "contentCacheManager")
     @Transactional(readOnly = true)
     @Override
     public ScheduleInProgressResDto getRunningSchedule(Long memberId) {
