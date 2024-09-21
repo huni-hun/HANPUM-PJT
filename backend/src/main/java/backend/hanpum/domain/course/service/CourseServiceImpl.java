@@ -12,7 +12,6 @@ import backend.hanpum.domain.schedule.dto.responseDto.ScheduleDayResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleTempResDto;
 import backend.hanpum.domain.schedule.dto.responseDto.ScheduleWayPointResDto;
 import backend.hanpum.domain.schedule.repository.ScheduleRepository;
-import backend.hanpum.domain.schedule.service.ScheduleService;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.auth.MemberNotFoundException;
 import backend.hanpum.exception.exception.common.JsonBadMappingException;
@@ -25,7 +24,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.querydsl.core.types.Projections;
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
@@ -166,6 +165,9 @@ public class CourseServiceImpl implements CourseService {
             }
 
             for (WayPointReqDto waypointReqDto : courseDayReqDto.getWayPointReqDtoList()) {
+                Gson gson = new Gson();
+                String jsonPolyline = gson.toJson(waypointReqDto.getVertexes());
+
                 Waypoint waypoint = Waypoint.builder()
                         .courseDay(courseDay)
                         .type(waypointReqDto.getType())
@@ -177,6 +179,7 @@ public class CourseServiceImpl implements CourseService {
                         .distance(waypointReqDto.getDistance())
                         .duration(waypointReqDto.getDuration())
                         .calorie(waypointReqDto.getCalorie())
+                        .polyline(jsonPolyline)
                         .build();
                 waypointRepository.save(waypoint);
             }
@@ -274,6 +277,40 @@ public class CourseServiceImpl implements CourseService {
                         .totalDuration(String.format("%.1f", totalDuration))
                         .totalCalorie(String.format("%.1f", totalCalorie))
                         .build();
+
+                for (AttractionReqDto attractionReqDto : newCourseDay.getAttractionReqDtoList()) {
+                    Attraction attraction = Attraction.builder()
+                            .courseDay(newDay)
+                            .name(attractionReqDto.getName())
+                            .type(attractionReqDto.getType())
+                            .address(attractionReqDto.getAddress())
+                            .lat(attractionReqDto.getLat())
+                            .lon(attractionReqDto.getLon())
+                            .img(attractionReqDto.getImage())
+                            .build();
+                    newDay.getAttractions().add(attraction);
+                }
+
+                for (WayPointReqDto waypointReqDto : newCourseDay.getWayPointReqDtoList()) {
+                    Gson gson = new Gson();
+                    String jsonPolyline = gson.toJson(waypointReqDto.getVertexes());
+
+                    Waypoint waypoint = Waypoint.builder()
+                            .courseDay(newDay)
+                            .type(waypointReqDto.getType())
+                            .name(waypointReqDto.getName())
+                            .address(waypointReqDto.getAddress())
+                            .lat(waypointReqDto.getLat())
+                            .lon(waypointReqDto.getLon())
+                            .pointNumber(waypointReqDto.getPointNumber())
+                            .distance(waypointReqDto.getDistance())
+                            .duration(waypointReqDto.getDuration())
+                            .calorie(waypointReqDto.getCalorie())
+                            .polyline(jsonPolyline)
+                            .build();
+                    newDay.getWaypoints().add(waypoint);
+                }
+
                 course.getCourseDays().add(newDay);
             }
             existDayNumbers.remove(newCourseDay.getDayNumber());
@@ -286,14 +323,6 @@ public class CourseServiceImpl implements CourseService {
         }
         course.getCourseDays().removeIf(day -> existDayNumbers.contains(day.getDayNumber()));
         courseRepository.save(course);
-    }
-
-    @Override
-    @Transactional
-    public void editCourseOpenState(Long memberId, Long courseId) {
-        Course course = courseRepository.findByMember_MemberIdAndCourseId(memberId, courseId).orElseThrow(CourseNotFoundException::new);
-
-        course.updateCourseOpenState(!course.isOpenState());
     }
 
     private void updateCourseDay(CourseDay existDay, CourseDayReqDto newDay, Double totalCalorie, Double totalDuration, Double totalDistance) {
@@ -347,6 +376,9 @@ public class CourseServiceImpl implements CourseService {
                 .collect(Collectors.toSet());
 
         for (WayPointReqDto newWaypoint : newDay.getWayPointReqDtoList()) {
+            Gson gson = new Gson();
+            String jsonPolyline = gson.toJson(newWaypoint.getVertexes());
+
             if (existPointNumber.contains(newWaypoint.getPointNumber())) {
                 Waypoint existWaypoint = existDay.getWaypoints().stream()
                         .filter(waypoint -> waypoint.getPointNumber().equals(newWaypoint.getPointNumber()))
@@ -360,7 +392,8 @@ public class CourseServiceImpl implements CourseService {
                         newWaypoint.getPointNumber(),
                         newWaypoint.getDistance(),
                         newWaypoint.getDuration(),
-                        newWaypoint.getCalorie());
+                        newWaypoint.getCalorie(),
+                        jsonPolyline);
             } else {
                 Waypoint waypoint = Waypoint.builder()
                         .courseDay(existDay)
@@ -373,6 +406,7 @@ public class CourseServiceImpl implements CourseService {
                         .distance(newWaypoint.getDistance())
                         .duration(newWaypoint.getDuration())
                         .calorie(newWaypoint.getCalorie())
+                        .polyline(jsonPolyline)
                         .build();
 
                 existDay.getWaypoints().add(waypoint);
@@ -390,6 +424,15 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional
+    public void editCourseOpenState(Long memberId, Long courseId) {
+        Course course = courseRepository.findByMember_MemberIdAndCourseId(memberId, courseId).orElseThrow(CourseNotFoundException::new);
+
+        course.updateCourseOpenState(!course.isOpenState());
+    }
+
+    @Override
+    @Transactional
     public void deleteCourse(Long memberId, Long courseId) {
         Course course;
         course = courseRepository.findByMember_MemberIdAndCourseId(memberId, courseId).orElseThrow(CourseNotFoundException::new);
@@ -414,6 +457,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<AttractionResDto> getCourseDayAttractions(Long courseId, Integer day) {
         List<Attraction> attractionList = attractionRepository.findByCourseDay_Course_CourseIdAndCourseDay_dayNumber(courseId, day);
 

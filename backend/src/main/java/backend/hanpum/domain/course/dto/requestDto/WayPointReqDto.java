@@ -2,6 +2,8 @@ package backend.hanpum.domain.course.dto.requestDto;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -17,4 +19,5 @@ public class WayPointReqDto {
     private String distance;
     private String duration;
     private String calorie;
+    private List<Double> vertexes;
 }

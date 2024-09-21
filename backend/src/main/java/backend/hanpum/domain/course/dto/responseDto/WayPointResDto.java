@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,4 +22,5 @@ public class WayPointResDto {
     private String distance;
     private String duration;
     private String calorie;
+    private List<Double> vertexes;
 }
