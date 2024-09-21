@@ -74,7 +74,7 @@ function RouteCard(props: RouteCardProps) {
         </C.ContentContainer>
         <Icon
           name={like ? 'IconModiHeartFill' : 'IconModiHeartNonFill'}
-          size={30}
+          size={20}
           onClick={(e) => {
             e.stopPropagation();
             likeHandler();

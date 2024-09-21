@@ -4,6 +4,7 @@ import * as R from '@/components/Style/Route/RouteBottom.styled';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { colors } from '@/styles/colorPalette';
+import { UpdateOpenState } from '@/api/route/PUT';
 
 interface BottomSheetProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -183,6 +184,21 @@ function BottomSheet(props: BottomSheetProps) {
     return ['최신순', '좋아요순', '등록순'].includes(option);
   };
 
+  const switchClick = () => {
+    if (props.id !== undefined) {
+      UpdateOpenState(props.id)
+        .then((result) => {
+          if (result.data.status === 'SUCCESS') {
+            toast.done('경로 공개여부 수정이 성공적으로 완료되었습니다.');
+            handleClose();
+          } else {
+            toast.error('경로 공개여부 수정 권한이 없습니다.');
+          }
+        })
+        .catch((err) => {});
+    }
+  };
+
   const BottomSheetMain = () => {
     switch (props.bsType) {
       case '일정':
@@ -206,7 +222,7 @@ function BottomSheet(props: BottomSheetProps) {
                     props.setSelected(ele);
                   }}
                 >
-                  <R.SettingIconBox isNoIcon={isSpecial}>
+                  <R.SettingIconBox $isNoIcon={isSpecial}>
                     {!isSpecial && iconName && (
                       <Icon name={iconName} size={20} />
                     )}
@@ -217,7 +233,7 @@ function BottomSheet(props: BottomSheetProps) {
 
                   <R.SettingTextBox
                     onClick={() => {}}
-                    isDelete={ele === '삭제'}
+                    $isDelete={ele === '삭제'}
                     style={{
                       color:
                         ele === '삭제'
@@ -241,7 +257,9 @@ function BottomSheet(props: BottomSheetProps) {
                       <R.SwitchInput
                         type="checkbox"
                         checked={isToggleOpen}
-                        onChange={() => setIsToggleOpen(!isToggleOpen)}
+                        onChange={() => {
+                          switchClick();
+                        }}
                       />
                       <R.SwitchButton $isOpen={isToggleOpen} />
                     </R.SwitchLabel>

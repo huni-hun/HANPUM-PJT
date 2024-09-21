@@ -73,46 +73,72 @@ function RouteDetailPage() {
 
   useEffect(() => {
     if (dayData.length === 0) {
-      getRouteDetail(routeid as string).then((result) => {
-        if (result.data.status !== 'ERROR' && result.status === 200) {
-          let num = 0;
-          let rd: RouteDetailProps = {
-            routeName: result.data.data.course.courseName,
-            routeContent: result.data.data.course.content,
-            writeDate: result.data.data.course.writeDate,
-            routeComment: result.data.data.course.commentCnt,
-            routeScore: result.data.data.course.scoreAvg,
-            start: result.data.data.course.startPoint,
-            end: result.data.data.course.endPoint,
-            img: result.data.data.course.backgroundImg,
-            writeState: result.data.data.course.writeState,
-            openState: result.data.data.course.openState,
-          };
-          setRouteData(rd);
-          setProfileImg(result.data.data.profilePicture);
-          setMemberName(result.data.data.nickname);
-          result.data.data.courseDays.map((ele: any) => {
-            let data: RouteDetailDayProps = {
-              dayNum: ele.dayNumber,
-              totalDistance: ele.total_distance,
-              totalCalorie: ele.total_calorie,
-              totalDuration: ele.total_duration,
+      getRouteDetail(routeid as string)
+        .then((result) => {
+          if (result.data.status !== 'ERROR' && result.status === 200) {
+            let num = 0;
+            let rd: RouteDetailProps = {
+              routeName: result.data.data.course.courseName,
+              routeContent: result.data.data.course.content,
+              writeDate: result.data.data.course.writeDate,
+              routeComment: result.data.data.course.commentCnt,
+              routeScore: result.data.data.course.scoreAvg,
+              start: result.data.data.course.startPoint,
+              end: result.data.data.course.endPoint,
+              img: result.data.data.course.backgroundImg,
+              writeState: result.data.data.course.writeState,
+              openState: result.data.data.course.openState,
             };
-            setDayData((pre) => [...pre, data]);
-            num += ele.total_distance;
-          });
-          let type: string[] = [];
-          result.data.data.course.courseTypes.map((ele: string) => {
-            type.push(ele);
-          });
-          setRouteType(type);
-          setTotalDistance(num);
-        }
+            setRouteData(rd);
+            setProfileImg(result.data.data.profilePicture);
+            setMemberName(result.data.data.nickname);
+            result.data.data.courseDays.map((ele: any) => {
+              let data: RouteDetailDayProps = {
+                dayNum: ele.dayNumber,
+                totalDistance: ele.total_distance,
+                totalCalorie: ele.total_calorie,
+                totalDuration: ele.total_duration,
+              };
+              setDayData((pre) => [...pre, data]);
+              num += ele.total_distance;
+            });
+            let type: string[] = [];
+            result.data.data.course.courseTypes.map((ele: string) => {
+              type.push(ele);
+            });
+            setRouteType(type);
+            setTotalDistance(num);
+          }
 
-        setLoading(true);
-      });
+          setLoading(true);
+        })
+        .catch((err) => {});
+    } else {
+      if (!isOpenSetting) {
+        getRouteDetail(routeid as string)
+          .then((result) => {
+            if (result.data.status !== 'ERROR' && result.status === 200) {
+              let rd: RouteDetailProps = {
+                routeName: result.data.data.course.courseName,
+                routeContent: result.data.data.course.content,
+                writeDate: result.data.data.course.writeDate,
+                routeComment: result.data.data.course.commentCnt,
+                routeScore: result.data.data.course.scoreAvg,
+                start: result.data.data.course.startPoint,
+                end: result.data.data.course.endPoint,
+                img: result.data.data.course.backgroundImg,
+                writeState: result.data.data.course.writeState,
+                openState: result.data.data.course.openState,
+              };
+              setRouteData(rd);
+            }
+
+            setLoading(true);
+          })
+          .catch((err) => {});
+      }
     }
-  }, []);
+  }, [isOpenSetting]);
 
   useEffect(() => {
     setSe([]);
