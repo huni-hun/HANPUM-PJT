@@ -12,10 +12,12 @@ import backend.hanpum.domain.member.entity.Member;
 import backend.hanpum.domain.member.enums.MemberType;
 import backend.hanpum.domain.member.repository.MemberRepository;
 import backend.hanpum.exception.exception.auth.*;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -215,26 +217,48 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private void createAuthMail(String email, String authCode) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
-        message.setSubject("한품 인증코드 발송");
-        message.setText("인증코드 : " + authCode);
+        MimeMessage message = javaMailSender.createMimeMessage();
         try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setTo(email);
+            helper.setSubject("한품 이메일 인증코드 발송");
+            String htmlContent = createAuthMailContent("이메일", authCode);
+            helper.setText(htmlContent, true);
             javaMailSender.send(message);
-        } catch (MailException e) {
+        } catch (Exception e) {
             throw new AuthenticationMailSendFailedException();
         }
     }
 
     private void createFindPasswordMail(String email, String authCode) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
-        message.setSubject("한품 비밀번호 찾기 인증 코드 발송");
-        message.setText("인증코드 : " + authCode);
+        MimeMessage message = javaMailSender.createMimeMessage();
         try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setTo(email);
+            helper.setSubject("한품 비밀번호 찾기 인증코드 발송");
+            String htmlContent = createAuthMailContent("비밀번호 찾기", authCode);
+            helper.setText(htmlContent, true);
             javaMailSender.send(message);
-        } catch (MailException e) {
+        } catch (Exception e) {
             throw new AuthenticationMailSendFailedException();
         }
+    }
+
+    private String createAuthMailContent(String type, String authCode) {
+        return
+                "<html>" +
+                        "<body style='font-family:Helvetica,Arial,sans-serif;margin:0;padding:0;background-color:#f9f9f9;color:#333;'>" +
+                        "  <div style='max-width:600px;margin:40px auto;background:#fff;padding:30px;border-radius:8px;border:1px solid #e0e0e0;'>" +
+                        "    <h1 style='text-align:center;color:#333;'> 한품 " + type + " 인증코드 </h1>" +
+                        "    <p style='color:#333;'>안녕하세요.</p>" +
+                        "    <p style='color:#333;'>한품 서비스를 이용해 주셔서 감사합니다. 요청하신 인증코드는 아래와 같습니다.</p>" +
+                        "    <div style='text-align:center;margin:30px 0;padding:15px;background:#f2f2f2;border-radius:4px;color:#333;border:2px solid #e0e0e0;'>" +
+                        "      <h2 style='margin:0;color:#333;'>" + authCode + "</h2>" +
+                        "    </div>" +
+                        "    <p style='color:#333;'>인증 코드는 5분 동안 유효합니다. 문제가 있을 경우, 고객 지원팀에 문의해 주세요.</p>" +
+                        "    <p style='text-align:center;color:#aaa;font-size:12px;border-top:1px solid #e0e0e0;padding-top:20px;'>&copy; 2024 한품. All rights reserved.</p>" +
+                        "  </div>" +
+                        "</body>" +
+                        "</html>";
     }
 }
