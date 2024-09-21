@@ -1,2 +1,0 @@
-[2024-09-20 13:34:08:61243] ERROR 13658 --- [nio-8080-exec-9] b.h.e.handler.GlobalExceptionHandler     : ValidScheduleNotFoundException = 유효한 일정이 없습니다.
-[2024-09-20 13:34:08:61244] ERROR 13658 --- [nio-8080-exec-9] b.h.e.handler.GlobalExceptionHandler     : Error Message = null
