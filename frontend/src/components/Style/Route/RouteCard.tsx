@@ -66,7 +66,7 @@ function RouteCard(props: RouteCardProps) {
           },
         });
       }}
-      img={props.ele.img.startsWith('testu') ? test : props.ele.img}
+      img={!props.ele.img.includes('jpg') ? test : props.ele.img}
     >
       <C.TopContent>
         <C.ContentContainer>
