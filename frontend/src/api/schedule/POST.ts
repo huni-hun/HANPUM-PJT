@@ -22,7 +22,7 @@ export const PostMineSchedule = async (courseId: number, startDate: string) => {
 
   const formattedDate = formatDateForServer(startDate);
 
-  const response = await api.post('http://3.35.230.31:8080/api/schedule', {
+  const response = await api.post('/api/schedule', {
     courseId: courseId,
     startDate: formattedDate,
   });
