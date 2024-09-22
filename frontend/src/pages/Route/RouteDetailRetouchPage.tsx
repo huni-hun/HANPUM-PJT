@@ -178,6 +178,7 @@ function RouteDetailRetouchPage() {
         }
         if (ele.attractionReqDtoList.length < 1) {
           let attArr: AttractionsProps[] = [];
+          let newAttR: AttractionReqDto[] = [];
           getRouteDayAttraction(routeid as string, ele.dayNumber).then(
             (result) => {
               result.data.data.map((ele: any) => {
@@ -199,13 +200,14 @@ function RouteDetailRetouchPage() {
                   type: ele.type,
                   img: ele.img,
                 };
-                setAttractionsr((pre) => [...pre, attraction]);
+                newAttR.push(attraction);
                 attArr.push(attData);
               });
             },
           );
+          setAttractionsr(newAttR);
           setAttractions(attArr);
-          copyDetail[idx].attractionReqDtoList = attractionsr;
+          copyDetail[idx].attractionReqDtoList = newAttR;
         }
       });
       setDateDetail(copyDetail);
@@ -239,6 +241,24 @@ function RouteDetailRetouchPage() {
         setLatitude(arr[0].latitude);
         setLongitude(arr[0].longitude);
       }
+      let attArr: AttractionsProps[] = [];
+      dateDetail[selectedDay - 1].attractionReqDtoList.map(
+        (ele: AttractionReqDto, idx: number) => {
+          let attData: AttractionsProps = {
+            name: ele.name,
+            type: ele.type,
+            attractionId: idx + 1,
+            address: ele.address,
+            latitude: ele.lat,
+            longitude: ele.lon,
+            img: ele.img,
+          };
+
+          attArr.push(attData);
+        },
+      );
+
+      setAttractions(attArr);
     }
     setDayOfRoute(arr);
   }, [selectedDay]);
@@ -398,7 +418,6 @@ function RouteDetailRetouchPage() {
         attArr.push(attData);
       });
     }
-
     setAttractions(attArr);
   }, [attractionsr]);
 
@@ -501,11 +520,13 @@ function RouteDetailRetouchPage() {
           navigate(-1);
         }}
         clickOption={() => {
-          RetouchRoute(addRoute).then((ele) => {
-            if (ele.status === 200) {
-              navigate(-1);
-            }
-          });
+          RetouchRoute(addRoute)
+            .then((ele) => {
+              if (ele.status === 200) {
+                navigate(-1);
+              }
+            })
+            .catch((err) => {});
         }}
       />
       <R.Main>

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { colors } from '@/styles/colorPalette';
 import markersrc from '@/assets/img/Marker.png';
 import attmarkersrc from '@/assets/img/AttMarker.png';
-import Icon from '../Icon/Icon';
+import { useNavigate } from 'react-router-dom';
 
 declare global {
   interface Window {
@@ -18,6 +18,7 @@ interface MapProps {
   marker?: any[];
   attrationmarker?: any[];
   infoBtn?: boolean;
+  isSchdule?: boolean;
 }
 
 function Map(props: MapProps) {
@@ -27,6 +28,8 @@ function Map(props: MapProps) {
   const [markers, setMarkers] = useState<any[]>([]); // 마커 배열을 상태로 관리
   const [attmarkers, setAttMarkers] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   const setMap = () => {
     const mapScript = document.createElement('script');
@@ -147,7 +150,16 @@ function Map(props: MapProps) {
   }, [kakaoMap, props.attrationmarker]);
 
   return (
-    <MapContainer id="kakaoMap">
+    <MapContainer
+      id="kakaoMap"
+      onClick={() => {
+        if (props.isSchdule !== undefined) {
+          if (props.isSchdule) {
+            navigate('/route/list', { state: { type: 'schedule' } });
+          }
+        }
+      }}
+    >
       {props.infoBtn && (
         <InfoBox
           onClick={() => {
