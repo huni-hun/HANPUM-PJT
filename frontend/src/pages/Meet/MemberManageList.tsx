@@ -32,7 +32,11 @@ function MemberManageList() {
       try {
         const response = await GetMeetMemberList(groupId || 0);
         if (response && response.status === 'SUCCESS') {
-          setListData(response.data.groupMemberResList || []);
+          // joinType이 "GROUP_LEADER"가 아닌 데이터만 필터링하여 listData에 저장
+          const filteredData = response.data.groupMemberResList.filter(
+            (member: MemberInfo) => member.joinType !== 'GROUP_LEADER',
+          );
+          setListData(filteredData || []);
         } else if (response.status === 'ERROR') {
           toast.error(response.message);
           navigate('/meet/detail');

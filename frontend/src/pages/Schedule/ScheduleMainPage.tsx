@@ -53,6 +53,7 @@ import { PutScheduleArrive } from '@/api/schedule/PUT';
 import ScheduleNoHave from '@/components/Schedule/ScheduleNoHave';
 import NoHave from '@/components/My/NoHave';
 import Loading from '@/components/common/Loading';
+import { cutAddress } from '@/utils/util';
 
 function ScheduleMainPage() {
   const BtnClick = () => {};
@@ -639,7 +640,13 @@ function ScheduleMainPage() {
         try {
           const response = await getNearbyLocData(lat || 0, lon || 0);
           if (response && response.status === 'SUCCESS') {
-            setAttractionsCard(response.data);
+            const transformedData = response.data.map(
+              (item: ScheduleAttractionsProps) => ({
+                ...item,
+                address: cutAddress(item.address),
+              }),
+            );
+            setAttractionsCard(transformedData);
           } else if (response.status === 'ERROR') {
             // console.log(response.message);
           }
@@ -660,6 +667,37 @@ function ScheduleMainPage() {
       state: { attractionIndex: index, attractionsCard },
     });
   };
+
+  // 현재 날짜를 가져오는 함수
+  const getCurrentDate = () => {
+    const today = new Date();
+    return today.toISOString().slice(0, 10).replace(/-/g, ''); // "YYYYMMDD" 형식으로 변환
+  };
+
+  useEffect(() => {
+    // 현재 날짜 가져오기
+    const currentDate = getCurrentDate();
+
+    // runningScheduleData가 존재하고, scheduleDayResDtoList가 있는지 확인
+    if (runningScheduleData && runningScheduleData.scheduleDayResDtoList) {
+      // 현재 날짜와 일치하는 데이터를 찾기
+      const todaySchedule = runningScheduleData.scheduleDayResDtoList.find(
+        (day) => day.date === currentDate,
+      );
+
+      if (todaySchedule && todaySchedule.scheduleWayPointList) {
+        // 출발지와 도착지 설정
+        const startPointName =
+          todaySchedule.scheduleWayPointList[0]?.name || '';
+        const endPointName =
+          todaySchedule.scheduleWayPointList[
+            todaySchedule.scheduleWayPointList.length - 1
+          ]?.name || '';
+      } else {
+        toast.error('오늘 일정이 없습니다.');
+      }
+    }
+  }, [runningScheduleData]);
 
   if (loading) {
     return <Loading />;
@@ -783,21 +821,20 @@ function ScheduleMainPage() {
                   </R.RouteDetailInfoContainer>
                   <S.AttractionsContainer>
                     <S.AttractionsBox>
-                      <S.AttrantiosTypeBox>관광지</S.AttrantiosTypeBox>
+                      <S.AttrantiosTypeBox>주요 관광지</S.AttrantiosTypeBox>
                       <S.AttractionsOverflow>
                         {attractionsCard.length > 0 &&
-                          attractionsCard.map((ele, index) => (
+                          attractionsCard.map((ele) => (
                             <S.AttractionCard
                               img={(ele as ScheduleAttractionsProps).image1}
-                              onClick={() => clickAttraction(index)}
                             >
                               <S.AttractionCardTitle>
-                                {(ele as ScheduleAttractionsProps).title}
+                                {(ele as ScheduleAttractionsProps).address}
                               </S.AttractionCardTitle>
                               <S.AttractionCardDetail>
                                 <Icon name="IconFlag" size={20} />
                                 <S.AttractionCardDetailText>
-                                  {(ele as ScheduleAttractionsProps).name}
+                                  {(ele as ScheduleAttractionsProps).title}
                                 </S.AttractionCardDetailText>
                               </S.AttractionCardDetail>
                             </S.AttractionCard>

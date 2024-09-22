@@ -508,7 +508,6 @@ export const DetailWayOverflow = styled.div`
 `;
 export const AttractionsContainer = styled.div`
   width: 100%;
-
   background-color: #fff;
 `;
 export const AttractionsBox = styled.div`
