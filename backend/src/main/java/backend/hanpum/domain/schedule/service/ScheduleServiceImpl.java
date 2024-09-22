@@ -39,6 +39,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -230,6 +231,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleDayResDto;
     }
 
+    @CacheEvict(cacheNames = "runningSchedule", allEntries = true)
     @Override
     public void deleteSchedule(Long memberId, Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(ScheduleNotFoundException::new);
@@ -260,6 +262,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = "runningSchedule", allEntries = true)
     @Override
     public Long startSchedule(Long memberId, ScheduleStartReqDto scheduleRunReqDto) {
         Schedule schedule = scheduleRepository.findById(scheduleRunReqDto.getScheduleId()).orElseThrow(ScheduleNotFoundException::new);
@@ -279,6 +282,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = "runningSchedule", allEntries = true)
     @Override
     public Long runAndStop(Long memberId, ScheduleRunReqDto scheduleRunReqDto) {
         ScheduleDay scheduleDay = scheduleDayRepository.findById(scheduleRunReqDto.getScheduleDayId()).orElseThrow(ScheduleDayNotFoundException::new);
