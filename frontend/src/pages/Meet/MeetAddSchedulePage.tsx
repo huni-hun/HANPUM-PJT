@@ -88,12 +88,13 @@ function MeetAddSchedulePage() {
   };
 
   const handlerExpanded = () => {
-    if (totalDays === 0) {
+    if (!isMapReady) {
+      // routedata가 없거나 ready가 false인 경우
       setIsRouteValid(false);
       toast.error('경로를 먼저 선택해주세요!');
     } else {
       setIsRouteValid(true);
-      setIsExpanded((prevState) => !prevState);
+      setIsExpanded((prevState) => !prevState); // 달력 확장
     }
   };
 

@@ -144,6 +144,7 @@ function MeetAddMainPage() {
       },
     });
   };
+
   /** 모임 생성 post api */
   const handleCreateGroup = async () => {
     try {
