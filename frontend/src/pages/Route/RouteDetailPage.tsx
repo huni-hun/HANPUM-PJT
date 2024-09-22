@@ -67,6 +67,7 @@ function RouteDetailPage() {
   const [beforeReview, setBeforeReview] = useState<string>('');
   const [beforeRating, setBeforeRating] = useState<number>(0);
   const [reviewId, setReviewId] = useState<number>(0);
+  const [noVertexes, setNoVertexes] = useState<boolean>(false);
   /** 바텀 sheet */
   const [isOpenSetting, setIsOpenSetting] = useState<boolean>(false); // 경로설정 BottomSheet 열림 상태
   const [isOpenSorting, setIsOpenSorting] = useState<boolean>(false); // 경로정렬 BottomSheet 열림 상태
@@ -152,7 +153,7 @@ function RouteDetailPage() {
         result.data.data.wayPoints.sort(
           (a: any, b: any) => a.pointNumber - b.pointNumber,
         );
-        result.data.data.wayPoints.map((ele: any) => {
+        result.data.data.wayPoints.map((ele: any, idx: number) => {
           let data: DaysOfRouteProps = {
             routeName: ele.name,
             routeAddress: ele.address,
@@ -171,6 +172,22 @@ function RouteDetailPage() {
           };
 
           lines.push(line);
+          if (idx === 0) {
+            if (ele.vertexes !== null) {
+              ele.vertexes.forEach((vertex: any, index: number) => {
+                if (index % 2 === 0) {
+                  mapLines.push(
+                    new window.kakao.maps.LatLng(
+                      ele.vertexes[index + 1],
+                      ele.vertexes[index],
+                    ),
+                  );
+                }
+              });
+            } else {
+              setNoVertexes(true);
+            }
+          }
 
           let markerData: LineStartEndProps = {
             x: ele.lat,
@@ -214,71 +231,73 @@ function RouteDetailPage() {
   }, [selectedDay]);
 
   useEffect(() => {
-    if (linePath.length > 0) {
-      const mapLines: any[] = [];
-      if (linePath.length <= 5) {
-        GetLineData(linePath)
-          .then((res) => {
-            if (res.status === 200 && res.data.status === 'SUCCESS') {
-              res.data.data.forEach((ele: any) => {
-                ele.vertexes.forEach((vertex: any, index: number) => {
-                  if (index % 2 === 0) {
-                    mapLines.push(
-                      new window.kakao.maps.LatLng(
-                        ele.vertexes[index + 1],
-                        ele.vertexes[index],
-                      ),
-                    );
-                  }
+    if (noVertexes) {
+      if (linePath.length > 0) {
+        const mapLines: any[] = [];
+        if (linePath.length <= 5) {
+          GetLineData(linePath)
+            .then((res) => {
+              if (res.status === 200 && res.data.status === 'SUCCESS') {
+                res.data.data.forEach((ele: any) => {
+                  ele.vertexes.forEach((vertex: any, index: number) => {
+                    if (index % 2 === 0) {
+                      mapLines.push(
+                        new window.kakao.maps.LatLng(
+                          ele.vertexes[index + 1],
+                          ele.vertexes[index],
+                        ),
+                      );
+                    }
+                  });
                 });
-              });
-              setMapLines([...mapLines]); // 복사본으로 상태 업데이트
-            }
-          })
-          .catch((err) => {
-            toast.error('해당경로는 길찾기를 제공하지 않습니다.');
-          });
-      } else {
-        let arr: MapLinePathProps[] = [];
-        const promises: Promise<any>[] = []; // 비동기 작업을 저장할 배열
+                setMapLines([...mapLines]); // 복사본으로 상태 업데이트
+              }
+            })
+            .catch((err) => {
+              toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+            });
+        } else {
+          let arr: MapLinePathProps[] = [];
+          const promises: Promise<any>[] = []; // 비동기 작업을 저장할 배열
 
-        linePath.forEach((ele: MapLinePathProps, idx: number) => {
-          arr.push(ele);
+          linePath.forEach((ele: MapLinePathProps, idx: number) => {
+            arr.push(ele);
 
-          if (arr.length === 5 || idx === linePath.length - 1) {
-            // 배열이 5개가 되었거나 마지막 요소일 때 GetLineData 호출
-            promises.push(
-              GetLineData(arr)
-                .then((res) => {
-                  if (res.status === 200 && res.data.status === 'SUCCESS') {
-                    res.data.data.forEach((ele: any) => {
-                      ele.vertexes.forEach((vertex: any, index: number) => {
-                        if (index % 2 === 0) {
-                          mapLines.push(
-                            new window.kakao.maps.LatLng(
-                              ele.vertexes[index + 1],
-                              ele.vertexes[index],
-                            ),
-                          );
-                        }
+            if (arr.length === 5 || idx === linePath.length - 1) {
+              // 배열이 5개가 되었거나 마지막 요소일 때 GetLineData 호출
+              promises.push(
+                GetLineData(arr)
+                  .then((res) => {
+                    if (res.status === 200 && res.data.status === 'SUCCESS') {
+                      res.data.data.forEach((ele: any) => {
+                        ele.vertexes.forEach((vertex: any, index: number) => {
+                          if (index % 2 === 0) {
+                            mapLines.push(
+                              new window.kakao.maps.LatLng(
+                                ele.vertexes[index + 1],
+                                ele.vertexes[index],
+                              ),
+                            );
+                          }
+                        });
                       });
-                    });
-                  }
-                })
-                .catch((err) => {
-                  toast.error('해당경로는 길찾기를 제공하지 않습니다.');
-                }),
-            );
+                    }
+                  })
+                  .catch((err) => {
+                    toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+                  }),
+              );
 
-            // 배열 초기화
-            arr = [];
-          }
-        });
+              // 배열 초기화
+              arr = [];
+            }
+          });
 
-        // 모든 비동기 작업이 완료된 후에 setMapLines 호출
-        Promise.all(promises).then(() => {
-          setMapLines([...mapLines]);
-        });
+          // 모든 비동기 작업이 완료된 후에 setMapLines 호출
+          Promise.all(promises).then(() => {
+            setMapLines([...mapLines]);
+          });
+        }
       }
     }
   }, [linePath]);
@@ -408,7 +427,11 @@ function RouteDetailPage() {
             <R.ImgBox>
               <img
                 src={
-                  !routeData.img.includes('jpg') ? defaultImg : routeData.img
+                  routeData.img !== null
+                    ? !routeData.img.includes('jpg')
+                      ? defaultImg
+                      : routeData.img
+                    : defaultImg
                 }
               />
             </R.ImgBox>

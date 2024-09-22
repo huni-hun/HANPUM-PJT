@@ -167,6 +167,7 @@ export interface WayPointReqDto {
   distance: string;
   duration: string;
   calorie: string;
+  vertexes: number[];
 }
 
 export interface AttractionReqDto {

@@ -52,6 +52,7 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
         distance: '0',
         duration: '0',
         calorie: '0',
+        vertexes: [],
       };
 
       props.setWayPoints((pre) => {

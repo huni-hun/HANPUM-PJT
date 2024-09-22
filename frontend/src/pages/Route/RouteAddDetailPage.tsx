@@ -126,6 +126,11 @@ function RouteAddDetailPage() {
           .then((res) => {
             if (res.status === 200 && res.data.status === 'SUCCESS') {
               res.data.data.forEach((ele: any) => {
+                wayPoints.map((el: WayPointReqDto) => {
+                  // eslint-disable-next-line no-self-assign
+                  el.vertexes = ele.vertexes;
+                });
+
                 ele.vertexes.forEach((vertex: any, index: number) => {
                   if (index % 2 === 0) {
                     mapLines.push(

@@ -151,6 +151,7 @@ function RouteDetailRetouchPage() {
                   distance: ele.distance,
                   duration: ele.duration,
                   calorie: ele.calorie,
+                  vertexes: ele.vertexes,
                 };
                 wayPoints.push(waypoint);
 
