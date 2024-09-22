@@ -358,6 +358,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .set(schedule.state, 1)
                 .where(schedule.state.eq(0)
                         .and(schedule.startDate.eq(today)))
+//                .where(schedule.startDate.eq(today))
                 .execute();
         return updatedCount;
     }
@@ -369,6 +370,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .where(schedule.state.eq(1)
                         .and(schedule.endDate.eq(today)))
                 .execute();
+
         long count2 = query.update(scheduleDay)
                 .set(scheduleDay.visit, true)
                 .where(scheduleDay.date.eq(yesterday)

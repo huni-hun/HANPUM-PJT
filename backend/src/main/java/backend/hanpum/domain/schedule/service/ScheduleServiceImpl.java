@@ -335,25 +335,30 @@ public class ScheduleServiceImpl implements ScheduleService {
         memoRepository.save(memo);
     }
 
+    @CacheEvict(cacheNames = "runningSchedule", allEntries = true)
     @Scheduled(cron = "0 0 0 * * *")
     @Transactional
     @Override
     public void activateSchedules() {
+        log.info("일정 활성화 시작");
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-
         long updatedCount = scheduleRepository.activateScheduleForToday(today);
+        log.info("일정 활성화 수" + updatedCount);
         if (updatedCount == 0) {
             log.info("활성화된 스케줄 없음");
         }
     }
 
+    @CacheEvict(cacheNames = "runningSchedule", allEntries = true)
     @Scheduled(cron = "0 0 0 * * *")
     @Transactional
     @Override
     public void deactivateSchedules() {
+        log.info("일정 비활성화 시작");
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String yesterday = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         long updatedCount = scheduleRepository.deactivateScheduleForToday(today, yesterday);
+        log.info("일정 비활성화 수" + updatedCount);
         if (updatedCount == 0) {
             log.info("비활성화된 스케줄 없음");
         }
