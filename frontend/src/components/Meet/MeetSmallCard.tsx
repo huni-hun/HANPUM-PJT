@@ -49,9 +49,6 @@ function MeetSmallCard({
             if (res.status === 'SUCCESS') {
               toast.success('관심 모임으로 등록되었습니다.');
               setLike(true);
-              navigate(`/meet/detail`, {
-                state: { groupId: data.groupId },
-              });
             } else if (res.status === 'ERROR') {
               toast.error(res.message);
             }
@@ -68,7 +65,10 @@ function MeetSmallCard({
   return (
     <MeetSmallCardContainer onClick={onClick}>
       <img src={data.groupImg} alt="그룹 이미지" />
-      <DateBadge totalDays={3} style={{ top: '12px', left: '12px' }} />
+      <DateBadge
+        totalDays={data.totalDays}
+        style={{ top: '12px', left: '12px' }}
+      />
       <Icon
         name={like ? 'IconModiHeartFill' : 'IconModiHeartNonFill'}
         size={20}

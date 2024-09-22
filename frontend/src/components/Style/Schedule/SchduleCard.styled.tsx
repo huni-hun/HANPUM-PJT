@@ -16,10 +16,10 @@ export const CardContainder = styled.div`
 
 export const CardWarp = styled.div<SchduleCardProps>`
   background-image: url(${(props) => props.backGroundImg});
+  background-size: cover;
   background-size: 98vw;
   background-position: center;
   background-repeat: no-repeat;
-  object-fit: cover;
   width: 100%;
   height: 100%;
   box-sizing: border-box;

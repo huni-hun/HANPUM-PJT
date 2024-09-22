@@ -79,14 +79,20 @@ function AddSchedulePage() {
   };
 
   const handlerExpanded = () => {
-    if (routedata && Object.keys(routedata).length === 0) {
-      setIsRouteValid(false); // 경로가 유효하지 않으면 상태를 업데이트
+    if (!routedata || routedata.ready === false) {
+      // routedata가 없거나 ready가 false인 경우
+      setIsRouteValid(false);
+      toast.error('경로를 먼저 선택해주세요!');
+    } else if (Object.keys(routedata).length === 0) {
+      // routedata가 빈 객체인 경우
+      setIsRouteValid(false);
       toast.error('경로를 먼저 선택해주세요!');
     } else {
-      setIsRouteValid(true); // 경로가 유효하면 상태를 true로
+      setIsRouteValid(true);
       setIsExpanded((prevState) => !prevState); // 달력 확장
     }
   };
+
   /** 임시 데이터 */
   const dummyData = {
     date: [
