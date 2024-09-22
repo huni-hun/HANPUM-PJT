@@ -229,7 +229,11 @@ function AddSchedulePage() {
                 >
                   <S.MapBox>
                     {isMapReady ? (
-                      <Map latitude={longitude} longitude={latitude} />
+                      <Map
+                        latitude={longitude}
+                        longitude={latitude}
+                        isSchdule
+                      />
                     ) : (
                       <S.NoDataRouteWrap>
                         <img src={noImage} alt="" />

@@ -145,7 +145,7 @@ function RouteAddMainPage() {
               )}
               {!explanationReady ? null : (
                 <R.RouteCardMain>
-                  <R.RouteExplane value={routeExplane} />
+                  <R.RouteExplane defaultValue={routeExplane} />
                 </R.RouteCardMain>
               )}
             </R.CardClosed>
@@ -268,7 +268,7 @@ function RouteAddMainPage() {
                     }}
                   >
                     <R.TypeCheckBox
-                      checked={typeChecked.includes(ele)}
+                      defaultChecked={typeChecked.includes(ele)}
                       type="checkbox"
                     />
                     <R.TypeLabel>{ele}</R.TypeLabel>
