@@ -286,8 +286,14 @@ function ProfileConfig({
 
     const signupKaKaoReq: Pick<
       SignupRequestValues,
-      'multipartFile' | 'nickname' | 'gender' | 'phoneNumber' | 'birthDate'
+      | 'multipartFile'
+      | 'nickname'
+      | 'gender'
+      | 'phoneNumber'
+      | 'birthDate'
+      | 'name'
     > = {
+      name: formValues.name || '',
       birthDate: formValues.birthDate || '',
       gender: formValues.gender || '',
       nickname: formValues.nickname || '',

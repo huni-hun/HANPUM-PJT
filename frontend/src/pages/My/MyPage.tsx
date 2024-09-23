@@ -1,6 +1,7 @@
 import { GetUser } from '@/api/mypage/GET';
 import { Logout } from '@/api/signup/POST';
 import { isAuthEnticatedAtom } from '@/atoms/isAuthEnticatedAtom';
+import BottomTab from '@/components/common/BottomTab/BottomTab';
 import Flex from '@/components/common/Flex';
 import Header from '@/components/common/Header/Header';
 import Text from '@/components/common/Text';
@@ -116,6 +117,7 @@ function MyPage() {
           </div>
         </>
       )}
+      <BottomTab />
     </MyPageContainer>
   );
 }
