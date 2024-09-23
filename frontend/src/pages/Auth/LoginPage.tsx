@@ -22,38 +22,36 @@ function LoginPage() {
   const setAuthEnticate = useSetRecoilState(isAuthEnticatedAtom);
 
   useEffect(() => {
-    if (tryKakao === 'true') {
-      const memberType = Cookies.get('memberType');
-      const accessToken = Cookies.get('accessToken');
-
-      if (accessToken) {
-        const token = encodeToken(accessToken.split('+')[1]);
-
-        if (token) {
-          localStorage.setItem('token', token);
-          Cookies.remove('accessToken', { path: '/' });
-        }
-        if (memberType === 'KAKAO_INCOMPLETE') {
-          navigate('/signup');
-        } else {
-          setAuthEnticate(true);
-          navigate('/home');
-        }
-      }
-    }
-  }, [tryKakao]);
-
-  useEffect(() => {
     const timer = setTimeout(() => {
       setSplashLoading(false);
+      if (tryKakao === 'true') {
+        const memberType = Cookies.get('memberType');
+        const accessToken = Cookies.get('accessToken');
+
+        if (accessToken) {
+          const token = encodeToken(accessToken.split('+')[1]);
+          if (token) {
+            localStorage.setItem('token', token);
+            Cookies.remove('accessToken', { path: '/' });
+          }
+
+          if (memberType === 'KAKAO_INCOMPLETE') {
+            navigate('/signup');
+          } else {
+            setAuthEnticate(true);
+            navigate('/home');
+          }
+        }
+      }
     }, 2800);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [tryKakao, navigate, setAuthEnticate]);
 
   if (splashLoading) {
     return <Splash />;
   }
+
   return (
     <LoginPageContainer>
       {init && <Entry />} {!init && <Form />}
