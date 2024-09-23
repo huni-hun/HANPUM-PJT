@@ -15,6 +15,12 @@ const ProgressSchedule = ({
   totalDistance,
   percentage,
   rate,
+  /** 오늘 일정률 */
+  todayStartPoint,
+  todayEndPoint,
+  currentVisitCount,
+  todayTotalVisitCount,
+  todayTotalDistance,
 }: FeedInfoProps) => {
   return (
     <>
@@ -44,10 +50,10 @@ const ProgressSchedule = ({
         <R.StartDateBox>
           <R.PlaceBox>
             <R.PlaceText>
-              출발지 <span className="bold-text">{startPoint}</span>
+              출발지 <span className="bold-text">{todayStartPoint}</span>
             </R.PlaceText>
             <R.PlaceText>
-              도착지 <span className="bold-text">{endPoint}</span>
+              도착지 <span className="bold-text">{todayEndPoint}</span>
             </R.PlaceText>
           </R.PlaceBox>
 
@@ -63,10 +69,12 @@ const ProgressSchedule = ({
         </S.ProgressBar>
         <S.ProgressBox>
           <S.ProgressText>
-            경유지 <span className="green_text">1</span>/8
+            경유지 <span className="green_text">{currentVisitCount}</span>/
+            {todayTotalVisitCount}
           </S.ProgressText>
           <S.ProgressText>
-            남은 이동 거리 <span className="bold-text">{totalDistance}km</span>
+            남은 이동 거리
+            <span className="bold-text">{todayTotalDistance}km</span>
           </S.ProgressText>
         </S.ProgressBox>
       </S.SchduleProgressWrap>

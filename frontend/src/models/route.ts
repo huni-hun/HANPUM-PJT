@@ -51,6 +51,12 @@ export interface FeedInfoProps {
   rate?: number;
   /** style */
   isMeetFeed?: string;
+  /** 오늘 일정 */
+  todayStartPoint?: string;
+  todayEndPoint?: string;
+  currentVisitCount?: number;
+  todayTotalVisitCount?: number;
+  todayTotalDistance?: number;
 }
 
 export interface RouteListProps {
