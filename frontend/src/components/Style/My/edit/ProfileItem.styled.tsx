@@ -23,8 +23,6 @@ export const ProfileItemContainer = styled.div`
       img {
         margin-right: 6px;
       }
-      svg {
-      }
     }
   }
 `;

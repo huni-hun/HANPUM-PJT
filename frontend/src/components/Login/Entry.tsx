@@ -3,7 +3,7 @@ import Text from '../common/Text';
 
 import human from '@imgs/login_human.png';
 import flag from '@imgs/login_flag.png';
-import logo from '@imgs/logo.png';
+import logo from '@imgs/newLogo.png';
 import Flex from '../common/Flex';
 
 import * as S from '../Style/Login/Entry.styled';
