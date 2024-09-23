@@ -1,6 +1,7 @@
 package backend.hanpum.exception.handler;
 
 import backend.hanpum.exception.exception.course.*;
+import backend.hanpum.exception.exception.member.DeleteMemberFailedByGroupException;
 import backend.hanpum.exception.exception.s3.FileDeleteFailedException;
 import backend.hanpum.exception.exception.s3.FileFormatUnsupportedException;
 import backend.hanpum.exception.exception.s3.FilePutFailedException;
@@ -377,4 +378,13 @@ public class GlobalExceptionHandler {
         log.error("Error Message = {}", e.getMessage());
         return response.error(e.getErrorCode());
     }
+
+    /* 멤버 */
+    @ExceptionHandler(DeleteMemberFailedByGroupException.class)
+    protected ResponseEntity<?> handle(DeleteMemberFailedByGroupException e) {
+        log.error("DeleteMemberFailedByGroupException = {}", e.getErrorCode().getMessage());
+        log.error("Error Message = {}", e.getMessage());
+        return response.error(e.getErrorCode());
+    }
+
 }

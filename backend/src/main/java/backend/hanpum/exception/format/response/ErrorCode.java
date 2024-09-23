@@ -76,6 +76,9 @@ public enum ErrorCode {
     REFRESH_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "리프레쉬 토큰이 존재하지 않습니다. 다시 로그인해 주세요."),
     ACCESS_TOKEN_INVALID(HttpStatus.BAD_REQUEST, "잘못된 엑세스 토큰입니다."),
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "일치하는 회원 정보가 없습니다."),
+
+    /* 멤버 */
+    DELETE_MEMBER_FAILED_BY_GROUP(HttpStatus.BAD_REQUEST, "가입 또는 신청 중인 모임이 있는 경우 회원 탈퇴가 불가능합니다."),
     ;
 
     private final HttpStatus status;

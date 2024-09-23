@@ -16,6 +16,7 @@ import backend.hanpum.domain.schedule.repository.ScheduleRepository;
 import backend.hanpum.exception.exception.auth.LoginInfoInvalidException;
 import backend.hanpum.exception.exception.auth.NicknameExpiredException;
 import backend.hanpum.exception.exception.group.GroupAlreadyJoinedException;
+import backend.hanpum.exception.exception.member.DeleteMemberFailedByGroupException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -108,16 +109,16 @@ public class MemberServiceImpl implements MemberService{
     public void deleteMember(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
         if (member.getGroupMember() != null) {
-            throw new GroupAlreadyJoinedException();
+            throw new DeleteMemberFailedByGroupException();
         }
         String profilePicture = member.getProfilePicture();
         member.deleteMember(null, null, null, null, null,
                 null, null, null, "탈퇴회원", MemberType.DELETE
         );
-        likeGroupRepository.deleteAllByMember_MemberId(memberId); // 관심모임 삭제
-        interestCourseRepository.deleteAllByMember_MemberId(memberId); // 관심 경로 삭제
-        courseUsageHistoryRepository.deleteAllByMember_MemberId(memberId); // 사용한 경로 삭제
-        scheduleRepository.deleteAllByMember_MemberId(memberId); // 일정 삭제
-        // 사진 삭제 로직 추가 예정
+        likeGroupRepository.deleteAllByMember_MemberId(memberId);
+        interestCourseRepository.deleteAllByMember_MemberId(memberId);
+        courseUsageHistoryRepository.deleteAllByMember_MemberId(memberId);
+        scheduleRepository.deleteAllByMember_MemberId(memberId);
+        s3ImageService.deleteImage(profilePicture);
     }
 }
