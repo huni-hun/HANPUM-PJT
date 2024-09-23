@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
@@ -36,6 +36,7 @@ import useQueryHandling from '@/hooks/global/useQueryHandling';
 import Loading from '@/components/common/Loading';
 import useIsAuth from '@/hooks/auth/useIsAuth';
 import { DeleteMeetLike } from '@/api/meet/Delete';
+import { isInitAtom } from '@/atoms/isAuthEnticatedAtom';
 
 function MainPage() {
   const navigator = useNavigate();
@@ -44,6 +45,8 @@ function MainPage() {
   const meetFilterInfo = useRecoilValue(meetFilterInfoAtom);
 
   const isAuth = useIsAuth();
+
+  const setIsInit = useSetRecoilState(isInitAtom);
 
   const queryClient = useQueryClient();
 
@@ -223,6 +226,10 @@ function MainPage() {
         });
       }
     });
+  }, []);
+
+  useEffect(() => {
+    setIsInit(true);
   }, []);
 
   return (

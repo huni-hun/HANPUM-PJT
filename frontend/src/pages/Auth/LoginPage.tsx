@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import Entry from '@/components/Login/Entry';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Form from '@/components/Login/Form';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { isAuthEnticatedAtom, isInitAtom } from '@/atoms/isAuthEnticatedAtom';
@@ -10,8 +10,10 @@ import { encodeToken } from '@/utils/util';
 import { useNavigate } from 'react-router-dom';
 import TermsText from '@/components/My/config/TermsText';
 import PersonalInformationText from '@/components/My/config/PersonalInformationText';
+import Splash from '@/components/Login/Splash';
 
 function LoginPage() {
+  const [splashLoading, setSplashLoading] = useState(true);
   const init = useRecoilValue(isInitAtom);
   const navigate = useNavigate();
 
@@ -21,7 +23,6 @@ function LoginPage() {
 
   useEffect(() => {
     if (tryKakao === 'true') {
-      // console.log('여기임?');
       const memberType = Cookies.get('memberType');
       const accessToken = Cookies.get('accessToken');
 
@@ -31,14 +32,10 @@ function LoginPage() {
         if (token) {
           localStorage.setItem('token', token);
           Cookies.remove('accessToken', { path: '/' });
-
-          // window.dispatchEvent(new Event('storage')); // 강제로 storage 이벤트 발생
         }
         if (memberType === 'KAKAO_INCOMPLETE') {
-          // console.log('회원가입 해야해요');
           navigate('/signup');
         } else {
-          // console.log('회원가입 이미 되어있어요.');
           setAuthEnticate(true);
           navigate('/home');
         }
@@ -46,6 +43,17 @@ function LoginPage() {
     }
   }, [tryKakao]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSplashLoading(false);
+    }, 2800);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (splashLoading) {
+    return <Splash />;
+  }
   return (
     <LoginPageContainer>
       {init && <Entry />} {!init && <Form />}

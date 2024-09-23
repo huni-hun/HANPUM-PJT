@@ -90,7 +90,7 @@ const Form = () => {
             localStorage.setItem('token', token);
           }
 
-          setIsAuthenticated(true);
+          // setIsAuthenticated(true);
           navigate('/home');
         }
         if (res.status === STATUS.error) {

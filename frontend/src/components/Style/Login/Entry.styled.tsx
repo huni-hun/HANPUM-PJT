@@ -8,7 +8,7 @@ export const EntryContainer = styled.div`
   flex-direction: column;
   align-items: center;
   .logo {
-    margin: 65px 0 23.52px;
+    margin: 65px 0 16px;
   }
 
   .round {
