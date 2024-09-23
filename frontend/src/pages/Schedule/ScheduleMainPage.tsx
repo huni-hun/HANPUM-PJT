@@ -753,6 +753,37 @@ function ScheduleMainPage() {
     return <Loading />;
   }
 
+  /** 오늘 달성률 */
+  const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+
+  const todaySchedule = runningScheduleData?.scheduleDayResDtoList?.find(
+    (schedule) => schedule.date === today,
+  );
+
+  const todayStartPoint =
+    todaySchedule?.scheduleWayPointList?.[0]?.name || '출발지 없음';
+  const todayEndPoint =
+    todaySchedule?.scheduleWayPointList?.[
+      todaySchedule?.scheduleWayPointList.length - 1
+    ]?.name || '도착지 없음';
+
+  const currentVisitCount =
+    todaySchedule?.scheduleWayPointList?.filter((point) => point.state === 2)
+      .length || 0;
+
+  const todayTotalVisitCount = todaySchedule?.scheduleWayPointList?.length || 0;
+
+  // 달성률 퍼센트 계산
+  const achievementPercentage =
+    todayTotalVisitCount > 0
+      ? (currentVisitCount / todayTotalVisitCount) * 100
+      : 0;
+
+  const todayTotalDistance =
+    todaySchedule?.totalDistance !== undefined
+      ? parseFloat(todaySchedule.totalDistance)
+      : 0;
+
   return (
     <ScheduleMainPageContainer>
       <Header
@@ -829,7 +860,17 @@ function ScheduleMainPage() {
                       totalDuration={feedInfoProps.totalDuration}
                       totalDistance={feedInfoProps.totalDistance}
                       dayData={feedInfoProps.dayData}
-                      percentage={runningScheduleData.rate}
+                      /** 오늘 일정 */
+                      todayStartPoint={todayStartPoint}
+                      todayEndPoint={todayEndPoint}
+                      currentVisitCount={currentVisitCount}
+                      todayTotalVisitCount={todayTotalVisitCount}
+                      todayTotalDistance={
+                        todaySchedule?.totalDistance !== undefined
+                          ? parseFloat(todaySchedule.totalDistance)
+                          : 0
+                      }
+                      percentage={achievementPercentage}
                     />
                   </S.ScheduleMainContainer>
 

@@ -177,7 +177,8 @@ function MeetList() {
             <Icon name="IconDownArrow" />
           </Flex>
           <div className="small-list">
-            {groupListData?.pages[0]?.data.groupResDtoList.length === 0 ? (
+            {groupListData?.pages?.[0]?.data?.groupResDtoList &&
+            groupListData.pages[0].data.groupResDtoList.length === 0 ? (
               <Text
                 $typography="t14"
                 $bold={true}
@@ -190,8 +191,8 @@ function MeetList() {
                 필터링 된 데이터가 없습니다.
               </Text>
             ) : (
-              groupListData?.pages.map((page) =>
-                page.data.groupResDtoList.map((groupData: MeetInfo) => (
+              groupListData?.pages?.map((page) =>
+                page.data.groupResDtoList?.map((groupData: MeetInfo) => (
                   <MeetSmallCard
                     key={groupData.groupId}
                     data={groupData}
