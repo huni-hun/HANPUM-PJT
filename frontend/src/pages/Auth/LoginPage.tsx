@@ -22,36 +22,48 @@ function LoginPage() {
   const setAuthEnticate = useSetRecoilState(isAuthEnticatedAtom);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setSplashLoading(false);
-      if (tryKakao === 'true') {
-        const memberType = Cookies.get('memberType');
-        const accessToken = Cookies.get('accessToken');
+    const token = localStorage.getItem('token'); // 로컬 스토리지에서 토큰을 가져옴
 
-        if (accessToken) {
-          const token = encodeToken(accessToken.split('+')[1]);
-          if (token) {
-            localStorage.setItem('token', token);
-            Cookies.remove('accessToken', { path: '/' });
-          }
+    if (token) {
+      // 토큰이 있으면 바로 홈으로 이동
+      setAuthEnticate(true);
+      navigate('/home');
+    } else {
+      // 토큰이 없으면 스플래시 화면을 2.8초 동안 보여줌
+      setSplashLoading(true);
+      const timer = setTimeout(() => {
+        setSplashLoading(false);
+      }, 2800);
 
-          if (memberType === 'KAKAO_INCOMPLETE') {
-            navigate('/signup');
-          } else {
-            setAuthEnticate(true);
-            navigate('/home');
-          }
+      return () => clearTimeout(timer);
+    }
+  }, [setAuthEnticate]);
+
+  useEffect(() => {
+    if (tryKakao === 'true') {
+      const memberType = Cookies.get('memberType');
+      const accessToken = Cookies.get('accessToken');
+
+      if (accessToken) {
+        const token = encodeToken(accessToken.split('+')[1]);
+
+        if (token) {
+          localStorage.setItem('token', token);
+          Cookies.remove('accessToken', { path: '/' });
+        }
+        if (memberType === 'KAKAO_INCOMPLETE') {
+          navigate('/signup');
+        } else {
+          setAuthEnticate(true);
+          navigate('/home');
         }
       }
-    }, 2800);
-
-    return () => clearTimeout(timer);
-  }, [tryKakao, navigate, setAuthEnticate]);
+    }
+  }, [tryKakao]);
 
   if (splashLoading) {
     return <Splash />;
   }
-
   return (
     <LoginPageContainer>
       {init && <Entry />} {!init && <Form />}
