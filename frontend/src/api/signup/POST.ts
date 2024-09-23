@@ -67,7 +67,12 @@ export async function SignUp(signupReq: SignupRequestValues) {
 export async function KaKaoLogin(
   signupKaKaoReq: Pick<
     SignupRequestValues,
-    'multipartFile' | 'nickname' | 'gender' | 'phoneNumber' | 'birthDate'
+    | 'multipartFile'
+    | 'nickname'
+    | 'gender'
+    | 'phoneNumber'
+    | 'birthDate'
+    | 'name'
   >,
 ) {
   // console.log('signupKaKaoReq ::', signupKaKaoReq);

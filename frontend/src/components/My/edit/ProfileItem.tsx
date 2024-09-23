@@ -5,6 +5,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { SignupRequestValues } from '@/models/signup';
 import Text from '@/components/common/Text';
 import Flex from '@/components/common/Flex';
+import Icon from '@/components/common/Icon/Icon';
 
 function ProfileItem({
   label,
@@ -17,36 +18,37 @@ function ProfileItem({
   param?: string;
   memberType?: string;
 }) {
+  console.log(label);
   const navigate = useNavigate();
-  const temp = false;
   return (
     <S.ProfileItemContainer className="info-item">
       <Text $typography="t15" color="grey2" style={{ width: '7.7rem' }}>
         {label}
       </Text>
 
-      <div
-        className="info"
-        onClick={() => {
-          if (param !== 'email') {
-            navigate(`/myprofile/:${param}`);
-          }
-        }}
-      >
-        <div className="kakao">
-          <Text $typography="t16">{value}</Text>
+      <div className="info">
+        <div className="info-box">
+          <Text $typography="t16" style={{ flex: 1 }}>
+            {value}
+          </Text>
           {memberType === 'KAKAO' && (
             <Flex $align="center">
               <img src={kakao} alt="kakao" />
               <Text $typography="t12">카카오 연동계정</Text>
             </Flex>
           )}
-          {/* {temp === false && (
-            <Flex $align="center">
-              <img src={kakao} alt="kakao" />
-              <Text $typography="t12">카카오 연동 계정</Text>
-            </Flex>
-          )} */}
+
+          {label !== '이메일' && (
+            <Icon
+              name="IconRetouch"
+              size={12}
+              onClick={() => {
+                if (param !== 'email') {
+                  navigate(`/myprofile/:${param}`);
+                }
+              }}
+            />
+          )}
         </div>
       </div>
     </S.ProfileItemContainer>

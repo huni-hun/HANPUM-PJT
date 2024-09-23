@@ -16,12 +16,14 @@ export const ProfileItemContainer = styled.div`
     padding-left: 1.2rem;
     box-sizing: border-box;
     font-size: 1.6rem;
-    .kakao {
+    .info-box {
       width: 100%;
       display: flex;
       align-items: center;
       img {
         margin-right: 6px;
+      }
+      svg {
       }
     }
   }
