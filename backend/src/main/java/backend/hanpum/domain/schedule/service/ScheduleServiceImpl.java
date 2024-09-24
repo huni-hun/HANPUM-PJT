@@ -98,6 +98,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new CreateCountExceededException();
         }
 
+
         Schedule schedule = Schedule.builder()
                 .type("private")
                 .startDate(startDate)
@@ -105,6 +106,12 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .member(member)
                 .course(course)
                 .build();
+
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        if(startDate.equals(today)) {
+            schedule.updateState(1);
+        }
+
         scheduleRepository.save(schedule);
         createScheduleDays(course, schedule, startDate);
 
