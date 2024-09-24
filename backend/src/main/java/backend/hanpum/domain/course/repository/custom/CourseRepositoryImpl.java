@@ -36,6 +36,8 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
         QCourseDay qCourseDay = QCourseDay.courseDay;
 
         BooleanBuilder whereClause = new BooleanBuilder();
+        whereClause.and(qCourse.deleteState.isNull().or(qCourse.deleteState.eq(false))); // deleteState가 null이거나 false인 경우만 조회
+
         if (targetCourse != null) {
             whereClause.and(qCourseType.typeName.eq(targetCourse));
         }
@@ -154,7 +156,8 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
                         qCourse.totalDays))
                 .from(qCourse)
                 .leftJoin(qReview).on(qCourse.courseId.eq(qReview.course.courseId))
-                .where(qCourse.courseId.eq(courseId))
+                .where(qCourse.courseId.eq(courseId)
+                        .and(qCourse.deleteState.isNull().or(qCourse.deleteState.eq(false))))
                 .groupBy(qCourse.courseId)
                 .fetchOne();
 
