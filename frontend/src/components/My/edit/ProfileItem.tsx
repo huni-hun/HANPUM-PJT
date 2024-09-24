@@ -18,7 +18,6 @@ function ProfileItem({
   param?: string;
   memberType?: string;
 }) {
-  console.log(label);
   const navigate = useNavigate();
   return (
     <S.ProfileItemContainer className="info-item">

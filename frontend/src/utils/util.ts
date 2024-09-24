@@ -2,6 +2,7 @@ import api from '@/api';
 import { GetRefreshToken } from '@/api/signup/POST';
 import { SignupRequestValues } from '@/models/signup';
 import CryptoJS from 'crypto-js';
+import { useNavigate } from 'react-router-dom';
 
 const secretKey = process.env.REACT_APP_SECRET_KEY;
 
@@ -55,17 +56,26 @@ export const handleTokenExpiration = async (originalRequest?: any) => {
   // 토큰 재발급 로직
   const newToken = await GetRefreshToken();
   console.log(newToken);
-  const encodeNewToken = encodeToken(newToken.data.accessToken.split('+')[1]);
-  console.log(encodeNewToken);
-  if (encodeNewToken) {
-    localStorage.setItem('token', encodeNewToken);
+  if (
+    newToken.message ===
+    '리프레쉬 토큰이 존재하지 않습니다. 다시 로그인해 주세요.'
+  ) {
+    console.log('여기??');
+    localStorage.removeItem('token');
+  } else {
+    const encodeNewToken = encodeToken(newToken.data.accessToken.split('+')[1]);
 
-    if (originalRequest) {
-      originalRequest.headers['Authorization'] = `Bearer ${encodeNewToken}`;
-      return api(originalRequest);
+    console.log(encodeNewToken);
+    if (encodeNewToken) {
+      localStorage.setItem('token', encodeNewToken);
+
+      if (originalRequest) {
+        originalRequest.headers['Authorization'] = `Bearer ${encodeNewToken}`;
+        return api(originalRequest);
+      }
     }
+    window.location.reload();
   }
-  // window.location.reload();
 };
 
 // text Area \n 붙이기
