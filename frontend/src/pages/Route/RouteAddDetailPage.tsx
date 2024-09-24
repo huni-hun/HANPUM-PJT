@@ -262,6 +262,17 @@ function RouteAddDetailPage() {
     });
   }, [selectedDay]);
 
+  const deleteDateDetail = (day: number) => {
+    let newDetail: CourseDayReqDto[] = [];
+    dateDetail.map((ele) => {
+      if (ele.dayNumber !== day) {
+        newDetail.push(ele);
+      }
+    });
+    console.log(newDetail);
+    setDateDetail(newDetail);
+  };
+
   return searchOpen ? (
     <SearchPlacePage
       setAttractionsCard={setAttractionsCard}
@@ -298,12 +309,30 @@ function RouteAddDetailPage() {
                   onClick={() => {
                     setSelectedDay(ele);
                   }}
-                >{`Day ${ele}`}</R.DayCard>
+                >
+                  {`Day ${ele}`}
+                  <R.DayDeleteBox
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      let newD = [...route];
+                      let d: number[] = [];
+                      newD.map((el) => {
+                        if (el !== ele) {
+                          d.push(el);
+                        }
+                      });
+                      deleteDateDetail(ele);
+                      setRoute(d);
+                    }}
+                  >
+                    X
+                  </R.DayDeleteBox>
+                </R.DayCard>
               ))}
               <R.DatAddCard
                 onClick={() => {
-                  setRoute((pre) => [...pre, day + 1]);
-                  setDay(day + 1);
+                  setRoute((pre) => [...pre, route[route.length - 1] + 1]);
+                  setDay(route[route.length - 1] + 1);
                 }}
               >
                 +
