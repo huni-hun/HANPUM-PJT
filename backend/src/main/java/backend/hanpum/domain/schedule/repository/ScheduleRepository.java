@@ -8,5 +8,4 @@ import java.util.List;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> , ScheduleRepositoryCustom {
     void deleteAllByMember_MemberId(Long memberId);
-    List<Schedule> findByCourse_courseId(Long courseId);
 }
