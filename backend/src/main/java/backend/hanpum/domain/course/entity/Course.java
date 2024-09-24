@@ -55,6 +55,9 @@ public class Course {
     @Column(name= "total_days")
     private Integer totalDays;
 
+    @Column(name= "delete_state")
+    private boolean deleteState;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -75,6 +78,10 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Schedule> schedules = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<CourseUsageHistory> courseUsageHistories = new ArrayList<>();
+
     public void updateCourse(String courseName, String content, boolean openState, boolean writeSTate, String startPoint, String endPoint, Integer totalDays) {
         this.courseName = courseName;
         this.content = content;
@@ -91,5 +98,9 @@ public class Course {
 
     public void updateBackgroundImg(String backgroundImg){
         this.backgroundImg = backgroundImg;
+    }
+
+    public void updateDeleteState(boolean deleteState) {
+        this.deleteState = deleteState;
     }
 }

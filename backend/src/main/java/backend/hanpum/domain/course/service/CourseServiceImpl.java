@@ -115,6 +115,7 @@ public class CourseServiceImpl implements CourseService {
                 .endPoint(endPoint)
                 .totalDistance(allDayDistance)
                 .totalDays(makeCourseReqDto.getCourseDayReqDtoList().size())
+                .deleteState(false)
                 .member(member)
                 .build();
 
@@ -439,7 +440,9 @@ public class CourseServiceImpl implements CourseService {
         if (course.getBackgroundImg() != null) {
             s3ImageService.deleteImage(course.getBackgroundImg());
         }
-        courseRepository.delete(course);
+
+        if(course.getSchedules().size() == 0 && course.getCourseUsageHistories().size() == 0) courseRepository.delete(course);
+        else course.updateDeleteState(true);
     }
 
     @Override
