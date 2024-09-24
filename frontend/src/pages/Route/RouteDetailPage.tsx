@@ -29,6 +29,7 @@ import { toast } from 'react-toastify';
 import defaultImg from '@/assets/img/mountain.jpg';
 import { GetUser } from '@/api/mypage/GET';
 import useQueryHandling from '@/hooks/global/useQueryHandling';
+import { setDefaultImg } from '@/utils/Image';
 
 function RouteDetailPage() {
   const { routeid } = useParams();
@@ -90,7 +91,7 @@ function RouteDetailPage() {
               writeState: result.data.data.course.writeState,
               openState: result.data.data.course.openState,
             };
-
+            console.log(result.data.data.course.backgroundImg);
             setRouteData(rd);
             setProfileImg(result.data.data.profilePicture);
             setMemberName(result.data.data.nickname);
@@ -425,15 +426,8 @@ function RouteDetailPage() {
         <R.Overflow>
           <R.RouteInfoContainer>
             <R.ImgBox>
-              <img
-                src={
-                  routeData.img !== null
-                    ? !routeData.img.includes('jpg')
-                      ? defaultImg
-                      : routeData.img
-                    : defaultImg
-                }
-              />
+              {/* 디퐅트 이미지 사용예시 */}
+              {loading && <img src={setDefaultImg(routeData.img || null)} />}
             </R.ImgBox>
             <R.UserContainer>
               <R.UserImgBox>

@@ -7,6 +7,7 @@ import { isAuthEnticatedAtom } from '@/atoms/isAuthEnticatedAtom';
 import { setRouteLike } from '@/api/route/GET';
 import { RouteLikeDelete } from '@/api/route/Delete';
 import { useEffect, useState } from 'react';
+import { setDefaultImg } from '@/utils/Image';
 
 interface RouteListMoreCardProps {
   title: string;
@@ -65,15 +66,7 @@ function RouteListMoreCard(props: RouteListMoreCardProps) {
       }}
     >
       <R.ContentBox>
-        <R.Img
-          src={
-            props.img !== null
-              ? !props.img.includes('jpg')
-                ? defaultImg
-                : props.img
-              : defaultImg
-          }
-        />
+        <R.Img src={setDefaultImg(props.img || null)} />
         <R.TextBox>
           <R.Title>{props.title}</R.Title>
           <R.RouteTextBox>

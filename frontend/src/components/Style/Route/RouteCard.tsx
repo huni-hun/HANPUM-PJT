@@ -9,6 +9,7 @@ import { setRouteLike } from '@/api/route/GET';
 import { RouteLikeDelete } from '@/api/route/Delete';
 import { useRecoilValue } from 'recoil';
 import { isAuthEnticatedAtom } from '@/atoms/isAuthEnticatedAtom';
+import { setDefaultImg } from '@/utils/Image';
 
 interface RouteCardProps {
   ele: RouteListProps;
@@ -66,7 +67,7 @@ function RouteCard(props: RouteCardProps) {
           },
         });
       }}
-      img={!props.ele.img.includes('jpg') ? test : props.ele.img}
+      img={setDefaultImg(props.ele.img || null)}
     >
       <C.TopContent>
         <C.ContentContainer>
