@@ -441,7 +441,12 @@ public class CourseServiceImpl implements CourseService {
             s3ImageService.deleteImage(course.getBackgroundImg());
         }
 
-        if(course.getSchedules().size() == 0 && course.getCourseUsageHistories().size() == 0) courseRepository.delete(course);
+        if(course.getSchedules().size() == 0 && course.getCourseUsageHistories().size() == 0) {
+            courseRepository.delete(course);
+            if (course.getBackgroundImg() != null) {
+                s3ImageService.deleteImage(course.getBackgroundImg());
+            }
+        }
         else course.updateDeleteState(true);
     }
 
