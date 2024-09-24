@@ -76,9 +76,11 @@ const RouterContent = ({
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    setIsAuth(!!token);
-
-    if (!token) {
+    if (token) {
+      setIsAuth(true);
+      navigate('/home');
+    } else {
+      setIsAuth(false);
       navigate('/login');
     }
 

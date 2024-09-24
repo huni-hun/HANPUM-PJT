@@ -35,6 +35,8 @@ api.interceptors.response.use(
         // 토큰 갱신 후 원래 요청 재시도
         return await handleTokenExpiration(originalRequest);
       } catch (err) {
+        // console.log
+        // window.location.reload();
         return Promise.reject(err);
       }
     }

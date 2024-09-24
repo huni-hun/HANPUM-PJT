@@ -116,7 +116,7 @@ export async function Logout() {
 export async function GetRefreshToken() {
   // console.log('요청 호출');
   const { data } = await api.post('/api/auth/reissue-token');
-  console.log(data);
+  // console.log(data);
   return data;
 }
 
