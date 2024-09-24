@@ -181,7 +181,7 @@ export interface AttractionReqDto {
   lat: number;
   lon: number;
   name: string;
-  img: string;
+  image: string;
   type: string;
 }
 

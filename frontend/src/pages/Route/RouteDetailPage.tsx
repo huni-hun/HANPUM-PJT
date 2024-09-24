@@ -91,7 +91,7 @@ function RouteDetailPage() {
               writeState: result.data.data.course.writeState,
               openState: result.data.data.course.openState,
             };
-            console.log(result.data.data.course.backgroundImg);
+
             setRouteData(rd);
             setProfileImg(result.data.data.profilePicture);
             setMemberName(result.data.data.nickname);
@@ -208,6 +208,7 @@ function RouteDetailPage() {
     getRouteDayAttraction(routeid as string, selectedDay).then((res) => {
       if (res.status === 200 && res.data.status === 'SUCCESS') {
         let attArr: AttractionsProps[] = [];
+        console.log(res);
         res.data.data.map((ele: any) => {
           let attData: AttractionsProps = {
             name: ele.name,
@@ -218,6 +219,7 @@ function RouteDetailPage() {
             longitude: ele.lat,
             img: ele.img,
           };
+          console.log(ele.img);
           attArr.push(attData);
 
           let markerData: LineStartEndProps = {

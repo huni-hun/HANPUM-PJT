@@ -108,3 +108,11 @@ export const RetouchIconBox = styled.div`
   flex-direction: column;
   justify-content: center;
 `;
+
+export const RetouchAddIconBox = styled.div`
+  width: auto;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;

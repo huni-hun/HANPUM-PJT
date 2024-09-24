@@ -348,6 +348,7 @@ function RouteAddDetailPage() {
                       latitude={ele.lat}
                       longitude={ele.lon}
                       routePoint={`${ele.pointNumber}`}
+                      isAdd
                     />
                   ))}
                 </R.DetailWayOverflow>
@@ -395,6 +396,7 @@ function RouteAddDetailPage() {
             children="경로완성"
             color="#ffffff"
             onClick={() => {
+              console.log(addRoute);
               if (
                 addRoute.courseDayReqDtoList.length > 0 &&
                 addRoute.courseDayReqDtoList[0].wayPointReqDtoList.length > 0
