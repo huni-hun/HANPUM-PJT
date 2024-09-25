@@ -102,7 +102,7 @@ export const sortList: LabelValue[] = [
     value: 'latest,desc',
   },
   {
-    label: '인기가 많은 순',
+    label: '인기 많은 순',
     value: 'likeCount,desc',
   },
   {
@@ -112,10 +112,6 @@ export const sortList: LabelValue[] = [
   {
     label: '경로 길이 긴 순',
     value: 'totalDistance,asc',
-  },
-  {
-    label: '설정 안함',
-    value: 'nothing',
   },
 ];
 

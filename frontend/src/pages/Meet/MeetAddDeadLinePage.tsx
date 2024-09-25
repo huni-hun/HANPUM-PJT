@@ -3,17 +3,12 @@ import * as S from '../../components/Style/Schedule/AddSchdulePage.styled';
 import * as R from '../../components/Style/Route/RouteAddDetailPage.styled';
 import Header from '@/components/common/Header/Header';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-import Calendar from '../../components/common/Calendar/RangeCalendar';
-import BaseButton from '@/components/common/BaseButton';
 import RangeCalendar from '../../components/common/Calendar/RangeCalendar';
-import { PostMineSchedule } from '@/api/schedule/POST';
-import styled from 'styled-components';
 import { toast } from 'react-toastify';
-import BottomTab from '@/components/common/BottomTab/BottomTab';
 import Button from '@/components/common/Button/Button';
 import { colors } from '@/styles/colorPalette';
 import { CreateMeetRequestDto } from '@/models/meet';
+import styled from 'styled-components';
 
 interface ScheduleData {
   courseId: number;
@@ -21,33 +16,27 @@ interface ScheduleData {
   startDate: string;
 }
 
-function MeetAddSchedulePage() {
+function MeetAddDeadLinePage() {
   const navigate = useNavigate();
-  const BtnClick = () => {};
-  const [error, setError] = useState<string | null>(null);
-  const [postSchedule, setPostSchedule] = useState<ScheduleData | null>(null);
-  /** coursId add.main에서 가져오기 */
   const location = useLocation();
   const { courseId, startDate, recruitmentPeriod, isEdit } =
     location.state || {};
-  const [meetRequest, setMeetRequest] =
-    useState<Partial<CreateMeetRequestDto> | null>(null);
-  /** 날짜 선택 시 vh 늘어나면서 data picker,map 활성화 */
-  const [isExpanded, setIsExpanded] = useState(false);
-  // 기존 recruitmentPeriod가 있으면 사용하고 없으면 빈 문자열로 초기화
+
+  const [meetRequest, setMeetRequest] = useState<Partial<CreateMeetRequestDto>>(
+    () => {
+      // 로컬 스토리지에서 이전에 저장된 상태를 가져와 초기화
+      const savedRequest = localStorage.getItem('meetRequest');
+      return savedRequest ? JSON.parse(savedRequest) : {};
+    },
+  );
+
   const [selectedDate, setSelectedDate] = useState<string>(
     meetRequest?.recruitmentPeriod || startDate || recruitmentPeriod || '',
   );
 
-  /** 달력 선택 start, endData 쓸 수 있는거 */
-  const [dates, setDates] = useState({
-    startDate: '',
-    endDate: '',
-  });
-
   useEffect(() => {
     if (recruitmentPeriod) {
-      setSelectedDate(recruitmentPeriod.trim() || '');
+      setSelectedDate(recruitmentPeriod.trim());
     }
   }, [recruitmentPeriod]);
 
@@ -61,8 +50,13 @@ function MeetAddSchedulePage() {
     }
   };
 
-  const postMeetDeadSchdule = (recruitmentPeriod: string) => {
-    if (startDate !== '') {
+  const postMeetDeadSchedule = (recruitmentPeriod: string) => {
+    if (recruitmentPeriod) {
+      const updatedRequest = { ...meetRequest, recruitmentPeriod };
+
+      // 로컬 스토리지에 업데이트된 상태 저장
+      localStorage.setItem('meetRequest', JSON.stringify(updatedRequest));
+
       const baseState = {
         courseId,
         startDate,
@@ -70,26 +64,19 @@ function MeetAddSchedulePage() {
       };
 
       if (isEdit) {
-        const savedMeetRequest = localStorage.getItem('meetRequest');
-        const state = {
-          ...baseState,
-          meetEditRequest: savedMeetRequest
-            ? JSON.parse(savedMeetRequest)
-            : meetRequest,
-        };
-        navigate('/meet/edit', { state });
-        // console.log(state, '바뀐것듪');
+        // 수정 시 meetRequest와 함께 상태 전환
+        navigate('/meet/edit', {
+          state: {
+            ...baseState,
+            meetRequest: updatedRequest,
+          },
+        });
       } else {
         navigate('/meet/addMain', { state: baseState });
       }
     } else {
       toast.error('날짜를 선택해주세요!');
     }
-  };
-
-  /** 하위 컴포넌트 클릭시 vh 변경되는 이벤트 막기 */
-  const handleStopEvent = (event: React.MouseEvent<HTMLDivElement>) => {
-    event.stopPropagation();
   };
 
   return (
@@ -100,13 +87,9 @@ function MeetAddSchedulePage() {
         clickBack={() => navigate(-1)}
         $isShadow
       />
-      {/* <S.Container> */}
       <S.SchduleContainer>
-        {/* 일정 선택 박스 */}
-        <S.DateWrap $isExpanded={!isExpanded}>
-          {/* vh 활성화 되었을 때 캘린더 */}
-
-          <div onClick={handleStopEvent}>
+        <S.DateWrap>
+          <div>
             <S.H3>마감일을 선택해주세요.</S.H3>
             <S.DatePicker>
               <RangeCalendar
@@ -119,7 +102,6 @@ function MeetAddSchedulePage() {
           </div>
         </S.DateWrap>
       </S.SchduleContainer>
-      {/* </S.Container> */}
       <R.BottomContainer>
         <R.ButtonBox>
           <Button
@@ -131,7 +113,7 @@ function MeetAddSchedulePage() {
             fontSize={1.8}
             children="등록"
             color="#ffffff"
-            onClick={() => postMeetDeadSchdule(selectedDate)}
+            onClick={() => postMeetDeadSchedule(selectedDate)}
           />
         </R.ButtonBox>
       </R.BottomContainer>
@@ -139,7 +121,7 @@ function MeetAddSchedulePage() {
   );
 }
 
-export default MeetAddSchedulePage;
+export default MeetAddDeadLinePage;
 
 const ScheduleMainPageContainer = styled.div`
   width: 100%;

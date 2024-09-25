@@ -5,6 +5,7 @@ import RouteBadge from '../common/Badge/RouteBadge';
 import Icon from '../common/Icon/Icon';
 import Text from '../common/Text';
 import styled from 'styled-components';
+import { setDefaultImg } from '@/utils/Image';
 
 function MeetLongCard({
   data,
@@ -18,7 +19,7 @@ function MeetLongCard({
   }
   return (
     <MeetLongCardContainer onClick={onClick}>
-      <img src={data.groupImg} alt="" />
+      <img src={setDefaultImg(data.groupImg || null)} />
       <DateBadge
         style={{ top: '16px', left: '20px' }}
         totalDays={data.totalDays}

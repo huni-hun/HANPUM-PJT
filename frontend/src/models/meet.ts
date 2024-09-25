@@ -97,6 +97,6 @@ export interface groupPostReqDtoProps {
 }
 
 export interface CreateMeetProps {
-  multipartFile: string;
   groupPostReqDto: groupPostReqDtoProps;
+  multipartFile?: string;
 }
