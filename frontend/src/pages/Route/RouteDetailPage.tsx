@@ -173,21 +173,20 @@ function RouteDetailPage() {
           };
 
           lines.push(line);
-          if (idx === 0) {
-            if (ele.vertexes !== null) {
-              ele.vertexes.forEach((vertex: any, index: number) => {
-                if (index % 2 === 0) {
-                  mapLines.push(
-                    new window.kakao.maps.LatLng(
-                      ele.vertexes[index + 1],
-                      ele.vertexes[index],
-                    ),
-                  );
-                }
-              });
-            } else {
-              setNoVertexes(true);
-            }
+
+          if (ele.vertexes !== null) {
+            ele.vertexes.forEach((vertex: any, index: number) => {
+              if (index % 2 === 0) {
+                mapLines.push(
+                  new window.kakao.maps.LatLng(
+                    ele.vertexes[index + 1],
+                    ele.vertexes[index],
+                  ),
+                );
+              }
+            });
+          } else {
+            setNoVertexes(true);
           }
 
           let markerData: LineStartEndProps = {
@@ -208,7 +207,7 @@ function RouteDetailPage() {
     getRouteDayAttraction(routeid as string, selectedDay).then((res) => {
       if (res.status === 200 && res.data.status === 'SUCCESS') {
         let attArr: AttractionsProps[] = [];
-        console.log(res);
+
         res.data.data.map((ele: any) => {
           let attData: AttractionsProps = {
             name: ele.name,
@@ -219,7 +218,6 @@ function RouteDetailPage() {
             longitude: ele.lat,
             img: ele.img,
           };
-          console.log(ele.img);
           attArr.push(attData);
 
           let markerData: LineStartEndProps = {

@@ -124,13 +124,16 @@ function RouteAddDetailPage() {
     if (linePath.length > 1) {
       const mapLines: any[] = [];
       if (linePath.length <= 5) {
+        console.log(linePath);
         GetLineData(linePath)
           .then((res) => {
             if (res.status === 200 && res.data.status === 'SUCCESS') {
-              res.data.data.forEach((ele: any) => {
-                wayPoints.map((el: WayPointReqDto) => {
+              res.data.data.forEach((ele: any, idx: number) => {
+                wayPoints.map((el: WayPointReqDto, i: number) => {
                   // eslint-disable-next-line no-self-assign
-                  el.vertexes = ele.vertexes;
+                  if (idx === i) {
+                    el.vertexes = ele.vertexes;
+                  }
                 });
 
                 ele.vertexes.forEach((vertex: any, index: number) => {
@@ -312,7 +315,6 @@ function RouteAddDetailPage() {
         }
       });
       setDateDetail(newDateDetail);
-      console.log(newDateDetail);
       return updatedWayPoints;
     });
   };
