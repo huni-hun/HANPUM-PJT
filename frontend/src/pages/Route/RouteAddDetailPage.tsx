@@ -15,11 +15,13 @@ import {
   WayPointReqDto,
   LineStartEndProps,
   MapLinePathProps,
+  DaysOfRouteProps,
 } from '@/models/route';
 import RoutePlaceCard from '@/components/Style/Route/RoutePlaceCard';
 import { colors } from '@/styles/colorPalette';
 import { AddRoute, GetDistance, GetLineData } from '@/api/route/POST';
 import { toast } from 'react-toastify';
+import { cutAddress } from '@/utils/util';
 
 function RouteAddDetailPage() {
   const [curLatitude, setCurLatitude] = useState<number>(0);
@@ -269,8 +271,32 @@ function RouteAddDetailPage() {
         newDetail.push(ele);
       }
     });
-    console.log(newDetail);
     setDateDetail(newDetail);
+  };
+
+  const deleteWayHandler = (data: WayPointReqDto) => {
+    let arr: WayPointReqDto[] = [];
+
+    wayPoints.map((ele) => {
+      if (ele.pointNumber !== data.pointNumber) {
+        ele.pointNumber = String(arr.length + 1);
+        arr.push(ele);
+      }
+    });
+
+    setWayPoints(() => {
+      const updatedWayPoints = arr;
+
+      let newDateDetail: CourseDayReqDto[] = [...dateDetail];
+      newDateDetail.map((ele: CourseDayReqDto) => {
+        if (ele.dayNumber === selectedDay) {
+          ele.wayPointReqDtoList = updatedWayPoints;
+        }
+      });
+      setDateDetail(newDateDetail);
+      console.log(newDateDetail);
+      return updatedWayPoints;
+    });
   };
 
   return searchOpen ? (
@@ -291,8 +317,12 @@ function RouteAddDetailPage() {
     <R.Container>
       <Header
         purpose="root"
-        depart="서울"
-        arrive="대전"
+        depart={wayPoints.length >= 2 ? cutAddress(wayPoints[0].address) : ''}
+        arrive={
+          wayPoints.length >= 2
+            ? cutAddress(wayPoints[wayPoints.length - 1].address)
+            : ''
+        }
         clickBack={() => {
           navigate(-1);
         }}
@@ -314,15 +344,17 @@ function RouteAddDetailPage() {
                   <R.DayDeleteBox
                     onClick={(e) => {
                       e.stopPropagation();
-                      let newD = [...route];
-                      let d: number[] = [];
-                      newD.map((el) => {
-                        if (el !== ele) {
-                          d.push(el);
-                        }
-                      });
-                      deleteDateDetail(ele);
-                      setRoute(d);
+                      if (route.length >= 2) {
+                        let newD = [...route];
+                        let d: number[] = [];
+                        newD.map((el) => {
+                          if (el !== ele) {
+                            d.push(el);
+                          }
+                        });
+                        deleteDateDetail(ele);
+                        setRoute(d);
+                      }
                     }}
                   >
                     X
@@ -371,13 +403,16 @@ function RouteAddDetailPage() {
                   {wayPoints.map((ele: WayPointReqDto, idx: number) => (
                     <RoutePlaceCard
                       routeAddress={ele.address}
-                      routeId={1}
+                      routeId={idx}
                       routeName={ele.name}
                       routeType={ele.type}
                       latitude={ele.lat}
                       longitude={ele.lon}
                       routePoint={`${ele.pointNumber}`}
                       isAdd
+                      deleteHandler={() => {
+                        deleteWayHandler(ele);
+                      }}
                     />
                   ))}
                 </R.DetailWayOverflow>

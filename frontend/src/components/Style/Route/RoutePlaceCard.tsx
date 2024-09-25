@@ -1,4 +1,4 @@
-import { DaysOfRouteProps } from '@/models/route';
+import { DaysOfRouteProps, WayPointReqDto } from '@/models/route';
 import * as R from '../Route/RoutePlaceCard.styled';
 import Icon from '@/components/common/Icon/Icon';
 
@@ -7,6 +7,7 @@ function RoutePlaceCard(
     isAdd?: boolean;
     isSchedule?: boolean;
     state?: number;
+    deleteHandler?: () => void;
   },
 ) {
   return (
@@ -23,7 +24,13 @@ function RoutePlaceCard(
         {props.routePoint}
       </R.PlaceNumberBox>
       {props.isAdd && (
-        <R.RetouchAddIconBox>
+        <R.RetouchAddIconBox
+          onClick={() => {
+            if (props.deleteHandler !== undefined) {
+              props.deleteHandler();
+            }
+          }}
+        >
           <Icon name="IconRetouchDelete" size={15} />
         </R.RetouchAddIconBox>
       )}

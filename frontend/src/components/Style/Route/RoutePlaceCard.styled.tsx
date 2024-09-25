@@ -20,12 +20,15 @@ export const Card = styled.div`
 `;
 
 export const PlaceInfoBox = styled.div`
-  width: 90%;
+  width: 80%;
   height: 80%;
   display: flex;
   flex-direction: column;
   border-bottom: 0.15rem solid ${colors.grey1};
   justify-content: space-around;
+  overflow: clip;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
 export const PlaceName = styled.p`
