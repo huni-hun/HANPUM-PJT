@@ -17,8 +17,8 @@ export const PostMeetLike = async (groupId: number) => {
 
 /** 모임 생성  */
 export const PostGroup = async (
-  multipartFileatom: File,
   props: CreateMeetProps,
+  multipartFileatom?: File,
 ) => {
   // console.log('multipartFileatom ::', multipartFileatom);
   // console.log('props ::', props);
@@ -39,9 +39,10 @@ export const PostGroup = async (
       type: 'application/json',
     },
   );
-
-  formData.append('multipartFile', multipartFileatom);
   formData.append('groupPostReqDto', groupPostReqDto);
+  if (multipartFileatom) {
+    formData.append('multipartFile', multipartFileatom);
+  }
 
   formData.forEach((value, key) => {
     // console.log(key, value);

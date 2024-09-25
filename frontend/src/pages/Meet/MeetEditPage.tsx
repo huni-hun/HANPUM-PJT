@@ -23,29 +23,67 @@ function MeetEditPage() {
   const [multipartImg, setMultipartImg] = useRecoilState(meetCreateImage);
   const [meetRequest, setMeetRequest] = useRecoilState(meetRequestState);
   const [detailData, setDetailData] = useState<MeetInfo>();
-  const [previewImage, setPreviewImage] = useState<string>(() => {
-    // 파일이 있는 경우 파일의 URL 생성, 없으면 detailData의 URL 사용
-    if (meetRequest?.multipartFile instanceof File) {
-      return URL.createObjectURL(meetRequest.multipartFile);
-    } else if (
-      meetRequest?.multipartFile &&
-      typeof meetRequest.multipartFile === 'string'
-    ) {
-      return meetRequest.multipartFile; // 이미 URL인 경우
-    } else if (detailData?.groupImg) {
-      return detailData.groupImg; // 서버에서 받아온 이미지 URL
-    }
-    return ''; // 기본값으로 빈 문자열 설정
-  });
+  const [initialData, setInitialData] = useState<MeetInfo>();
+  const [previewImage, setPreviewImage] = useState<string>('');
   const [meetData, setMeetData] = useState<CreateMeetProps>(null!);
   const [loading, setLoading] = useState<boolean>(false);
 
   const savedGroupId = localStorage.getItem('groupId');
   const groupIdNumber = savedGroupId ? Number(JSON.parse(savedGroupId)) : null;
+  const [groupId, setGroupId] = useState<number | null>(groupIdNumber);
 
-  const { groupId, courseId, startDate, endDate, recruitmentPeriod } =
-    location.state || {};
+  useEffect(() => {
+    if (!groupId) {
+      const savedGroupId = localStorage.getItem('groupId');
+      if (savedGroupId) {
+        setGroupId(Number(JSON.parse(savedGroupId)));
+      }
+    }
+  }, [groupId]);
 
+  const { courseId, startDate, recruitmentPeriod } = location.state || {};
+
+  // 페이지 로드 시 로컬 스토리지에서 상태 복원
+  useEffect(() => {
+    const savedRequest = localStorage.getItem('savedMeetRequest');
+    const savedPreviewImage = localStorage.getItem('savedPreviewImage');
+    if (savedRequest && savedPreviewImage) {
+      setMeetRequest(JSON.parse(savedRequest));
+      setPreviewImage(savedPreviewImage);
+    } else {
+      fetchData(); // 로컬 스토리지에 저장된 값이 없으면 fetchData 호출
+    }
+  }, [groupId]);
+
+  // 데이터 fetch 후 meetRequest 초기화 및 초기 데이터 저장
+  const fetchData = async () => {
+    if (!groupId) return;
+    try {
+      setLoading(true);
+      const response = await GetMeetDetailList(groupId);
+      if (response?.status === 'SUCCESS') {
+        setDetailData(response.data);
+        setInitialData(response.data); // 초기 데이터를 저장
+        setPreviewImage(response.data.groupImg);
+        setMeetRequest((prevRequest) => ({
+          ...prevRequest,
+          multipartFile: response.data.groupImg,
+          title: response.data.title,
+          description: response.data.description,
+          recruitmentCount: response.data.recruitmentCount,
+          recruitmentPeriod: response.data.recruitmentPeriod,
+        }));
+      } else if (response?.status === 'ERROR') {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      toast.error('에러 발생');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // location.state와 관련된 상태 반영
   useEffect(() => {
     if (location.state) {
       setMeetRequest((prevState) => ({
@@ -55,17 +93,10 @@ function MeetEditPage() {
       if (location.state.previewImage) {
         setPreviewImage(location.state.previewImage); // URL 복원
       }
-    } else {
-      if (!multipartImg && detailData?.groupImg) {
-        setPreviewImage(detailData.groupImg);
-      }
     }
-  }, [location.state, detailData, multipartImg]);
+  }, [location.state]);
 
-  useEffect(() => {
-    fetchData();
-  }, [groupId]);
-
+  // 모집 마감일 state와 recruitmentPeriod 비교하여 업데이트
   useEffect(() => {
     if (location.state?.recruitmentPeriod) {
       setMeetRequest((prevState) => ({
@@ -75,15 +106,7 @@ function MeetEditPage() {
     }
   }, [location.state?.recruitmentPeriod]);
 
-  useEffect(() => {
-    if (!meetRequest?.recruitmentPeriod && recruitmentPeriod) {
-      setMeetRequest((prevState) => ({
-        ...prevState,
-        recruitmentPeriod: recruitmentPeriod,
-      }));
-    }
-  }, [meetRequest?.recruitmentPeriod, recruitmentPeriod]);
-
+  // meetRequest의 상태가 변경될 때마다 meetData 업데이트 및 로컬 스토리지 저장
   useEffect(() => {
     const groupPostReqDto: groupPostReqDtoProps = {
       title: meetRequest.title || '',
@@ -96,7 +119,10 @@ function MeetEditPage() {
       groupPostReqDto: groupPostReqDto,
     };
     setMeetData(meetdata);
-  }, [meetRequest, groupId]);
+    // meetRequest 상태를 로컬 스토리지에 저장
+    localStorage.setItem('savedMeetRequest', JSON.stringify(meetRequest));
+    localStorage.setItem('savedPreviewImage', previewImage);
+  }, [meetRequest, previewImage]);
 
   /** 이미지 핸들링 */
   const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -115,12 +141,17 @@ function MeetEditPage() {
 
   /** 모집 마감일 페이지로 이동 */
   const clickAddDeadline = () => {
-    // 이미지가 설정되지 않았을 때 detailData에서 가져온 이미지로 설정
     if (!multipartImg && !previewImage) {
-      setPreviewImage(detailData?.groupImg || ''); // URL만 저장
+      setPreviewImage(detailData?.groupImg || '');
+    }
+    if (groupId) {
+      localStorage.setItem('groupId', JSON.stringify(groupId));
     }
 
-    // 이미지와 meetRequest 상태를 유지하면서 navigate
+    // 현재 meetRequest와 previewImage를 로컬 스토리지에 저장
+    localStorage.setItem('savedMeetRequest', JSON.stringify(meetRequest));
+    localStorage.setItem('savedPreviewImage', previewImage);
+
     navigate('/meet/addMain/AddDeadline', {
       state: {
         courseId,
@@ -137,11 +168,6 @@ function MeetEditPage() {
   const handleEditGroup = async () => {
     if (groupId) {
       try {
-        if (!previewImage) {
-          toast.info('모임 이미지를 업로드해주세요!');
-          return;
-        }
-
         if (!meetRequest.title) {
           toast.info('모임 이름을 작성해주세요!');
           return;
@@ -182,6 +208,9 @@ function MeetEditPage() {
           });
           setMeetRequest({});
           setMultipartImg(null);
+          // 저장된 로컬 스토리지 데이터 삭제
+          localStorage.removeItem('savedMeetRequest');
+          localStorage.removeItem('savedPreviewImage');
         } else {
           toast.error(response.message);
         }
@@ -210,32 +239,7 @@ function MeetEditPage() {
     }));
   };
 
-  /** 모임 상세 페이지에서 수정버튼 클릭 시 해당 상세 데이터 가져옴 */
-  const fetchData = async () => {
-    if (!groupId) return;
-    try {
-      setLoading(true);
-      const response = await GetMeetDetailList(groupId);
-      if (response?.status === 'SUCCESS') {
-        setDetailData(response.data);
-        setPreviewImage(response.data.groupImg);
-        setMeetRequest((prevRequest) => ({
-          ...prevRequest,
-          multipartFile: response.data.groupImg,
-          title: response.data.title,
-          description: response.data.description,
-          recruitmentCount: response.data.recruitmentCount,
-          recruitmentPeriod: response.data.recruitmentPeriod,
-        }));
-      } else if (response?.status === 'ERROR') {
-        toast.error(response.message);
-      }
-    } catch (error) {
-      toast.error('에러 발생');
-    } finally {
-      setLoading(false);
-    }
-  };
+  console.log(previewImage, '?');
 
   return (
     <>
@@ -244,7 +248,7 @@ function MeetEditPage() {
         title="모임 수정"
         $isborder={true}
         clickBack={() => {
-          setMeetRequest({});
+          setMeetRequest(initialData || {}); // 초기 데이터를 복원
           setMultipartImg(null);
           navigate('/meet/detail', {
             state: {
@@ -261,7 +265,7 @@ function MeetEditPage() {
                 모임 이미지
               </Text>
               <div className="img-box">
-                {previewImage ? (
+                {previewImage !== 'null' ? (
                   <img src={previewImage} alt="프로필 이미지 미리보기" />
                 ) : (
                   <Icon name="IconCameraGrey" width={52} height={38} />

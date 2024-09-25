@@ -14,6 +14,7 @@ import { useRecoilValue } from 'recoil';
 import { isAuthEnticatedAtom } from '@/atoms/isAuthEnticatedAtom';
 import { useState } from 'react';
 import { DeleteMeetLike } from '@/api/meet/Delete';
+import { setDefaultImg } from '@/utils/Image';
 
 function MeetSmallCard({
   data,
@@ -64,7 +65,7 @@ function MeetSmallCard({
 
   return (
     <MeetSmallCardContainer onClick={onClick}>
-      <img src={data.groupImg} alt="그룹 이미지" />
+      <img src={setDefaultImg(data.groupImg || null)} />
       <DateBadge
         totalDays={data.totalDays}
         style={{ top: '12px', left: '12px' }}
