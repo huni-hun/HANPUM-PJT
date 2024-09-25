@@ -199,7 +199,7 @@ function RouteDetailRetouchPage() {
                   lon: ele.lon,
                   name: ele.name,
                   type: ele.type,
-                  img: ele.img,
+                  image: ele.img,
                 };
                 newAttR.push(attraction);
                 attArr.push(attData);
@@ -252,7 +252,7 @@ function RouteDetailRetouchPage() {
             address: ele.address,
             latitude: ele.lat,
             longitude: ele.lon,
-            img: ele.img,
+            img: ele.image,
           };
 
           attArr.push(attData);
@@ -413,7 +413,7 @@ function RouteDetailRetouchPage() {
           address: ele.address,
           latitude: ele.lat,
           longitude: ele.lon,
-          img: ele.img,
+          img: ele.image,
         };
 
         attArr.push(attData);

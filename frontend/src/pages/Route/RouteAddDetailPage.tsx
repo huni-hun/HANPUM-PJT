@@ -15,11 +15,13 @@ import {
   WayPointReqDto,
   LineStartEndProps,
   MapLinePathProps,
+  DaysOfRouteProps,
 } from '@/models/route';
 import RoutePlaceCard from '@/components/Style/Route/RoutePlaceCard';
 import { colors } from '@/styles/colorPalette';
 import { AddRoute, GetDistance, GetLineData } from '@/api/route/POST';
 import { toast } from 'react-toastify';
+import { cutAddress } from '@/utils/util';
 
 function RouteAddDetailPage() {
   const [curLatitude, setCurLatitude] = useState<number>(0);
@@ -122,13 +124,16 @@ function RouteAddDetailPage() {
     if (linePath.length > 1) {
       const mapLines: any[] = [];
       if (linePath.length <= 5) {
+        console.log(linePath);
         GetLineData(linePath)
           .then((res) => {
             if (res.status === 200 && res.data.status === 'SUCCESS') {
-              res.data.data.forEach((ele: any) => {
-                wayPoints.map((el: WayPointReqDto) => {
+              res.data.data.forEach((ele: any, idx: number) => {
+                wayPoints.map((el: WayPointReqDto, i: number) => {
                   // eslint-disable-next-line no-self-assign
-                  el.vertexes = ele.vertexes;
+                  if (idx === i) {
+                    el.vertexes = ele.vertexes;
+                  }
                 });
 
                 ele.vertexes.forEach((vertex: any, index: number) => {
@@ -262,6 +267,58 @@ function RouteAddDetailPage() {
     });
   }, [selectedDay]);
 
+  useEffect(() => {
+    wayPoints.map((ele, idx) => {
+      if (idx === 0) {
+        ele.type = '출발지';
+      } else if (idx === wayPoints.length - 1) {
+        ele.type = '도착지';
+      } else {
+        ele.type = '경유지';
+      }
+    });
+    // let newDateDetail: CourseDayReqDto[] = [...dateDetail];
+    console.log(dateDetail);
+
+    // setDateDetail(newDateDetail);
+  }, [wayPoints]);
+
+  const deleteDateDetail = (day: number) => {
+    let newDetail: CourseDayReqDto[] = [];
+    dateDetail.map((ele) => {
+      if (ele.dayNumber !== day) {
+        newDetail.push(ele);
+      }
+    });
+    setDateDetail(newDetail);
+  };
+
+  const deleteWayHandler = (data: WayPointReqDto) => {
+    let arr: WayPointReqDto[] = [];
+
+    wayPoints.map((ele) => {
+      if (ele.pointNumber !== data.pointNumber) {
+        ele.pointNumber = String(arr.length + 1);
+        arr.push(ele);
+      }
+    });
+    arr[0].type = '출발지';
+    arr[arr.length - 1].type = '도착지';
+
+    setWayPoints(() => {
+      const updatedWayPoints = arr;
+
+      let newDateDetail: CourseDayReqDto[] = [...dateDetail];
+      newDateDetail.map((ele: CourseDayReqDto) => {
+        if (ele.dayNumber === selectedDay) {
+          ele.wayPointReqDtoList = updatedWayPoints;
+        }
+      });
+      setDateDetail(newDateDetail);
+      return updatedWayPoints;
+    });
+  };
+
   return searchOpen ? (
     <SearchPlacePage
       setAttractionsCard={setAttractionsCard}
@@ -280,8 +337,12 @@ function RouteAddDetailPage() {
     <R.Container>
       <Header
         purpose="root"
-        depart="서울"
-        arrive="대전"
+        depart={wayPoints.length >= 2 ? cutAddress(wayPoints[0].address) : ''}
+        arrive={
+          wayPoints.length >= 2
+            ? cutAddress(wayPoints[wayPoints.length - 1].address)
+            : ''
+        }
         clickBack={() => {
           navigate(-1);
         }}
@@ -298,12 +359,32 @@ function RouteAddDetailPage() {
                   onClick={() => {
                     setSelectedDay(ele);
                   }}
-                >{`Day ${ele}`}</R.DayCard>
+                >
+                  {`Day ${ele}`}
+                  <R.DayDeleteBox
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (route.length >= 2) {
+                        let newD = [...route];
+                        let d: number[] = [];
+                        newD.map((el) => {
+                          if (el !== ele) {
+                            d.push(el);
+                          }
+                        });
+                        deleteDateDetail(ele);
+                        setRoute(d);
+                      }
+                    }}
+                  >
+                    X
+                  </R.DayDeleteBox>
+                </R.DayCard>
               ))}
               <R.DatAddCard
                 onClick={() => {
-                  setRoute((pre) => [...pre, day + 1]);
-                  setDay(day + 1);
+                  setRoute((pre) => [...pre, route[route.length - 1] + 1]);
+                  setDay(route[route.length - 1] + 1);
                 }}
               >
                 +
@@ -342,12 +423,16 @@ function RouteAddDetailPage() {
                   {wayPoints.map((ele: WayPointReqDto, idx: number) => (
                     <RoutePlaceCard
                       routeAddress={ele.address}
-                      routeId={1}
+                      routeId={idx}
                       routeName={ele.name}
                       routeType={ele.type}
                       latitude={ele.lat}
                       longitude={ele.lon}
                       routePoint={`${ele.pointNumber}`}
+                      isAdd
+                      deleteHandler={() => {
+                        deleteWayHandler(ele);
+                      }}
                     />
                   ))}
                 </R.DetailWayOverflow>
@@ -395,10 +480,12 @@ function RouteAddDetailPage() {
             children="경로완성"
             color="#ffffff"
             onClick={() => {
+              console.log(addRoute);
               if (
                 addRoute.courseDayReqDtoList.length > 0 &&
                 addRoute.courseDayReqDtoList[0].wayPointReqDtoList.length > 0
               ) {
+                console.log(addRoute);
                 AddRoute(addRoute)
                   .then((res) => {
                     if (res.status === 200) {
