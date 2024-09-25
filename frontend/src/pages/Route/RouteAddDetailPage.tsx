@@ -264,6 +264,22 @@ function RouteAddDetailPage() {
     });
   }, [selectedDay]);
 
+  useEffect(() => {
+    wayPoints.map((ele, idx) => {
+      if (idx === 0) {
+        ele.type = '출발지';
+      } else if (idx === wayPoints.length - 1) {
+        ele.type = '도착지';
+      } else {
+        ele.type = '경유지';
+      }
+    });
+    // let newDateDetail: CourseDayReqDto[] = [...dateDetail];
+    console.log(dateDetail);
+
+    // setDateDetail(newDateDetail);
+  }, [wayPoints]);
+
   const deleteDateDetail = (day: number) => {
     let newDetail: CourseDayReqDto[] = [];
     dateDetail.map((ele) => {
@@ -283,6 +299,8 @@ function RouteAddDetailPage() {
         arr.push(ele);
       }
     });
+    arr[0].type = '출발지';
+    arr[arr.length - 1].type = '도착지';
 
     setWayPoints(() => {
       const updatedWayPoints = arr;
@@ -465,6 +483,7 @@ function RouteAddDetailPage() {
                 addRoute.courseDayReqDtoList.length > 0 &&
                 addRoute.courseDayReqDtoList[0].wayPointReqDtoList.length > 0
               ) {
+                console.log(addRoute);
                 AddRoute(addRoute)
                   .then((res) => {
                     if (res.status === 200) {

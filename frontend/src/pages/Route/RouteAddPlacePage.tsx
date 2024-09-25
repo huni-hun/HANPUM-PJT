@@ -79,7 +79,6 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
   };
 
   const setAttraction = () => {
-    console.log(props.selectedPlace.img);
     let attraction: AttractionReqDto = {
       name: props.selectedPlace.placeName,
       address: props.selectedPlace.address,
