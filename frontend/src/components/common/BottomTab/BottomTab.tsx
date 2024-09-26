@@ -8,6 +8,8 @@ function BottomTab() {
   const location = useLocation();
   const navigator = useNavigate();
 
+  console.log(location);
+
   useEffect(() => {
     setCurTab(location.pathname);
   }, [location]);
@@ -67,9 +69,7 @@ function BottomTab() {
         }}
       >
         <Icon
-          name={
-            curTab === 'Community' ? 'IconCommunitySelect' : 'IconCommunity'
-          }
+          name={curTab === '/mypage' ? 'IconMyInfoActive' : 'IconMyInfo'}
           size={20}
         />
         <Bt.TabText selected={curTab.includes('mypage')}>내 정보</Bt.TabText>

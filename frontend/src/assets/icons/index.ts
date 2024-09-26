@@ -113,3 +113,5 @@ export { ReactComponent as IconModiHeartFill } from './lastModiHeart_fill.svg';
 export { ReactComponent as IconModiHeartNonFill } from './lastModiHeart_nonFill.svg';
 
 export { ReactComponent as IconLoading } from './loading.svg';
+export { ReactComponent as IconMyInfo } from './myInfo.svg';
+export { ReactComponent as IconMyInfoActive } from './myInfoActive.svg';
