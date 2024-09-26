@@ -8,8 +8,6 @@ function BottomTab() {
   const location = useLocation();
   const navigator = useNavigate();
 
-  console.log(location);
-
   useEffect(() => {
     setCurTab(location.pathname);
   }, [location]);

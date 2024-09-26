@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import { useMutation, useQueryClient } from 'react-query';
 import { STATUS } from '@/constants';
 import { AxiosError } from 'axios';
+import { setDefaultImg } from '@/utils/Image';
 
 function CardLong({
   item,
@@ -37,10 +38,12 @@ function CardLong({
   const [startX, setStartX] = useState<number | null>(null);
   const [canDeleted, setCanDeleted] = useState(false);
   const [img, setImg] = useState<string>('');
+  // const [temp, setTemp] = useState(false);
+
+  // console.log(startX);
+  const [selected, setSelected] = useState<number | null>(null);
 
   const queryClient = useQueryClient();
-
-  // console.log(item);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setStartX(e.touches[0].clientX);
@@ -53,13 +56,16 @@ function CardLong({
         if (onSwipe) {
           if (isMeetInfo(item)) {
             onSwipe(item.groupId);
+            setSelected(item.groupId);
           } else {
             onSwipe(item.courseId);
+            setSelected(item.courseId);
           }
         }
         setCanDeleted(true);
       } else {
-        setCanDeleted(false);
+        // setCanDeleted(false);
+        setSelected(null);
       }
     }
   };
@@ -67,12 +73,14 @@ function CardLong({
   // 터치 끝날 때
   const handleTouchEnd = () => {
     setStartX(null);
+    setCanDeleted(false);
   };
 
   // 바깥요소 누르면 다시 늘리기
   const handleClickOutside = () => {
     if (onClickOutside) {
       onClickOutside();
+      setCanDeleted(false);
     }
   };
 
@@ -161,7 +169,18 @@ function CardLong({
           transition: 'width 0.3s ease',
         }}
       >
-        <img src={img} alt="" />
+        {isUserRouteProps(item) ? (
+          <img src={setDefaultImg(item.backgroundImg || null)} alt="" />
+        ) : (
+          <img src={setDefaultImg(item.groupImg || null)} alt="" />
+        )}
+
+        {isUserRouteProps(item) && (
+          <img src={setDefaultImg(item.backgroundImg || null)} alt="" />
+        )}
+
+        {/* <img src={img} alt="" /> */}
+
         <div className="info-box">
           <div className="review">
             {/* <Icon name="IconStar" /> */}
@@ -245,7 +264,10 @@ function CardLong({
         <div className="black-bg" />
       </div>
 
-      <div className="delete-bg">
+      <div
+        className="delete-bg"
+        style={isSwiped ? { opacity: 1 } : { opacity: 0 }}
+      >
         <Flex
           direction="column"
           $align="center"
