@@ -66,7 +66,12 @@ function Map(props: MapProps) {
   }, [isMapLoaded, props.latitude, props.longitude]);
 
   useEffect(() => {
+    // console.log(props.linePath);
     if (props.linePath !== undefined && kakaoMap) {
+      if (polyLine) {
+        polyLine.setMap(null);
+      }
+
       if (props.linePath.length > 0) {
         if (polyLine) {
           polyLine.setMap(null);

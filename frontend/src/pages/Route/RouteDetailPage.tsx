@@ -185,8 +185,10 @@ function RouteDetailPage() {
           }
           lines.push(line);
 
-          if (ele.vertexes !== null) {
+          if (ele.vertexes.length > 0) {
+            const ml: any[] = [];
             ele.vertexes.forEach((vertex: any, index: number) => {
+              // console.log(vertex);
               if (index % 2 === 0) {
                 mapLines.push(
                   new window.kakao.maps.LatLng(
@@ -196,6 +198,9 @@ function RouteDetailPage() {
                 );
               }
             });
+
+            // setMapLines([...ml]);
+            setNoVertexes(false);
           } else {
             setNoVertexes(true);
           }
@@ -244,7 +249,9 @@ function RouteDetailPage() {
 
   useEffect(() => {
     if (noVertexes) {
+      // console.log(linePath);
       if (linePath.length > 0) {
+        // console.log('oo');
         const mapLines: any[] = [];
         if (linePath.length <= 5) {
           GetLineData(linePath)
