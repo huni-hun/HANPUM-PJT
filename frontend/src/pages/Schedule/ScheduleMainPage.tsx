@@ -821,8 +821,6 @@ function ScheduleMainPage() {
       ? parseFloat(todaySchedule.totalDistance)
       : 0;
 
-  console.log(runningScheduleData, '?');
-
   return (
     <ScheduleMainPageContainer>
       <Header

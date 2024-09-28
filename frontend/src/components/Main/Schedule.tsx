@@ -33,14 +33,14 @@ function Schedule({ data }: { data: RunningScheduleProps }) {
   const currentWayPoint =
     currentPointIndex !== undefined
       ? scheduleWayPointList[currentPointIndex].name
-      : '알 수 없음';
+      : '-';
 
   // 다음 경유지
   const nextWaypoint =
     currentPointIndex !== undefined &&
     currentPointIndex < scheduleWayPointList.length - 1
       ? scheduleWayPointList[currentPointIndex + 1].name
-      : '도착지 없음';
+      : '-';
 
   const currentVisitCount =
     todaySchedule?.scheduleWayPointList?.filter((point) => point.state === 2)
@@ -102,7 +102,7 @@ function Schedule({ data }: { data: RunningScheduleProps }) {
                 style={{ maxWidth: '7.5rem', flex: '1' }}
               >
                 {/* 현재 위치 */}
-                출발 경유지
+                현재 경유지
               </Text>
               <Text $typography="t12" color="grey2" $bold={true}>
                 {currentWayPoint}
