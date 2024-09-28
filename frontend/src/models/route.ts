@@ -181,7 +181,7 @@ export interface AttractionReqDto {
   lat: number;
   lon: number;
   name: string;
-  img: string;
+  image: string;
   type: string;
 }
 
@@ -221,4 +221,13 @@ export interface MapLinePathProps {
 export interface LineStartEndProps {
   x: number;
   y: number;
+}
+
+export interface MakerDataProps {
+  x: number;
+  y: number;
+  distance: string;
+  calorie: string;
+  duration: string;
+  name: string;
 }

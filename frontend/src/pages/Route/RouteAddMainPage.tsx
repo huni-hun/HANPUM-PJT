@@ -252,23 +252,25 @@ function RouteAddMainPage() {
                 {typeArr.map((ele) => (
                   <R.CheckBoxContainer
                     onClick={() => {
-                      if (!typeChecked.includes(ele)) {
-                        setTypeChecked((pre) => [...pre, ele]);
-                      } else {
-                        let arr = [...typeChecked];
-                        let newArr: string[] = [];
-                        arr.map((e) => {
-                          if (e != ele) {
-                            newArr.push(e);
-                          }
-                        });
+                      if (typeChecked.length < 5) {
+                        if (!typeChecked.includes(ele)) {
+                          setTypeChecked((pre) => [...pre, ele]);
+                        } else {
+                          let arr = [...typeChecked];
+                          let newArr: string[] = [];
+                          arr.map((e) => {
+                            if (e != ele) {
+                              newArr.push(e);
+                            }
+                          });
 
-                        setTypeChecked(newArr);
+                          setTypeChecked(newArr);
+                        }
                       }
                     }}
                   >
                     <R.TypeCheckBox
-                      defaultChecked={typeChecked.includes(ele)}
+                      checked={typeChecked.includes(ele)}
                       type="checkbox"
                     />
                     <R.TypeLabel>{ele}</R.TypeLabel>

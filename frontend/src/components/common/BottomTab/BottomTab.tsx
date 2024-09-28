@@ -67,9 +67,7 @@ function BottomTab() {
         }}
       >
         <Icon
-          name={
-            curTab === 'Community' ? 'IconCommunitySelect' : 'IconCommunity'
-          }
+          name={curTab === '/mypage' ? 'IconMyInfoActive' : 'IconMyInfo'}
           size={20}
         />
         <Bt.TabText selected={curTab.includes('mypage')}>내 정보</Bt.TabText>

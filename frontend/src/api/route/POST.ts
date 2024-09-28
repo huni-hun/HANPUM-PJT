@@ -133,3 +133,21 @@ export const SetRouteReview = async (
 
   return response;
 };
+
+export const GetLineDataKakao = async (
+  start: LineStartEndProps,
+  end: LineStartEndProps,
+  data: MapLinePathProps[],
+) => {
+  const response = api.post(
+    '/api/course/search/multiWaypoint',
+    [start, end, ...data],
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+
+  return response;
+};

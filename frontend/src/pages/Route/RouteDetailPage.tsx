@@ -12,6 +12,7 @@ import {
   AttractionsProps,
   DaysOfRouteProps,
   LineStartEndProps,
+  MakerDataProps,
   MapLinePathProps,
   RouteDetailDayProps,
   RouteDetailProps,
@@ -22,7 +23,7 @@ import Button from '@/components/common/Button/Button';
 import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
 import BottomSheet from '@/components/Style/Route/BottomSheet';
 import ReviewModal from '@/components/Style/Route/ReviewModal';
-import { GetLineData } from '@/api/route/POST';
+import { GetLineData, GetLineDataKakao } from '@/api/route/POST';
 import { RouteDelete } from '@/api/route/Delete';
 import { toast } from 'react-toastify';
 
@@ -51,7 +52,7 @@ function RouteDetailPage() {
   const [attractions, setAttractions] = useState<AttractionsProps[]>([]);
   const [linePath, setLinePath] = useState<MapLinePathProps[]>([]);
   const [se, setSe] = useState<LineStartEndProps[]>([]);
-  const [marker, setMarker] = useState<LineStartEndProps[]>([]);
+  const [marker, setMarker] = useState<MakerDataProps[]>([]);
   const [attmarker, setAttMarker] = useState<LineStartEndProps[]>([]);
   const [bsType, setBsType] = useState<string>('설정');
   const [reviewType, setReviewType] = useState<string>('최신순');
@@ -69,6 +70,7 @@ function RouteDetailPage() {
   const [beforeRating, setBeforeRating] = useState<number>(0);
   const [reviewId, setReviewId] = useState<number>(0);
   const [noVertexes, setNoVertexes] = useState<boolean>(false);
+  const [kakaolinePath, setKakaoLinePath] = useState<MapLinePathProps[]>([]);
   /** 바텀 sheet */
   const [isOpenSetting, setIsOpenSetting] = useState<boolean>(false); // 경로설정 BottomSheet 열림 상태
   const [isOpenSorting, setIsOpenSorting] = useState<boolean>(false); // 경로정렬 BottomSheet 열림 상태
@@ -91,7 +93,7 @@ function RouteDetailPage() {
               writeState: result.data.data.course.writeState,
               openState: result.data.data.course.openState,
             };
-            console.log(result.data.data.course.backgroundImg);
+
             setRouteData(rd);
             setProfileImg(result.data.data.profilePicture);
             setMemberName(result.data.data.nickname);
@@ -151,6 +153,9 @@ function RouteDetailPage() {
       if (result.status === 200) {
         let arr: DaysOfRouteProps[] = [];
         let lines: MapLinePathProps[] = [];
+        let kakaose: LineStartEndProps[] = [];
+        let kakaoData: MapLinePathProps[] = [];
+        // console.log(result);
         result.data.data.wayPoints.sort(
           (a: any, b: any) => a.pointNumber - b.pointNumber,
         );
@@ -171,13 +176,23 @@ function RouteDetailPage() {
             x: ele.lat,
             y: ele.lon,
           };
-
+          if (idx === 0 || idx === result.data.data.wayPoints.length - 1) {
+            let kse: LineStartEndProps = {
+              x: ele.lat,
+              y: ele.lon,
+            };
+            kakaose.push(kse);
+          } else {
+            kakaoData.push(line);
+          }
           lines.push(line);
-          if (idx === 0) {
-            if (ele.vertexes !== null) {
+          if (ele.vertexes !== null) {
+            if (ele.vertexes.length > 0) {
+              const ml: any[] = [];
               ele.vertexes.forEach((vertex: any, index: number) => {
+                // console.log(vertex);
                 if (index % 2 === 0) {
-                  mapLines.push(
+                  ml.push(
                     new window.kakao.maps.LatLng(
                       ele.vertexes[index + 1],
                       ele.vertexes[index],
@@ -185,14 +200,23 @@ function RouteDetailPage() {
                   );
                 }
               });
+
+              setMapLines([...ml]);
+              // setNoVertexes(false);
             } else {
               setNoVertexes(true);
             }
+          } else {
+            setNoVertexes(true);
           }
 
-          let markerData: LineStartEndProps = {
+          let markerData: MakerDataProps = {
             x: ele.lat,
             y: ele.lon,
+            distance: ele.distance,
+            duration: ele.duration,
+            name: ele.name,
+            calorie: ele.calorie,
           };
           setMarker((pre) => [...pre, markerData]);
         });
@@ -208,6 +232,7 @@ function RouteDetailPage() {
     getRouteDayAttraction(routeid as string, selectedDay).then((res) => {
       if (res.status === 200 && res.data.status === 'SUCCESS') {
         let attArr: AttractionsProps[] = [];
+
         res.data.data.map((ele: any) => {
           let attData: AttractionsProps = {
             name: ele.name,
@@ -233,7 +258,9 @@ function RouteDetailPage() {
 
   useEffect(() => {
     if (noVertexes) {
+      // console.log(linePath);
       if (linePath.length > 0) {
+        // console.log('oo');
         const mapLines: any[] = [];
         if (linePath.length <= 5) {
           GetLineData(linePath)
@@ -255,7 +282,37 @@ function RouteDetailPage() {
               }
             })
             .catch((err) => {
-              toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+              GetLineDataKakao(se[0], se[1], kakaolinePath)
+                .then((result) => {
+                  if (
+                    result.status === 200 &&
+                    result.data.status === 'SUCCESS'
+                  ) {
+                    result.data.data.forEach((ele: any, idx: number) => {
+                      // wayPoints.map((el: WayPointReqDto, i: number) => {
+                      //   // eslint-disable-next-line no-self-assign
+                      //   if (idx === i) {
+                      //     el.vertexes = ele.vertexes;
+                      //   }
+                      // });
+
+                      ele.vertexes.forEach((vertex: any, index: number) => {
+                        if (index % 2 === 0) {
+                          mapLines.push(
+                            new window.kakao.maps.LatLng(
+                              ele.vertexes[index + 1],
+                              ele.vertexes[index],
+                            ),
+                          );
+                        }
+                      });
+                    });
+                    setMapLines([...mapLines]); // 복사본으로 상태 업데이트
+                  }
+                })
+                .catch((err) => {
+                  toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+                });
             });
         } else {
           let arr: MapLinePathProps[] = [];
@@ -285,7 +342,39 @@ function RouteDetailPage() {
                     }
                   })
                   .catch((err) => {
-                    toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+                    GetLineDataKakao(se[0], se[1], kakaolinePath)
+                      .then((result) => {
+                        if (
+                          result.status === 200 &&
+                          result.data.status === 'SUCCESS'
+                        ) {
+                          result.data.data.forEach((ele: any, idx: number) => {
+                            // wayPoints.map((el: WayPointReqDto, i: number) => {
+                            //   // eslint-disable-next-line no-self-assign
+                            //   if (idx === i) {
+                            //     el.vertexes = ele.vertexes;
+                            //   }
+                            // });
+
+                            ele.vertexes.forEach(
+                              (vertex: any, index: number) => {
+                                if (index % 2 === 0) {
+                                  mapLines.push(
+                                    new window.kakao.maps.LatLng(
+                                      ele.vertexes[index + 1],
+                                      ele.vertexes[index],
+                                    ),
+                                  );
+                                }
+                              },
+                            );
+                          });
+                          setMapLines([...mapLines]); // 복사본으로 상태 업데이트
+                        }
+                      })
+                      .catch((err) => {
+                        toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+                      });
                   }),
               );
 

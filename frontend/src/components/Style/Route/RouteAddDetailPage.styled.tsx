@@ -57,11 +57,11 @@ export const DayOverFlow = styled.div`
 `;
 
 export const DayCard = styled.div<{ selected: boolean }>`
-  width: 7.4rem;
+  width: 8.4rem;
   height: 3.3rem;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-around;
   margin-right: 0.8rem;
   align-items: center;
   border: 0.15rem solid
@@ -71,6 +71,14 @@ export const DayCard = styled.div<{ selected: boolean }>`
   font-weight: bold;
   color: ${(prop) => (prop.selected ? colors.main : colors.grey2)};
   flex-shrink: 0;
+`;
+
+export const DayDeleteBox = styled.div`
+  width: 15%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const DatAddCard = styled.div`

@@ -37,7 +37,7 @@ function MemberManageDetail() {
           if (response && response.status === 'SUCCESS') {
             setMemberData(response.data || null);
           } else {
-            console.error('error');
+            // console.error('error');
             toast.error('데이터를 불러오는데 실패했습니다.');
           }
         } catch (error) {

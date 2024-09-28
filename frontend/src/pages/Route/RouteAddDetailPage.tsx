@@ -15,11 +15,18 @@ import {
   WayPointReqDto,
   LineStartEndProps,
   MapLinePathProps,
+  DaysOfRouteProps,
 } from '@/models/route';
 import RoutePlaceCard from '@/components/Style/Route/RoutePlaceCard';
 import { colors } from '@/styles/colorPalette';
-import { AddRoute, GetDistance, GetLineData } from '@/api/route/POST';
+import {
+  AddRoute,
+  GetDistance,
+  GetLineData,
+  GetLineDataKakao,
+} from '@/api/route/POST';
 import { toast } from 'react-toastify';
+import { cutAddress } from '@/utils/util';
 
 function RouteAddDetailPage() {
   const [curLatitude, setCurLatitude] = useState<number>(0);
@@ -41,6 +48,8 @@ function RouteAddDetailPage() {
   const [marker, setMarker] = useState<LineStartEndProps[]>([]);
   const [attmarker, setAttMarker] = useState<LineStartEndProps[]>([]);
   const [linePath, setLinePath] = useState<MapLinePathProps[]>([]);
+  const [kakaolinePath, setKakaoLinePath] = useState<MapLinePathProps[]>([]);
+  const [se, setSe] = useState<LineStartEndProps[]>([]);
   const [mapLines, setMapLines] = useState<any[]>([]);
 
   const location = useLocation();
@@ -90,7 +99,9 @@ function RouteAddDetailPage() {
   useEffect(() => {
     setMarker([]);
     let lines: MapLinePathProps[] = [];
-    wayPoints.map((ele: WayPointReqDto) => {
+    let kakaose: LineStartEndProps[] = [];
+    let kakaoData: MapLinePathProps[] = [];
+    wayPoints.map((ele: WayPointReqDto, idx: number) => {
       let markerData: LineStartEndProps = {
         x: ele.lat,
         y: ele.lon,
@@ -100,10 +111,20 @@ function RouteAddDetailPage() {
         x: ele.lat,
         y: ele.lon,
       };
+      if (idx === 0 || idx === wayPoints.length - 1) {
+        let kse: LineStartEndProps = {
+          x: ele.lat,
+          y: ele.lon,
+        };
+        kakaose.push(kse);
+      } else {
+        kakaoData.push(line);
+      }
       lines.push(line);
       setMarker((pre) => [...pre, markerData]);
     });
-
+    setSe(kakaose);
+    setKakaoLinePath(kakaoData);
     setLinePath(lines);
   }, [wayPoints]);
 
@@ -125,10 +146,12 @@ function RouteAddDetailPage() {
         GetLineData(linePath)
           .then((res) => {
             if (res.status === 200 && res.data.status === 'SUCCESS') {
-              res.data.data.forEach((ele: any) => {
-                wayPoints.map((el: WayPointReqDto) => {
+              res.data.data.forEach((ele: any, idx: number) => {
+                wayPoints.map((el: WayPointReqDto, i: number) => {
                   // eslint-disable-next-line no-self-assign
-                  el.vertexes = ele.vertexes;
+                  if (idx === i) {
+                    el.vertexes = ele.vertexes;
+                  }
                 });
 
                 ele.vertexes.forEach((vertex: any, index: number) => {
@@ -146,7 +169,34 @@ function RouteAddDetailPage() {
             }
           })
           .catch((err) => {
-            toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+            GetLineDataKakao(se[0], se[1], kakaolinePath)
+              .then((result) => {
+                if (result.status === 200 && result.data.status === 'SUCCESS') {
+                  result.data.data.forEach((ele: any, idx: number) => {
+                    wayPoints.map((el: WayPointReqDto, i: number) => {
+                      // eslint-disable-next-line no-self-assign
+                      if (idx === i) {
+                        el.vertexes = ele.vertexes;
+                      }
+                    });
+
+                    ele.vertexes.forEach((vertex: any, index: number) => {
+                      if (index % 2 === 0) {
+                        mapLines.push(
+                          new window.kakao.maps.LatLng(
+                            ele.vertexes[index + 1],
+                            ele.vertexes[index],
+                          ),
+                        );
+                      }
+                    });
+                  });
+                  setMapLines([...mapLines]); // 복사본으로 상태 업데이트
+                }
+              })
+              .catch((err) => {
+                toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+              });
           });
       } else {
         let arr: MapLinePathProps[] = [];
@@ -176,7 +226,37 @@ function RouteAddDetailPage() {
                   }
                 })
                 .catch((err) => {
-                  toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+                  GetLineDataKakao(se[0], se[1], kakaolinePath)
+                    .then((result) => {
+                      if (
+                        result.status === 200 &&
+                        result.data.status === 'SUCCESS'
+                      ) {
+                        result.data.data.forEach((ele: any, idx: number) => {
+                          wayPoints.map((el: WayPointReqDto, i: number) => {
+                            // eslint-disable-next-line no-self-assign
+                            if (idx === i) {
+                              el.vertexes = ele.vertexes;
+                            }
+                          });
+
+                          ele.vertexes.forEach((vertex: any, index: number) => {
+                            if (index % 2 === 0) {
+                              mapLines.push(
+                                new window.kakao.maps.LatLng(
+                                  ele.vertexes[index + 1],
+                                  ele.vertexes[index],
+                                ),
+                              );
+                            }
+                          });
+                        });
+                        setMapLines([...mapLines]); // 복사본으로 상태 업데이트
+                      }
+                    })
+                    .catch((err) => {
+                      toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+                    });
                 }),
             );
 
@@ -262,6 +342,57 @@ function RouteAddDetailPage() {
     });
   }, [selectedDay]);
 
+  useEffect(() => {
+    wayPoints.map((ele, idx) => {
+      if (idx === 0) {
+        ele.type = '출발지';
+      } else if (idx === wayPoints.length - 1) {
+        ele.type = '도착지';
+      } else {
+        ele.type = '경유지';
+      }
+    });
+    // let newDateDetail: CourseDayReqDto[] = [...dateDetail];
+
+    // setDateDetail(newDateDetail);
+  }, [wayPoints]);
+
+  const deleteDateDetail = (day: number) => {
+    let newDetail: CourseDayReqDto[] = [];
+    dateDetail.map((ele) => {
+      if (ele.dayNumber !== day) {
+        newDetail.push(ele);
+      }
+    });
+    setDateDetail(newDetail);
+  };
+
+  const deleteWayHandler = (data: WayPointReqDto) => {
+    let arr: WayPointReqDto[] = [];
+
+    wayPoints.map((ele) => {
+      if (ele.pointNumber !== data.pointNumber) {
+        ele.pointNumber = String(arr.length + 1);
+        arr.push(ele);
+      }
+    });
+    arr[0].type = '출발지';
+    arr[arr.length - 1].type = '도착지';
+
+    setWayPoints(() => {
+      const updatedWayPoints = arr;
+
+      let newDateDetail: CourseDayReqDto[] = [...dateDetail];
+      newDateDetail.map((ele: CourseDayReqDto) => {
+        if (ele.dayNumber === selectedDay) {
+          ele.wayPointReqDtoList = updatedWayPoints;
+        }
+      });
+      setDateDetail(newDateDetail);
+      return updatedWayPoints;
+    });
+  };
+
   return searchOpen ? (
     <SearchPlacePage
       setAttractionsCard={setAttractionsCard}
@@ -280,8 +411,12 @@ function RouteAddDetailPage() {
     <R.Container>
       <Header
         purpose="root"
-        depart="서울"
-        arrive="대전"
+        depart={wayPoints.length >= 2 ? cutAddress(wayPoints[0].address) : ''}
+        arrive={
+          wayPoints.length >= 2
+            ? cutAddress(wayPoints[wayPoints.length - 1].address)
+            : ''
+        }
         clickBack={() => {
           navigate(-1);
         }}
@@ -298,12 +433,32 @@ function RouteAddDetailPage() {
                   onClick={() => {
                     setSelectedDay(ele);
                   }}
-                >{`Day ${ele}`}</R.DayCard>
+                >
+                  {`Day ${ele}`}
+                  <R.DayDeleteBox
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (route.length >= 2) {
+                        let newD = [...route];
+                        let d: number[] = [];
+                        newD.map((el) => {
+                          if (el !== ele) {
+                            d.push(el);
+                          }
+                        });
+                        deleteDateDetail(ele);
+                        setRoute(d);
+                      }
+                    }}
+                  >
+                    X
+                  </R.DayDeleteBox>
+                </R.DayCard>
               ))}
               <R.DatAddCard
                 onClick={() => {
-                  setRoute((pre) => [...pre, day + 1]);
-                  setDay(day + 1);
+                  setRoute((pre) => [...pre, route[route.length - 1] + 1]);
+                  setDay(route[route.length - 1] + 1);
                 }}
               >
                 +
@@ -342,12 +497,16 @@ function RouteAddDetailPage() {
                   {wayPoints.map((ele: WayPointReqDto, idx: number) => (
                     <RoutePlaceCard
                       routeAddress={ele.address}
-                      routeId={1}
+                      routeId={idx}
                       routeName={ele.name}
                       routeType={ele.type}
                       latitude={ele.lat}
                       longitude={ele.lon}
                       routePoint={`${ele.pointNumber}`}
+                      isAdd
+                      deleteHandler={() => {
+                        deleteWayHandler(ele);
+                      }}
                     />
                   ))}
                 </R.DetailWayOverflow>
@@ -395,10 +554,12 @@ function RouteAddDetailPage() {
             children="경로완성"
             color="#ffffff"
             onClick={() => {
+              console.log(addRoute);
               if (
                 addRoute.courseDayReqDtoList.length > 0 &&
                 addRoute.courseDayReqDtoList[0].wayPointReqDtoList.length > 0
               ) {
+                console.log(addRoute);
                 AddRoute(addRoute)
                   .then((res) => {
                     if (res.status === 200) {

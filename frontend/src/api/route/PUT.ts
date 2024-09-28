@@ -5,7 +5,7 @@ export const RetouchRoute = async (data: RetouchRouteProps) => {
   const formData = new FormData();
 
   const { multipartFile, ...rest } = data;
-  console.log(rest);
+  // console.log(rest);
   const editCourseReqDto = new Blob([JSON.stringify(rest)], {
     type: 'application/json',
   });

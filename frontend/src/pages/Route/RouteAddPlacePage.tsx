@@ -84,7 +84,7 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
       address: props.selectedPlace.address,
       lat: props.selectedPlace.longitude,
       lon: props.selectedPlace.latitude,
-      img: props.selectedPlace.img as string,
+      image: props.selectedPlace.img as string,
       type: '관광지',
     };
 

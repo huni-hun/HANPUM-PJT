@@ -8,7 +8,7 @@ export const CardLongContainer = styled.div`
   border-radius: 20px;
   box-sizing: border-box;
   overflow: hidden;
-  background-color: ${colors.red};
+  background-color: ${colors.grey1};
   .card {
     /* width: 80%; */
     height: 100%;
