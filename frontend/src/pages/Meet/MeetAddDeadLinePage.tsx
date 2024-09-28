@@ -21,6 +21,8 @@ function MeetAddDeadLinePage() {
   const location = useLocation();
   const { courseId, startDate, recruitmentPeriod, isEdit } =
     location.state || {};
+  /** 날짜 선택 시 vh 늘어나면서 data picker,map 활성화 */
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const [meetRequest, setMeetRequest] = useState<Partial<CreateMeetRequestDto>>(
     () => {
@@ -83,12 +85,12 @@ function MeetAddDeadLinePage() {
     <ScheduleMainPageContainer>
       <Header
         purpose="title"
-        title="일정을 등록해주세요"
+        title="모집 마감일을 등록해주세요"
         clickBack={() => navigate(-1)}
         $isShadow
       />
       <S.SchduleContainer>
-        <S.DateWrap>
+        <S.DateWrap $isExpanded={!isExpanded}>
           <div>
             <S.H3>마감일을 선택해주세요.</S.H3>
             <S.DatePicker>

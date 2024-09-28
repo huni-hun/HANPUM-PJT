@@ -52,8 +52,8 @@ export interface FeedInfoProps {
   /** style */
   isMeetFeed?: string;
   /** 오늘 일정 */
-  todayStartPoint?: string;
-  todayEndPoint?: string;
+  currentWayPoint?: string;
+  nextWayPoint?: string;
   currentVisitCount?: number;
   todayTotalVisitCount?: number;
   todayTotalDistance?: number;
