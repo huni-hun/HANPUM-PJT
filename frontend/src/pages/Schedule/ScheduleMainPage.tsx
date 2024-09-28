@@ -316,6 +316,7 @@ function ScheduleMainPage() {
     if (isSelected === 'Proceeding') {
       /** 진행중 data */
       const fetchData = async () => {
+        setLoading(true);
         try {
           const response = await getRunningScheduleData();
           if (response && response.status === 'SUCCESS') {
@@ -333,11 +334,12 @@ function ScheduleMainPage() {
               setArriveGreen(initialArriveGreen);
             }
           } else if (response.status === 'ERROR') {
-            // console.log(response.message);
+            toast.error(response.message);
+            setRunningScheduleData(null);
           }
         } catch (error: unknown) {
-          console.error('Fetch Error:', error);
-          toast.error((error as AxiosError).message);
+          setRunningScheduleData(null);
+          // toast.error((error as AxiosError).message);
         } finally {
           setLoading(false);
         }
@@ -721,7 +723,6 @@ function ScheduleMainPage() {
             // console.log(response.message);
           }
         } catch (error: unknown) {
-          console.error('Fetch Error:', error);
           toast.error((error as AxiosError).message);
         } finally {
           setLoading(false);
@@ -751,7 +752,7 @@ function ScheduleMainPage() {
     // runningScheduleData가 존재하고, scheduleDayResDtoList가 있는지 확인
     if (runningScheduleData && runningScheduleData.scheduleDayResDtoList) {
       // 현재 날짜와 일치하는 데이터를 찾기
-      const todaySchedule = runningScheduleData.scheduleDayResDtoList.find(
+      const todaySchedule = runningScheduleData?.scheduleDayResDtoList.find(
         (day) => day.date === currentDate,
       );
 
@@ -828,6 +829,8 @@ function ScheduleMainPage() {
       ? parseFloat(todaySchedule.totalDistance)
       : 0;
 
+  console.log(runningScheduleData, '?');
+
   return (
     <ScheduleMainPageContainer>
       <Header
@@ -873,7 +876,8 @@ function ScheduleMainPage() {
         <S.Main>
           <S.Overflow>
             <>
-              {runningScheduleData ? (
+              {runningScheduleData &&
+              runningScheduleData.scheduleDayResDtoList ? (
                 <>
                   <S.RouteInfoContainer>
                     <>
