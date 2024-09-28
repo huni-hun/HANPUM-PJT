@@ -118,7 +118,7 @@ function Map(props: MapProps) {
           image: markerImg,
         });
 
-        const infoWindowContent = `<div style="padding:5px; display:flex; flex-direction:column;"><p style="font-size:1.5rem; font-weight:bold; margin-bottom:0.8rem;">${mar.name}</p><p style="font-size:1.2rem; font-weight:bold; margin-bottom:0.5rem;">걸리는 시간: ${mar.duration}</p><p style="font-size:1.2rem; font-weight:bold; margin-bottom:0.5rem;">거리: ${mar.distance}</p><p style="font-size:1.2rem; font-weight:bold; margin-bottom:0.5rem;">칼로리: ${mar.calorie}</p></div>`; // 인포윈도우에 표시할 텍스트 (HTML 가능)
+        const infoWindowContent = `<div style="padding:5px; display:flex; flex-direction:column;"><p style="font-size:1.5rem; font-weight:bold; margin-bottom:0.8rem;">${mar.name === null ? '0' : mar.name}</p><p style="font-size:1.2rem; font-weight:bold; margin-bottom:0.5rem;">걸리는 시간: ${mar.duration === null ? '0' : mar.duration}</p><p style="font-size:1.2rem; font-weight:bold; margin-bottom:0.5rem;">거리: ${mar.distance === null ? '0' : mar.distance}</p><p style="font-size:1.2rem; font-weight:bold; margin-bottom:0.5rem;">칼로리: ${mar.calorie === null ? '0' : mar.calorie}</p></div>`; // 인포윈도우에 표시할 텍스트 (HTML 가능)
         const infoWindow = new window.kakao.maps.InfoWindow({
           content: infoWindowContent,
         });
