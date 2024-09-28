@@ -203,7 +203,7 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
     }
 
     @Override
-    public GroupResDto findGroupByMemberId(Long memberId) {
+    public GroupResDto findGroupByMemberId(Long memberId, Long groupId) {
         return query
                 .select(Projections.constructor(
                         GroupResDto.class,
@@ -231,7 +231,8 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                 .leftJoin(group.schedule, schedule)
                 .leftJoin(schedule.course, course)
                 .leftJoin(likeGroup).on(likeGroup.group.groupId.eq(group.groupId).and(likeGroup.member.memberId.eq(memberId)))
-                .where(groupMember.member.memberId.eq(memberId))
+                .where(group.groupId.eq(groupId))
+                .where(groupMember.joinType.ne(JoinType.APPLY))
                 .groupBy(group.groupId, course.startPoint, course.endPoint, course.totalDistance, course.totalDays,
                         schedule.startDate, schedule.endDate)
                 .fetchOne();
