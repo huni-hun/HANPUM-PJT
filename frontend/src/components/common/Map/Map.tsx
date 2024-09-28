@@ -142,15 +142,17 @@ function Map(props: MapProps) {
             // 같은 마커를 다시 클릭하면 인포윈도우 닫기
             infoWindow.close();
             isInfoWindowOpen = false;
+            openInfoWindow = null;
           } else {
             // 기존에 열려있는 인포윈도우가 있으면 닫기
             if (openInfoWindow) {
               openInfoWindow.close();
+              isInfoWindowOpen = false;
             }
 
             // 클릭한 마커로 지도의 중심을 이동 및 인포윈도우 열기
             kakaoMap.setCenter(markerPosition); // 마커 위치를 중심으로 설정
-            kakaoMap.setLevel(7); // 줌 레벨 설정 (필요에 따라 조정)
+            kakaoMap.setLevel(3); // 줌 레벨 설정 (필요에 따라 조정)
             infoWindow.open(kakaoMap, kakaoMarker);
 
             // 현재 열린 인포윈도우로 상태 업데이트
@@ -159,8 +161,10 @@ function Map(props: MapProps) {
           }
         });
         if (props.selected !== undefined) {
-          if (props.selected.name === mar.name) {
-            window.kakao.maps.event.trigger(kakaoMarker, 'click');
+          if (props.selected !== null) {
+            if (props.selected.name === mar.name) {
+              window.kakao.maps.event.trigger(kakaoMarker, 'click');
+            }
           }
         }
         kakaoMarker.setMap(kakaoMap);

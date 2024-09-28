@@ -188,24 +188,26 @@ function RouteDetailPage() {
           }
           lines.push(line);
           if (ele.vertexes !== null) {
-            if (ele.vertexes.length > 0) {
-              const ml: any[] = [];
-              ele.vertexes.forEach((vertex: any, index: number) => {
-                // console.log(vertex);
-                if (index % 2 === 0) {
-                  ml.push(
-                    new window.kakao.maps.LatLng(
-                      ele.vertexes[index + 1],
-                      ele.vertexes[index],
-                    ),
-                  );
-                }
-              });
+            if (ele.vertexes !== undefined) {
+              if (ele.vertexes.length > 0) {
+                const ml: any[] = [];
+                // console.log(ele.vertexes);
+                ele.vertexes.forEach((vertex: any, index: number) => {
+                  if (index % 2 === 0) {
+                    ml.push(
+                      new window.kakao.maps.LatLng(
+                        ele.vertexes[index + 1],
+                        ele.vertexes[index],
+                      ),
+                    );
+                  }
+                });
 
-              setMapLines([...ml]);
-              // setNoVertexes(false);
-            } else {
-              setNoVertexes(true);
+                setMapLines([...ml]);
+                // setNoVertexes(false);
+              } else {
+                setNoVertexes(true);
+              }
             }
           } else {
             setNoVertexes(true);
