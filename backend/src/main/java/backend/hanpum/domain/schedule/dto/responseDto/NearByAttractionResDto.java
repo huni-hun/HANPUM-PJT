@@ -7,10 +7,10 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class NearByAttractionResDto {
-    String title;
+    String name;
     String address;
     String tel;
-    String image1;
+    String img;
     double lat;
     double lon;
 }
