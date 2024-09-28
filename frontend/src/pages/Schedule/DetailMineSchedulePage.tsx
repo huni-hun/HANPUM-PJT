@@ -116,8 +116,10 @@ function DetailMineSchedulePage() {
       if (response && response.status === 'SUCCESS') {
         toast.success('일정 삭제 완료되었습니다.');
         setIsDeleteModalOpen(false);
+        navigate('/schedule/main');
       } else {
         toast.error('일정 삭제 실패했습니다.');
+        navigate('/schedule/main');
       }
     } catch (error) {
       toast.error('에러 발생');
@@ -538,7 +540,7 @@ function DetailMineSchedulePage() {
           />
         </R.RouteInfoContainer>
 
-        {/* 지도 및 하위 컴포넌트 container */}
+        {/* 지도 및 하위 컴포넌트 container
         <R.RouteDetailInfoContainer>
           <RouteDetailInfo
             marker={marker}
@@ -562,7 +564,7 @@ function DetailMineSchedulePage() {
             turnGreen={arriveGreen}
             isSchedule
           />
-        </R.RouteDetailInfoContainer>
+        </R.RouteDetailInfoContainer> */}
         <S.AttractionsContainer>
           <S.AttractionsBox>
             <S.AttrantiosTypeBox>주요 관광지</S.AttrantiosTypeBox>

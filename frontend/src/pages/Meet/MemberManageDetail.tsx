@@ -24,13 +24,16 @@ function MemberManageDetail() {
   const savedGroupId = localStorage.getItem('groupId');
   // const groupId = savedGroupId ? Number(JSON.parse(savedGroupId)) : null;
   const location = useLocation();
-  const { memberId, groupId } = location.state || {};
+  const { memberId, groupId, groupMemberId } = location.state || {};
 
   useEffect(() => {
     if (groupId) {
       const fetchData = async () => {
         try {
-          const response = await GetMeetMemberDetailList(groupId, groupId || 0);
+          const response = await GetMeetMemberDetailList(
+            groupId,
+            groupMemberId || 0,
+          );
           if (response && response.status === 'SUCCESS') {
             setMemberData(response.data || null);
           } else {

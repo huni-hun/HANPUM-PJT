@@ -24,6 +24,7 @@ import {
   SchduleCardProps,
   WeatherProps,
   ScheduleAttractionsProps,
+  WayPoint,
 } from '@/models/schdule';
 import BottomTab from '@/components/common/BottomTab/BottomTab';
 import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
@@ -228,6 +229,15 @@ function ScheduleMainPage() {
     }
   };
 
+  useEffect(() => {
+    if (isLocationReady) {
+      const interval = setInterval(() => {
+        handleLocationUpdate(lat || 0, lon || 0);
+      }, 5000); // 5초마다 위치 확인
+      return () => clearInterval(interval);
+    }
+  }, [lat, lon, isLocationReady]);
+
   // 두 좌표 사이의 거리를 계산하는 함수 (단순 비교용)
   const calculateDistance = (
     lat1: number,
@@ -312,6 +322,16 @@ function ScheduleMainPage() {
             setRunningScheduleData(response.data);
             setCourseId(response.data.courseId);
             setScheduleId(response.data.scheduleId);
+
+            const scheduleWayPoints: WayPoint[] =
+              response.data.scheduleWayPointList;
+            if (scheduleWayPoints && scheduleWayPoints.length > 0) {
+              // scheduleWayPoints 길이에 맞춰 arriveGreen 초기화
+              const initialArriveGreen = scheduleWayPoints.map(
+                (waypoint: WayPoint) => waypoint.state === 2,
+              );
+              setArriveGreen(initialArriveGreen);
+            }
           } else if (response.status === 'ERROR') {
             // console.log(response.message);
           }
@@ -754,10 +774,9 @@ function ScheduleMainPage() {
   }
 
   /** 오늘 달성률 */
-  const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-
+  const today: string = new Date().toISOString().slice(0, 10).replace(/-/g, ''); // '20240926' 형식으로 변환
   const todaySchedule = runningScheduleData?.scheduleDayResDtoList?.find(
-    (schedule) => schedule.date === today,
+    (schedule) => schedule.date || '' === today,
   );
 
   const todayStartPoint =
@@ -766,6 +785,31 @@ function ScheduleMainPage() {
     todaySchedule?.scheduleWayPointList?.[
       todaySchedule?.scheduleWayPointList.length - 1
     ]?.name || '도착지 없음';
+
+  const scheduleWayPointList = todaySchedule?.scheduleWayPointList || [];
+
+  // 현재 경유지의 인덱스(마지막 state = 2)
+  let currentPointIndex: number | undefined = undefined;
+  for (let i = scheduleWayPointList.length - 1; i >= 0; i--) {
+    if (scheduleWayPointList[i].state === 2) {
+      currentPointIndex = i;
+      break;
+    }
+  }
+
+  // 현재 경유지
+  const currentWayPoint =
+    currentPointIndex !== undefined && currentPointIndex >= 0
+      ? scheduleWayPointList[currentPointIndex].name
+      : '-';
+
+  // 다음 경유지
+  const nextWayPoint =
+    currentPointIndex !== undefined &&
+    currentPointIndex >= 0 &&
+    currentPointIndex < scheduleWayPointList.length - 1
+      ? scheduleWayPointList[currentPointIndex + 1].name
+      : '-';
 
   const currentVisitCount =
     todaySchedule?.scheduleWayPointList?.filter((point) => point.state === 2)
@@ -855,14 +899,14 @@ function ScheduleMainPage() {
                       proceessDay={calculateDayNumber(
                         runningScheduleData.startDate || '',
                       )}
-                      startPoint={feedInfoProps.startPoint}
-                      endPoint={feedInfoProps.endPoint}
+                      startPoint={todayStartPoint}
+                      endPoint={todayEndPoint}
                       totalDuration={feedInfoProps.totalDuration}
                       totalDistance={feedInfoProps.totalDistance}
                       dayData={feedInfoProps.dayData}
                       /** 오늘 일정 */
-                      todayStartPoint={todayStartPoint}
-                      todayEndPoint={todayEndPoint}
+                      currentWayPoint={currentWayPoint} //현재 경유지
+                      nextWayPoint={nextWayPoint} //다음 경유지
                       currentVisitCount={currentVisitCount}
                       todayTotalVisitCount={todayTotalVisitCount}
                       todayTotalDistance={

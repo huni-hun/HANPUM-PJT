@@ -187,6 +187,12 @@ export const ProgressBox = styled.p`
   justify-content: space-between;
 `;
 
+export const ProgressTextWrap = styled.p`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+`;
+
 export const ProgressText = styled.p`
   font-size: 1.2rem;
   font-weight: 500;

@@ -169,9 +169,9 @@ function MeetAddMainPage() {
     });
   };
 
-  const resetAndNavigate = (path: string) => {
-    setMultipartImg(null); // multipartImg를 초기화
-    navigate(path);
+  const resetAndNavigate = (path: string, options?: { state?: any }) => {
+    setMultipartImg(null);
+    navigate(path, options);
   };
 
   // 모임 생성 API 호출
@@ -193,7 +193,12 @@ function MeetAddMainPage() {
         // 로컬 스토리지 초기화
         localStorage.removeItem('meetRequest');
         localStorage.removeItem('previewImage');
-        resetAndNavigate('/meet/addMain/complete'); // 초기화 후 페이지 이동
+        // resetAndNavigate('/meet/addMain/complete'); // 초기화 후 페이지 이동
+        resetAndNavigate('/meet/addMain/complete', {
+          state: {
+            category: 'create',
+          },
+        });
       } else {
         toast.error(response.message);
       }
