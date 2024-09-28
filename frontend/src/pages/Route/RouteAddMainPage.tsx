@@ -7,6 +7,8 @@ import Header from '@/components/common/Header/Header';
 import { colors } from '@/styles/colorPalette';
 import { useNavigate } from 'react-router-dom';
 import useImageCompression from '@/hooks/global/useImageCompression';
+import { convertImageToFile } from '@/utils/util';
+import { setDefaultImg } from '@/utils/Image';
 
 function RouteAddMainPage() {
   const navigator = useNavigate();
@@ -321,7 +323,12 @@ function RouteAddMainPage() {
             fontSize={1.6}
             children="다음"
             color="#ffffff"
-            onClick={() => {
+            onClick={async () => {
+              if (imgData === null) {
+                setImgData(
+                  await convertImageToFile(setDefaultImg(imgSrc || null)),
+                );
+              }
               if (explanationReady) {
                 navigator('/route/addDetail', {
                   state: {

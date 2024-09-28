@@ -71,6 +71,7 @@ function RouteDetailPage() {
   const [reviewId, setReviewId] = useState<number>(0);
   const [noVertexes, setNoVertexes] = useState<boolean>(false);
   const [kakaolinePath, setKakaoLinePath] = useState<MapLinePathProps[]>([]);
+
   /** 바텀 sheet */
   const [isOpenSetting, setIsOpenSetting] = useState<boolean>(false); // 경로설정 BottomSheet 열림 상태
   const [isOpenSorting, setIsOpenSorting] = useState<boolean>(false); // 경로정렬 BottomSheet 열림 상태

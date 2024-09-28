@@ -19,6 +19,7 @@ interface MapProps {
   attrationmarker?: any[];
   infoBtn?: boolean;
   isSchdule?: boolean;
+  selected?: any;
 }
 
 function Map(props: MapProps) {
@@ -157,14 +158,18 @@ function Map(props: MapProps) {
             isInfoWindowOpen = true; // 현재 인포윈도우가 열려 있음
           }
         });
-
+        if (props.selected !== undefined) {
+          if (props.selected.name === mar.name) {
+            window.kakao.maps.event.trigger(kakaoMarker, 'click');
+          }
+        }
         kakaoMarker.setMap(kakaoMap);
         return kakaoMarker;
       });
 
       setMarkers(newMarkers); // 새로운 마커 배열을 상태로 저장
     }
-  }, [kakaoMap, props.marker]);
+  }, [kakaoMap, props.marker, props.selected]);
 
   useEffect(() => {
     if (props.attrationmarker !== undefined && kakaoMap) {
