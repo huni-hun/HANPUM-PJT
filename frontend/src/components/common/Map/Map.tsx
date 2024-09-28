@@ -118,6 +118,27 @@ function Map(props: MapProps) {
           image: markerImg,
         });
 
+        const infoWindowContent = `<div style="padding:5px; display:flex; flex-direction:column;"><p style="font-size:1.5rem; font-weight:bold; margin-bottom:0.8rem;">${mar.name}</p><p style="font-size:1.2rem; font-weight:bold; margin-bottom:0.5rem;">걸리는 시간: ${mar.duration}</p><p style="font-size:1.2rem; font-weight:bold; margin-bottom:0.5rem;">거리: ${mar.distance}</p><p style="font-size:1.2rem; font-weight:bold; margin-bottom:0.5rem;">칼로리: ${mar.calorie}</p></div>`; // 인포윈도우에 표시할 텍스트 (HTML 가능)
+        const infoWindow = new window.kakao.maps.InfoWindow({
+          content: infoWindowContent,
+        });
+        let isInfoWindowOpen = false;
+
+        // 마커 클릭 이벤트
+        window.kakao.maps.event.addListener(kakaoMarker, 'click', function () {
+          if (isInfoWindowOpen) {
+            // 인포윈도우가 열려있으면 닫기
+            infoWindow.close();
+            isInfoWindowOpen = false;
+          } else {
+            // 인포윈도우가 닫혀있으면 열기
+            kakaoMap.panTo(markerPosition); // 마커 위치로 부드럽게 이동
+            kakaoMap.setLevel(7); // 줌 레벨 설정 (필요에 따라 조정)
+            infoWindow.open(kakaoMap, kakaoMarker); // 인포윈도우 열기
+            isInfoWindowOpen = true;
+          }
+        });
+
         kakaoMarker.setMap(kakaoMap);
         return kakaoMarker;
       });
@@ -141,13 +162,22 @@ function Map(props: MapProps) {
         );
         const markerPosition = new window.kakao.maps.LatLng(mar.x, mar.y);
 
-        const kakaoMarker = new window.kakao.maps.Marker({
+        const kakaoAttMarker = new window.kakao.maps.Marker({
           position: markerPosition,
           image: markerImg,
         });
 
-        kakaoMarker.setMap(kakaoMap);
-        return kakaoMarker;
+        window.kakao.maps.event.addListener(
+          kakaoAttMarker,
+          'click',
+          function () {
+            kakaoMap.panTo(markerPosition); // 마커 위치로 이동
+            kakaoMap.setLevel(7); // 원하는 줌 레벨로 확대
+          },
+        );
+
+        kakaoAttMarker.setMap(kakaoMap);
+        return kakaoAttMarker;
       });
 
       setAttMarkers(newMarkers); // 새로운 마커 배열을 상태로 저장

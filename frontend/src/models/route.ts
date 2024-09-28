@@ -222,3 +222,12 @@ export interface LineStartEndProps {
   x: number;
   y: number;
 }
+
+export interface MakerDataProps {
+  x: number;
+  y: number;
+  distance: string;
+  calorie: string;
+  duration: string;
+  name: string;
+}
