@@ -316,7 +316,7 @@ function ScheduleMainPage() {
     if (isSelected === 'Proceeding') {
       /** 진행중 data */
       const fetchData = async () => {
-        setLoading(true);
+        // setLoading(true);/
         try {
           const response = await getRunningScheduleData();
           if (response && response.status === 'SUCCESS') {
@@ -334,11 +334,9 @@ function ScheduleMainPage() {
               setArriveGreen(initialArriveGreen);
             }
           } else if (response.status === 'ERROR') {
-            toast.error(response.message);
-            setRunningScheduleData(null);
+            // toast.error(response.message);
           }
         } catch (error: unknown) {
-          setRunningScheduleData(null);
           // toast.error((error as AxiosError).message);
         } finally {
           setLoading(false);
@@ -653,7 +651,7 @@ function ScheduleMainPage() {
   };
 
   /** 진행중 - 날씨 */
-  /*  useEffect(() => {
+  useEffect(() => {
     if (lat !== null && lon !== null && isLocationReady) {
       const fetchData = async () => {
         try {
@@ -673,7 +671,7 @@ function ScheduleMainPage() {
       };
       fetchData();
     }
-  }, [isSelected, isLocationReady]); */
+  }, [isSelected, isLocationReady]);
 
   /** 모임 데이터 때려넣기 */
   const meetDayData = meetListData?.scheduleDayResDtoList[0];
@@ -712,13 +710,7 @@ function ScheduleMainPage() {
         try {
           const response = await getNearbyLocData(lat || 0, lon || 0);
           if (response && response.status === 'SUCCESS') {
-            const transformedData = response.data.map(
-              (item: ScheduleAttractionsProps) => ({
-                ...item,
-                address: cutAddress(item.address),
-              }),
-            );
-            setAttractionsCard(transformedData);
+            setAttractions(response.data);
           } else if (response.status === 'ERROR') {
             // console.log(response.message);
           }
@@ -899,39 +891,64 @@ function ScheduleMainPage() {
 
                   {/* 1일차 진행 상황을 확인 + 달성률 ~~ 어쩌구 container */}
                   <S.ScheduleMainContainer>
-                    <ProgressSchedule
-                      proceessDay={calculateDayNumber(
-                        runningScheduleData.startDate || '',
+                    <div className="today_rate_box">
+                      <ProgressSchedule
+                        proceessDay={calculateDayNumber(
+                          runningScheduleData.startDate || '',
+                        )}
+                        startPoint={todayStartPoint}
+                        endPoint={todayEndPoint}
+                        totalDuration={feedInfoProps.totalDuration}
+                        totalDistance={feedInfoProps.totalDistance}
+                        dayData={feedInfoProps.dayData}
+                        /** 오늘 일정 */
+                        currentWayPoint={currentWayPoint} //현재 경유지
+                        nextWayPoint={nextWayPoint} //다음 경유지
+                        currentVisitCount={currentVisitCount}
+                        todayTotalVisitCount={todayTotalVisitCount}
+                        todayTotalDistance={
+                          todaySchedule?.totalDistance !== undefined
+                            ? parseFloat(todaySchedule.totalDistance)
+                            : 0
+                        }
+                        percentage={achievementPercentage}
+                      />
+                    </div>
+
+                    {/* 날씨 + 날씨 메시지 container  */}
+                    <S.ScheduleWeatherContainer>
+                      {weatherData.length > 0 && (
+                        <WeatherSchedule
+                          logcation={'현재위치'}
+                          weatherData={weatherData}
+                          weatherIcon={Error}
+                          message={'warning message'}
+                        />
                       )}
-                      startPoint={todayStartPoint}
-                      endPoint={todayEndPoint}
-                      totalDuration={feedInfoProps.totalDuration}
-                      totalDistance={feedInfoProps.totalDistance}
-                      dayData={feedInfoProps.dayData}
-                      /** 오늘 일정 */
-                      currentWayPoint={currentWayPoint} //현재 경유지
-                      nextWayPoint={nextWayPoint} //다음 경유지
-                      currentVisitCount={currentVisitCount}
-                      todayTotalVisitCount={todayTotalVisitCount}
-                      todayTotalDistance={
-                        todaySchedule?.totalDistance !== undefined
-                          ? parseFloat(todaySchedule.totalDistance)
-                          : 0
-                      }
-                      percentage={achievementPercentage}
-                    />
+                    </S.ScheduleWeatherContainer>
+
+                    <R.ContentSelecContainer>
+                      <R.ContentBox
+                        selected={selected === 'course'}
+                        onClick={() => {
+                          setSelected('course');
+                        }}
+                      >
+                        코스
+                      </R.ContentBox>
+                      <R.ContentBox
+                        selected={selected === 'information'}
+                        onClick={() => {
+                          setSelected('information');
+                        }}
+                      >
+                        관광지
+                      </R.ContentBox>
+                    </R.ContentSelecContainer>
                   </S.ScheduleMainContainer>
 
-                  {/* 날씨 + 날씨 메시지 container 
-                  <S.ScheduleWeatherContainer>
-                    <WeatherSchedule
-                      weatherData={weatherData}
-                      weatherIcon={Error}
-                      message={'warning message'}
-                    />
-                  </S.ScheduleWeatherContainer>*/}
-
                   {/* 지도 및 하위 컴포넌트 container */}
+
                   <R.RouteDetailInfoContainer>
                     {lat !== null && lon !== null && (
                       <RouteDetailInfo
@@ -958,7 +975,7 @@ function ScheduleMainPage() {
                       />
                     )}
                   </R.RouteDetailInfoContainer>
-                  <S.AttractionsContainer>
+                  {/* <S.AttractionsContainer>
                     <S.AttractionsBox>
                       <S.AttrantiosTypeBox>주요 관광지</S.AttrantiosTypeBox>
                       <S.AttractionsOverflow>
@@ -980,7 +997,7 @@ function ScheduleMainPage() {
                           ))}
                       </S.AttractionsOverflow>
                     </S.AttractionsBox>
-                  </S.AttractionsContainer>
+                  </S.AttractionsContainer> */}
                 </>
               ) : (
                 <>
@@ -1103,6 +1120,7 @@ export default ScheduleMainPage;
 
 const ScheduleMainPageContainer = styled.div`
   width: 100%;
-  height: 100%;
-  background-color: #fff;
+  height: 100vh;
+  background-color: #f5f5f5;
+  /* background-color: #fff; */
 `;

@@ -23,7 +23,7 @@ export const Container = styled.div`
 
 export const Main = styled.div`
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 9rem - 6vh);
   display: flex;
   flex-direction: row;
   overflow-y: auto;
@@ -35,9 +35,9 @@ export const Overflow = styled.div`
   width: 100%;
   height: 100%;
   overflow-y: auto;
-  margin-top: 13vw;
+  /* margin-top: 13vw; */
   overflow-x: hidden;
-
+  /* padding-bottom: 7rem; */
   &::-webkit-scrollbar {
     display: none;
   }
@@ -82,7 +82,7 @@ export const SchduleTypeContainer = styled.div`
   background-color: #fff;
   position: fixed;
   width: 100%;
-  z-index: 999;
+  z-index: 8;
 `;
 
 export const SchduleTypeBox = styled.div`
@@ -103,7 +103,7 @@ export const ScheduleType = styled.p<{ isSelected: boolean }>`
 
 export const ScheduleMainContainer = styled.div`
   width: 100vw;
-  height: 75vh;
+  height: 100vh;
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
@@ -113,6 +113,10 @@ export const ScheduleMainContainer = styled.div`
   padding-bottom: 2rem;
   .marginBottom {
     margin-bottom: 7vh;
+  }
+
+  .today_rate_box {
+    margin-bottom: 2rem;
   }
 `;
 
