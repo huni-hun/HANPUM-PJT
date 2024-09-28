@@ -306,7 +306,8 @@ public class GroupServiceImpl implements GroupService {
     @Transactional(readOnly = true)
     public GroupResDto getMemberJoinGroup(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(LoginInfoInvalidException::new);
-        return groupRepositoryCustom.findGroupByMemberId(memberId);
+        if(member.getGroupMember() == null) return null;
+        return groupRepositoryCustom.findGroupByMemberId(memberId, member.getGroupMember().getGroup().getGroupId());
 
     }
 

@@ -13,5 +13,5 @@ public interface GroupRepositoryCustom {
                                      Integer maxRecruitmentCount, Pageable pageable);
     LikeGroupListGetResDto findMemberLikeGroupList(Long memberId);
     Optional<GroupDetailGetResDto> findGroupById(Long memberId, Long groupId);
-    GroupResDto findGroupByMemberId(Long memberId);
+    GroupResDto findGroupByMemberId(Long memberId, Long groupId);
 }
