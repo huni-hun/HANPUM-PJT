@@ -232,7 +232,7 @@ function RouteDetailPage() {
     getRouteDayAttraction(routeid as string, selectedDay).then((res) => {
       if (res.status === 200 && res.data.status === 'SUCCESS') {
         let attArr: AttractionsProps[] = [];
-        console.log(res);
+
         res.data.data.map((ele: any) => {
           let attData: AttractionsProps = {
             name: ele.name,
