@@ -85,7 +85,7 @@ function EditMySchedulePage() {
           setError('데이터 가져오기 실패');
         }
       } catch (error) {
-        console.error('Fetch Error:', error);
+        // console.error('Fetch Error:', error);
       } finally {
         setLoading(false);
       }
