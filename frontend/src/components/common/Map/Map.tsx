@@ -102,6 +102,9 @@ function Map(props: MapProps) {
       // 기존 마커 제거
       markers.forEach((marker) => marker.setMap(null));
 
+      // 인포윈도우 상태를 저장할 변수
+      let openInfoWindow: any = null;
+
       const newMarkers = props.marker.map((mar) => {
         const imgSrc = markersrc;
         const imgSize = new window.kakao.maps.Size(32, 32);
@@ -116,6 +119,43 @@ function Map(props: MapProps) {
         const kakaoMarker = new window.kakao.maps.Marker({
           position: markerPosition,
           image: markerImg,
+        });
+
+        const infoWindowContent = `
+          <div style="padding:5px; display:flex; flex-direction:column;">
+            <p style="font-size:1.5rem; font-weight:bold; margin-bottom:0.8rem;">${mar.name ?? '0'}</p>
+            <p style="font-size:1.2rem; font-weight:bold; margin-bottom:0.5rem;">걸리는 시간: ${mar.duration ?? '0'}</p>
+            <p style="font-size:1.2rem; font-weight:bold; margin-bottom:0.5rem;">거리: ${mar.distance ?? '0'}</p>
+            <p style="font-size:1.2rem; font-weight:bold; margin-bottom:0.5rem;">칼로리: ${mar.calorie ?? '0'}</p>
+          </div>
+        `;
+        const infoWindow = new window.kakao.maps.InfoWindow({
+          content: infoWindowContent,
+        });
+
+        let isInfoWindowOpen = false; // 인포윈도우 상태 관리
+
+        // 마커 클릭 이벤트
+        window.kakao.maps.event.addListener(kakaoMarker, 'click', function () {
+          if (isInfoWindowOpen) {
+            // 같은 마커를 다시 클릭하면 인포윈도우 닫기
+            infoWindow.close();
+            isInfoWindowOpen = false;
+          } else {
+            // 기존에 열려있는 인포윈도우가 있으면 닫기
+            if (openInfoWindow) {
+              openInfoWindow.close();
+            }
+
+            // 클릭한 마커로 지도의 중심을 이동 및 인포윈도우 열기
+            kakaoMap.setCenter(markerPosition); // 마커 위치를 중심으로 설정
+            kakaoMap.setLevel(7); // 줌 레벨 설정 (필요에 따라 조정)
+            infoWindow.open(kakaoMap, kakaoMarker);
+
+            // 현재 열린 인포윈도우로 상태 업데이트
+            openInfoWindow = infoWindow;
+            isInfoWindowOpen = true; // 현재 인포윈도우가 열려 있음
+          }
         });
 
         kakaoMarker.setMap(kakaoMap);
@@ -141,13 +181,22 @@ function Map(props: MapProps) {
         );
         const markerPosition = new window.kakao.maps.LatLng(mar.x, mar.y);
 
-        const kakaoMarker = new window.kakao.maps.Marker({
+        const kakaoAttMarker = new window.kakao.maps.Marker({
           position: markerPosition,
           image: markerImg,
         });
 
-        kakaoMarker.setMap(kakaoMap);
-        return kakaoMarker;
+        window.kakao.maps.event.addListener(
+          kakaoAttMarker,
+          'click',
+          function () {
+            kakaoMap.panTo(markerPosition); // 마커 위치로 이동
+            kakaoMap.setLevel(7); // 원하는 줌 레벨로 확대
+          },
+        );
+
+        kakaoAttMarker.setMap(kakaoMap);
+        return kakaoAttMarker;
       });
 
       setAttMarkers(newMarkers); // 새로운 마커 배열을 상태로 저장
