@@ -5,6 +5,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
+import Cookies from 'js-cookie';
 
 import BottomTab from '@components/common/BottomTab/BottomTab';
 import Schedule from '@components/Main/Schedule';
@@ -36,7 +37,8 @@ import useQueryHandling from '@/hooks/global/useQueryHandling';
 import Loading from '@/components/common/Loading';
 import useIsAuth from '@/hooks/auth/useIsAuth';
 import { DeleteMeetLike } from '@/api/meet/Delete';
-import { isInitAtom } from '@/atoms/isAuthEnticatedAtom';
+import { isAuthEnticatedAtom, isInitAtom } from '@/atoms/isAuthEnticatedAtom';
+import { encodeToken } from '@/utils/util';
 
 function MainPage() {
   const navigator = useNavigate();
@@ -200,9 +202,9 @@ function MainPage() {
   };
 
   useEffect(() => {
-    getRouteList('해안길', 2).then((result) => {
+    getRouteList('', 2).then((result) => {
       if (result.status === 200) {
-        result.data.data.courseListMap['해안길'].map((ele: any) => {
+        result.data.data.courseListMap.searchResult.map((ele: any) => {
           let data: RouteListProps = {
             routeName: ele.courseName,
             routeContent: ele.content,
@@ -228,8 +230,28 @@ function MainPage() {
     });
   }, []);
 
+  const tryKakao = sessionStorage.getItem('send');
+  // const setAuthEnticate = useSetRecoilState(isAuthEnticatedAtom);
+  const navigate = useNavigate();
+
   useEffect(() => {
     setIsInit(true);
+  }, []);
+
+  useEffect(() => {
+    if (tryKakao === 'true') {
+      const memberType = Cookies.get('memberType');
+
+      // console.log('여기?');
+
+      if (memberType === 'KAKAO_INCOMPLETE') {
+        navigate('/signup');
+      }
+      // else {
+      //   setAuthEnticate(true);
+      //   // navigate('/home');
+      // }
+    }
   }, []);
 
   return (

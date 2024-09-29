@@ -7,11 +7,14 @@ import { useSetRecoilState } from 'recoil';
 import { signupStepAtom } from '@/atoms/signupStepAtom';
 import { useNavigate } from 'react-router-dom';
 import { isAuthEnticatedAtom } from '@/atoms/isAuthEnticatedAtom';
+import Cookies from 'js-cookie';
 
 function Finish({ nickname }: { nickname: string }) {
   const setStep = useSetRecoilState(signupStepAtom);
   const navigate = useNavigate();
   const setAuthEnticate = useSetRecoilState(isAuthEnticatedAtom);
+
+  // const memberType = Cookies.get('memberType');
   return (
     <S.FinishContainer>
       <img src={finishImg} alt="" />
@@ -31,6 +34,7 @@ function Finish({ nickname }: { nickname: string }) {
           if (sessionStorage.getItem('send') === 'true') {
             setAuthEnticate(false);
             navigate('/home');
+            Cookies.remove('memberType');
           } else {
             navigate('/login');
           }

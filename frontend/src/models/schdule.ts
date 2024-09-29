@@ -122,6 +122,6 @@ export interface ScheduleAttractionsProps {
   title: string;
   tel: string;
   name: string;
-  image1: string;
+  img: string;
   address: string;
 }

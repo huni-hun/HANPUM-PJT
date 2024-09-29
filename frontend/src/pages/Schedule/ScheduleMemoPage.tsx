@@ -84,7 +84,7 @@ function ScheduleMemoPage(props: RouteAddPagePlaceProps) {
               <S.AttractionCard>
                 <div className="img_wrap">
                   <img
-                    src={selectedAttraction.image1}
+                    src={selectedAttraction.img}
                     alt={selectedAttraction.title}
                   />
                 </div>

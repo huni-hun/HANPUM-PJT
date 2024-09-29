@@ -3,7 +3,7 @@ import * as S from './Header.styled';
 import Icon from '../Icon/Icon';
 import Flex from '../Flex';
 import Text from '../Text';
-import logo from '../../../assets/img/logo2.png';
+import logo from '../../../assets/img/lastLogo.png';
 
 interface HeaderProps {
   purpose: string;
@@ -24,6 +24,7 @@ interface HeaderProps {
   plusBtnclick?: () => void;
   /** 일정 & 모임 구분 */
   isSchedule?: boolean;
+  isRoute?: boolean;
   readonly?: boolean;
   notAuth?: boolean;
 }
@@ -46,6 +47,7 @@ const Header = ({
   plusBtnclick,
   $isGrey = false,
   isSchedule,
+  isRoute,
   readonly = false,
   notAuth = false,
 }: HeaderProps) => {
@@ -109,7 +111,7 @@ const Header = ({
               onClick={() => navigate('/')}
               src={logo}
               alt="logo"
-              style={{ width: '3.1rem', height: '3rem' }}
+              // style={{ width: '3.1rem', height: '3rem' }}
             />
             <Flex $gap={16} style={{ width: 'auto' }}>
               <Icon
@@ -125,11 +127,11 @@ const Header = ({
                 }}
                 size={20}
               />
-              <Icon
+              {/* <Icon
                 name="IconUser"
                 onClick={() => onClickHandler('mypage')}
                 size={20}
-              />
+              /> */}
             </Flex>
           </Flex>
         );
@@ -189,7 +191,7 @@ const Header = ({
                 onClick={() => navigate('/')}
                 src={logo}
                 alt="logo"
-                style={{ width: '3.1rem', height: '3rem' }}
+                // style={{ width: '3.1rem', height: '3rem' }}
               />
             )}
             <Flex
@@ -200,11 +202,10 @@ const Header = ({
               }}
               $justify="space-around"
             >
-              <Icon name="IconHeaderPlus" onClick={plusBtnclick} size={14} />
               <Icon
-                name="IconUser"
-                onClick={() => onClickHandler('mypage')}
-                size={14}
+                name="IconHeaderPlus"
+                onClick={plusBtnclick}
+                size={isRoute ? 20 : 14}
               />
             </Flex>
           </Flex>
@@ -315,13 +316,13 @@ const Header = ({
               onClick={() => navigate('/')}
               src={logo}
               alt="logo"
-              style={{ width: '3.1rem', height: '3rem' }}
+              // style={{ width: '3.1rem', height: '3rem' }}
             />
-            <Icon
+            {/* <Icon
               name="IconUser"
               onClick={() => onClickHandler('mypage')}
               size={20}
-            />
+            /> */}
           </Flex>
         );
       case 'schedule':

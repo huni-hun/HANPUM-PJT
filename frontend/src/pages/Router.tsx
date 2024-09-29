@@ -87,7 +87,7 @@ const RouterContent = ({
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === 'token') {
         const newToken = localStorage.getItem('token');
-        console.log('newToken ::', newToken);
+        // console.log('newToken ::', newToken);
         setIsAuth(!!newToken);
         if (!newToken) {
           navigate('/login');

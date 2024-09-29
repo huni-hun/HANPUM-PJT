@@ -241,6 +241,7 @@ function RouteAddMainPage() {
                         setTypeChecked(newArr);
                       }}
                       $isLong={ele.length > 3}
+                      key={ele}
                     >
                       <R.TypeTextBox>
                         <R.TypeText>{ele}</R.TypeText>
@@ -270,9 +271,11 @@ function RouteAddMainPage() {
                         }
                       }
                     }}
+                    key={ele}
                   >
                     <R.TypeCheckBox
-                      checked={typeChecked.includes(ele)}
+                      key={ele}
+                      defaultChecked={typeChecked.includes(ele)}
                       type="checkbox"
                     />
                     <R.TypeLabel>{ele}</R.TypeLabel>
@@ -324,15 +327,15 @@ function RouteAddMainPage() {
             children="다음"
             color="#ffffff"
             onClick={async () => {
-              if (imgData === null) {
-                setImgData(
-                  await convertImageToFile(setDefaultImg(imgSrc || null)),
-                );
-              }
               if (explanationReady) {
                 navigator('/route/addDetail', {
                   state: {
-                    imgSrc: imgData,
+                    imgSrc:
+                      imgSrc !== ''
+                        ? imgData
+                        : await convertImageToFile(
+                            setDefaultImg(imgSrc || null),
+                          ),
                     typeChecked: typeChecked,
                     routeTitle: routeTitle,
                     routeExplane: routeExplane,
