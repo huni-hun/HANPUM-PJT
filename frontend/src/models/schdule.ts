@@ -41,6 +41,14 @@ export interface MeetMemberProps {
   members: Member[];
 }
 
+export interface MemberLeader {
+  groupMemberId?: number;
+  joinType?: string;
+  memberId?: number;
+  nickname?: string;
+  profilePicture?: string;
+}
+
 export interface SchduleCardProps {
   scheduleId?: number;
   backgroundImg?: string | null;

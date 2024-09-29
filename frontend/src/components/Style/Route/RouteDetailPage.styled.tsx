@@ -831,11 +831,15 @@ export const TagsWrap = styled.div`
   display: flex;
   justify-content: left;
   gap: 1rem;
-  width: 60%;
+  width: 95%;
   align-items: center;
-  height: 2.8rem;
+  height: 4rem;
   position: absolute;
-  bottom: 2rem;
+  bottom: 0rem;
+  box-sizing: border-box;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-bottom: 1rem;
 `;
 
 export const Tags = styled.div`
@@ -850,4 +854,6 @@ export const Tags = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 7rem;
+  box-sizing: border-box;
 `;

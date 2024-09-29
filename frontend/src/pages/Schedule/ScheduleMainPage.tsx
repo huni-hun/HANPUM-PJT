@@ -25,6 +25,7 @@ import {
   WeatherProps,
   ScheduleAttractionsProps,
   WayPoint,
+  MemberLeader,
 } from '@/models/schdule';
 import BottomTab from '@/components/common/BottomTab/BottomTab';
 import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
@@ -49,7 +50,7 @@ import {
 } from '@/api/schedule/GET';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
-import { getRouteDetail } from '@/api/route/GET';
+import { getRouteDayAttraction, getRouteDetail } from '@/api/route/GET';
 import { GetLineData, GetLineDataKakao } from '@/api/route/POST';
 import { PutScheduleArrive } from '@/api/schedule/PUT';
 import ScheduleNoHave from '@/components/Schedule/ScheduleNoHave';
@@ -85,6 +86,7 @@ function ScheduleMainPage() {
     ScheduleAttractionsProps[]
   >([]);
   const [memberData, setMemberData] = useState<Member[]>([]);
+  const [memberLeader, setMemberLeader] = useState<MemberLeader[]>([]);
   const [error, setError] = useState<string | null>(null);
   /** 위치 가져오기*/
   const [lat, setLat] = useState<number | null>(null);
@@ -204,8 +206,8 @@ function ScheduleMainPage() {
   /** 모임일정 feed안에 들어가는 데이터 */
   const meetFeedData = {
     routeFeedImg: meetListData?.backgroundImg,
-    routeUserImg: memberImg,
-    routeName: meetListData?.title,
+    routeUserImg: memberLeader[0]?.profilePicture,
+    routeName: memberLeader[0]?.nickname,
     routeContent: meetListData?.content,
     routeTypes: meetListData?.courseTypes || [],
   };
@@ -432,6 +434,7 @@ function ScheduleMainPage() {
           if (response && response.status === 'SUCCESS') {
             setMeetListData(response.data);
             setMemberData(response.data.groupMemberResDtoList);
+            setMemberLeader(response.data.groupMemberResDtoList);
             setCourseId(response.data.courseId);
             setScheduleId(response.data.scheduleId);
           } else if (response.status === 'ERROR') {
@@ -519,6 +522,31 @@ function ScheduleMainPage() {
           }
         });
       }
+      getRouteDayAttraction(String(courseId), selectedDay).then((res) => {
+        if (res.status === 200 && res.data.status === 'SUCCESS') {
+          let attArr: AttractionsProps[] = [];
+
+          res.data.data.map((ele: any) => {
+            let attData: AttractionsProps = {
+              name: ele.name,
+              type: ele.type,
+              attractionId: ele.attractionId,
+              address: ele.address,
+              latitude: ele.lon,
+              longitude: ele.lat,
+              img: ele.img,
+            };
+            attArr.push(attData);
+
+            let markerData: LineStartEndProps = {
+              x: ele.lon,
+              y: ele.lat,
+            };
+            // setAttMarker((pre) => [...pre, markerData]);
+          });
+          setAttractions(attArr);
+        }
+      });
     } else {
       let arr: DaysOfRouteProps[] = [];
       let lines: MapLinePathProps[] = [];
@@ -567,6 +595,31 @@ function ScheduleMainPage() {
       setLinePath(lines);
 
       setWayPoints(arr);
+      getRouteDayAttraction(String(courseId), selectedDay).then((res) => {
+        if (res.status === 200 && res.data.status === 'SUCCESS') {
+          let attArr: AttractionsProps[] = [];
+
+          res.data.data.map((ele: any) => {
+            let attData: AttractionsProps = {
+              name: ele.name,
+              type: ele.type,
+              attractionId: ele.attractionId,
+              address: ele.address,
+              latitude: ele.lon,
+              longitude: ele.lat,
+              img: ele.img,
+            };
+            attArr.push(attData);
+
+            let markerData: LineStartEndProps = {
+              x: ele.lon,
+              y: ele.lat,
+            };
+            // setAttMarker((pre) => [...pre, markerData]);
+          });
+          setAttractions(attArr);
+        }
+      });
     }
   }, [selectedDay, scheduleId, arriveGreen]);
 
@@ -855,7 +908,6 @@ function ScheduleMainPage() {
             todaySchedule.scheduleWayPointList.length - 1
           ]?.name || '';
       } else {
-        toast.error('오늘 일정이 없습니다.');
       }
     }
   }, [runningScheduleData]);
@@ -937,6 +989,15 @@ function ScheduleMainPage() {
   if (loading) {
     return <Loading />;
   }
+
+  const extractCity = (address: string) => {
+    // 주소를 공백으로 나눈 후 두 번째까지의 단어만 결합
+    const parts = address.split(' ');
+    if (parts.length >= 2) {
+      return `${parts[0]} ${parts[1]}`; // 첫 번째와 두 번째 단어 반환
+    }
+    return address; // 두 단어 이하일 경우 원본 주소 반환
+  };
 
   return (
     <ScheduleMainPageContainer>
@@ -1100,7 +1161,9 @@ function ScheduleMainPage() {
                               img={(ele as ScheduleAttractionsProps).img}
                             >
                               <S.AttractionCardTitle>
-                                {(ele as ScheduleAttractionsProps).address}
+                                {extractCity(
+                                  (ele as ScheduleAttractionsProps).address,
+                                )}
                               </S.AttractionCardTitle>
                               <S.AttractionCardDetail>
                                 <Icon name="IconFlag" size={20} />
@@ -1179,8 +1242,28 @@ function ScheduleMainPage() {
                     totalDistance={feedMeetInfoProps.totalDistance}
                     dayData={feedMeetInfoProps.dayData}
                   />
+                  <R.ContentSelecContainer>
+                    <R.ContentBox
+                      selected={selected === 'course'}
+                      onClick={() => {
+                        setSelected('course');
+                      }}
+                    >
+                      코스
+                    </R.ContentBox>
+                    <R.ContentBox
+                      selected={selected === 'information'}
+                      onClick={() => {
+                        setSelected('information');
+                      }}
+                    >
+                      관광지
+                    </R.ContentBox>
+                  </R.ContentSelecContainer>
                 </R.RouteInfoContainer>
+
                 {/* 지도 및 하위 컴포넌트 container */}
+
                 <R.RouteDetailInfoContainer>
                   {lat !== null && lon !== null && (
                     <RouteDetailInfo
