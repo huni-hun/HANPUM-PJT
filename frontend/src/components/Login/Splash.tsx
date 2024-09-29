@@ -7,7 +7,7 @@ function Splash() {
     <SplashContainer>
       <div className="img-box">
         <img src={logoImg} alt="" />
-        <Text color="main" $bold={true} style={{ fontSize: '45px' }}>
+        <Text color="main" style={{ fontSize: '45px' }}>
           한품
         </Text>
       </div>
