@@ -140,7 +140,7 @@ export const SchduleProgressWrap = styled.div<StyleProps>`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  /* padding-top: 2rem; */
+  padding-top: 2rem;
 `;
 
 export const PercentBox = styled.div`

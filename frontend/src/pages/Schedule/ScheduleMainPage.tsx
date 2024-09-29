@@ -1092,7 +1092,7 @@ function ScheduleMainPage() {
                   </R.RouteDetailInfoContainer>
                   <S.AttractionsContainer>
                     <S.AttractionsBox>
-                      <S.AttrantiosTypeBox>주요 관광지</S.AttrantiosTypeBox>
+                      <S.AttrantiosTypeBox>내 주변 관광지</S.AttrantiosTypeBox>
                       <S.AttractionsOverflow>
                         {attractionsCard.length > 0 &&
                           attractionsCard.map((ele) => (
