@@ -327,15 +327,15 @@ function RouteAddMainPage() {
             children="다음"
             color="#ffffff"
             onClick={async () => {
-              if (imgData === null) {
-                setImgData(
-                  await convertImageToFile(setDefaultImg(imgSrc || null)),
-                );
-              }
               if (explanationReady) {
                 navigator('/route/addDetail', {
                   state: {
-                    imgSrc: imgData,
+                    imgSrc:
+                      imgSrc !== ''
+                        ? imgData
+                        : await convertImageToFile(
+                            setDefaultImg(imgSrc || null),
+                          ),
                     typeChecked: typeChecked,
                     routeTitle: routeTitle,
                     routeExplane: routeExplane,
