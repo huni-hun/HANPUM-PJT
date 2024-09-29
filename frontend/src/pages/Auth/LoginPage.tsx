@@ -44,7 +44,7 @@ function LoginPage() {
       const memberType = Cookies.get('memberType');
       const accessToken = Cookies.get('accessToken');
 
-      console.log('여기?');
+      // console.log('여기?');
 
       if (accessToken) {
         const token = encodeToken(accessToken.split('+')[1]);
