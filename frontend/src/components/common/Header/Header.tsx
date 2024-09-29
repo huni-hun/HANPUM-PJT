@@ -127,11 +127,11 @@ const Header = ({
                 }}
                 size={20}
               />
-              <Icon
+              {/* <Icon
                 name="IconUser"
                 onClick={() => onClickHandler('mypage')}
                 size={20}
-              />
+              /> */}
             </Flex>
           </Flex>
         );
@@ -207,13 +207,6 @@ const Header = ({
                 onClick={plusBtnclick}
                 size={isRoute ? 20 : 14}
               />
-              {isRoute ? null : (
-                <Icon
-                  name="IconUser"
-                  onClick={() => onClickHandler('mypage')}
-                  size={14}
-                />
-              )}
             </Flex>
           </Flex>
         );
@@ -325,11 +318,11 @@ const Header = ({
               alt="logo"
               style={{ width: '3.1rem', height: '3rem' }}
             />
-            <Icon
+            {/* <Icon
               name="IconUser"
               onClick={() => onClickHandler('mypage')}
               size={20}
-            />
+            /> */}
           </Flex>
         );
       case 'schedule':
