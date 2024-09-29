@@ -30,7 +30,7 @@ function Activity() {
           onClick={() => navigate('/mypage/:finish')}
         >
           <Icon name="IconfinishedRoot" />
-          <Text $typography="t12">완주한 경로</Text>
+          <Text $typography="t12">사용한 경로</Text>
         </div>
       </div>
     </S.ActivityContainer>

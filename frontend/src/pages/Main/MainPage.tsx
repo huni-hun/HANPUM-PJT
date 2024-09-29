@@ -44,6 +44,8 @@ function MainPage() {
   const navigator = useNavigate();
   const type = '초보자';
 
+  const [routeLoading, setRouteLoading] = useState(false);
+
   const meetFilterInfo = useRecoilValue(meetFilterInfoAtom);
 
   const isAuth = useIsAuth();
@@ -92,7 +94,7 @@ function MainPage() {
 
   // 내 일정
   // const { data: mySchedule } = useQuery('getMySchedule', getMySchedule);
-  const { data: mySchedule } = useQueryHandling(
+  const { data: mySchedule, isLoading: scheduleLoading } = useQueryHandling(
     'getMySchedule',
     getRunningScheduleData,
     {
@@ -152,7 +154,7 @@ function MainPage() {
   });
 
   // 모임(인기순 1개)
-  const { data: groupListData } = useQueryHandling(
+  const { data: groupListData, isLoading } = useQueryHandling(
     ['getGroupList', requestDto.pageable.sort],
     () => GetGroupList(requestDto),
   );
@@ -202,7 +204,9 @@ function MainPage() {
   };
 
   useEffect(() => {
+    setRouteLoading(true);
     getRouteList('', 2).then((result) => {
+      console.log(routeLoading);
       if (result.status === 200) {
         result.data.data.courseListMap.searchResult.map((ele: any) => {
           let data: RouteListProps = {
@@ -225,10 +229,11 @@ function MainPage() {
           if (routes.length < 2) {
             setRoutes((pre) => [...pre, data]);
           }
+          setRouteLoading(false);
         });
       }
     });
-  }, []);
+  }, [setRouteLoading]);
 
   const tryKakao = sessionStorage.getItem('send');
   // const setAuthEnticate = useSetRecoilState(isAuthEnticatedAtom);
@@ -242,17 +247,13 @@ function MainPage() {
     if (tryKakao === 'true') {
       const memberType = Cookies.get('memberType');
 
-      // console.log('여기?');
-
       if (memberType === 'KAKAO_INCOMPLETE') {
         navigate('/signup');
       }
-      // else {
-      //   setAuthEnticate(true);
-      //   // navigate('/home');
-      // }
     }
   }, []);
+
+  if (routeLoading || isLoading || scheduleLoading) return <Loading />;
 
   return (
     <MainPageContainer>

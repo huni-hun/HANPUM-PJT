@@ -113,9 +113,9 @@ function MyPage() {
             </div>
 
             <div className="logout-container">
-              <Text $typography="t16" onClick={clickLogout}>
+              <BaseButton size="large" onClick={clickLogout}>
                 로그아웃
-              </Text>
+              </BaseButton>
             </div>
           </div>
           <div className="banner">
