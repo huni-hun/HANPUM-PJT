@@ -34,7 +34,6 @@ function Finish({ nickname }: { nickname: string }) {
           if (sessionStorage.getItem('send') === 'true') {
             setAuthEnticate(false);
             navigate('/home');
-            Cookies.remove(memberType as string);
           } else {
             navigate('/login');
           }

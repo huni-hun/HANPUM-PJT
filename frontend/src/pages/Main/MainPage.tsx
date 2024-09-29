@@ -246,6 +246,7 @@ function MainPage() {
 
       if (memberType === 'KAKAO_INCOMPLETE') {
         navigate('/signup');
+        Cookies.remove(memberType);
       }
       // else {
       //   setAuthEnticate(true);
