@@ -88,7 +88,7 @@ function ReviewModal(props: ReviewModalProps) {
 
   return (
     <R.Container
-      isVisible={props.isVisible}
+      $isVisible={props.isVisible}
       onClick={() => {
         modalClosed();
       }}
