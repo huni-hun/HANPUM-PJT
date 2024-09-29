@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import * as M from '@/components/Style/Meet/MeetFilter.styled';
+import * as R from '../../components/Style/Route/RouteAddDetailPage.styled';
 import Header from '@/components/common/Header/Header';
 
 import styled from 'styled-components';
@@ -163,6 +164,35 @@ function MeetFilterPage() {
           필터 적용
         </BaseButton>
       </div>
+
+      <R.BottomContainer>
+        {/* <R.ButtonBox> */}
+        <M.ButtonBox>
+          <Flex
+            style={{ width: 'auto' }}
+            $align="center"
+            $gap={6}
+            onClick={revertInfo}
+          >
+            <Icon name="IconRevert" />
+            <Text $typography="t14" $bold={true}>
+              초기화
+            </Text>
+          </Flex>
+          <BaseButton
+            size="apply"
+            fontSize={1.7}
+            // $weak={!sendAuthCode}
+
+            onClick={() => {
+              navigate('/meet/list');
+            }}
+          >
+            필터 적용
+          </BaseButton>
+        </M.ButtonBox>
+        {/* </R.ButtonBox> */}
+      </R.BottomContainer>
     </MeetFilterPageContainer>
   );
 }
@@ -220,7 +250,7 @@ const MeetFilterPageContainer = styled.div`
     gap: 18px;
     bottom: 0;
     width: 100%;
-    padding-top: 16px;
+    padding: 1.5rem 0;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 16px;
   }
 `;

@@ -52,7 +52,15 @@ export const ToggleSliderBox = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 94vw;
+  width: 83vw;
   margin: auto;
   padding: 3rem 0 0 0;
+`;
+
+export const ButtonBox = styled.div`
+  width: 90%;
+  height: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
