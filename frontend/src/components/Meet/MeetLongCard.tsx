@@ -17,6 +17,7 @@ function MeetLongCard({
   if (!data) {
     return null;
   }
+
   return (
     <MeetLongCardContainer onClick={onClick}>
       <img src={setDefaultImg(data.groupImg || null)} />

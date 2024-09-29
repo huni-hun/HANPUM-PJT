@@ -39,6 +39,7 @@ function MeetSmallCard({
             if (res.status === 'SUCCESS') {
               toast.success('관심 모임에서 제거되었습니다.');
               setLike(false);
+              refetchGroupList();
             }
           })
           .catch((err) => {
@@ -50,6 +51,7 @@ function MeetSmallCard({
             if (res.status === 'SUCCESS') {
               toast.success('관심 모임으로 등록되었습니다.');
               setLike(true);
+              refetchGroupList();
             } else if (res.status === 'ERROR') {
               toast.error(res.message);
             }

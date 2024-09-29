@@ -119,10 +119,13 @@ function CardLong({
         setImg(image);
       }
     } else {
-      if (item.groupImg.includes('test') || item.groupImg === '') {
+      if (
+        item.groupImg &&
+        (item.groupImg.includes('test') || item.groupImg === '')
+      ) {
         setImg(image);
       } else {
-        setImg(item.groupImg);
+        setImg(item.groupImg || image);
       }
     }
   }, []);

@@ -61,6 +61,7 @@ function RouteDetailInfo({
   const location = useLocation();
   const draggingPos = useRef<any>(null);
   const dragOverPos = useRef<any>(null);
+  const [selectedMarker, setSelectedMarker] = useState<any>(null!);
 
   const handleDragStart = (position: number) => {
     draggingPos.current = position;
@@ -154,6 +155,7 @@ function RouteDetailInfo({
                 marker={props.marker}
                 infoBtn
                 attrationmarker={props.attmarker}
+                selected={selectedMarker}
               />
             </R.MapBox>
             <R.DetailHeader>
@@ -212,6 +214,8 @@ function RouteDetailInfo({
                           turnGreen={
                             props.turnGreen ? props.turnGreen[idx] : false
                           }
+                          makers={props.marker[idx]}
+                          setSelectedMarker={setSelectedMarker}
                         />
                       ),
                     )

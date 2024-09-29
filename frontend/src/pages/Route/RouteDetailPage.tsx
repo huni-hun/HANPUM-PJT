@@ -12,6 +12,7 @@ import {
   AttractionsProps,
   DaysOfRouteProps,
   LineStartEndProps,
+  MakerDataProps,
   MapLinePathProps,
   RouteDetailDayProps,
   RouteDetailProps,
@@ -51,7 +52,7 @@ function RouteDetailPage() {
   const [attractions, setAttractions] = useState<AttractionsProps[]>([]);
   const [linePath, setLinePath] = useState<MapLinePathProps[]>([]);
   const [se, setSe] = useState<LineStartEndProps[]>([]);
-  const [marker, setMarker] = useState<LineStartEndProps[]>([]);
+  const [marker, setMarker] = useState<MakerDataProps[]>([]);
   const [attmarker, setAttMarker] = useState<LineStartEndProps[]>([]);
   const [bsType, setBsType] = useState<string>('설정');
   const [reviewType, setReviewType] = useState<string>('최신순');
@@ -70,6 +71,7 @@ function RouteDetailPage() {
   const [reviewId, setReviewId] = useState<number>(0);
   const [noVertexes, setNoVertexes] = useState<boolean>(false);
   const [kakaolinePath, setKakaoLinePath] = useState<MapLinePathProps[]>([]);
+
   /** 바텀 sheet */
   const [isOpenSetting, setIsOpenSetting] = useState<boolean>(false); // 경로설정 BottomSheet 열림 상태
   const [isOpenSorting, setIsOpenSorting] = useState<boolean>(false); // 경로정렬 BottomSheet 열림 상태
@@ -154,9 +156,11 @@ function RouteDetailPage() {
         let lines: MapLinePathProps[] = [];
         let kakaose: LineStartEndProps[] = [];
         let kakaoData: MapLinePathProps[] = [];
+        // console.log(result);
         result.data.data.wayPoints.sort(
           (a: any, b: any) => a.pointNumber - b.pointNumber,
         );
+        // console.log(result);
         result.data.data.wayPoints.map((ele: any, idx: number) => {
           let data: DaysOfRouteProps = {
             routeName: ele.name,
@@ -184,30 +188,39 @@ function RouteDetailPage() {
             kakaoData.push(line);
           }
           lines.push(line);
+          if (ele.vertexes !== null) {
+            if (ele.vertexes !== undefined) {
+              if (ele.vertexes.length > 0) {
+                const ml: any[] = [];
+                // console.log(ele.vertexes);
+                ele.vertexes.forEach((vertex: any, index: number) => {
+                  if (index % 2 === 0) {
+                    ml.push(
+                      new window.kakao.maps.LatLng(
+                        ele.vertexes[index + 1],
+                        ele.vertexes[index],
+                      ),
+                    );
+                  }
+                });
 
-          if (ele.vertexes.length > 0) {
-            const ml: any[] = [];
-            ele.vertexes.forEach((vertex: any, index: number) => {
-              // console.log(vertex);
-              if (index % 2 === 0) {
-                mapLines.push(
-                  new window.kakao.maps.LatLng(
-                    ele.vertexes[index + 1],
-                    ele.vertexes[index],
-                  ),
-                );
+                setMapLines([...ml]);
+                // setNoVertexes(false);
+              } else {
+                setNoVertexes(true);
               }
-            });
-
-            // setMapLines([...ml]);
-            setNoVertexes(false);
+            }
           } else {
             setNoVertexes(true);
           }
 
-          let markerData: LineStartEndProps = {
+          let markerData: MakerDataProps = {
             x: ele.lat,
             y: ele.lon,
+            distance: ele.distance,
+            duration: ele.duration,
+            name: ele.name,
+            calorie: ele.calorie,
           };
           setMarker((pre) => [...pre, markerData]);
         });

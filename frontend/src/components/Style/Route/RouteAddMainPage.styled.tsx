@@ -140,9 +140,9 @@ export const CardTitle = styled.p`
   font-weight: bold;
 `;
 
-export const TypeCardOpen = styled.div<{ isChecked: boolean }>`
+export const TypeCardOpen = styled.div<{ $isChecked: boolean }>`
   width: 80vw;
-  height: ${(props) => (props.isChecked ? '50vh' : '40vh')};
+  height: ${(props) => (props.$isChecked ? '50vh' : '40vh')};
   border-radius: 1.2rem;
   background-color: #ffffff;
   box-shadow: -0.2rem 0.3rem 0.1rem #d9d9d9;

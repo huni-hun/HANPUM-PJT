@@ -54,21 +54,25 @@ export const PlaceNumberBox = styled.div<ScheduleProps>`
   left: -0.85rem;
   background-color: ${(props) => {
     if (props.$isSchedule) {
-      /** 일정 페이지일때  */
-      return props.state === 2 || props.$turnGreen ? colors.main : colors.grey2;
+      // 일정 페이지일 때, state가 2이거나 turnGreen이 true일 때만 main 색상
+      if (props.state === 2 || props.$turnGreen) {
+        return colors.main; // green
+      } else {
+        return colors.grey2; // grey
+      }
     }
-    return colors.main; /** !일정 페이지 */
+    // 일정 페이지가 아닐 때는 항상 main 색상
+    return colors.main;
   }};
-
   color: ${(props) => {
     if (props.$isSchedule) {
       if (props.state === 2 || props.$turnGreen) {
-        return colors.white; // state가 2이거나 turnGreen이 true일 때
+        return colors.white; // state가 2이거나 turnGreen이 true일 때 white
       } else {
-        return colors.black;
+        return colors.black; // 나머지 경우 black
       }
     } else {
-      return colors.white; /** ! 일정 페이지 */
+      return colors.white; // !일정 페이지일 때 white
     }
   }};
 `;

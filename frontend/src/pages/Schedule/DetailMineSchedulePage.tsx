@@ -116,8 +116,10 @@ function DetailMineSchedulePage() {
       if (response && response.status === 'SUCCESS') {
         toast.success('일정 삭제 완료되었습니다.');
         setIsDeleteModalOpen(false);
+        navigate('/schedule/main');
       } else {
         toast.error('일정 삭제 실패했습니다.');
+        navigate('/schedule/main');
       }
     } catch (error) {
       toast.error('에러 발생');
@@ -165,13 +167,7 @@ function DetailMineSchedulePage() {
         try {
           const response = await getNearbyLocData(lat || 0, lon || 0);
           if (response && response.status === 'SUCCESS') {
-            const processedData = response.data.map(
-              (item: ScheduleAttractionsProps) => ({
-                ...item,
-                address: cutAddress(item.address), // address 잘라주는 함수 적용
-              }),
-            );
-            setAttractionsCard(processedData);
+            setAttractions(response.data);
           } else {
             console.error('Error:', response.error);
           }
@@ -523,47 +519,65 @@ function DetailMineSchedulePage() {
           setBsType('일정');
         }}
       />
+      <S.Main>
+        <S.Overflow>
+          <R.RouteInfoContainer>
+            <Feed routeData={feedData} isUserContainer />
+            <FeedInfo
+              feedInfoTitle="일정 정보"
+              startPoint={myScheduleListData?.startPoint}
+              endPoint={myScheduleListData?.endPoint}
+              startDate={formatDate(myScheduleListData?.startDate || '')}
+              endDate={formatDate(myScheduleListData?.endDate || '-')}
+              totalDistance={formattedDistance}
+              dayData={dayData}
+            />
+            <R.ContentSelecContainer>
+              <R.ContentBox
+                selected={selected === 'course'}
+                onClick={() => {
+                  setSelected('course');
+                }}
+              >
+                코스
+              </R.ContentBox>
+              <R.ContentBox
+                selected={selected === 'information'}
+                onClick={() => {
+                  setSelected('information');
+                }}
+              >
+                관광지
+              </R.ContentBox>
+            </R.ContentSelecContainer>
+          </R.RouteInfoContainer>
 
-      <R.Overflow>
-        <R.RouteInfoContainer>
-          <Feed routeData={feedData} isUserContainer />
-          <FeedInfo
-            feedInfoTitle="일정 정보"
-            startPoint={myScheduleListData?.startPoint}
-            endPoint={myScheduleListData?.endPoint}
-            startDate={formatDate(myScheduleListData?.startDate || '')}
-            endDate={formatDate(myScheduleListData?.endDate || '-')}
-            totalDistance={formattedDistance}
-            dayData={dayData}
-          />
-        </R.RouteInfoContainer>
-
-        {/* 지도 및 하위 컴포넌트 container */}
-        <R.RouteDetailInfoContainer>
-          <RouteDetailInfo
-            marker={marker}
-            deleteHandler={(name: string) => {}}
-            setSelectedIdx={setSelectedIdx}
-            reviews={reviews}
-            setDayOfRoute={setDayOfRoute}
-            dayOfRoute={dayOfRoute}
-            linePath={mapLines}
-            selected={selected}
-            selectedDay={selectedDay}
-            latitude={latitude}
-            longitude={longitude}
-            dayData={routeDayData}
-            attractions={attractions}
-            setLoading={setLoading}
-            setSelectedDay={setSelectedDay}
-            setIsOpen={setIsOpen}
-            setBsType={setBsType}
-            reviewType={reviewType}
-            turnGreen={arriveGreen}
-            isSchedule
-          />
-        </R.RouteDetailInfoContainer>
-        <S.AttractionsContainer>
+          {/* 지도 및 하위 컴포넌트 container*/}
+          <R.RouteDetailInfoContainer>
+            <RouteDetailInfo
+              marker={marker}
+              deleteHandler={(name: string) => {}}
+              setSelectedIdx={setSelectedIdx}
+              reviews={reviews}
+              setDayOfRoute={setDayOfRoute}
+              dayOfRoute={dayOfRoute}
+              linePath={mapLines}
+              selected={selected}
+              selectedDay={selectedDay}
+              latitude={latitude}
+              longitude={longitude}
+              dayData={routeDayData}
+              attractions={attractions}
+              setLoading={setLoading}
+              setSelectedDay={setSelectedDay}
+              setIsOpen={setIsOpen}
+              setBsType={setBsType}
+              reviewType={reviewType}
+              turnGreen={arriveGreen}
+              isSchedule
+            />
+          </R.RouteDetailInfoContainer>
+          {/* <S.AttractionsContainer>
           <S.AttractionsBox>
             <S.AttrantiosTypeBox>주요 관광지</S.AttrantiosTypeBox>
             <S.AttractionsOverflow>
@@ -585,8 +599,9 @@ function DetailMineSchedulePage() {
                 ))}
             </S.AttractionsOverflow>
           </S.AttractionsBox>
-        </S.AttractionsContainer>
-      </R.Overflow>
+        </S.AttractionsContainer> */}
+        </S.Overflow>
+      </S.Main>
 
       {isOpen && (
         <BottomSheet
@@ -617,10 +632,7 @@ function DetailMineSchedulePage() {
 export default DetailMineSchedulePage;
 
 const ScheduleMainPageContainer = styled.div`
-  width: 100vw;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+  height: 100vh;
   background-color: #f5f5f5;
-  overflow-y: auto;
 `;

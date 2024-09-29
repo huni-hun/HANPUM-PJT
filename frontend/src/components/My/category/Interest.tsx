@@ -8,6 +8,8 @@ import { AxiosError } from 'axios';
 import NoHave from '../NoHave';
 import CardLong from '@/components/common/CardLong/CardLong';
 import { useNavigate } from 'react-router-dom';
+import { RouteDelete, RouteLikeDelete } from '@/api/route/Delete';
+import { UserRouteProps } from '@/models/route';
 
 function Interest() {
   const [tab, setTab] = useState('경로');
@@ -43,7 +45,7 @@ function Interest() {
     },
   );
 
-  const { data: interesRoot } = useQuery(
+  const { data: interesRoot, refetch } = useQuery(
     'getInterestRoute', // Query Key
     GetInterestRouteList,
     {
@@ -66,6 +68,21 @@ function Interest() {
 
   const onClickCardMeet = (id: number) => {
     navigate(`/meet/detail`, { state: { groupId: id } });
+  };
+
+  const handleDeleteClick = (item: UserRouteProps) => {
+    RouteLikeDelete(String(item.courseId))
+      .then((res) => {
+        if (res.data.status === 'SUCCESS') {
+          refetch();
+          toast.done('경로 삭제에 성공했습니다.');
+        } else {
+          toast.error('경로 삭제 권한이 없습니다.');
+        }
+      })
+      .catch((err) => {
+        toast.error('경로 삭제에 실패했습니다.');
+      });
   };
 
   return (
@@ -101,6 +118,7 @@ function Interest() {
                 onSwipe={handleSwipe}
                 onClickOutside={handleClickOutside}
                 onClickCard={() => onClickCard(item.courseId)}
+                onDeleteHandler={handleDeleteClick}
               />
             ))}
           </div>
