@@ -3,7 +3,7 @@ import * as S from './Header.styled';
 import Icon from '../Icon/Icon';
 import Flex from '../Flex';
 import Text from '../Text';
-import logo from '../../../assets/img/logo2.png';
+import logo from '../../../assets/img/lastLogo.png';
 
 interface HeaderProps {
   purpose: string;
@@ -111,7 +111,7 @@ const Header = ({
               onClick={() => navigate('/')}
               src={logo}
               alt="logo"
-              style={{ width: '3.1rem', height: '3rem' }}
+              // style={{ width: '3.1rem', height: '3rem' }}
             />
             <Flex $gap={16} style={{ width: 'auto' }}>
               <Icon
@@ -191,7 +191,7 @@ const Header = ({
                 onClick={() => navigate('/')}
                 src={logo}
                 alt="logo"
-                style={{ width: '3.1rem', height: '3rem' }}
+                // style={{ width: '3.1rem', height: '3rem' }}
               />
             )}
             <Flex
@@ -316,7 +316,7 @@ const Header = ({
               onClick={() => navigate('/')}
               src={logo}
               alt="logo"
-              style={{ width: '3.1rem', height: '3rem' }}
+              // style={{ width: '3.1rem', height: '3rem' }}
             />
             {/* <Icon
               name="IconUser"

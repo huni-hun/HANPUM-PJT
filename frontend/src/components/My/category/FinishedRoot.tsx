@@ -11,7 +11,7 @@ import MyRouteNoHave from './MyORFinishedNoHave';
 function FinishedRoot() {
   const { data: finishedRoute } = useQuery('GetUseRouteList', GetUseRouteList, {
     onSuccess: (res) => {
-      console.log('res ::', res.data);
+      // console.log('res ::', res.data);
       // if (res.status === STATUS.success) {
       // } else if (res.status === STATUS.error) {
       //   toast.error(res.message);
