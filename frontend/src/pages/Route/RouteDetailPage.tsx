@@ -71,6 +71,7 @@ function RouteDetailPage() {
   const [reviewId, setReviewId] = useState<number>(0);
   const [noVertexes, setNoVertexes] = useState<boolean>(false);
   const [kakaolinePath, setKakaoLinePath] = useState<MapLinePathProps[]>([]);
+
   /** 바텀 sheet */
   const [isOpenSetting, setIsOpenSetting] = useState<boolean>(false); // 경로설정 BottomSheet 열림 상태
   const [isOpenSorting, setIsOpenSorting] = useState<boolean>(false); // 경로정렬 BottomSheet 열림 상태
@@ -187,24 +188,26 @@ function RouteDetailPage() {
           }
           lines.push(line);
           if (ele.vertexes !== null) {
-            if (ele.vertexes.length > 0) {
-              const ml: any[] = [];
-              ele.vertexes.forEach((vertex: any, index: number) => {
-                // console.log(vertex);
-                if (index % 2 === 0) {
-                  ml.push(
-                    new window.kakao.maps.LatLng(
-                      ele.vertexes[index + 1],
-                      ele.vertexes[index],
-                    ),
-                  );
-                }
-              });
+            if (ele.vertexes !== undefined) {
+              if (ele.vertexes.length > 0) {
+                const ml: any[] = [];
+                // console.log(ele.vertexes);
+                ele.vertexes.forEach((vertex: any, index: number) => {
+                  if (index % 2 === 0) {
+                    ml.push(
+                      new window.kakao.maps.LatLng(
+                        ele.vertexes[index + 1],
+                        ele.vertexes[index],
+                      ),
+                    );
+                  }
+                });
 
-              setMapLines([...ml]);
-              // setNoVertexes(false);
-            } else {
-              setNoVertexes(true);
+                setMapLines([...ml]);
+                // setNoVertexes(false);
+              } else {
+                setNoVertexes(true);
+              }
             }
           } else {
             setNoVertexes(true);

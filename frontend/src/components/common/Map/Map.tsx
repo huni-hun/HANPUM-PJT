@@ -19,6 +19,7 @@ interface MapProps {
   attrationmarker?: any[];
   infoBtn?: boolean;
   isSchdule?: boolean;
+  selected?: any;
 }
 
 function Map(props: MapProps) {
@@ -123,7 +124,7 @@ function Map(props: MapProps) {
 
         const infoWindowContent = `
           <div style="padding:5px; display:flex; flex-direction:column;">
-            <p style="font-size:1.5rem; font-weight:bold; margin-bottom:0.8rem;">${mar.name ?? '0'}</p>
+            <p style="font-size:1.5rem; font-weight:bold; margin-bottom:0.8rem; white-space: nowrap; overflow: hidden; text-overflow: clip;">${mar.name ?? '0'}</p>
             <p style="font-size:1.2rem; font-weight:bold; margin-bottom:0.5rem;">걸리는 시간: ${mar.duration ?? '0'}</p>
             <p style="font-size:1.2rem; font-weight:bold; margin-bottom:0.5rem;">거리: ${mar.distance ?? '0'}</p>
             <p style="font-size:1.2rem; font-weight:bold; margin-bottom:0.5rem;">칼로리: ${mar.calorie ?? '0'}</p>
@@ -141,15 +142,17 @@ function Map(props: MapProps) {
             // 같은 마커를 다시 클릭하면 인포윈도우 닫기
             infoWindow.close();
             isInfoWindowOpen = false;
+            openInfoWindow = null;
           } else {
             // 기존에 열려있는 인포윈도우가 있으면 닫기
             if (openInfoWindow) {
               openInfoWindow.close();
+              isInfoWindowOpen = false;
             }
 
             // 클릭한 마커로 지도의 중심을 이동 및 인포윈도우 열기
             kakaoMap.setCenter(markerPosition); // 마커 위치를 중심으로 설정
-            kakaoMap.setLevel(7); // 줌 레벨 설정 (필요에 따라 조정)
+            kakaoMap.setLevel(3); // 줌 레벨 설정 (필요에 따라 조정)
             infoWindow.open(kakaoMap, kakaoMarker);
 
             // 현재 열린 인포윈도우로 상태 업데이트
@@ -157,14 +160,20 @@ function Map(props: MapProps) {
             isInfoWindowOpen = true; // 현재 인포윈도우가 열려 있음
           }
         });
-
+        if (props.selected !== undefined) {
+          if (props.selected !== null) {
+            if (props.selected.name === mar.name) {
+              window.kakao.maps.event.trigger(kakaoMarker, 'click');
+            }
+          }
+        }
         kakaoMarker.setMap(kakaoMap);
         return kakaoMarker;
       });
 
       setMarkers(newMarkers); // 새로운 마커 배열을 상태로 저장
     }
-  }, [kakaoMap, props.marker]);
+  }, [kakaoMap, props.marker, props.selected]);
 
   useEffect(() => {
     if (props.attrationmarker !== undefined && kakaoMap) {

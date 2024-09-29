@@ -6,7 +6,7 @@ interface StyledProps {
 }
 
 interface MeetStyleProps {
-  isMeetFeed?: string;
+  $isMeetFeed?: string;
 }
 
 export const Badge = styled.div`
@@ -98,7 +98,7 @@ export const Tags = styled.div`
 /** feed */
 export const RouteNameInfo = styled.div<MeetStyleProps>`
   width: 85vw;
-  height: ${(props) => props.isMeetFeed || '20.2rem'};
+  height: ${(props) => props.$isMeetFeed || '20.2rem'};
   display: flex;
   flex-direction: column;
   /* border-bottom: 0.1rem solid #d9d9d9; */
@@ -115,7 +115,7 @@ export const RouteNameInfoContainer = styled.div`
 
 export const RouteDateBox = styled.div<MeetStyleProps>`
   width: 85vw;
-  height: ${(props) => props.isMeetFeed || '20.2rem'};
+  height: ${(props) => props.$isMeetFeed || '20.2rem'};
   display: flex;
   flex-direction: column;
   justify-content: space-around;
