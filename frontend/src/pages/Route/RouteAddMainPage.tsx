@@ -241,6 +241,7 @@ function RouteAddMainPage() {
                         setTypeChecked(newArr);
                       }}
                       $isLong={ele.length > 3}
+                      key={ele}
                     >
                       <R.TypeTextBox>
                         <R.TypeText>{ele}</R.TypeText>
@@ -270,9 +271,11 @@ function RouteAddMainPage() {
                         }
                       }
                     }}
+                    key={ele}
                   >
                     <R.TypeCheckBox
-                      checked={typeChecked.includes(ele)}
+                      key={ele}
+                      defaultChecked={typeChecked.includes(ele)}
                       type="checkbox"
                     />
                     <R.TypeLabel>{ele}</R.TypeLabel>

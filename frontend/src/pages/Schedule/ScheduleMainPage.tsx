@@ -37,6 +37,7 @@ import {
   RouteDetailDayProps,
   RouteDetailProps,
   RouteReviewProps,
+  WayPointReqDto,
 } from '@/models/route';
 import {
   getDayNumData,
@@ -49,7 +50,7 @@ import {
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 import { getRouteDetail } from '@/api/route/GET';
-import { GetLineData } from '@/api/route/POST';
+import { GetLineData, GetLineDataKakao } from '@/api/route/POST';
 import { PutScheduleArrive } from '@/api/schedule/PUT';
 import ScheduleNoHave from '@/components/Schedule/ScheduleNoHave';
 import NoHave from '@/components/My/NoHave';
@@ -117,6 +118,7 @@ function ScheduleMainPage() {
   const [scheduleId, setScheduleId] = useState<number>(0);
   /** 현재 경유지 -> 다음 경유지 도착  */
   const [wayPoints, setWayPoints] = useState<DaysOfRouteProps[]>([]);
+  const [kakaolinePath, setKakaoLinePath] = useState<MapLinePathProps[]>([]);
   const [currentWaypoint, setCurrentWaypoint] = useState(0); // 현재 경유지 인덱스
   const DISTANCE_THRESHOLD = 0.01; // 거리 기준 (1km 정도)
   const [arriveGreen, setArriveGreen] = useState<boolean[]>([]);
@@ -290,6 +292,7 @@ function ScheduleMainPage() {
       geo.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
+          // console.log(latitude);
           setLat(latitude);
           setLon(longitude);
           setIsLocationReady(true);
@@ -439,6 +442,8 @@ function ScheduleMainPage() {
           if (result.status === 'SUCCESS') {
             let arr: DaysOfRouteProps[] = [];
             let lines: MapLinePathProps[] = [];
+            let kakaose: LineStartEndProps[] = [];
+            let kakaoData: MapLinePathProps[] = [];
             /** 경유지 turnGreen 상태관리 */
             let greenStates: boolean[] = [];
             result.data.scheduleWayPointList.map((ele: any, idx: number) => {
@@ -463,6 +468,19 @@ function ScheduleMainPage() {
 
               lines.push(line);
 
+              if (
+                idx === 0 ||
+                idx === result.data.scheduleWayPointList.length - 1
+              ) {
+                let kse: LineStartEndProps = {
+                  x: ele.lat,
+                  y: ele.lon,
+                };
+                kakaose.push(kse);
+              } else {
+                kakaoData.push(line);
+              }
+
               let markerData: LineStartEndProps = {
                 x: ele.lat,
                 y: ele.lon,
@@ -474,6 +492,8 @@ function ScheduleMainPage() {
             setLinePath(lines);
 
             setWayPoints(arr);
+            setSe(kakaose);
+            setKakaoLinePath(kakaoData);
 
             /* 지도 중심점 잡기 */
             setLatitude(arr[0].latitude);
@@ -509,7 +529,7 @@ function ScheduleMainPage() {
         }
 
         /* 다중 경유지 정보, 시작점, 도착점 저장 */
-
+        // console.log(ele);
         let line: MapLinePathProps = {
           name: ele.name!,
           x: ele.lat!,
@@ -533,6 +553,7 @@ function ScheduleMainPage() {
   }, [selectedDay, scheduleId, arriveGreen]);
 
   useEffect(() => {
+    // console.log(linePath);
     if (linePath.length > 0) {
       const mapLines: any[] = [];
       if (linePath.length <= 5) {
@@ -555,7 +576,34 @@ function ScheduleMainPage() {
             }
           })
           .catch((err) => {
-            toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+            GetLineDataKakao(se[0], se[1], kakaolinePath)
+              .then((result) => {
+                if (result.status === 200 && result.data.status === 'SUCCESS') {
+                  result.data.data.forEach((ele: any, idx: number) => {
+                    // wayPoints.map((el: WayPointReqDto, i: number) => {
+                    //   // eslint-disable-next-line no-self-assign
+                    //   if (idx === i) {
+                    //     el.vertexes = ele.vertexes;
+                    //   }
+                    // });
+
+                    ele.vertexes.forEach((vertex: any, index: number) => {
+                      if (index % 2 === 0) {
+                        mapLines.push(
+                          new window.kakao.maps.LatLng(
+                            ele.vertexes[index + 1],
+                            ele.vertexes[index],
+                          ),
+                        );
+                      }
+                    });
+                  });
+                  setMapLines([...mapLines]); // 복사본으로 상태 업데이트
+                }
+              })
+              .catch((err) => {
+                toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+              });
           });
       } else {
         let arr: MapLinePathProps[] = [];
@@ -585,7 +633,38 @@ function ScheduleMainPage() {
                   }
                 })
                 .catch((err) => {
-                  toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+                  // console.log(se);
+                  GetLineDataKakao(se[0], se[1], kakaolinePath)
+                    .then((result) => {
+                      if (
+                        result.status === 200 &&
+                        result.data.status === 'SUCCESS'
+                      ) {
+                        result.data.data.forEach((ele: any, idx: number) => {
+                          // wayPoints.map((el: WayPointReqDto, i: number) => {
+                          //   // eslint-disable-next-line no-self-assign
+                          //   if (idx === i) {
+                          //     el.vertexes = ele.vertexes;
+                          //   }
+                          // });
+
+                          ele.vertexes.forEach((vertex: any, index: number) => {
+                            if (index % 2 === 0) {
+                              mapLines.push(
+                                new window.kakao.maps.LatLng(
+                                  ele.vertexes[index + 1],
+                                  ele.vertexes[index],
+                                ),
+                              );
+                            }
+                          });
+                        });
+                        setMapLines([...mapLines]); // 복사본으로 상태 업데이트
+                      }
+                    })
+                    .catch((err) => {
+                      toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+                    });
                 }),
             );
 
@@ -661,7 +740,7 @@ function ScheduleMainPage() {
           if (response && response.status === 'SUCCESS') {
             setWeatherData(response.data);
           } else if (response.status === 'ERROR') {
-            console.log(response.message);
+            // console.log(response.message);
           }
         } catch (error) {
           console.error('Fetch Error:', error);
@@ -960,8 +1039,8 @@ function ScheduleMainPage() {
                         linePath={mapLines}
                         selected={selected}
                         selectedDay={selectedDay}
-                        latitude={lat}
-                        longitude={lon}
+                        latitude={lon}
+                        longitude={lat}
                         dayData={routeDayData}
                         attractions={attractions}
                         setLoading={setLoading}
