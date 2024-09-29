@@ -1,6 +1,7 @@
 import { GetUser } from '@/api/mypage/GET';
 import { Logout } from '@/api/signup/POST';
 import { isAuthEnticatedAtom } from '@/atoms/isAuthEnticatedAtom';
+import BaseButton from '@/components/common/BaseButton';
 import BottomTab from '@/components/common/BottomTab/BottomTab';
 import Flex from '@/components/common/Flex';
 import Header from '@/components/common/Header/Header';
@@ -15,6 +16,8 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
+import banner_flag from '@imgs/banner_flag.png';
+import banner_shoes from '@imgs/banner_shoes.png';
 
 function MyPage() {
   const navigate = useNavigate();
@@ -115,6 +118,23 @@ function MyPage() {
               </Text>
             </div>
           </div>
+          <div className="banner">
+            <Text $typography="t14" $bold={true} style={{ marginTop: '20px' }}>
+              걷기 여행 안전수칙이 궁금하신가요?
+            </Text>
+            <BaseButton
+              size="banner"
+              style={{ zIndex: 1 }}
+              onClick={() => {
+                window.location.href =
+                  'https://www.durunubi.kr/safe-trail-guide.do';
+              }}
+            >
+              걷기 여행 안전수칙 확인하기
+            </BaseButton>
+            <img className="flag" src={banner_flag} alt="" />
+            <img className="shoes" src={banner_shoes} alt="" />
+          </div>
         </>
       )}
       <BottomTab />
@@ -157,6 +177,7 @@ const MyPageContainer = styled.div`
 
   .section {
     padding: 0 16px;
+
     background-color: ${colors.white};
 
     .logout-container {
@@ -165,6 +186,34 @@ const MyPageContainer = styled.div`
       align-items: center;
       margin-top: 3rem;
       /* padding-bottom: 3.6rem; */
+    }
+  }
+
+  .banner {
+    width: 100%;
+    height: 105px;
+    background-color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    /* justify-content: center; */
+    padding-bottom: 7rem;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+    margin-top: 20px;
+    img {
+      position: absolute;
+    }
+    .flag {
+      top: 13px;
+      right: -6px;
+    }
+    .shoes {
+      left: -20px;
+      top: -10px;
+      width: 97px;
     }
   }
 `;
