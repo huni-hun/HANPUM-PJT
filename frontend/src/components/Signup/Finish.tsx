@@ -14,7 +14,7 @@ function Finish({ nickname }: { nickname: string }) {
   const navigate = useNavigate();
   const setAuthEnticate = useSetRecoilState(isAuthEnticatedAtom);
 
-  const memberType = Cookies.get('memberType');
+  // const memberType = Cookies.get('memberType');
   return (
     <S.FinishContainer>
       <img src={finishImg} alt="" />
@@ -34,7 +34,7 @@ function Finish({ nickname }: { nickname: string }) {
           if (sessionStorage.getItem('send') === 'true') {
             setAuthEnticate(false);
             navigate('/home');
-            Cookies.remove(memberType as string);
+            Cookies.remove('memberType');
           } else {
             navigate('/login');
           }
