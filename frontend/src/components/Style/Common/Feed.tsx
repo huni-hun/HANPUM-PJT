@@ -33,7 +33,7 @@ const FeedContainer = ({
           <R.UserImgBox>
             <img src={routeData?.routeUserImg} />
           </R.UserImgBox>
-          <R.UserName>{routeData?.readerName}</R.UserName>
+          <R.UserName>{routeData?.routeName}</R.UserName>
         </R.UserContainer>
       ) : (
         <></>
@@ -43,11 +43,11 @@ const FeedContainer = ({
         <S.RouteNameInfoContainer>
           <S.RouteName>{routeData?.routeName || ''}</S.RouteName>
           <S.RouteInfo>{routeData?.routeContent || ''}</S.RouteInfo>
-          <S.TagsWrap>
+          <R.TagsWrap>
             {routeData?.routeTypes?.map((type, index) => (
               <R.Tags key={index}>{type}</R.Tags>
             )) || ''}
-          </S.TagsWrap>
+          </R.TagsWrap>
         </S.RouteNameInfoContainer>
       </S.RouteNameInfo>
 

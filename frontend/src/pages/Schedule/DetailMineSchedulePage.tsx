@@ -33,7 +33,11 @@ import {
   RouteDetailProps,
   RouteReviewProps,
 } from '@/models/route';
-import { getRouteDayDetail, getRouteDetail } from '@/api/route/GET';
+import {
+  getRouteDayAttraction,
+  getRouteDayDetail,
+  getRouteDetail,
+} from '@/api/route/GET';
 import { GetLineData, GetLineDataKakao } from '@/api/route/POST';
 import BottomTab from '@/components/common/BottomTab/BottomTab';
 import { DeleteSchedule } from '@/api/schedule/Delete';
@@ -257,8 +261,34 @@ function DetailMineSchedulePage() {
           }
         }
       });
+      /**  관광지 가져오기 */
+      getRouteDayAttraction(courseId.toString(), selectedDay).then((res) => {
+        if (res.status === 200 && res.data.status === 'SUCCESS') {
+          let attArr: AttractionsProps[] = [];
+
+          res.data.data.map((ele: any) => {
+            let attData: AttractionsProps = {
+              name: ele.name,
+              type: ele.type,
+              attractionId: ele.attractionId,
+              address: ele.address,
+              latitude: ele.lon,
+              longitude: ele.lat,
+              img: ele.img,
+            };
+            attArr.push(attData);
+
+            let markerData: LineStartEndProps = {
+              x: ele.lon,
+              y: ele.lat,
+            };
+            // setAttMarker((pre) => [...pre, markerData]);
+          });
+          setAttractions(attArr);
+        }
+      });
     }
-  }, [selectedDay, scheduleId, arriveGreen]);
+  }, [selectedDay, scheduleId, arriveGreen, courseId]);
 
   useEffect(() => {
     if (linePath.length > 0) {
@@ -656,7 +686,7 @@ function DetailMineSchedulePage() {
           </R.RouteDetailInfoContainer>
           <S.AttractionsContainer>
             <S.AttractionsBox>
-              <S.AttrantiosTypeBox>주요 관광지</S.AttrantiosTypeBox>
+              <S.AttrantiosTypeBox>내 주변 관광지</S.AttrantiosTypeBox>
               <S.AttractionsOverflow>
                 {attractionsCard.length > 0 &&
                   attractionsCard.map((ele) => (
