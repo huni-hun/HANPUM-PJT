@@ -56,6 +56,7 @@ import ScheduleNoHave from '@/components/Schedule/ScheduleNoHave';
 import NoHave from '@/components/My/NoHave';
 import Loading from '@/components/common/Loading';
 import { cutAddress } from '@/utils/util';
+import { setDefaultImg } from '@/utils/Image';
 
 function ScheduleMainPage() {
   const BtnClick = () => {};
@@ -63,7 +64,7 @@ function ScheduleMainPage() {
   const [isSelected, setIsSelected] = useState<'Proceeding' | 'Mine' | 'Class'>(
     'Proceeding',
   );
-  /** 진행중 , 내일정, 모임 일정 데이터 state*/
+  /** 진행중 , 내일정, 모임 일정 데이터 state */
   const [runningScheduleData, setRunningScheduleData] =
     useState<RunningScheduleProps | null>(null);
   const [myScheduleListData, setMyScheduleListData] =
@@ -119,12 +120,21 @@ function ScheduleMainPage() {
   /** 현재 경유지 -> 다음 경유지 도착  */
   const [wayPoints, setWayPoints] = useState<DaysOfRouteProps[]>([]);
   const [kakaolinePath, setKakaoLinePath] = useState<MapLinePathProps[]>([]);
-  const [currentWaypoint, setCurrentWaypoint] = useState(0); // 현재 경유지 인덱스
+  const [currentWaypointIndex, setCurrentWaypointIndex] = useState(0); // 현재 경유지 인덱스
   const DISTANCE_THRESHOLD = 0.01; // 거리 기준 (1km 정도)
   const [arriveGreen, setArriveGreen] = useState<boolean[]>([]);
   const location = useLocation();
   const navigator = useNavigate();
   const data = { ...location };
+  /** 오늘 일정 달성률 */
+  const [todayStartPoint, setTodayStartPoint] = useState<string>('출발지 없음');
+  const [todayEndPoint, setTodayEndPoint] = useState<string>('도착지 없음');
+  const [currentWayPoint, setCurrentWayPoint] = useState<string>('-');
+  const [nextWayPoint, setNextWayPoint] = useState<string>('-');
+  const [currentVisitCount, setCurrentVisitCount] = useState<number>(0);
+  const [todayTotalVisitCount, setTodayTotalVisitCount] = useState<number>(0);
+  const [todayTotalDistance, setTodayTotalDistance] = useState<number>(0);
+  const [achievementPercentage, setAchievementPercentage] = useState<number>(0);
 
   /** 내일정 - card 컴포넌트 'n박 n일' 계산 */
   const formatDate = (dateStr: string): string => {
@@ -184,7 +194,7 @@ function ScheduleMainPage() {
 
   /** 진행중 feed안에 들어가는 데이터 */
   const runningFeedData = {
-    routeFeedImg: runningScheduleData?.backgroundImg || goyuMY,
+    routeFeedImg: setDefaultImg(runningScheduleData?.backgroundImg || null),
     routeUserImg: memberImg,
     routeName: runningScheduleData?.title,
     routeContent: runningScheduleData?.content,
@@ -193,7 +203,7 @@ function ScheduleMainPage() {
 
   /** 모임일정 feed안에 들어가는 데이터 */
   const meetFeedData = {
-    routeFeedImg: meetListData?.backgroundImg || goyuMY,
+    routeFeedImg: setDefaultImg(meetListData?.backgroundImg || null),
     routeUserImg: memberImg,
     routeName: meetListData?.title,
     routeContent: meetListData?.content,
@@ -262,8 +272,8 @@ function ScheduleMainPage() {
 
   // 위치 업데이트 처리 함수
   const handleLocationUpdate = (latitude: number, longitude: number) => {
-    if (currentWaypoint < wayPoints.length) {
-      const nextWaypoint = wayPoints[currentWaypoint];
+    if (currentWaypointIndex < wayPoints.length) {
+      const nextWaypoint = wayPoints[currentWaypointIndex];
       if (nextWaypoint) {
         const distance = calculateDistance(
           latitude,
@@ -276,7 +286,7 @@ function ScheduleMainPage() {
           if (nextWaypoint.routeId !== undefined) {
             arriveSchedule(nextWaypoint.routeId);
           }
-          setCurrentWaypoint((prev) => prev + 1);
+          setCurrentWaypointIndex((prev) => prev + 1);
         }
       } else {
         console.error('다음 경유지가 없음');
@@ -789,7 +799,7 @@ function ScheduleMainPage() {
         try {
           const response = await getNearbyLocData(lat || 0, lon || 0);
           if (response && response.status === 'SUCCESS') {
-            setAttractions(response.data);
+            setAttractionsCard(response.data);
           } else if (response.status === 'ERROR') {
             // console.log(response.message);
           }
@@ -841,64 +851,83 @@ function ScheduleMainPage() {
     }
   }, [runningScheduleData]);
 
+  // 진행중일 때 오늘 달성률 계산하는 부분을 useEffect로 감싸기
+  useEffect(() => {
+    if (isSelected === 'Proceeding' && runningScheduleData) {
+      /** 오늘 달성률 계산 */
+      const today: string = new Date()
+        .toISOString()
+        .slice(0, 10)
+        .replace(/-/g, ''); // '20240926' 형식으로 변환
+      const todaySchedule = runningScheduleData?.scheduleDayResDtoList?.find(
+        (schedule) => schedule.date === today,
+      );
+
+      if (todaySchedule) {
+        setTodayStartPoint(
+          todaySchedule?.scheduleWayPointList?.[0]?.name || '출발지 없음',
+        );
+        setTodayEndPoint(
+          todaySchedule?.scheduleWayPointList?.[
+            todaySchedule?.scheduleWayPointList.length - 1
+          ]?.name || '도착지 없음',
+        );
+
+        const scheduleWayPointList = todaySchedule?.scheduleWayPointList || [];
+
+        // 현재 경유지의 인덱스(마지막 state = 2)
+        let currentPointIndex: number | undefined = undefined;
+        for (let i = scheduleWayPointList.length - 1; i >= 0; i--) {
+          if (scheduleWayPointList[i].state === 2) {
+            currentPointIndex = i;
+            break;
+          }
+        }
+
+        // 현재 경유지
+        setCurrentWayPoint(
+          currentPointIndex !== undefined && currentPointIndex >= 0
+            ? scheduleWayPointList[currentPointIndex]?.name || '-'
+            : '-',
+        );
+
+        // 다음 경유지
+        setNextWayPoint(
+          currentPointIndex !== undefined &&
+            currentPointIndex >= 0 &&
+            currentPointIndex < scheduleWayPointList.length - 1
+            ? scheduleWayPointList[currentPointIndex + 1]?.name || '-'
+            : '-',
+        );
+
+        // 현재 방문한 경유지 개수 계산
+        const currentVisit =
+          scheduleWayPointList?.filter((point) => point.state === 2).length ||
+          0;
+        setCurrentVisitCount(currentVisit);
+
+        // 총 경유지 개수
+        const totalVisitCount = scheduleWayPointList?.length || 0;
+        setTodayTotalVisitCount(totalVisitCount);
+
+        // 오늘의 총 거리
+        setTodayTotalDistance(
+          todaySchedule?.totalDistance !== undefined
+            ? parseFloat(todaySchedule.totalDistance)
+            : 0,
+        );
+
+        // 달성률 퍼센트 계산
+        const percentage =
+          totalVisitCount > 0 ? (currentVisit / totalVisitCount) * 100 : 0;
+        setAchievementPercentage(percentage);
+      }
+    }
+  }, [isSelected, runningScheduleData]);
+
   if (loading) {
     return <Loading />;
   }
-
-  /** 오늘 달성률 */
-  const today: string = new Date().toISOString().slice(0, 10).replace(/-/g, ''); // '20240926' 형식으로 변환
-  const todaySchedule = runningScheduleData?.scheduleDayResDtoList?.find(
-    (schedule) => schedule.date || '' === today,
-  );
-
-  const todayStartPoint =
-    todaySchedule?.scheduleWayPointList?.[0]?.name || '출발지 없음';
-  const todayEndPoint =
-    todaySchedule?.scheduleWayPointList?.[
-      todaySchedule?.scheduleWayPointList.length - 1
-    ]?.name || '도착지 없음';
-
-  const scheduleWayPointList = todaySchedule?.scheduleWayPointList || [];
-
-  // 현재 경유지의 인덱스(마지막 state = 2)
-  let currentPointIndex: number | undefined = undefined;
-  for (let i = scheduleWayPointList.length - 1; i >= 0; i--) {
-    if (scheduleWayPointList[i].state === 2) {
-      currentPointIndex = i;
-      break;
-    }
-  }
-
-  // 현재 경유지
-  const currentWayPoint =
-    currentPointIndex !== undefined && currentPointIndex >= 0
-      ? scheduleWayPointList[currentPointIndex].name
-      : '-';
-
-  // 다음 경유지
-  const nextWayPoint =
-    currentPointIndex !== undefined &&
-    currentPointIndex >= 0 &&
-    currentPointIndex < scheduleWayPointList.length - 1
-      ? scheduleWayPointList[currentPointIndex + 1].name
-      : '-';
-
-  const currentVisitCount =
-    todaySchedule?.scheduleWayPointList?.filter((point) => point.state === 2)
-      .length || 0;
-
-  const todayTotalVisitCount = todaySchedule?.scheduleWayPointList?.length || 0;
-
-  // 달성률 퍼센트 계산
-  const achievementPercentage =
-    todayTotalVisitCount > 0
-      ? (currentVisitCount / todayTotalVisitCount) * 100
-      : 0;
-
-  const todayTotalDistance =
-    todaySchedule?.totalDistance !== undefined
-      ? parseFloat(todaySchedule.totalDistance)
-      : 0;
 
   return (
     <ScheduleMainPageContainer>
@@ -953,47 +982,47 @@ function ScheduleMainPage() {
                     <>
                       <Feed routeData={runningFeedData} />
                       <FeedInfo
-                        feedInfoTitle={feedInfoProps.feedInfoTitle}
-                        startPoint={feedInfoProps.startPoint}
-                        endPoint={feedInfoProps.endPoint}
+                        feedInfoTitle="일정 정보"
                         startDate={formatDate(
                           runningScheduleData.startDate || '',
                         )}
-                        endDate={formatDate(runningScheduleData.endDate || '-')}
+                        endDate={formatDate(runningScheduleData.endDate || '')}
+                        startPoint={runningScheduleData.startPoint}
+                        endPoint={runningScheduleData.endPoint}
                         totalDistance={runningScheduleData.totalDistance}
-                        dayData={feedInfoProps.dayData}
-                        percentage={feedInfoProps.percentage}
+                        dayData={dayData || []}
+                        percentage={undefined}
                       />
                     </>
                   </S.RouteInfoContainer>
-
-                  {/* 1일차 진행 상황을 확인 + 달성률 ~~ 어쩌구 container */}
+                  {/* 일차 진행 상황 + 오늘 달성률을 */}
                   <S.ScheduleMainContainer>
                     <div className="today_rate_box">
                       <ProgressSchedule
                         proceessDay={calculateDayNumber(
-                          runningScheduleData.startDate || '',
+                          runningScheduleData?.startDate || '',
                         )}
                         startPoint={todayStartPoint}
                         endPoint={todayEndPoint}
-                        totalDuration={feedInfoProps.totalDuration}
-                        totalDistance={feedInfoProps.totalDistance}
-                        dayData={feedInfoProps.dayData}
-                        /** 오늘 일정 */
-                        currentWayPoint={currentWayPoint} //현재 경유지
-                        nextWayPoint={nextWayPoint} //다음 경유지
+                        totalDuration={
+                          typeof firstDayData?.totalDuration === 'string'
+                            ? parseFloat(firstDayData.totalDuration)
+                            : firstDayData?.totalDuration || 0
+                        }
+                        totalDistance={
+                          typeof firstDayData?.totalDistance === 'string'
+                            ? parseFloat(firstDayData.totalDistance)
+                            : firstDayData?.totalDistance || 0
+                        }
+                        dayData={dayData || []}
+                        currentWayPoint={currentWayPoint} // 현재 경유지
+                        nextWayPoint={nextWayPoint} // 다음 경유지
                         currentVisitCount={currentVisitCount}
                         todayTotalVisitCount={todayTotalVisitCount}
-                        todayTotalDistance={
-                          todaySchedule?.totalDistance !== undefined
-                            ? parseFloat(todaySchedule.totalDistance)
-                            : 0
-                        }
-                        percentage={achievementPercentage}
+                        todayTotalDistance={todayTotalDistance}
+                        percentage={achievementPercentage} // 오늘 달성률 퍼센트
                       />
                     </div>
-
-                    {/* 날씨 + 날씨 메시지 container  */}
                     <S.ScheduleWeatherContainer>
                       {weatherData.length > 0 && (
                         <WeatherSchedule
@@ -1004,7 +1033,6 @@ function ScheduleMainPage() {
                         />
                       )}
                     </S.ScheduleWeatherContainer>
-
                     <R.ContentSelecContainer>
                       <R.ContentBox
                         selected={selected === 'course'}
@@ -1053,14 +1081,14 @@ function ScheduleMainPage() {
                       />
                     )}
                   </R.RouteDetailInfoContainer>
-                  {/* <S.AttractionsContainer>
+                  <S.AttractionsContainer>
                     <S.AttractionsBox>
                       <S.AttrantiosTypeBox>주요 관광지</S.AttrantiosTypeBox>
                       <S.AttractionsOverflow>
                         {attractionsCard.length > 0 &&
                           attractionsCard.map((ele) => (
                             <S.AttractionCard
-                              img={(ele as ScheduleAttractionsProps).image1}
+                              img={(ele as ScheduleAttractionsProps).img}
                             >
                               <S.AttractionCardTitle>
                                 {(ele as ScheduleAttractionsProps).address}
@@ -1068,19 +1096,17 @@ function ScheduleMainPage() {
                               <S.AttractionCardDetail>
                                 <Icon name="IconFlag" size={20} />
                                 <S.AttractionCardDetailText>
-                                  {(ele as ScheduleAttractionsProps).title}
+                                  {(ele as ScheduleAttractionsProps).name}
                                 </S.AttractionCardDetailText>
                               </S.AttractionCardDetail>
                             </S.AttractionCard>
                           ))}
                       </S.AttractionsOverflow>
                     </S.AttractionsBox>
-                  </S.AttractionsContainer> */}
+                  </S.AttractionsContainer>
                 </>
               ) : (
-                <>
-                  <ScheduleNoHave category="schedule" />
-                </>
+                <ScheduleNoHave category="schedule" />
               )}
             </>
           </S.Overflow>
@@ -1090,8 +1116,7 @@ function ScheduleMainPage() {
       {/* 내 일정 tab */}
       {isSelected === 'Mine' && (
         <S.Main>
-          {/* <S.Overflow> */}
-          <S.SchduleCardContainer>
+          <S.Overflow>
             {myScheduleListData &&
             Array.isArray(myScheduleListData) &&
             myScheduleListData.length > 0 ? (
@@ -1106,25 +1131,25 @@ function ScheduleMainPage() {
                 const formattedEndDate = formatDate(data.endDate || '');
 
                 return (
-                  <SchduleCard
-                    key={data.scheduleId}
-                    backgroundImg={data.backgroundImg || goyuMY}
-                    title={data.title}
-                    startPoint={data.startPoint}
-                    endPoint={data.endPoint}
-                    startDate={formattedStartDate}
-                    endDate={formattedEndDate}
-                    tripDay={tripDay}
-                    dDay={dDay}
-                    onClick={() => clickCard(data.scheduleId, dDay)}
-                  />
+                  <S.SchduleCardContainer key={data.scheduleId}>
+                    <SchduleCard
+                      backgroundImg={setDefaultImg(data.backgroundImg || '')}
+                      title={data.title}
+                      startPoint={data.startPoint}
+                      endPoint={data.endPoint}
+                      startDate={formattedStartDate}
+                      endDate={formattedEndDate}
+                      tripDay={tripDay}
+                      dDay={dDay}
+                      onClick={() => clickCard(data.scheduleId, dDay)}
+                    />
+                  </S.SchduleCardContainer>
                 );
               })
             ) : (
               <ScheduleNoHave category="schedule" />
             )}
-            {/* </S.Overflow> */}
-          </S.SchduleCardContainer>
+          </S.Overflow>
         </S.Main>
       )}
 
@@ -1198,7 +1223,7 @@ export default ScheduleMainPage;
 
 const ScheduleMainPageContainer = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 100%;
   background-color: #f5f5f5;
   /* background-color: #fff; */
 `;
