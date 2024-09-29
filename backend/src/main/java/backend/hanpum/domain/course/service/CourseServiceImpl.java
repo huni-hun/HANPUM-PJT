@@ -38,6 +38,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -86,7 +88,10 @@ public class CourseServiceImpl implements CourseService {
         Double allDayDistance = 0.0;
         for (CourseDayReqDto courseDayReqDto : makeCourseReqDto.getCourseDayReqDtoList()) {
             for (WayPointReqDto waypointReqDto : courseDayReqDto.getWayPointReqDtoList()) {
-                allDayDistance += Double.parseDouble(waypointReqDto.getDistance());
+                // 거리 (km) 문자열 처리
+                String distanceStr = waypointReqDto.getDistance();
+                Double distanceValue = extractDoubleFromString(distanceStr, "km");
+                allDayDistance += distanceValue;
             }
         }
 
@@ -138,16 +143,27 @@ public class CourseServiceImpl implements CourseService {
             Double totalDuration = 0.0;
             Double totalCalorie = 0.0;
             for (WayPointReqDto waypointReqDto : courseDayReqDto.getWayPointReqDtoList()) {
-                totalDistance += Double.parseDouble(waypointReqDto.getDistance());
-                totalDuration += Double.parseDouble(waypointReqDto.getDuration());
-                totalCalorie += Double.parseDouble(waypointReqDto.getCalorie());
+                // 거리 (km) 문자열 처리
+                String distanceStr = waypointReqDto.getDistance();
+                Double distanceValue = extractDoubleFromString(distanceStr, "km");
+                totalDistance += distanceValue;
+
+                // 시간 문자열 처리 (0시간 57분)
+                String durationStr = waypointReqDto.getDuration();
+                Double durationValue = extractDurationInMinutes(durationStr);
+                totalDuration += durationValue;
+
+                // 칼로리 처리 (소수점 포함된 숫자 처리)
+                String calorieStr = waypointReqDto.getCalorie();
+                Double calorieValue = Double.parseDouble(calorieStr);
+                totalCalorie += calorieValue;
             }
 
             CourseDay courseDay = CourseDay.builder()
                     .course(course)
                     .dayNumber(courseDayReqDto.getDayNumber())
                     .totalDistance(totalDistance)
-                    .totalDuration(String.format("%.1f", totalDuration))
+                    .totalDuration(formatDuration(totalDuration))
                     .totalCalorie(String.format("%.1f", totalCalorie))
                     .build();
             courseDayRepository.save(courseDay);
@@ -187,11 +203,42 @@ public class CourseServiceImpl implements CourseService {
         }
     }
 
+    private String formatDuration(Double durationInMinutes) {
+        int hours = (int) (durationInMinutes / 60);
+        int minutes = (int) (durationInMinutes % 60);
+        return String.format("%d시간 %d분", hours, minutes);
+    }
+
     public static String extractSido(String address) {
         return SIDO_LIST.stream()
                 .filter(address::contains)
                 .findFirst()
                 .orElse("필터링 실패");
+    }
+
+    private Double extractDoubleFromString(String str, String unit) {
+        if (str != null && str.contains(unit)) {
+            str = str.replace(unit, "").trim(); // 단위를 제거
+        }
+        return Double.parseDouble(str);
+    }
+
+    private Double extractDurationInMinutes(String durationStr) {
+        Pattern pattern = Pattern.compile("(\\d+)시간 (\\d+)분");
+        Matcher matcher = pattern.matcher(durationStr);
+        if (matcher.find()) {
+            int hours = Integer.parseInt(matcher.group(1));
+            int minutes = Integer.parseInt(matcher.group(2));
+            return (double) hours * 60 + minutes;
+        } else {
+            // "57분"과 같은 경우
+            pattern = Pattern.compile("(\\d+)분");
+            matcher = pattern.matcher(durationStr);
+            if (matcher.find()) {
+                return Double.parseDouble(matcher.group(1));
+            }
+        }
+        return 0.0;
     }
 
     @Override
