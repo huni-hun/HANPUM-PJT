@@ -160,7 +160,8 @@ function RouteDetailPage() {
         result.data.data.wayPoints.sort(
           (a: any, b: any) => a.pointNumber - b.pointNumber,
         );
-        result.data.data.wayPoints.map((ele: any, idx: number) => {
+
+        result.data.data.wayPoints!.map((ele: any, idx: number) => {
           let data: DaysOfRouteProps = {
             routeName: ele.name,
             routeAddress: ele.address,

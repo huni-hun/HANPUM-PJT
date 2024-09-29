@@ -14,11 +14,13 @@ import { useQuery } from 'react-query';
 import { STATUS } from '@/constants';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
+import Loading from '@/components/common/Loading';
 
 function RouteList() {
   const [arr, setArr] = useState<RouteListProps[]>([]);
   const [arrC, setArrC] = useState<RouteListProps[]>([]);
   const [arrD, setArrD] = useState<RouteListProps[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const [morePageOpen, setMoreOpenPage] = useState<boolean>(false);
   const navigator = useNavigate();
 
@@ -39,12 +41,19 @@ function RouteList() {
   });
 
   useEffect(() => {
-    const data: RouteListProps[] = [];
-    getRouteList('해안길', 4)
-      .then((result) => {
-        if (result.status === 200) {
-          result.data.data.courseListMap['해안길'].map((ele: any) => {
-            let data: RouteListProps = {
+    const fetchData = async () => {
+      setLoading(false); // Set loading to false while fetching data
+      try {
+        const [seaRoutes, beginnerRoutes, expertRoutes] = await Promise.all([
+          getRouteList('해안길', 4),
+          getRouteList('초보자', 4),
+          getRouteList('숙련자', 4),
+        ]);
+
+        // 해안길 데이터 처리
+        if (seaRoutes.status === 200) {
+          seaRoutes.data.data.courseListMap['해안길'].forEach((ele: any) => {
+            const data: RouteListProps = {
               routeName: ele.courseName,
               routeContent: ele.content,
               routeScore: ele.scoreAvg,
@@ -61,50 +70,40 @@ function RouteList() {
               totalDays: ele.totalDays,
               interestFlag: ele.interestFlag,
             };
-
             setArr((pre) => [...pre, data]);
           });
         }
-      })
-      .catch((err) => {
-        toast.error('경로를 가져오지 못 했습니다.');
-      });
 
-    getRouteList('초보자', 4)
-      .then((result) => {
-        if (result.status === 200) {
-          result.data.data.courseListMap['초보자'].map((ele: any) => {
-            let data: RouteListProps = {
-              routeName: ele.courseName,
-              routeContent: ele.content,
-              routeScore: ele.scoreAvg,
-              routeComment: ele.commentCnt,
-              routeId: ele.courseId,
-              img: ele.backgroundImg,
-              writeState: ele.writeState,
-              openState: ele.openState,
-              memberId: ele.memberId,
-              writeDate: ele.writeDate,
-              start: ele.startPoint,
-              end: ele.endPoint,
-              totalDistance: Math.round(ele.totalDistance),
-              totalDays: ele.totalDays,
-              interestFlag: ele.interestFlag,
-            };
-
-            setArrC((pre) => [...pre, data]);
-          });
+        // 초보자 데이터 처리
+        if (beginnerRoutes.status === 200) {
+          beginnerRoutes.data.data.courseListMap['초보자'].forEach(
+            (ele: any) => {
+              const data: RouteListProps = {
+                routeName: ele.courseName,
+                routeContent: ele.content,
+                routeScore: ele.scoreAvg,
+                routeComment: ele.commentCnt,
+                routeId: ele.courseId,
+                img: ele.backgroundImg,
+                writeState: ele.writeState,
+                openState: ele.openState,
+                memberId: ele.memberId,
+                writeDate: ele.writeDate,
+                start: ele.startPoint,
+                end: ele.endPoint,
+                totalDistance: Math.round(ele.totalDistance),
+                totalDays: ele.totalDays,
+                interestFlag: ele.interestFlag,
+              };
+              setArrC((pre) => [...pre, data]);
+            },
+          );
         }
-      })
-      .catch((err) => {
-        toast.error('경로를 가져오지 못 했습니다.');
-      });
 
-    getRouteList('숙련자', 4)
-      .then((result) => {
-        if (result.status === 200) {
-          result.data.data.courseListMap['숙련자'].map((ele: any) => {
-            let data: RouteListProps = {
+        // 숙련자 데이터 처리
+        if (expertRoutes.status === 200) {
+          expertRoutes.data.data.courseListMap['숙련자'].forEach((ele: any) => {
+            const data: RouteListProps = {
               routeName: ele.courseName,
               routeContent: ele.content,
               routeScore: ele.scoreAvg,
@@ -121,21 +120,24 @@ function RouteList() {
               totalDays: ele.totalDays,
               interestFlag: ele.interestFlag,
             };
-
             setArrD((pre) => [...pre, data]);
           });
         }
-      })
-      .catch((err) => {
+      } catch (error) {
         toast.error('경로를 가져오지 못 했습니다.');
-      });
+      } finally {
+        setLoading(true); // Set loading to true after all data is fetched
+      }
+    };
+
+    fetchData();
   }, []);
 
   const clickMoreBtn = (keyword: string) => {
     navigator('/route/list/more', { state: { keyword: keyword } });
   };
 
-  return (
+  return loading ? (
     <R.RouteListContainer>
       <Header
         purpose="merge"
@@ -284,6 +286,8 @@ function RouteList() {
       </R.MainContainer>
       <BottomTab />
     </R.RouteListContainer>
+  ) : (
+    <Loading />
   );
 }
 
