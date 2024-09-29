@@ -831,6 +831,7 @@ function ScheduleMainPage() {
           navigate('/schedule/addSchedule', { state: { ready: false } })
         }
         isSchedule
+        isRoute={false}
       />
 
       <S.SchduleTypeContainer>

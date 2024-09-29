@@ -24,6 +24,7 @@ interface HeaderProps {
   plusBtnclick?: () => void;
   /** 일정 & 모임 구분 */
   isSchedule?: boolean;
+  isRoute?: boolean;
   readonly?: boolean;
   notAuth?: boolean;
 }
@@ -46,6 +47,7 @@ const Header = ({
   plusBtnclick,
   $isGrey = false,
   isSchedule,
+  isRoute,
   readonly = false,
   notAuth = false,
 }: HeaderProps) => {
@@ -200,12 +202,18 @@ const Header = ({
               }}
               $justify="space-around"
             >
-              <Icon name="IconHeaderPlus" onClick={plusBtnclick} size={14} />
               <Icon
-                name="IconUser"
-                onClick={() => onClickHandler('mypage')}
-                size={14}
+                name="IconHeaderPlus"
+                onClick={plusBtnclick}
+                size={isRoute ? 20 : 14}
               />
+              {isRoute ? null : (
+                <Icon
+                  name="IconUser"
+                  onClick={() => onClickHandler('mypage')}
+                  size={14}
+                />
+              )}
             </Flex>
           </Flex>
         );

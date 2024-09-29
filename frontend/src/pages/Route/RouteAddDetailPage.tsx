@@ -296,9 +296,9 @@ function RouteAddDetailPage() {
       GetDistance(startlat, startlon, endlat, endlon)
         .then((res) => {
           if (res.status === 200 && res.data.status === 'SUCCESS') {
-            let dist = Number(res.data.data[0].distance) / 1000;
-            let cal = 3.5 * 70 * (dist / 4);
-            let durationInHours = dist / 4; // 소요 시간 (시간 단위)
+            let dist = Math.floor(Number(res.data.data[0].distance) / 1000);
+            let cal = Math.floor(3.5 * 70 * (dist / 4));
+            let durationInHours = Math.floor(dist / 4); // 소요 시간 (시간 단위)
 
             // 시간과 분으로 변환
             let durationHours = Math.floor(durationInHours); // 시간
@@ -565,7 +565,7 @@ function RouteAddDetailPage() {
                 addRoute.courseDayReqDtoList.length > 0 &&
                 addRoute.courseDayReqDtoList[0].wayPointReqDtoList.length > 0
               ) {
-                console.log(addRoute);
+                // console.log(addRoute);
                 AddRoute(addRoute)
                   .then((res) => {
                     if (res.status === 200) {

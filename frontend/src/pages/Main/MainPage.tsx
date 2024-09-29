@@ -200,9 +200,9 @@ function MainPage() {
   };
 
   useEffect(() => {
-    getRouteList('해안길', 2).then((result) => {
+    getRouteList('', 2).then((result) => {
       if (result.status === 200) {
-        result.data.data.courseListMap['해안길'].map((ele: any) => {
+        result.data.data.courseListMap.searchResult.map((ele: any) => {
           let data: RouteListProps = {
             routeName: ele.courseName,
             routeContent: ele.content,
