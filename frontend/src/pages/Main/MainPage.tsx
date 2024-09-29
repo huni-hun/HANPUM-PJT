@@ -231,7 +231,7 @@ function MainPage() {
   }, []);
 
   const tryKakao = sessionStorage.getItem('send');
-  const setAuthEnticate = useSetRecoilState(isAuthEnticatedAtom);
+  // const setAuthEnticate = useSetRecoilState(isAuthEnticatedAtom);
   const navigate = useNavigate();
 
   useEffect(() => {
