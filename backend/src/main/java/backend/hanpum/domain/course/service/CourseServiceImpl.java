@@ -143,17 +143,14 @@ public class CourseServiceImpl implements CourseService {
             Double totalDuration = 0.0;
             Double totalCalorie = 0.0;
             for (WayPointReqDto waypointReqDto : courseDayReqDto.getWayPointReqDtoList()) {
-                // 거리 (km) 문자열 처리
                 String distanceStr = waypointReqDto.getDistance();
                 Double distanceValue = extractDoubleFromString(distanceStr, "km");
                 totalDistance += distanceValue;
 
-                // 시간 문자열 처리 (0시간 57분)
                 String durationStr = waypointReqDto.getDuration();
                 Double durationValue = extractDurationInMinutes(durationStr);
                 totalDuration += durationValue;
 
-                // 칼로리 처리 (소수점 포함된 숫자 처리)
                 String calorieStr = waypointReqDto.getCalorie();
                 Double calorieValue = Double.parseDouble(calorieStr);
                 totalCalorie += calorieValue;
@@ -307,9 +304,17 @@ public class CourseServiceImpl implements CourseService {
             Double totalDuration = 0.0;
             Double totalDistance = 0.0;
             for (WayPointReqDto waypointReqDto : newCourseDay.getWayPointReqDtoList()) {
-                totalCalorie += Double.parseDouble(waypointReqDto.getCalorie());
-                totalDuration += Double.parseDouble(waypointReqDto.getDuration());
-                totalDistance += Double.parseDouble(waypointReqDto.getDistance());
+                String distanceStr = waypointReqDto.getDistance();
+                Double distanceValue = extractDoubleFromString(distanceStr, "km");
+                totalDistance += distanceValue;
+
+                String durationStr = waypointReqDto.getDuration();
+                Double durationValue = extractDurationInMinutes(durationStr);
+                totalDuration += durationValue;
+
+                String calorieStr = waypointReqDto.getCalorie();
+                Double calorieValue = Double.parseDouble(calorieStr);
+                totalCalorie += calorieValue;
             }
 
             if (existDayNumbers.contains(newCourseDay.getDayNumber())) {
@@ -322,7 +327,7 @@ public class CourseServiceImpl implements CourseService {
                         .dayNumber(newCourseDay.getDayNumber())
                         .course(course)
                         .totalDistance(totalDistance)
-                        .totalDuration(String.format("%.1f", totalDuration))
+                        .totalDuration(formatDuration(totalDuration))
                         .totalCalorie(String.format("%.1f", totalCalorie))
                         .build();
 
@@ -375,7 +380,7 @@ public class CourseServiceImpl implements CourseService {
 
     private void updateCourseDay(CourseDay existDay, CourseDayReqDto newDay, Double totalCalorie, Double totalDuration, Double totalDistance) {
         // CourseDay 정보 업데이트
-        existDay.updateCourseDayTotal(String.format("%.1f", totalCalorie), String.format("%.1f", totalDuration), totalDistance);
+        existDay.updateCourseDayTotal(String.format("%.1f", totalCalorie), formatDuration(totalDuration), totalDistance);
 
         // Attraction 업데이트
         Set<String> existAttractionName = existDay.getAttractions().stream()
