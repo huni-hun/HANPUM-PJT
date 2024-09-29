@@ -18,7 +18,7 @@ function NoHave({ category }: { category: string }) {
       >
         {category === 'root'
           ? '관심있는 경로가 없어요'
-          : '참여하고있는 모임이 없어요'}
+          : '관심있는 모임이 없어요'}
       </Text>
       <Flex direction="column" style={{ textAlign: 'center' }}>
         <Text $typography="t14" color="grey2" style={{ marginBottom: '4px' }}>
@@ -27,7 +27,7 @@ function NoHave({ category }: { category: string }) {
         <Text $typography="t14" color="grey2">
           {category === 'root'
             ? '일정을 만들어보세요.'
-            : '함께하는 일정을 만들어보세요.'}
+            : '모임에 참여해보세요.'}
         </Text>
       </Flex>
 
