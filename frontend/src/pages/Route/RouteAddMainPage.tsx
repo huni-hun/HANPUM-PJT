@@ -221,7 +221,7 @@ function RouteAddMainPage() {
               </R.TypeClosedCard>
             </R.CardClosed>
           ) : (
-            <R.TypeCardOpen isChecked={typeChecked.length > 0}>
+            <R.TypeCardOpen $isChecked={typeChecked.length > 0}>
               <R.ExplanationCardTitle>
                 경로 타입을 선택해주세요.
               </R.ExplanationCardTitle>

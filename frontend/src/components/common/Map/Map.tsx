@@ -124,7 +124,7 @@ function Map(props: MapProps) {
 
         const infoWindowContent = `
           <div style="padding:5px; display:flex; flex-direction:column;">
-            <p style="font-size:1.5rem; font-weight:bold; margin-bottom:0.8rem;">${mar.name ?? '0'}</p>
+            <p style="font-size:1.5rem; font-weight:bold; margin-bottom:0.8rem; white-space: nowrap; overflow: hidden; text-overflow: clip;">${mar.name ?? '0'}</p>
             <p style="font-size:1.2rem; font-weight:bold; margin-bottom:0.5rem;">걸리는 시간: ${mar.duration ?? '0'}</p>
             <p style="font-size:1.2rem; font-weight:bold; margin-bottom:0.5rem;">거리: ${mar.distance ?? '0'}</p>
             <p style="font-size:1.2rem; font-weight:bold; margin-bottom:0.5rem;">칼로리: ${mar.calorie ?? '0'}</p>
