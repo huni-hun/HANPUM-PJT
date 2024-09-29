@@ -20,7 +20,7 @@ function ActivityLayout() {
       return '나의 경로';
     }
     if (param === 'finish') {
-      return '완주한 경로';
+      return '사용한 경로';
     }
     return '';
   };

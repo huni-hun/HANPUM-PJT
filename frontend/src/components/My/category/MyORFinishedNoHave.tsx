@@ -16,7 +16,7 @@ function MyRouteNoHave({ category }: { category: string }) {
         color="grey2"
         style={{ marginBottom: '12px' }}
       >
-        {category === 'my' ? '내 경로가 없어요.' : '완주한 경로가 없어요'}
+        {category === 'my' ? '내 경로가 없어요.' : '사용한 경로가 없어요'}
       </Text>
       <Flex direction="column" style={{ textAlign: 'center' }}>
         <Text $typography="t14" color="grey2" style={{ marginBottom: '4px' }}>
