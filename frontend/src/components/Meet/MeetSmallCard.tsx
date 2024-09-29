@@ -67,7 +67,7 @@ function MeetSmallCard({
 
   return (
     <MeetSmallCardContainer onClick={onClick}>
-      <img src={setDefaultImg(data.groupImg || null)} />
+      <img src={data.groupImg} />
       <DateBadge
         totalDays={data.totalDays}
         style={{ top: '12px', left: '12px' }}
