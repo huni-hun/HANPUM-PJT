@@ -44,6 +44,7 @@ import {
 import { MemberInfo } from '@/models/meet';
 import Button from '@/components/common/Button/Button';
 import { colors } from '@/styles/colorPalette';
+import { setDefaultImg } from '@/utils/Image';
 
 function MeetDetailPage() {
   /** 헤더 설정 열기 */
@@ -385,7 +386,7 @@ function MeetDetailPage() {
   /** feed 더미 데이터 */
   /** === useState (routeData) */
   const feedData = {
-    routeFeedImg: meetDetail?.data?.groupImg || goyuMY,
+    routeFeedImg: meetDetail?.data?.groupImg,
     routeUserImg: meetDetail?.data?.readerProfileImg || memberImg,
     routeName: meetDetail?.data?.title,
     routeContent: meetDetail?.data?.description,

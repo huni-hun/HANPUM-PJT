@@ -20,12 +20,13 @@ import { MeetInfo, MeetRequestDto } from '@/models/meet';
 import SortBox from '@/components/Meet/SortBox';
 import { meetFilterInfoAtom } from '@/atoms/meetFilterAtom';
 import { useRecoilValue } from 'recoil';
+import Loading from '@/components/common/Loading';
 
 function MeetList() {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState<boolean>(false);
   const [openSort, setOpenSort] = useState(false);
   const meetFilterInfo = useRecoilValue(meetFilterInfoAtom);
 
@@ -40,16 +41,23 @@ function MeetList() {
 
   const navigator = useNavigate();
 
+  useEffect(() => {
+    setLoading(true);
+  }, []);
+
   // 내 모임
   const { data: myMeet } = useQuery('getmyMeet', GetMyMeet, {
     onSuccess: (res) => {
       if (res.status === STATUS.success) {
         // console.log(res);
+        setLoading(false);
       } else if (res.status === STATUS.error) {
+        setLoading(false);
         toast.error(res.message);
       }
     },
     onError: (error: AxiosError) => {
+      setLoading(false);
       toast.error(error.message);
     },
   });
@@ -80,10 +88,12 @@ function MeetList() {
         const isLastPage =
           lastPage.data.groupResDtoList.length < requestDto.pageable.size;
         if (!morePagesExist || isLastPage) return undefined;
+        setLoading(false);
         return pages.length;
       },
       onError: (error: AxiosError) => {
         toast.error(error.message);
+        setLoading(false);
       },
     },
   );
@@ -140,6 +150,10 @@ function MeetList() {
   const clickMeetCard = (groupId: number) => {
     navigate(`/meet/detail`, { state: { groupId } });
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <R.RouteListContainer>
@@ -217,18 +231,6 @@ function MeetList() {
                   </BaseButton>
                 </S.NoHaveContainer>
               </Flex>
-            ) : openSort ? (
-              <Text
-                $typography="t14"
-                $bold={true}
-                style={{
-                  paddingLeft: '8px',
-                  minHeight: '220px',
-                  height: '100%',
-                }}
-              >
-                필터링 된 데이터가 없습니다.
-              </Text>
             ) : (
               groupListData?.pages?.map((page) =>
                 page.data.groupResDtoList?.map((groupData: MeetInfo) => (

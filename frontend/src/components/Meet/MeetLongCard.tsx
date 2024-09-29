@@ -20,7 +20,7 @@ function MeetLongCard({
 
   return (
     <MeetLongCardContainer onClick={onClick}>
-      <img src={setDefaultImg(data.groupImg || null)} />
+      <img src={data.groupImg} />
       <DateBadge
         style={{ top: '16px', left: '20px' }}
         totalDays={data.totalDays}

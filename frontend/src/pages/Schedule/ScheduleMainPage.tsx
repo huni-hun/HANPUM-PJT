@@ -194,7 +194,7 @@ function ScheduleMainPage() {
 
   /** 진행중 feed안에 들어가는 데이터 */
   const runningFeedData = {
-    routeFeedImg: setDefaultImg(runningScheduleData?.backgroundImg || null),
+    routeFeedImg: runningScheduleData?.backgroundImg,
     routeUserImg: memberImg,
     routeName: runningScheduleData?.title,
     routeContent: runningScheduleData?.content,
@@ -203,7 +203,7 @@ function ScheduleMainPage() {
 
   /** 모임일정 feed안에 들어가는 데이터 */
   const meetFeedData = {
-    routeFeedImg: setDefaultImg(meetListData?.backgroundImg || null),
+    routeFeedImg: meetListData?.backgroundImg,
     routeUserImg: memberImg,
     routeName: meetListData?.title,
     routeContent: meetListData?.content,
@@ -299,6 +299,8 @@ function ScheduleMainPage() {
     const geo = window.navigator.geolocation;
 
     if (geo) {
+      setLoading(true);
+
       geo.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
@@ -306,11 +308,13 @@ function ScheduleMainPage() {
           setLat(latitude);
           setLon(longitude);
           setIsLocationReady(true);
+          setLoading(false);
         },
         (error) => {
           console.error('Error occurred while fetching location:', error);
           alert('위치 가져오기 실패');
           setIsLocationReady(false);
+          setLoading(false);
         },
         {
           enableHighAccuracy: true,
@@ -321,6 +325,7 @@ function ScheduleMainPage() {
     } else {
       alert('지원하지 않는 브라우저입니다.');
       setIsLocationReady(false);
+      setLoading(false);
     }
   }, []);
 
@@ -329,7 +334,7 @@ function ScheduleMainPage() {
     if (isSelected === 'Proceeding') {
       /** 진행중 data */
       const fetchData = async () => {
-        // setLoading(true);/
+        // setLoading(true);
         try {
           const response = await getRunningScheduleData();
           if (response && response.status === 'SUCCESS') {
@@ -397,6 +402,7 @@ function ScheduleMainPage() {
   useEffect(() => {
     if (isSelected === 'Mine') {
       const fetchData = async () => {
+        /** 여기서 로딩 true */
         try {
           const response = await getMyScheduleData();
           if (response && response.status === 'SUCCESS') {
@@ -407,6 +413,7 @@ function ScheduleMainPage() {
         } catch (error) {
           console.error('Fetch Error:', error);
         } finally {
+          /** 여기서 로딩 false */
           setLoading(false);
         }
       };
@@ -419,6 +426,7 @@ function ScheduleMainPage() {
   useEffect(() => {
     if (isSelected === 'Class') {
       const fetchData = async () => {
+        setLoading(true);
         try {
           const response = await getGroupScheduleData();
           if (response && response.status === 'SUCCESS') {
@@ -744,7 +752,7 @@ function ScheduleMainPage() {
     if (lat !== null && lon !== null && isLocationReady) {
       const fetchData = async () => {
         try {
-          setLoading(true);
+          // setLoading(true);
           const response = await getWeather(lat, lon);
 
           if (response && response.status === 'SUCCESS') {
@@ -796,6 +804,7 @@ function ScheduleMainPage() {
   useEffect(() => {
     if (lat !== null && lon !== null && isLocationReady) {
       const nearByData = async () => {
+        // setLoading(true);
         try {
           const response = await getNearbyLocData(lat || 0, lon || 0);
           if (response && response.status === 'SUCCESS') {
@@ -1133,7 +1142,7 @@ function ScheduleMainPage() {
                 return (
                   <S.SchduleCardContainer key={data.scheduleId}>
                     <SchduleCard
-                      backgroundImg={setDefaultImg(data.backgroundImg || '')}
+                      backgroundImg={data.backgroundImg}
                       title={data.title}
                       startPoint={data.startPoint}
                       endPoint={data.endPoint}

@@ -134,7 +134,7 @@ function DetailMineSchedulePage() {
   /** feed 더미 데이터 */
   /** === useState (routeData) */
   const feedData = {
-    routeFeedImg: setDefaultImg(myScheduleListData?.backgroundImg || ''),
+    routeFeedImg: myScheduleListData?.backgroundImg,
     routeUserImg: memberImg,
     routeName: myScheduleListData?.title,
     routeContent: myScheduleListData?.content,

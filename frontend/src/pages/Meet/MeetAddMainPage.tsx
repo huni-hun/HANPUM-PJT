@@ -19,6 +19,8 @@ import Text from '@/components/common/Text';
 import BaseButton from '@/components/common/BaseButton';
 import ToggleSlider from '@/components/common/ToggleSlider/ToggleSlider';
 import * as M from '../../components/Style/Meet/MeetAddMain.styled';
+import { setDefaultImg } from '@/utils/Image';
+import { convertImageToFile } from '@/utils/util';
 
 function MeetAddMainPage() {
   const navigate = useNavigate();
@@ -174,26 +176,31 @@ function MeetAddMainPage() {
     navigate(path, options);
   };
 
-  // 모임 생성 API 호출
+  //모임 생성 버튼 클릭
   const handleCreateGroup = async () => {
     if (!meetData) {
-      toast.error('모임 데이터를 확인할 수 없습니다.');
+      toast.error('형식을 올바르게 입력해주세요.');
       return;
     }
 
     try {
-      const response = await PostGroup(meetData, multipartImg || undefined);
+      let imageFile: File | undefined = multipartImg || undefined;
+
+      // previewImage가 없을 경우 기본 이미지를 사용
+      if (!multipartImg && !previewImage) {
+        const defaultImgUrl = setDefaultImg(previewImage || null);
+        imageFile = await convertImageToFile(defaultImgUrl);
+        setMultipartImg(imageFile);
+      }
+
+      // API 호출
+      const response = await PostGroup(meetData, imageFile || undefined);
       if (response && response.status === 'SUCCESS') {
         toast.success('모임 생성이 완료되었습니다!');
-        navigate('/meet/addMain/complete', {
-          state: {
-            category: 'create',
-          },
-        });
         // 로컬 스토리지 초기화
         localStorage.removeItem('meetRequest');
         localStorage.removeItem('previewImage');
-        // resetAndNavigate('/meet/addMain/complete'); // 초기화 후 페이지 이동
+
         resetAndNavigate('/meet/addMain/complete', {
           state: {
             category: 'create',
