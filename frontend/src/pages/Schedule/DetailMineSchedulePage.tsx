@@ -42,6 +42,7 @@ import { AxiosError } from 'axios';
 import Icon from '@/components/common/Icon/Icon';
 import { PutScheduleArrive } from '@/api/schedule/PUT';
 import { cutAddress } from '@/utils/util';
+import { setDefaultImg } from '@/utils/Image';
 
 function DetailMineSchedulePage() {
   const BtnClick = () => {};
@@ -132,7 +133,7 @@ function DetailMineSchedulePage() {
   /** feed 더미 데이터 */
   /** === useState (routeData) */
   const feedData = {
-    routeFeedImg: myScheduleListData?.backgroundImg || goyuMY,
+    routeFeedImg: setDefaultImg(myScheduleListData?.backgroundImg || ''),
     routeUserImg: memberImg,
     routeName: myScheduleListData?.title,
     routeContent: myScheduleListData?.content,
@@ -167,7 +168,7 @@ function DetailMineSchedulePage() {
         try {
           const response = await getNearbyLocData(lat || 0, lon || 0);
           if (response && response.status === 'SUCCESS') {
-            setAttractions(response.data);
+            setAttractionsCard(response.data);
           } else {
             console.error('Error:', response.error);
           }
@@ -229,8 +230,8 @@ function DetailMineSchedulePage() {
 
           /* 지도 중심점 잡기 */
           if (arr.length > 0 && arr[0] && arr[0].latitude && arr[0].longitude) {
-            setLat(arr[0].latitude);
-            setLon(arr[0].longitude);
+            setLatitude(arr[0].latitude);
+            setLongitude(arr[0].longitude);
             setIsLocationReady(true);
           } else {
             console.error('중심점 비어있음');
@@ -505,7 +506,7 @@ function DetailMineSchedulePage() {
       alert('지원하지 않는 브라우저입니다.');
       setIsLocationReady(false);
     }
-  }, []);
+  }, [isLocationReady]);
 
   return (
     <ScheduleMainPageContainer>
@@ -577,29 +578,29 @@ function DetailMineSchedulePage() {
               isSchedule
             />
           </R.RouteDetailInfoContainer>
-          {/* <S.AttractionsContainer>
-          <S.AttractionsBox>
-            <S.AttrantiosTypeBox>주요 관광지</S.AttrantiosTypeBox>
-            <S.AttractionsOverflow>
-              {attractionsCard.length > 0 &&
-                attractionsCard.map((ele) => (
-                  <S.AttractionCard
-                    img={(ele as ScheduleAttractionsProps).image1}
-                  >
-                    <S.AttractionCardTitle>
-                      {(ele as ScheduleAttractionsProps).address}
-                    </S.AttractionCardTitle>
-                    <S.AttractionCardDetail>
-                      <Icon name="IconFlag" size={20} />
-                      <S.AttractionCardDetailText>
-                        {(ele as ScheduleAttractionsProps).title}
-                      </S.AttractionCardDetailText>
-                    </S.AttractionCardDetail>
-                  </S.AttractionCard>
-                ))}
-            </S.AttractionsOverflow>
-          </S.AttractionsBox>
-        </S.AttractionsContainer> */}
+          <S.AttractionsContainer>
+            <S.AttractionsBox>
+              <S.AttrantiosTypeBox>주요 관광지</S.AttrantiosTypeBox>
+              <S.AttractionsOverflow>
+                {attractionsCard.length > 0 &&
+                  attractionsCard.map((ele) => (
+                    <S.AttractionCard
+                      img={(ele as ScheduleAttractionsProps).img}
+                    >
+                      <S.AttractionCardTitle>
+                        {(ele as ScheduleAttractionsProps).address}
+                      </S.AttractionCardTitle>
+                      <S.AttractionCardDetail>
+                        <Icon name="IconFlag" size={20} />
+                        <S.AttractionCardDetailText>
+                          {(ele as ScheduleAttractionsProps).title}
+                        </S.AttractionCardDetailText>
+                      </S.AttractionCardDetail>
+                    </S.AttractionCard>
+                  ))}
+              </S.AttractionsOverflow>
+            </S.AttractionsBox>
+          </S.AttractionsContainer>
         </S.Overflow>
       </S.Main>
 
@@ -633,6 +634,9 @@ export default DetailMineSchedulePage;
 
 const ScheduleMainPageContainer = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   background-color: #f5f5f5;
+  overflow-y: auto;
 `;

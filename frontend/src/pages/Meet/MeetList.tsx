@@ -2,6 +2,9 @@ import { useEffect, useRef, useCallback, useState } from 'react';
 import Header from '@/components/common/Header/Header';
 import Icon from '../../components/common/Icon/Icon';
 import * as R from '../../components/Style/Route/RouteList.styled';
+import noImage from '../../assets/img/noInterest.png';
+import BaseButton from '../../components/common/BaseButton';
+import * as S from '../../components/Style/My/NoHave.styled';
 import BottomTab from '@/components/common/BottomTab/BottomTab';
 import { useNavigate } from 'react-router-dom';
 import Text from '@/components/common/Text';
@@ -179,6 +182,42 @@ function MeetList() {
           <div className="small-list">
             {groupListData?.pages?.[0]?.data?.groupResDtoList &&
             groupListData.pages[0].data.groupResDtoList.length === 0 ? (
+              <Flex $align="center" $justify="center" $gap={3}>
+                <S.NoHaveContainer>
+                  <img src={noImage} alt="" />
+                  <Text
+                    $bold={true}
+                    $typography="t16"
+                    color="grey2"
+                    style={{ marginBottom: '12px' }}
+                  >
+                    현재 모임이 없어요
+                  </Text>
+                  <Flex direction="column" style={{ textAlign: 'center' }}>
+                    <Text
+                      $typography="t14"
+                      color="grey2"
+                      style={{ marginBottom: '4px' }}
+                    >
+                      모임을 생성하여
+                    </Text>
+                    <Text $typography="t14" color="grey2">
+                      함께하는 일정을 만들어보세요.
+                    </Text>
+                  </Flex>
+
+                  <BaseButton
+                    size="large"
+                    style={{ margin: '36px auto 0' }}
+                    onClick={() => {
+                      navigate('/meet/addMain');
+                    }}
+                  >
+                    모임 생성하기
+                  </BaseButton>
+                </S.NoHaveContainer>
+              </Flex>
+            ) : openSort ? (
               <Text
                 $typography="t14"
                 $bold={true}

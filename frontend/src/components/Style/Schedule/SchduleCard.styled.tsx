@@ -6,8 +6,8 @@ export interface SchduleCardProps {
 }
 
 export const CardContainder = styled.div`
-  width: 90vw;
-  height: 60vw;
+  width: 87vw;
+  height: 55vw;
   margin-bottom: 0.5rem;
   box-sizing: border-box;
   border-radius: 2rem;
@@ -16,8 +16,9 @@ export const CardContainder = styled.div`
 
 export const CardWarp = styled.div<SchduleCardProps>`
   background-image: url(${(props) => props.backGroundImg});
+  border-radius: 2rem;
   background-size: cover;
-  background-size: 98vw;
+  background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
   width: 100%;
@@ -64,7 +65,8 @@ export const CardInfo = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  padding-top: 5rem;
+  /* padding-top: 5rem; */
+  margin-top: 2rem;
 
   span {
     font-size: 2.4rem;

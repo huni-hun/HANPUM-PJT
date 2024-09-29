@@ -26,7 +26,8 @@ export const Main = styled.div`
   height: calc(100vh - 9rem - 6vh);
   display: flex;
   flex-direction: row;
-  overflow-y: auto;
+  overflow-y: hidden;
+  z-index: 1;
 `;
 
 export const Overflow = styled.div`
@@ -37,11 +38,12 @@ export const Overflow = styled.div`
   overflow-y: auto;
   /* margin-top: 13vw; */
   overflow-x: hidden;
-  /* padding-bottom: 7rem; */
+  padding-bottom: 7rem;
   &::-webkit-scrollbar {
     display: none;
   }
 `;
+
 export const RouteInfoContainer = styled.div`
   width: 100vw;
   height: 80vh;
@@ -522,7 +524,7 @@ export const AttractionsContainer = styled.div`
 `;
 export const AttractionsBox = styled.div`
   width: 90%;
-  min-height: 28vh;
+  /* min-height: 28vh; */
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -640,9 +642,10 @@ export const SchduleCardContainer = styled.div`
   align-items: center;
   width: 100vw;
   height: auto;
-  padding-top: 7vh;
+  /* padding-top: 7vh; */
   padding-bottom: 8vh;
   margin: 0 auto;
+  margin-top: 7rem;
 `;
 
 /** feed */
