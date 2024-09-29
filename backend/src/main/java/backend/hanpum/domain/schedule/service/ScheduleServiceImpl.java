@@ -544,10 +544,10 @@ public class ScheduleServiceImpl implements ScheduleService {
             if (items.isArray()) {  // items가 배열인지 확인
                 for (JsonNode item : items) {
                     NearByAttractionResDto attraction = NearByAttractionResDto.builder()
-                            .title(item.path("title").asText())
+                            .name(item.path("title").asText())
                             .address(item.path("addr1").asText())
                             .tel(item.path("tel").asText())
-                            .image1(item.path("firstimage").asText())
+                            .img(item.path("firstimage").asText())
                             .lat(item.path("mapy").asDouble())
                             .lon(item.path("mapx").asDouble())
                             .build();  // Builder 패턴으로 객체 생성

@@ -90,7 +90,7 @@ function RouteListMoreCard(props: RouteListMoreCardProps) {
               likeHandler();
             }}
           />
-          <R.Date>5박6일</R.Date>
+          <R.Date>{`${props.totalDays - 1}박${props.totalDays}일`}</R.Date>
         </R.DateBox>
       </R.ContentBox>
     </R.RouteCard>

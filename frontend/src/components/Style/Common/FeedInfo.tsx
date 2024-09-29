@@ -17,7 +17,7 @@ const FeedInfo = ({
   isMeetFeed,
 }: FeedInfoProps) => {
   return (
-    <M.RouteDateBox isMeetFeed={isMeetFeed}>
+    <M.RouteDateBox $isMeetFeed={isMeetFeed}>
       <S.Hr></S.Hr>
       <R.RouteName>{feedInfoTitle}</R.RouteName>
       <R.StartDateBox>

@@ -16,8 +16,8 @@ const ProgressSchedule = ({
   percentage,
   rate,
   /** 오늘 일정률 */
-  todayStartPoint,
-  todayEndPoint,
+  currentWayPoint,
+  nextWayPoint,
   currentVisitCount,
   todayTotalVisitCount,
   todayTotalDistance,
@@ -50,10 +50,10 @@ const ProgressSchedule = ({
         <R.StartDateBox>
           <R.PlaceBox>
             <R.PlaceText>
-              출발지 <span className="bold-text">{todayStartPoint}</span>
+              현재 경유지 <span className="bold-text">{currentWayPoint}</span>
             </R.PlaceText>
             <R.PlaceText>
-              도착지 <span className="bold-text">{todayEndPoint}</span>
+              다음 경유지 <span className="bold-text">{nextWayPoint}</span>
             </R.PlaceText>
           </R.PlaceBox>
 
@@ -67,16 +67,16 @@ const ProgressSchedule = ({
         <S.ProgressBar percentage={percentage || 0}>
           <div className="progress" />
         </S.ProgressBar>
-        <S.ProgressBox>
+        <S.ProgressText>
+          {/* <S.ProgressText>
+            남은 이동 거리
+            <span className="bold-text">{todayTotalDistance}km</span>
+          </S.ProgressText> */}
           <S.ProgressText>
             경유지 <span className="green_text">{currentVisitCount}</span>/
             {todayTotalVisitCount}
           </S.ProgressText>
-          <S.ProgressText>
-            남은 이동 거리
-            <span className="bold-text">{todayTotalDistance}km</span>
-          </S.ProgressText>
-        </S.ProgressBox>
+        </S.ProgressText>
       </S.SchduleProgressWrap>
     </>
   );
