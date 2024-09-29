@@ -288,22 +288,29 @@ function RouteAddDetailPage() {
     if (wayPoints.length >= 2) {
       setColorValue(colors.main);
 
-      let startlat = wayPoints[wayPoints.length - 2].lon;
-      let startlon = wayPoints[wayPoints.length - 2].lat;
-      let endlat = wayPoints[wayPoints.length - 1].lon;
-      let endlon = wayPoints[wayPoints.length - 1].lat;
+      let startlat = wayPoints[wayPoints.length - 2].lat;
+      let startlon = wayPoints[wayPoints.length - 2].lon;
+      let endlat = wayPoints[wayPoints.length - 1].lat;
+      let endlon = wayPoints[wayPoints.length - 1].lon;
 
       GetDistance(startlat, startlon, endlat, endlon)
         .then((res) => {
           if (res.status === 200 && res.data.status === 'SUCCESS') {
-            let dist = Number(res.data.data[0].distance) / 1000;
-            let cal = 3.5 * 70 * (dist / 4);
-            let duration = dist / 4;
+            let dist = Math.floor(Number(res.data.data[0].distance) / 1000);
+            let cal = Math.floor(3.5 * 70 * (dist / 4));
+            let durationInHours = Math.floor(dist / 4); // 소요 시간 (시간 단위)
+
+            // 시간과 분으로 변환
+            let durationHours = Math.floor(durationInHours); // 시간
+            let durationMinutes = Math.round(
+              (durationInHours - durationHours) * 60,
+            ); // 분
 
             let curWay = [...wayPoints];
-            curWay[curWay.length - 2].distance = `${dist}`;
-            curWay[curWay.length - 2].calorie = `${cal}`;
-            curWay[curWay.length - 2].duration = `${duration}`;
+            curWay[curWay.length - 1].distance = `${dist}km`;
+            curWay[curWay.length - 1].calorie = `${cal}`;
+            curWay[curWay.length - 1].duration =
+              `${durationHours}시간${durationMinutes}분`;
 
             curWay.map((ele: WayPointReqDto, idx: number) => {
               if (idx === 0) {
@@ -376,8 +383,13 @@ function RouteAddDetailPage() {
         arr.push(ele);
       }
     });
-    arr[0].type = '출발지';
-    arr[arr.length - 1].type = '도착지';
+    if (arr.length > 0) {
+      arr[0].type = '출발지';
+    }
+
+    if (arr.length > 1) {
+      arr[arr.length - 1].type = '도착지';
+    }
 
     setWayPoints(() => {
       const updatedWayPoints = arr;
@@ -433,6 +445,7 @@ function RouteAddDetailPage() {
                   onClick={() => {
                     setSelectedDay(ele);
                   }}
+                  key={ele}
                 >
                   {`Day ${ele}`}
                   <R.DayDeleteBox
@@ -496,6 +509,7 @@ function RouteAddDetailPage() {
                 <R.DetailWayOverflow>
                   {wayPoints.map((ele: WayPointReqDto, idx: number) => (
                     <RoutePlaceCard
+                      key={idx}
                       routeAddress={ele.address}
                       routeId={idx}
                       routeName={ele.name}
@@ -554,12 +568,11 @@ function RouteAddDetailPage() {
             children="경로완성"
             color="#ffffff"
             onClick={() => {
-              console.log(addRoute);
               if (
                 addRoute.courseDayReqDtoList.length > 0 &&
                 addRoute.courseDayReqDtoList[0].wayPointReqDtoList.length > 0
               ) {
-                console.log(addRoute);
+                // console.log(addRoute);
                 AddRoute(addRoute)
                   .then((res) => {
                     if (res.status === 200) {

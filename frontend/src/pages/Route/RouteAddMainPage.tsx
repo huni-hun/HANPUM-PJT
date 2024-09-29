@@ -7,6 +7,8 @@ import Header from '@/components/common/Header/Header';
 import { colors } from '@/styles/colorPalette';
 import { useNavigate } from 'react-router-dom';
 import useImageCompression from '@/hooks/global/useImageCompression';
+import { convertImageToFile } from '@/utils/util';
+import { setDefaultImg } from '@/utils/Image';
 
 function RouteAddMainPage() {
   const navigator = useNavigate();
@@ -219,7 +221,7 @@ function RouteAddMainPage() {
               </R.TypeClosedCard>
             </R.CardClosed>
           ) : (
-            <R.TypeCardOpen isChecked={typeChecked.length > 0}>
+            <R.TypeCardOpen $isChecked={typeChecked.length > 0}>
               <R.ExplanationCardTitle>
                 경로 타입을 선택해주세요.
               </R.ExplanationCardTitle>
@@ -239,6 +241,7 @@ function RouteAddMainPage() {
                         setTypeChecked(newArr);
                       }}
                       $isLong={ele.length > 3}
+                      key={ele}
                     >
                       <R.TypeTextBox>
                         <R.TypeText>{ele}</R.TypeText>
@@ -268,9 +271,11 @@ function RouteAddMainPage() {
                         }
                       }
                     }}
+                    key={ele}
                   >
                     <R.TypeCheckBox
-                      checked={typeChecked.includes(ele)}
+                      key={ele}
+                      defaultChecked={typeChecked.includes(ele)}
                       type="checkbox"
                     />
                     <R.TypeLabel>{ele}</R.TypeLabel>
@@ -321,7 +326,12 @@ function RouteAddMainPage() {
             fontSize={1.6}
             children="다음"
             color="#ffffff"
-            onClick={() => {
+            onClick={async () => {
+              if (imgData === null) {
+                setImgData(
+                  await convertImageToFile(setDefaultImg(imgSrc || null)),
+                );
+              }
               if (explanationReady) {
                 navigator('/route/addDetail', {
                   state: {

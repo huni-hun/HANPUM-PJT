@@ -32,7 +32,14 @@ function RouteListMorePage() {
     {
       getNextPageParam: (lastPage, pages) => {
         // console.log(lastPage.data.data.courseListMap[key]);
-        const exist = lastPage.data.data.courseListMap[key].length >= 8;
+        let exist = false;
+
+        if (key === '') {
+          exist = lastPage.data.data.courseListMap.searchResult.length >= 8;
+        } else {
+          exist = lastPage.data.data.courseListMap[key].length >= 8;
+        }
+
         if (!exist) return undefined;
         return pages.length;
       },
@@ -79,29 +86,47 @@ function RouteListMorePage() {
     <R.Container>
       <Header
         purpose="title"
-        title={key}
+        title={key === '' ? '인기있는 경로' : key}
         clickBack={() => {
           navigator(-1);
         }}
       />
       <R.MainContainer>
-        {RouteMoreList?.pages.map((pages) =>
-          pages.data.data.courseListMap[key].map((ele: any) => (
-            <RouteListMoreCard
-              id={ele.courseId}
-              title={ele.courseName}
-              start={ele.startPoint}
-              end={ele.endPoint}
-              score={ele.scoreAvg}
-              review={ele.commentCnt}
-              img={ele.backgroundImg}
-              interestFlag={ele.interestFlag}
-              totalDays={ele.totalDays}
-              routeId={String(ele.courseId)}
-              distance={ele.totalDistance}
-            />
-          )),
-        )}
+        {key === ''
+          ? RouteMoreList?.pages.map((pages) =>
+              pages.data.data.courseListMap.searchResult.map((ele: any) => (
+                <RouteListMoreCard
+                  id={ele.courseId}
+                  title={ele.courseName}
+                  start={ele.startPoint}
+                  end={ele.endPoint}
+                  score={ele.scoreAvg}
+                  review={ele.commentCnt}
+                  img={ele.backgroundImg}
+                  interestFlag={ele.interestFlag}
+                  totalDays={ele.totalDays}
+                  routeId={String(ele.courseId)}
+                  distance={ele.totalDistance}
+                />
+              )),
+            )
+          : RouteMoreList?.pages.map((pages) =>
+              pages.data.data.courseListMap[key].map((ele: any) => (
+                <RouteListMoreCard
+                  id={ele.courseId}
+                  title={ele.courseName}
+                  start={ele.startPoint}
+                  end={ele.endPoint}
+                  score={ele.scoreAvg}
+                  review={ele.commentCnt}
+                  img={ele.backgroundImg}
+                  interestFlag={ele.interestFlag}
+                  totalDays={ele.totalDays}
+                  routeId={String(ele.courseId)}
+                  distance={ele.totalDistance}
+                />
+              )),
+            )}
         <div ref={loadMoreRef} style={{ height: '1px' }} />
       </R.MainContainer>
     </R.Container>

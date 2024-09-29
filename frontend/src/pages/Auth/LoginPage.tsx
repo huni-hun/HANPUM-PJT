@@ -44,6 +44,8 @@ function LoginPage() {
       const memberType = Cookies.get('memberType');
       const accessToken = Cookies.get('accessToken');
 
+      // console.log('여기?');
+
       if (accessToken) {
         const token = encodeToken(accessToken.split('+')[1]);
 
@@ -51,12 +53,12 @@ function LoginPage() {
           localStorage.setItem('token', token);
           Cookies.remove('accessToken', { path: '/' });
         }
-        if (memberType === 'KAKAO_INCOMPLETE') {
-          navigate('/signup');
-        } else {
-          setAuthEnticate(true);
-          navigate('/home');
-        }
+        // if (memberType === 'KAKAO_INCOMPLETE') {
+        //   navigate('/signup');
+        // } else {
+        //   setAuthEnticate(true);
+        //   navigate('/home');
+        // }
       }
     }
   }, [tryKakao]);

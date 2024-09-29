@@ -40,10 +40,10 @@ function RouteList() {
 
   useEffect(() => {
     const data: RouteListProps[] = [];
-    getRouteList('해안길', 4)
+    getRouteList('', 4)
       .then((result) => {
         if (result.status === 200) {
-          result.data.data.courseListMap['해안길'].map((ele: any) => {
+          result.data.data.courseListMap.searchResult.map((ele: any) => {
             let data: RouteListProps = {
               routeName: ele.courseName,
               routeContent: ele.content,
@@ -145,48 +145,15 @@ function RouteList() {
           navigator('/route/list/search');
         }}
         plusBtnclick={() => navigator('/route/addMain')}
+        isRoute
       />
       <R.MainContainer>
-        <R.RouteCardContainer>
-          <R.RouteTypeHeader>
-            {userInfo && (
-              <R.TypeTitle>
-                {userInfo.data.nickname}님에게 잘 맞는 경로
-              </R.TypeTitle>
-            )}
-            <R.MoreButton>
-              <R.MoreText
-                onClick={() => {
-                  clickMoreBtn('해안길');
-                }}
-              >
-                더보기
-              </R.MoreText>
-              <Icon name="IconLeftBlackArrow" size={10} />
-            </R.MoreButton>
-          </R.RouteTypeHeader>
-          <R.CardContainer>
-            <R.BlankBox />
-            <R.OverFlow>
-              {arr.map((ele) => (
-                <RouteCard
-                  ele={ele}
-                  startDate={startDate}
-                  type={type}
-                  recruitmentPeriod={recruitmentPeriod}
-                  key={ele.routeId}
-                />
-              ))}
-            </R.OverFlow>
-            <R.BlankBox />
-          </R.CardContainer>
-        </R.RouteCardContainer>
         <R.RouteCardContainer>
           <R.RouteTypeHeader>
             <R.TypeTitle>지금 가장 인기 있는 경로</R.TypeTitle>
             <R.MoreButton
               onClick={() => {
-                clickMoreBtn('해안길');
+                clickMoreBtn('');
               }}
             >
               <R.MoreText>더보기</R.MoreText>
