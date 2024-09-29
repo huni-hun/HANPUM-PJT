@@ -27,7 +27,7 @@ import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
 import Header from '@/components/common/Header/Header';
 import Icon from '@/components/common/Icon/Icon';
 import SearchPlacePage from './SearchPlacePage';
-import { GetDistance, GetLineData } from '@/api/route/POST';
+import { GetDistance, GetLineData, GetLineDataKakao } from '@/api/route/POST';
 import { RetouchRoute } from '@/api/route/PUT';
 import { toast } from 'react-toastify';
 
@@ -56,6 +56,7 @@ function RouteDetailRetouchPage() {
   const [attractionsr, setAttractionsr] = useState<AttractionReqDto[]>([]);
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
   const [loadAll, setLoadAll] = useState<boolean>(false);
+  const [kakaolinePath, setKakaoLinePath] = useState<MapLinePathProps[]>([]);
   const [attractionsCard, setAttractionsCard] = useState<
     AttractionsAddCardProps[]
   >([]);
@@ -283,10 +284,13 @@ function RouteDetailRetouchPage() {
     setMarker([]);
     let arr: DaysOfRouteProps[] = [];
     let lines: MapLinePathProps[] = [];
+    let kakaose: LineStartEndProps[] = [];
+    let kakaoData: MapLinePathProps[] = [];
     if (dateDetail.length > 0) {
       if (dateDetail[selectedDay - 1].wayPointReqDtoList.length > 0) {
         wayPoints.sort((a: any, b: any) => a.routePoint - b.routePoint);
         wayPoints.map((ele: WayPointReqDto, idx: number) => {
+          // console.log(ele);
           let data: DaysOfRouteProps = {
             routeName: ele.name,
             routeAddress: ele.address,
@@ -303,6 +307,15 @@ function RouteDetailRetouchPage() {
             x: ele.lat,
             y: ele.lon,
           };
+          if (idx === 0 || idx === wayPoints.length - 1) {
+            let kse: LineStartEndProps = {
+              x: ele.lat,
+              y: ele.lon,
+            };
+            kakaose.push(kse);
+          } else {
+            kakaoData.push(line);
+          }
 
           lines.push(line);
 
@@ -313,6 +326,8 @@ function RouteDetailRetouchPage() {
           setMarker((pre) => [...pre, markerData]);
         });
         setLinePath(lines);
+        setSe(kakaose);
+        setKakaoLinePath(kakaoData);
         setWayPoints(dateDetail[selectedDay - 1].wayPointReqDtoList);
       }
       setLoadAll(true);
@@ -322,9 +337,10 @@ function RouteDetailRetouchPage() {
   }, [wayPoints]);
 
   useEffect(() => {
-    if (linePath.length > 0) {
+    if (linePath.length > 1) {
       const mapLines: any[] = [];
       if (linePath.length <= 5) {
+        // console.log(linePath);
         GetLineData(linePath)
           .then((res) => {
             if (res.status === 200 && res.data.status === 'SUCCESS') {
@@ -344,7 +360,34 @@ function RouteDetailRetouchPage() {
             }
           })
           .catch((err) => {
-            toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+            GetLineDataKakao(se[0], se[1], kakaolinePath)
+              .then((result) => {
+                if (result.status === 200 && result.data.status === 'SUCCESS') {
+                  result.data.data.forEach((ele: any, idx: number) => {
+                    wayPoints.map((el: WayPointReqDto, i: number) => {
+                      // eslint-disable-next-line no-self-assign
+                      if (idx === i) {
+                        el.vertexes = ele.vertexes;
+                      }
+                    });
+
+                    ele.vertexes.forEach((vertex: any, index: number) => {
+                      if (index % 2 === 0) {
+                        mapLines.push(
+                          new window.kakao.maps.LatLng(
+                            ele.vertexes[index + 1],
+                            ele.vertexes[index],
+                          ),
+                        );
+                      }
+                    });
+                  });
+                  setMapLines([...mapLines]); // 복사본으로 상태 업데이트
+                }
+              })
+              .catch((err) => {
+                toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+              });
           });
       } else {
         let arr: MapLinePathProps[] = [];
@@ -374,7 +417,37 @@ function RouteDetailRetouchPage() {
                   }
                 })
                 .catch((err) => {
-                  toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+                  GetLineDataKakao(se[0], se[1], kakaolinePath)
+                    .then((result) => {
+                      if (
+                        result.status === 200 &&
+                        result.data.status === 'SUCCESS'
+                      ) {
+                        result.data.data.forEach((ele: any, idx: number) => {
+                          wayPoints.map((el: WayPointReqDto, i: number) => {
+                            // eslint-disable-next-line no-self-assign
+                            if (idx === i) {
+                              el.vertexes = ele.vertexes;
+                            }
+                          });
+
+                          ele.vertexes.forEach((vertex: any, index: number) => {
+                            if (index % 2 === 0) {
+                              mapLines.push(
+                                new window.kakao.maps.LatLng(
+                                  ele.vertexes[index + 1],
+                                  ele.vertexes[index],
+                                ),
+                              );
+                            }
+                          });
+                        });
+                        setMapLines([...mapLines]); // 복사본으로 상태 업데이트
+                      }
+                    })
+                    .catch((err) => {
+                      toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+                    });
                 }),
             );
 

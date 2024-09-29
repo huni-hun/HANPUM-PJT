@@ -383,8 +383,13 @@ function RouteAddDetailPage() {
         arr.push(ele);
       }
     });
-    arr[0].type = '출발지';
-    arr[arr.length - 1].type = '도착지';
+    if (arr.length > 0) {
+      arr[0].type = '출발지';
+    }
+
+    if (arr.length > 1) {
+      arr[arr.length - 1].type = '도착지';
+    }
 
     setWayPoints(() => {
       const updatedWayPoints = arr;
@@ -440,6 +445,7 @@ function RouteAddDetailPage() {
                   onClick={() => {
                     setSelectedDay(ele);
                   }}
+                  key={ele}
                 >
                   {`Day ${ele}`}
                   <R.DayDeleteBox
@@ -503,6 +509,7 @@ function RouteAddDetailPage() {
                 <R.DetailWayOverflow>
                   {wayPoints.map((ele: WayPointReqDto, idx: number) => (
                     <RoutePlaceCard
+                      key={idx}
                       routeAddress={ele.address}
                       routeId={idx}
                       routeName={ele.name}

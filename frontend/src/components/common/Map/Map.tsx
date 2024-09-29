@@ -236,6 +236,10 @@ function Map(props: MapProps) {
         <InfoModal>
           <InfoTitle>경로 주의사항</InfoTitle>
           <InfoText>경로 안내는 특정 지역만 제공해드립니다.</InfoText>
+          <InfoText>
+            도보 경로 미안내 지역은 자동차 경로를 포함하여 제공됩니다.
+          </InfoText>
+          <InfoBoldText>도보 경로 안내지역</InfoBoldText>
           <InfoBoldText>서울특별시, 수도권 시, 6대광역시, 제주도</InfoBoldText>
           <InfoBoldText>강원도</InfoBoldText>
           <InfoText>

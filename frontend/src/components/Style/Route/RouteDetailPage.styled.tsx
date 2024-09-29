@@ -808,7 +808,7 @@ export const ReviewHeader = styled.div`
 `;
 
 export const WriteTextBox = styled.div`
-  width: 15%;
+  width: 20%;
   height: 70%;
   display: flex;
   justify-content: end;

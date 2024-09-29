@@ -34,7 +34,7 @@ import {
   RouteReviewProps,
 } from '@/models/route';
 import { getRouteDayDetail, getRouteDetail } from '@/api/route/GET';
-import { GetLineData } from '@/api/route/POST';
+import { GetLineData, GetLineDataKakao } from '@/api/route/POST';
 import BottomTab from '@/components/common/BottomTab/BottomTab';
 import { DeleteSchedule } from '@/api/schedule/Delete';
 import { toast } from 'react-toastify';
@@ -42,6 +42,7 @@ import { AxiosError } from 'axios';
 import Icon from '@/components/common/Icon/Icon';
 import { PutScheduleArrive } from '@/api/schedule/PUT';
 import { cutAddress } from '@/utils/util';
+import { setDefaultImg } from '@/utils/Image';
 
 function DetailMineSchedulePage() {
   const BtnClick = () => {};
@@ -83,6 +84,7 @@ function DetailMineSchedulePage() {
   const [selected, setSelected] = useState<string>('course');
   const [selectedDay, setSelectedDay] = useState<number>(1);
   const [linePath, setLinePath] = useState<MapLinePathProps[]>([]);
+  const [kakaolinePath, setKakaoLinePath] = useState<MapLinePathProps[]>([]);
   const [arriveGreen, setArriveGreen] = useState<boolean[]>([]);
   /** 현재 경유지 -> 다음 경유지 도착  */
   const [wayPoints, setWayPoints] = useState<DaysOfRouteProps[]>([]);
@@ -132,7 +134,7 @@ function DetailMineSchedulePage() {
   /** feed 더미 데이터 */
   /** === useState (routeData) */
   const feedData = {
-    routeFeedImg: myScheduleListData?.backgroundImg || goyuMY,
+    routeFeedImg: setDefaultImg(myScheduleListData?.backgroundImg || ''),
     routeUserImg: memberImg,
     routeName: myScheduleListData?.title,
     routeContent: myScheduleListData?.content,
@@ -167,7 +169,7 @@ function DetailMineSchedulePage() {
         try {
           const response = await getNearbyLocData(lat || 0, lon || 0);
           if (response && response.status === 'SUCCESS') {
-            setAttractions(response.data);
+            setAttractionsCard(response.data);
           } else {
             console.error('Error:', response.error);
           }
@@ -192,6 +194,8 @@ function DetailMineSchedulePage() {
         if (result.status === 'SUCCESS') {
           let arr: DaysOfRouteProps[] = [];
           let lines: MapLinePathProps[] = [];
+          let kakaose: LineStartEndProps[] = [];
+          let kakaoData: MapLinePathProps[] = [];
           /** 경유지 turnGreen 상태관리 */
           let greenStates: boolean[] = [];
           result.data.scheduleWayPointList.map((ele: any, idx: number) => {
@@ -216,6 +220,19 @@ function DetailMineSchedulePage() {
 
             lines.push(line);
 
+            if (
+              idx === 0 ||
+              idx === result.data.scheduleWayPointList.length - 1
+            ) {
+              let kse: LineStartEndProps = {
+                x: ele.lat,
+                y: ele.lon,
+              };
+              kakaose.push(kse);
+            } else {
+              kakaoData.push(line);
+            }
+
             let markerData: LineStartEndProps = {
               x: ele.lat,
               y: ele.lon,
@@ -226,14 +243,16 @@ function DetailMineSchedulePage() {
           setDayOfRoute(arr);
           setLinePath(lines);
           setWayPoints(arr);
+          setSe(kakaose);
+          setKakaoLinePath(kakaoData);
 
           /* 지도 중심점 잡기 */
           if (arr.length > 0 && arr[0] && arr[0].latitude && arr[0].longitude) {
-            setLat(arr[0].latitude);
-            setLon(arr[0].longitude);
+            setLatitude(arr[0].latitude);
+            setLongitude(arr[0].longitude);
             setIsLocationReady(true);
           } else {
-            console.error('중심점 비어있음');
+            // console.error('중심점 비어있음');
             setIsLocationReady(false);
           }
         }
@@ -264,7 +283,35 @@ function DetailMineSchedulePage() {
             }
           })
           .catch((err) => {
-            toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+            // console.log(se);
+            GetLineDataKakao(se[0], se[1], kakaolinePath)
+              .then((result) => {
+                if (result.status === 200 && result.data.status === 'SUCCESS') {
+                  result.data.data.forEach((ele: any, idx: number) => {
+                    // wayPoints.map((el: WayPointReqDto, i: number) => {
+                    //   // eslint-disable-next-line no-self-assign
+                    //   if (idx === i) {
+                    //     el.vertexes = ele.vertexes;
+                    //   }
+                    // });
+
+                    ele.vertexes.forEach((vertex: any, index: number) => {
+                      if (index % 2 === 0) {
+                        mapLines.push(
+                          new window.kakao.maps.LatLng(
+                            ele.vertexes[index + 1],
+                            ele.vertexes[index],
+                          ),
+                        );
+                      }
+                    });
+                  });
+                  setMapLines([...mapLines]); // 복사본으로 상태 업데이트
+                }
+              })
+              .catch((err) => {
+                toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+              });
           });
       } else {
         let arr: MapLinePathProps[] = [];
@@ -294,7 +341,37 @@ function DetailMineSchedulePage() {
                   }
                 })
                 .catch((err) => {
-                  toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+                  GetLineDataKakao(se[0], se[1], kakaolinePath)
+                    .then((result) => {
+                      if (
+                        result.status === 200 &&
+                        result.data.status === 'SUCCESS'
+                      ) {
+                        result.data.data.forEach((ele: any, idx: number) => {
+                          // wayPoints.map((el: WayPointReqDto, i: number) => {
+                          //   // eslint-disable-next-line no-self-assign
+                          //   if (idx === i) {
+                          //     el.vertexes = ele.vertexes;
+                          //   }
+                          // });
+
+                          ele.vertexes.forEach((vertex: any, index: number) => {
+                            if (index % 2 === 0) {
+                              mapLines.push(
+                                new window.kakao.maps.LatLng(
+                                  ele.vertexes[index + 1],
+                                  ele.vertexes[index],
+                                ),
+                              );
+                            }
+                          });
+                        });
+                        setMapLines([...mapLines]); // 복사본으로 상태 업데이트
+                      }
+                    })
+                    .catch((err) => {
+                      toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+                    });
                 }),
             );
 
@@ -505,7 +582,7 @@ function DetailMineSchedulePage() {
       alert('지원하지 않는 브라우저입니다.');
       setIsLocationReady(false);
     }
-  }, []);
+  }, [isLocationReady]);
 
   return (
     <ScheduleMainPageContainer>
@@ -564,8 +641,8 @@ function DetailMineSchedulePage() {
               linePath={mapLines}
               selected={selected}
               selectedDay={selectedDay}
-              latitude={latitude}
-              longitude={longitude}
+              latitude={lat!}
+              longitude={lon!}
               dayData={routeDayData}
               attractions={attractions}
               setLoading={setLoading}
@@ -577,29 +654,29 @@ function DetailMineSchedulePage() {
               isSchedule
             />
           </R.RouteDetailInfoContainer>
-          {/* <S.AttractionsContainer>
-          <S.AttractionsBox>
-            <S.AttrantiosTypeBox>주요 관광지</S.AttrantiosTypeBox>
-            <S.AttractionsOverflow>
-              {attractionsCard.length > 0 &&
-                attractionsCard.map((ele) => (
-                  <S.AttractionCard
-                    img={(ele as ScheduleAttractionsProps).image1}
-                  >
-                    <S.AttractionCardTitle>
-                      {(ele as ScheduleAttractionsProps).address}
-                    </S.AttractionCardTitle>
-                    <S.AttractionCardDetail>
-                      <Icon name="IconFlag" size={20} />
-                      <S.AttractionCardDetailText>
-                        {(ele as ScheduleAttractionsProps).title}
-                      </S.AttractionCardDetailText>
-                    </S.AttractionCardDetail>
-                  </S.AttractionCard>
-                ))}
-            </S.AttractionsOverflow>
-          </S.AttractionsBox>
-        </S.AttractionsContainer> */}
+          <S.AttractionsContainer>
+            <S.AttractionsBox>
+              <S.AttrantiosTypeBox>주요 관광지</S.AttrantiosTypeBox>
+              <S.AttractionsOverflow>
+                {attractionsCard.length > 0 &&
+                  attractionsCard.map((ele) => (
+                    <S.AttractionCard
+                      img={(ele as ScheduleAttractionsProps).img}
+                    >
+                      <S.AttractionCardTitle>
+                        {(ele as ScheduleAttractionsProps).address}
+                      </S.AttractionCardTitle>
+                      <S.AttractionCardDetail>
+                        <Icon name="IconFlag" size={20} />
+                        <S.AttractionCardDetailText>
+                          {(ele as ScheduleAttractionsProps).title}
+                        </S.AttractionCardDetailText>
+                      </S.AttractionCardDetail>
+                    </S.AttractionCard>
+                  ))}
+              </S.AttractionsOverflow>
+            </S.AttractionsBox>
+          </S.AttractionsContainer>
         </S.Overflow>
       </S.Main>
 
@@ -633,6 +710,9 @@ export default DetailMineSchedulePage;
 
 const ScheduleMainPageContainer = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   background-color: #f5f5f5;
+  overflow-y: auto;
 `;

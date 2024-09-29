@@ -19,7 +19,7 @@ const fadeOut = keyframes`
   }
 `;
 
-export const Container = styled.div<{ isVisible: boolean }>`
+export const Container = styled.div<{ $isVisible: boolean }>`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.45);
@@ -28,7 +28,7 @@ export const Container = styled.div<{ isVisible: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: ${(props) => (props.isVisible ? fadeIn : fadeOut)} 0.5s ease
+  animation: ${(props) => (props.$isVisible ? fadeIn : fadeOut)} 0.5s ease
     forwards;
 `;
 

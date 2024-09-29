@@ -32,7 +32,7 @@ import {
   getRouteDayDetail,
   getRouteDetail,
 } from '@/api/route/GET';
-import { GetLineData } from '@/api/route/POST';
+import { GetLineData, GetLineDataKakao } from '@/api/route/POST';
 import RouteDetailInfo from '@/components/Style/Route/RouteDetailInfo';
 import BottomSheet from '@/components/Style/Route/BottomSheet';
 import MeetModal from '@/components/Meet/MeetModal';
@@ -87,6 +87,7 @@ function MeetDetailPage() {
   const [reviews, setReviews] = useState<RouteReviewProps[]>([]);
   const [selectedIdx, setSelectedIdx] = useState<number>(-1);
   const [mapLines, setMapLines] = useState<any[]>([]);
+  const [kakaolinePath, setKakaoLinePath] = useState<MapLinePathProps[]>([]);
 
   const BtnClick = () => {};
   const navigate = useNavigate();
@@ -157,7 +158,9 @@ function MeetDetailPage() {
       if (result.status === 200) {
         let arr: DaysOfRouteProps[] = [];
         let lines: MapLinePathProps[] = [];
-        result.data.data.wayPoints.map((ele: any) => {
+        let kakaose: LineStartEndProps[] = [];
+        let kakaoData: MapLinePathProps[] = [];
+        result.data.data.wayPoints.map((ele: any, idx: number) => {
           let data: DaysOfRouteProps = {
             routeName: ele.name,
             routeAddress: ele.address,
@@ -176,6 +179,15 @@ function MeetDetailPage() {
           };
 
           lines.push(line);
+          if (idx === 0 || idx === result.data.data.wayPoints.length - 1) {
+            let kse: LineStartEndProps = {
+              x: ele.lat,
+              y: ele.lon,
+            };
+            kakaose.push(kse);
+          } else {
+            kakaoData.push(line);
+          }
 
           let markerData: LineStartEndProps = {
             x: ele.lat,
@@ -186,6 +198,8 @@ function MeetDetailPage() {
         arr.sort((a: any, b: any) => a.routePoint - b.routePoint);
         setDayOfRoute(arr);
         setLinePath(lines);
+        setSe(kakaose);
+        setKakaoLinePath(kakaoData);
 
         // setLatitude(arr[0].latitude);
         // setLongitude(arr[0].longitude);
@@ -240,7 +254,34 @@ function MeetDetailPage() {
             }
           })
           .catch((err) => {
-            toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+            GetLineDataKakao(se[0], se[1], kakaolinePath)
+              .then((result) => {
+                if (result.status === 200 && result.data.status === 'SUCCESS') {
+                  result.data.data.forEach((ele: any, idx: number) => {
+                    // wayPoints.map((el: WayPointReqDto, i: number) => {
+                    //   // eslint-disable-next-line no-self-assign
+                    //   if (idx === i) {
+                    //     el.vertexes = ele.vertexes;
+                    //   }
+                    // });
+
+                    ele.vertexes.forEach((vertex: any, index: number) => {
+                      if (index % 2 === 0) {
+                        mapLines.push(
+                          new window.kakao.maps.LatLng(
+                            ele.vertexes[index + 1],
+                            ele.vertexes[index],
+                          ),
+                        );
+                      }
+                    });
+                  });
+                  setMapLines([...mapLines]); // 복사본으로 상태 업데이트
+                }
+              })
+              .catch((err) => {
+                toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+              });
           });
       } else {
         let arr: MapLinePathProps[] = [];
@@ -270,7 +311,37 @@ function MeetDetailPage() {
                   }
                 })
                 .catch((err) => {
-                  toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+                  GetLineDataKakao(se[0], se[1], kakaolinePath)
+                    .then((result) => {
+                      if (
+                        result.status === 200 &&
+                        result.data.status === 'SUCCESS'
+                      ) {
+                        result.data.data.forEach((ele: any, idx: number) => {
+                          // wayPoints.map((el: WayPointReqDto, i: number) => {
+                          //   // eslint-disable-next-line no-self-assign
+                          //   if (idx === i) {
+                          //     el.vertexes = ele.vertexes;
+                          //   }
+                          // });
+
+                          ele.vertexes.forEach((vertex: any, index: number) => {
+                            if (index % 2 === 0) {
+                              mapLines.push(
+                                new window.kakao.maps.LatLng(
+                                  ele.vertexes[index + 1],
+                                  ele.vertexes[index],
+                                ),
+                              );
+                            }
+                          });
+                        });
+                        setMapLines([...mapLines]); // 복사본으로 상태 업데이트
+                      }
+                    })
+                    .catch((err) => {
+                      toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+                    });
                 }),
             );
 
