@@ -232,6 +232,7 @@ function MainPage() {
           setRouteLoading(false);
         });
       }
+      setRouteLoading(false);
     });
   }, [setRouteLoading]);
 
