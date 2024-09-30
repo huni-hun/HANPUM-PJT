@@ -58,8 +58,9 @@ export const buttonSizeMap = {
   `,
   banner: css`
     width: 27rem;
-    height: 5.8rem;
+    height: 3rem;
     border-radius: 15px;
+    margin-bottom: 2vh;
   `,
 };
 
