@@ -146,7 +146,7 @@ export default MyPage;
 
 const MyPageContainer = styled.div`
   width: 100vw;
-  height: 100%;
+  /* height: 100%;*/
   background-color: ${colors.white};
 
   .profile {
@@ -179,6 +179,7 @@ const MyPageContainer = styled.div`
     padding: 0 16px;
 
     background-color: ${colors.white};
+    margin-bottom: 20px;
 
     .logout-container {
       display: flex;
@@ -191,18 +192,19 @@ const MyPageContainer = styled.div`
 
   .banner {
     width: 100%;
-    height: 105px;
-    background-color: #e0e0e0;
+    /* height: 105px; */
+    background-color: #f5f5f5;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     /* justify-content: center; */
     padding-bottom: 7rem;
+    /* margin-bottom: 7rem; */
     gap: 8px;
     position: relative;
     overflow: hidden;
-    margin-top: 20px;
+    padding-bottom: 6rem;
     img {
       position: absolute;
     }

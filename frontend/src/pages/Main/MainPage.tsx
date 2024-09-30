@@ -206,7 +206,7 @@ function MainPage() {
   useEffect(() => {
     setRouteLoading(true);
     getRouteList('', 2).then((result) => {
-      console.log(routeLoading);
+      // console.log(routeLoading);
       if (result.status === 200) {
         result.data.data.courseListMap.searchResult.map((ele: any) => {
           let data: RouteListProps = {
