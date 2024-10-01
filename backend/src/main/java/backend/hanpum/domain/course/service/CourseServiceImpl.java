@@ -731,8 +731,8 @@ public class CourseServiceImpl implements CourseService {
         ObjectMapper objectMapper = new ObjectMapper();
 
         MultiWaypointSearchReqDto origin = multiWaypointSearchReqDtoList.get(0);
-        MultiWaypointSearchReqDto destination = multiWaypointSearchReqDtoList.get(multiWaypointSearchReqDtoList.size() - 1);
-        List<MultiWaypointSearchReqDto> waypoints = multiWaypointSearchReqDtoList.subList(1, multiWaypointSearchReqDtoList.size() - 1);
+        MultiWaypointSearchReqDto destination = multiWaypointSearchReqDtoList.get(1);
+        List<MultiWaypointSearchReqDto> waypoints = multiWaypointSearchReqDtoList.subList(2, multiWaypointSearchReqDtoList.size());
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("origin", origin);
