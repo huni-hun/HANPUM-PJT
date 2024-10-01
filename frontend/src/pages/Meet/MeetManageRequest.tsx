@@ -136,14 +136,16 @@ function MeetManageRequest() {
             onChange={handleInputChange}
             placeholder="지원글을 입력하세요"
           />
-          <BaseButton
-            size="large"
-            style={{ margin: '15rem 3rem' }}
-            onClick={handleApply}
-            disabled={loading}
-          >
-            {loading ? '처리 중...' : '신청하기'}
-          </BaseButton>
+          <M.InfoButtonWrap>
+            <BaseButton
+              size="large"
+              // style={{ margin: '15rem 3.5rem' }}
+              onClick={handleApply}
+              disabled={loading}
+            >
+              {loading ? '처리 중...' : '신청하기'}
+            </BaseButton>
+          </M.InfoButtonWrap>
         </M.InfoInputBox>
       </M.InfoWrap>
     </MainPageContainer>

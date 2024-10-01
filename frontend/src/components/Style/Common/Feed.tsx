@@ -33,7 +33,7 @@ const FeedContainer = ({
           <R.UserImgBox>
             <img src={routeData?.routeUserImg} />
           </R.UserImgBox>
-          <R.UserName>{routeData?.routeName}</R.UserName>
+          <R.UserName>{routeData?.readerName}</R.UserName>
         </R.UserContainer>
       ) : (
         <></>

@@ -111,7 +111,7 @@ export const ScheduleMainContainer = styled.div`
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
-  margin-top: 2rem;
+  /* margin-top: 2rem; */
   padding-bottom: 2rem;
   .marginBottom {
     margin-bottom: 7vh;
@@ -140,7 +140,7 @@ export const SchduleProgressWrap = styled.div<StyleProps>`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  padding-top: 2rem;
+  padding-top: 4rem;
 `;
 
 export const PercentBox = styled.div`
