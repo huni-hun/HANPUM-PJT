@@ -169,8 +169,6 @@ function RouteAddDetailPage() {
             }
           })
           .catch((err) => {
-            console.log(se);
-            console.log(kakaolinePath);
             GetLineDataKakao(se[0], se[1], kakaolinePath)
               .then((result) => {
                 if (result.status === 200 && result.data.status === 'SUCCESS') {
