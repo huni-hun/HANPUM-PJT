@@ -25,10 +25,13 @@ function Entry() {
 
       <Flex direction="column" $align="center" $justify="center">
         <Text $bold={true} $typography="t16" style={{ lineHeight: '25px' }}>
-          이제는 국토대장정을
+          '한' 한국을 '품' 품는 여정
         </Text>
         <Text $bold={true} $typography="t16" style={{ lineHeight: '25px' }}>
-          한품과 함께해요!
+          국내 최초 국토재장정 종합 앱 서비스 '한품은'
+        </Text>
+        <Text $bold={true} $typography="t16" style={{ lineHeight: '25px' }}>
+          다양한 지역을 포용하는 여정에 동행합니다.
         </Text>
       </Flex>
       <div className="round">
