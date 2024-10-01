@@ -344,7 +344,12 @@ function RouteDetailRetouchPage() {
         GetLineData(linePath)
           .then((res) => {
             if (res.status === 200 && res.data.status === 'SUCCESS') {
-              res.data.data.forEach((ele: any) => {
+              res.data.data.forEach((ele: any, idx: number) => {
+                wayPoints.map((el: WayPointReqDto, i: number) => {
+                  if (idx === i) {
+                    el.vertexes = ele.vertexes;
+                  }
+                });
                 ele.vertexes.forEach((vertex: any, index: number) => {
                   if (index % 2 === 0) {
                     mapLines.push(
@@ -402,7 +407,12 @@ function RouteDetailRetouchPage() {
               GetLineData(arr)
                 .then((res) => {
                   if (res.status === 200 && res.data.status === 'SUCCESS') {
-                    res.data.data.forEach((ele: any) => {
+                    res.data.data.forEach((ele: any, idx: number) => {
+                      wayPoints.map((el: WayPointReqDto, i: number) => {
+                        if (idx === i) {
+                          el.vertexes = ele.vertexes;
+                        }
+                      });
                       ele.vertexes.forEach((vertex: any, index: number) => {
                         if (index % 2 === 0) {
                           mapLines.push(
@@ -506,14 +516,22 @@ function RouteDetailRetouchPage() {
       GetDistance(startlat, startlon, endlat, endlon)
         .then((res) => {
           if (res.status === 200 && res.data.status === 'SUCCESS') {
-            let dist = Number(res.data.data[0].distance) / 1000;
-            let cal = 3.5 * 70 * (dist / 4);
-            let duration = dist / 4;
+            let dist: number = Number(
+              (Number(res.data.data[0].distance) / 1000).toFixed(1),
+            );
+            let cal = (3.5 * 70 * (dist / 4.0)).toFixed(1);
+            let durationInHours = dist / 4.0;
+
+            let durationHours = Math.floor(durationInHours); // 시간
+            let durationMinutes = Math.round(
+              (durationInHours - durationHours) * 60,
+            );
 
             let curWay = [...wayPoints];
-            curWay[curWay.length - 2].distance = `${dist}`;
-            curWay[curWay.length - 2].calorie = `${cal}`;
-            curWay[curWay.length - 2].duration = `${duration}`;
+            curWay[curWay.length - 1].distance = `${dist}km`;
+            curWay[curWay.length - 1].calorie = `${cal}`;
+            curWay[curWay.length - 1].duration =
+              `${durationHours}시간${durationMinutes}분`;
 
             curWay.map((ele: WayPointReqDto, idx: number) => {
               if (idx === 0) {
@@ -570,6 +588,56 @@ function RouteDetailRetouchPage() {
   const clickAttryBtn = () => {
     setPointType('nwp');
     setSearchOpen(true);
+  };
+
+  const dayAddHandler = () => {
+    let course: CourseDayReqDto = {
+      dayNumber: dayData.length + 1,
+      wayPointReqDtoList: [],
+      attractionReqDtoList: [],
+    };
+
+    let data: RouteDetailDayProps = {
+      dayNum: dayData.length + 1,
+      totalDistance: '0',
+      totalCalorie: '0',
+      totalDuration: '0',
+    };
+    setDayData((pre) => [...pre, data]);
+    setDateDetail((pre) => [...pre, course]);
+  };
+
+  const dayDeleteHandler = (selectNum: number) => {
+    let courseArr: CourseDayReqDto[] = [];
+    let detailArr: RouteDetailDayProps[] = [];
+
+    dayData.map((ele) => {
+      if (ele.dayNum !== selectNum) {
+        let data: RouteDetailDayProps = {
+          dayNum: detailArr.length + 1,
+          totalDistance: ele.totalDistance,
+          totalCalorie: ele.totalCalorie,
+          totalDuration: ele.totalDuration,
+        };
+
+        detailArr.push(data);
+      }
+    });
+
+    dateDetail.map((ele) => {
+      if (ele.dayNumber !== selectNum) {
+        let course: CourseDayReqDto = {
+          dayNumber: courseArr.length + 1,
+          wayPointReqDtoList: ele.wayPointReqDtoList,
+          attractionReqDtoList: ele.attractionReqDtoList,
+        };
+
+        courseArr.push(course);
+      }
+    });
+    setSelectedDay(detailArr[detailArr.length - 1].dayNum);
+    setDayData(detailArr);
+    setDateDetail(courseArr);
   };
 
   return searchOpen ? (
@@ -709,6 +777,8 @@ function RouteDetailRetouchPage() {
                 reviewType={reviewType}
                 clickAttryBtn={clickAttryBtn}
                 clickWayBtn={clickWayBtn}
+                retouchDayHandler={dayAddHandler}
+                retouchDayDeHandler={dayDeleteHandler}
               />
             )}
           </R.RouteDetailInfoContainer>

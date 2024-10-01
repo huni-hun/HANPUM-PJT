@@ -146,19 +146,21 @@ function RouteAddDetailPage() {
     });
 
     setAttractionsCard(arr);
-    console.log(dateDetail);
+    // console.log(dateDetail);
   }, [attractions]);
 
   useEffect(() => {
     if (linePath.length > 1) {
-      const mapLines: any[] = [];
+      const mapLinesArr: any[] = [];
+      const mapLinesTotal: any[] = [];
+      let previousVertex: any = null; // 이전 그룹의 마지막 좌표를 저장할 변수
+
       if (linePath.length <= 5) {
         GetLineData(linePath)
           .then((res) => {
             if (res.status === 200 && res.data.status === 'SUCCESS') {
               res.data.data.forEach((ele: any, idx: number) => {
                 wayPoints.map((el: WayPointReqDto, i: number) => {
-                  // eslint-disable-next-line no-self-assign
                   if (idx === i) {
                     el.vertexes = ele.vertexes;
                   }
@@ -166,7 +168,7 @@ function RouteAddDetailPage() {
 
                 ele.vertexes.forEach((vertex: any, index: number) => {
                   if (index % 2 === 0) {
-                    mapLines.push(
+                    mapLinesArr.push(
                       new window.kakao.maps.LatLng(
                         ele.vertexes[index + 1],
                         ele.vertexes[index],
@@ -175,7 +177,7 @@ function RouteAddDetailPage() {
                   }
                 });
               });
-              setMapLines([...mapLines]); // 복사본으로 상태 업데이트
+              setMapLines([...mapLinesArr]);
             }
           })
           .catch((err) => {
@@ -184,7 +186,6 @@ function RouteAddDetailPage() {
                 if (result.status === 200 && result.data.status === 'SUCCESS') {
                   result.data.data.forEach((ele: any, idx: number) => {
                     wayPoints.map((el: WayPointReqDto, i: number) => {
-                      // eslint-disable-next-line no-self-assign
                       if (idx === i) {
                         el.vertexes = ele.vertexes;
                       }
@@ -192,7 +193,7 @@ function RouteAddDetailPage() {
 
                     ele.vertexes.forEach((vertex: any, index: number) => {
                       if (index % 2 === 0) {
-                        mapLines.push(
+                        mapLinesArr.push(
                           new window.kakao.maps.LatLng(
                             ele.vertexes[index + 1],
                             ele.vertexes[index],
@@ -201,7 +202,7 @@ function RouteAddDetailPage() {
                       }
                     });
                   });
-                  setMapLines([...mapLines]); // 복사본으로 상태 업데이트
+                  setMapLines([...mapLinesArr]);
                 }
               })
               .catch((err) => {
@@ -210,74 +211,80 @@ function RouteAddDetailPage() {
           });
       } else {
         let arr: MapLinePathProps[] = [];
-        const promises: Promise<any>[] = []; // 비동기 작업을 저장할 배열
+        const promises: Promise<any>[] = [];
 
         linePath.forEach((ele: MapLinePathProps, idx: number) => {
-          arr.push(ele);
+          if (arr.length < 5) {
+            arr.push(ele);
+          } else {
+            arr = [arr[arr.length - 1]];
+            arr.push(ele);
+          }
 
-          if (arr.length === 5 || idx === linePath.length - 1) {
-            // 배열이 5개가 되었거나 마지막 요소일 때 GetLineData 호출
-            promises.push(
-              GetLineData(arr)
-                .then((res) => {
-                  if (res.status === 200 && res.data.status === 'SUCCESS') {
-                    res.data.data.forEach((ele: any) => {
-                      ele.vertexes.forEach((vertex: any, index: number) => {
-                        if (index % 2 === 0) {
-                          mapLines.push(
-                            new window.kakao.maps.LatLng(
+          promises.push(
+            GetLineData(arr)
+              .then((res) => {
+                if (res.status === 200 && res.data.status === 'SUCCESS') {
+                  res.data.data.forEach((ele: any) => {
+                    ele.vertexes.forEach((vertex: any, index: number) => {
+                      if (index % 2 === 0) {
+                        const latLng = new window.kakao.maps.LatLng(
+                          ele.vertexes[index + 1],
+                          ele.vertexes[index],
+                        );
+
+                        // if (previousVertex) {
+                        //   mapLinesArr.push(previousVertex); // 이전 좌표부터 이어짐
+                        // }
+
+                        mapLinesArr.push(latLng);
+
+                        // previousVertex = latLng; // 마지막 좌표를 저장하여 다음 구간과 연결
+                      }
+                    });
+                  });
+                }
+              })
+              .catch((err) => {
+                GetLineDataKakao(se[0], se[1], kakaolinePath)
+                  .then((result) => {
+                    if (
+                      result.status === 200 &&
+                      result.data.status === 'SUCCESS'
+                    ) {
+                      result.data.data.forEach((ele: any) => {
+                        ele.vertexes.forEach((vertex: any, index: number) => {
+                          if (index % 2 === 0) {
+                            const latLng = new window.kakao.maps.LatLng(
                               ele.vertexes[index + 1],
                               ele.vertexes[index],
-                            ),
-                          );
-                        }
-                      });
-                    });
-                  }
-                })
-                .catch((err) => {
-                  GetLineDataKakao(se[0], se[1], kakaolinePath)
-                    .then((result) => {
-                      if (
-                        result.status === 200 &&
-                        result.data.status === 'SUCCESS'
-                      ) {
-                        result.data.data.forEach((ele: any, idx: number) => {
-                          wayPoints.map((el: WayPointReqDto, i: number) => {
-                            // eslint-disable-next-line no-self-assign
-                            if (idx === i) {
-                              el.vertexes = ele.vertexes;
-                            }
-                          });
+                            );
 
-                          ele.vertexes.forEach((vertex: any, index: number) => {
-                            if (index % 2 === 0) {
-                              mapLines.push(
-                                new window.kakao.maps.LatLng(
-                                  ele.vertexes[index + 1],
-                                  ele.vertexes[index],
-                                ),
-                              );
-                            }
-                          });
+                            // if (previousVertex) {
+                            //   mapLinesArr.push(previousVertex);
+                            // }
+
+                            mapLinesArr.push(latLng);
+
+                            // previousVertex = latLng;
+                          }
                         });
-                        setMapLines([...mapLines]); // 복사본으로 상태 업데이트
-                      }
-                    })
-                    .catch((err) => {
-                      toast.error('해당경로는 길찾기를 제공하지 않습니다.');
-                    });
-                }),
-            );
+                      });
+                      setMapLines([...mapLinesArr]);
+                    }
+                  })
+                  .catch((err) => {
+                    toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+                  });
+              }),
+          );
 
-            // 배열 초기화
-            arr = [];
-          }
+          // arr = [arr[arr.length - 1]]; // 마지막 지점만 남겨서 다음 구간과 연결
         });
 
-        // 모든 비동기 작업이 완료된 후에 setMapLines 호출
         Promise.all(promises).then(() => {
-          setMapLines([...mapLines]);
+          // console.log(mapLinesArr);
+          setMapLines([...mapLinesArr]);
         });
       }
     }
@@ -306,10 +313,12 @@ function RouteAddDetailPage() {
       GetDistance(startlat, startlon, endlat, endlon)
         .then((res) => {
           if (res.status === 200 && res.data.status === 'SUCCESS') {
-            let dist = Math.floor(Number(res.data.data[0].distance) / 1000);
-            let cal = Math.floor(3.5 * 70 * (dist / 4));
-            let durationInHours = Math.floor(dist / 4); // 소요 시간 (시간 단위)
-
+            let dist: number = Number(
+              (Number(res.data.data[0].distance) / 1000).toFixed(1),
+            );
+            let cal = (3.5 * 70 * (dist / 4.0)).toFixed(1);
+            let durationInHours = dist / 4.0; // 소요 시간 (시간 단위)
+            // console.log(durationInHours);
             // 시간과 분으로 변환
             let durationHours = Math.floor(durationInHours); // 시간
             let durationMinutes = Math.round(

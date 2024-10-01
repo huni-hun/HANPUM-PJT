@@ -453,7 +453,7 @@ export const DayContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 0.8rem;
+  margin-right: 2rem;
 `;
 
 export const DayBox = styled.div<{ selected: boolean }>`
@@ -467,6 +467,45 @@ export const DayBox = styled.div<{ selected: boolean }>`
   align-items: center;
   border-radius: 10rem;
   color: ${(props) => (props.selected ? '#1a823b' : '#d9d9d9')};
+  flex-shrink: 0;
+`;
+
+export const RDayBox = styled.div<{ selected: boolean }>`
+  width: 8.4rem;
+  height: 3.3rem;
+  font-size: 1.6rem;
+  font-weight: bold;
+  border: 0.2rem solid ${(props) => (props.selected ? '#1a823b' : '#d9d9d9')};
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 10rem;
+  color: ${(props) => (props.selected ? '#1a823b' : '#d9d9d9')};
+  flex-shrink: 0;
+`;
+
+export const DayDeleteBox = styled.div`
+  width: 15%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const DatAddCard = styled.div`
+  width: 7.4rem;
+  height: 3.3rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border: 0.15rem solid ${colors.grey2};
+  border-radius: 10rem;
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: ${colors.grey2};
+  flex-shrink: 0;
 `;
 
 export const DetailMain = styled.div`

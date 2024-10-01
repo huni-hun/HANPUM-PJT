@@ -46,12 +46,15 @@ interface RouteDetailInfoProps {
   marker: any[];
   attmarker?: any[];
   isSchedule?: boolean;
+  isDetail?: boolean;
   state?: number;
   turnGreen?: boolean[];
   isMeetPage?: boolean;
   memberData?: MemberInfo[];
   memberCount?: number;
   reviewClickEven?: (ele: RouteReviewProps) => void;
+  retouchDayHandler?: () => void;
+  retouchDayDeHandler?: (n: number) => void;
 }
 
 function RouteDetailInfo({
@@ -141,7 +144,6 @@ function RouteDetailInfo({
   const selectHandler = (i: number) => {
     props.setSelectedIdx(i);
   };
-
   const renderMain = () => {
     switch (props.selected) {
       case 'course':
@@ -163,14 +165,37 @@ function RouteDetailInfo({
                 <R.RetouchHeaderOverflow>
                   {props.dayData.map((ele) => (
                     <R.DayContainer key={ele.dayNum}>
-                      <R.DayBox
+                      <R.RDayBox
                         selected={ele.dayNum === props.selectedDay}
                         onClick={() => {
                           props.setSelectedDay(ele.dayNum);
                         }}
-                      >{`Day ${ele.dayNum}`}</R.DayBox>
+                      >
+                        {`Day ${ele.dayNum}`}
+                        <R.DayDeleteBox
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (props.dayData.length >= 2) {
+                              if (props.retouchDayDeHandler !== undefined) {
+                                props.retouchDayDeHandler(ele.dayNum);
+                              }
+                            }
+                          }}
+                        >
+                          X
+                        </R.DayDeleteBox>
+                      </R.RDayBox>
                     </R.DayContainer>
                   ))}
+                  <R.DatAddCard
+                    onClick={() => {
+                      if (props.retouchDayHandler !== undefined) {
+                        props.retouchDayHandler();
+                      }
+                    }}
+                  >
+                    +
+                  </R.DatAddCard>
                 </R.RetouchHeaderOverflow>
               ) : (
                 <R.HeaderOverflow>
@@ -216,6 +241,7 @@ function RouteDetailInfo({
                           }
                           makers={props.marker[idx]}
                           setSelectedMarker={setSelectedMarker}
+                          isDetail={props.isDetail}
                         />
                       ),
                     )

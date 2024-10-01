@@ -250,8 +250,8 @@ function RouteDetailPage() {
           attArr.push(attData);
 
           let markerData: LineStartEndProps = {
-            x: ele.lon,
-            y: ele.lat,
+            x: ele.lat,
+            y: ele.lon,
           };
           setAttMarker((pre) => [...pre, markerData]);
         });
@@ -633,6 +633,7 @@ function RouteDetailPage() {
               reviewType={reviewType}
               attmarker={attmarker}
               reviewClickEven={reviewCardHandler}
+              isDetail={true}
             />
           </R.RouteDetailInfoContainer>
         </R.Overflow>

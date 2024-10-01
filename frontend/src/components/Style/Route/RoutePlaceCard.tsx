@@ -11,6 +11,7 @@ declare global {
 function RoutePlaceCard(
   props: DaysOfRouteProps & {
     isAdd?: boolean;
+    isDetail?: boolean;
     isSchedule?: boolean;
     state?: number;
     deleteHandler?: () => void;
@@ -55,6 +56,17 @@ function RoutePlaceCard(
           }}
         >
           <Icon name="IconRetouchDelete" size={15} />
+        </R.RetouchAddIconBox>
+      )}
+      {props.isDetail && (
+        <R.RetouchAddIconBox
+          onClick={() => {
+            if (props.deleteHandler !== undefined) {
+              props.deleteHandler();
+            }
+          }}
+        >
+          <R.RetouchInfoBox onClick={() => {}}>i</R.RetouchInfoBox>
         </R.RetouchAddIconBox>
       )}
     </R.Card>
