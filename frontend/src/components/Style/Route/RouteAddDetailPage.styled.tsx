@@ -261,6 +261,9 @@ export const AttractionAddCard = styled.div`
 export const AttractionCardTitle = styled.p`
   font-size: 1rem;
   color: ${colors.white};
+  white-space: nowrap; /* 텍스트가 줄바꿈 없이 한 줄로 유지되도록 설정 */
+  overflow: hidden; /* 부모 요소를 넘는 부분을 숨김 */
+  text-overflow: clip;
 `;
 
 export const AttractionCardDetail = styled.div`
