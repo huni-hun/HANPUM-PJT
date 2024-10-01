@@ -130,13 +130,23 @@ function RouteAddDetailPage() {
 
   useEffect(() => {
     setAttMarker([]);
+    let arr: AttractionsAddCardProps[] = [];
     attractions.map((ele: AttractionReqDto) => {
       let markerData: LineStartEndProps = {
         x: ele.lat,
         y: ele.lon,
       };
+      let cardData: AttractionsAddCardProps = {
+        name: ele.name,
+        img: ele.image,
+        keyword: ele.name,
+      };
+      arr.push(cardData);
       setAttMarker((pre) => [...pre, markerData]);
     });
+
+    setAttractionsCard(arr);
+    console.log(dateDetail);
   }, [attractions]);
 
   useEffect(() => {
@@ -405,6 +415,29 @@ function RouteAddDetailPage() {
     });
   };
 
+  const deleteAttractionHandler = (data: AttractionsAddCardProps) => {
+    let arr: AttractionReqDto[] = [];
+
+    attractions.map((ele) => {
+      if (ele.name !== data.name) {
+        arr.push(ele);
+      }
+    });
+
+    setAttractions(() => {
+      const updatedAttractions = arr;
+
+      let newDateDetail: CourseDayReqDto[] = [...dateDetail];
+      newDateDetail.map((ele: CourseDayReqDto) => {
+        if (ele.dayNumber === selectedDay) {
+          ele.attractionReqDtoList = updatedAttractions;
+        }
+      });
+      setDateDetail(newDateDetail);
+      return updatedAttractions;
+    });
+  };
+
   return searchOpen ? (
     <SearchPlacePage
       setAttractionsCard={setAttractionsCard}
@@ -540,6 +573,13 @@ function RouteAddDetailPage() {
                             {ele.name}
                           </R.AttractionCardDetailText>
                         </R.AttractionCardDetail>
+                        <R.AttractionDeleteBox
+                          onClick={() => {
+                            deleteAttractionHandler(ele);
+                          }}
+                        >
+                          <Icon name="IconRetouchDelete" size={15} />
+                        </R.AttractionDeleteBox>
                       </R.AttractionCard>
                     ))}
                   <R.AttractionAddCard

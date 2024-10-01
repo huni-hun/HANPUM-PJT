@@ -115,11 +115,19 @@ function RouteAddPlacePage(props: RouteAddPagePlaceProps) {
   };
 
   useEffect(() => {
-    let markerData: LineStartEndProps = {
-      x: props.selectedPlace.latitude,
-      y: props.selectedPlace.longitude,
-    };
-    setMarker((pre) => [...pre, markerData]);
+    if (props.pointType === 'wp') {
+      let markerData: LineStartEndProps = {
+        x: props.selectedPlace.latitude,
+        y: props.selectedPlace.longitude,
+      };
+      setMarker((pre) => [...pre, markerData]);
+    } else {
+      let markerData: LineStartEndProps = {
+        x: props.selectedPlace.longitude,
+        y: props.selectedPlace.latitude,
+      };
+      setMarker((pre) => [...pre, markerData]);
+    }
   }, []);
 
   // console.log(placeInfo);
