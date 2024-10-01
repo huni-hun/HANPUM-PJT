@@ -633,6 +633,7 @@ function RouteDetailPage() {
               reviewType={reviewType}
               attmarker={attmarker}
               reviewClickEven={reviewCardHandler}
+              isDetail={true}
             />
           </R.RouteDetailInfoContainer>
         </R.Overflow>

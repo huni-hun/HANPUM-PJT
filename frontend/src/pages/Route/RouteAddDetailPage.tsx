@@ -151,7 +151,8 @@ function RouteAddDetailPage() {
 
   useEffect(() => {
     if (linePath.length > 1) {
-      const mapLines: any[] = [];
+      const mapLinesArr: any[] = [];
+      const mapLinesTotal: any[] = [];
       let previousVertex: any = null; // 이전 그룹의 마지막 좌표를 저장할 변수
 
       if (linePath.length <= 5) {
@@ -167,7 +168,7 @@ function RouteAddDetailPage() {
 
                 ele.vertexes.forEach((vertex: any, index: number) => {
                   if (index % 2 === 0) {
-                    mapLines.push(
+                    mapLinesArr.push(
                       new window.kakao.maps.LatLng(
                         ele.vertexes[index + 1],
                         ele.vertexes[index],
@@ -176,7 +177,7 @@ function RouteAddDetailPage() {
                   }
                 });
               });
-              setMapLines([...mapLines]);
+              setMapLines([...mapLinesArr]);
             }
           })
           .catch((err) => {
@@ -192,7 +193,7 @@ function RouteAddDetailPage() {
 
                     ele.vertexes.forEach((vertex: any, index: number) => {
                       if (index % 2 === 0) {
-                        mapLines.push(
+                        mapLinesArr.push(
                           new window.kakao.maps.LatLng(
                             ele.vertexes[index + 1],
                             ele.vertexes[index],
@@ -201,7 +202,7 @@ function RouteAddDetailPage() {
                       }
                     });
                   });
-                  setMapLines([...mapLines]);
+                  setMapLines([...mapLinesArr]);
                 }
               })
               .catch((err) => {
@@ -213,84 +214,45 @@ function RouteAddDetailPage() {
         const promises: Promise<any>[] = [];
 
         linePath.forEach((ele: MapLinePathProps, idx: number) => {
-          arr.push(ele);
-
-          if (arr.length === 5) {
-            promises.push(
-              GetLineData(arr)
-                .then((res) => {
-                  if (res.status === 200 && res.data.status === 'SUCCESS') {
-                    res.data.data.forEach((ele: any, idx: number) => {
-                      wayPoints.map((el: WayPointReqDto, i: number) => {
-                        if (idx === i) {
-                          el.vertexes = ele.vertexes;
-                        }
-                      });
-                      ele.vertexes.forEach((vertex: any, index: number) => {
-                        if (index % 2 === 0) {
-                          const latLng = new window.kakao.maps.LatLng(
-                            ele.vertexes[index + 1],
-                            ele.vertexes[index],
-                          );
-
-                          // 이전 좌표가 있으면 그 좌표부터 이어지게 추가
-                          if (previousVertex) {
-                            mapLines.push(previousVertex);
-                          }
-
-                          mapLines.push(latLng);
-
-                          // 마지막 좌표를 저장해 다음 그룹과 연결
-                          previousVertex = latLng;
-                        }
-                      });
-                    });
-                  }
-                })
-                .catch((err) => {
-                  GetLineDataKakao(se[0], se[1], kakaolinePath)
-                    .then((result) => {
-                      if (
-                        result.status === 200 &&
-                        result.data.status === 'SUCCESS'
-                      ) {
-                        result.data.data.forEach((ele: any) => {
-                          ele.vertexes.forEach((vertex: any, index: number) => {
-                            if (index % 2 === 0) {
-                              const latLng = new window.kakao.maps.LatLng(
-                                ele.vertexes[index + 1],
-                                ele.vertexes[index],
-                              );
-
-                              // 이전 좌표와 연결
-                              if (previousVertex) {
-                                mapLines.push(previousVertex);
-                              }
-
-                              mapLines.push(latLng);
-
-                              previousVertex = latLng;
-                            }
-                          });
-                        });
-                        setMapLines([...mapLines]);
-                      }
-                    })
-                    .catch((err) => {
-                      toast.error('해당경로는 길찾기를 제공하지 않습니다.');
-                    });
-                }),
-            );
-
-            arr = [];
-            // console.log(arr);
+          if (arr.length < 5) {
+            arr.push(ele);
           } else {
-            if (idx === linePath.length - 1) {
-              promises.push(
-                GetLineData(arr)
-                  .then((res) => {
-                    if (res.status === 200 && res.data.status === 'SUCCESS') {
-                      res.data.data.forEach((ele: any) => {
+            arr = [arr[arr.length - 1]];
+            arr.push(ele);
+          }
+
+          promises.push(
+            GetLineData(arr)
+              .then((res) => {
+                if (res.status === 200 && res.data.status === 'SUCCESS') {
+                  res.data.data.forEach((ele: any) => {
+                    ele.vertexes.forEach((vertex: any, index: number) => {
+                      if (index % 2 === 0) {
+                        const latLng = new window.kakao.maps.LatLng(
+                          ele.vertexes[index + 1],
+                          ele.vertexes[index],
+                        );
+
+                        // if (previousVertex) {
+                        //   mapLinesArr.push(previousVertex); // 이전 좌표부터 이어짐
+                        // }
+
+                        mapLinesArr.push(latLng);
+
+                        // previousVertex = latLng; // 마지막 좌표를 저장하여 다음 구간과 연결
+                      }
+                    });
+                  });
+                }
+              })
+              .catch((err) => {
+                GetLineDataKakao(se[0], se[1], kakaolinePath)
+                  .then((result) => {
+                    if (
+                      result.status === 200 &&
+                      result.data.status === 'SUCCESS'
+                    ) {
+                      result.data.data.forEach((ele: any) => {
                         ele.vertexes.forEach((vertex: any, index: number) => {
                           if (index % 2 === 0) {
                             const latLng = new window.kakao.maps.LatLng(
@@ -298,64 +260,31 @@ function RouteAddDetailPage() {
                               ele.vertexes[index],
                             );
 
-                            // 이전 좌표가 있으면 그 좌표부터 이어지게 추가
-                            if (previousVertex) {
-                              mapLines.push(previousVertex);
-                            }
+                            // if (previousVertex) {
+                            //   mapLinesArr.push(previousVertex);
+                            // }
 
-                            mapLines.push(latLng);
+                            mapLinesArr.push(latLng);
 
-                            // 마지막 좌표를 저장해 다음 그룹과 연결
-                            previousVertex = latLng;
+                            // previousVertex = latLng;
                           }
                         });
                       });
+                      setMapLines([...mapLinesArr]);
                     }
                   })
                   .catch((err) => {
-                    GetLineDataKakao(se[0], se[1], kakaolinePath)
-                      .then((result) => {
-                        if (
-                          result.status === 200 &&
-                          result.data.status === 'SUCCESS'
-                        ) {
-                          result.data.data.forEach((ele: any) => {
-                            ele.vertexes.forEach(
-                              (vertex: any, index: number) => {
-                                if (index % 2 === 0) {
-                                  const latLng = new window.kakao.maps.LatLng(
-                                    ele.vertexes[index + 1],
-                                    ele.vertexes[index],
-                                  );
+                    toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+                  });
+              }),
+          );
 
-                                  // 이전 좌표와 연결
-                                  if (previousVertex) {
-                                    mapLines.push(previousVertex);
-                                  }
-
-                                  mapLines.push(latLng);
-
-                                  previousVertex = latLng;
-                                }
-                              },
-                            );
-                          });
-                          setMapLines([...mapLines]);
-                        }
-                      })
-                      .catch((err) => {
-                        toast.error('해당경로는 길찾기를 제공하지 않습니다.');
-                      });
-                  }),
-              );
-            }
-          }
+          // arr = [arr[arr.length - 1]]; // 마지막 지점만 남겨서 다음 구간과 연결
         });
 
-        // 모든 비동기 작업 완료 후 setMapLines 호출
         Promise.all(promises).then(() => {
-          // 마지막 좌표와 첫 번째 좌표가 연결되지 않도록 하기 위해 마지막 좌표를 제거
-          setMapLines([...mapLines]);
+          // console.log(mapLinesArr);
+          setMapLines([...mapLinesArr]);
         });
       }
     }

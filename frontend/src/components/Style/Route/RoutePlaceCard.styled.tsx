@@ -123,3 +123,16 @@ export const RetouchAddIconBox = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+export const RetouchInfoBox = styled.div`
+  width: 1.8rem;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid ${colors.grey1};
+  font-size: 1.5rem;
+  border-radius: 50%;
+  font-weight: bold;
+  color: ${colors.grey1};
+`;

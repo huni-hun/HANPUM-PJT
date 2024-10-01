@@ -46,6 +46,7 @@ interface RouteDetailInfoProps {
   marker: any[];
   attmarker?: any[];
   isSchedule?: boolean;
+  isDetail?: boolean;
   state?: number;
   turnGreen?: boolean[];
   isMeetPage?: boolean;
@@ -143,7 +144,6 @@ function RouteDetailInfo({
   const selectHandler = (i: number) => {
     props.setSelectedIdx(i);
   };
-
   const renderMain = () => {
     switch (props.selected) {
       case 'course':
@@ -241,6 +241,7 @@ function RouteDetailInfo({
                           }
                           makers={props.marker[idx]}
                           setSelectedMarker={setSelectedMarker}
+                          isDetail={props.isDetail}
                         />
                       ),
                     )
