@@ -250,8 +250,8 @@ function RouteDetailPage() {
           attArr.push(attData);
 
           let markerData: LineStartEndProps = {
-            x: ele.lon,
-            y: ele.lat,
+            x: ele.lat,
+            y: ele.lon,
           };
           setAttMarker((pre) => [...pre, markerData]);
         });
