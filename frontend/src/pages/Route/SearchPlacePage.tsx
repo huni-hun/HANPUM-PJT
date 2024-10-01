@@ -12,6 +12,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import RouteAddPlacePage from './RouteAddPlacePage';
+import { toast } from 'react-toastify';
 
 interface SearchPlacePageProps {
   setSearchOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -46,17 +47,21 @@ function SearchPlacePage(props: SearchPlacePageProps) {
         .then((result) => {
           if (result.status === 200) {
             let arr: searchPlaceProps[] = [];
-            result.data.data.map((ele: any) => {
-              let data: searchPlaceProps = {
-                placeName: ele.placeName,
-                address: ele.address,
-                latitude: ele.lat,
-                longitude: ele.lon,
-              };
-              arr.push(data);
-            });
+            if (result.data.data.length > 0) {
+              result.data.data.map((ele: any) => {
+                let data: searchPlaceProps = {
+                  placeName: ele.placeName,
+                  address: ele.address,
+                  latitude: ele.lat,
+                  longitude: ele.lon,
+                };
+                arr.push(data);
+              });
 
-            setSearchedPlace(arr);
+              setSearchedPlace(arr);
+            } else {
+              toast.error('검색결과가 없습니다.');
+            }
           }
         })
         .catch((err) => {
@@ -73,19 +78,24 @@ function SearchPlacePage(props: SearchPlacePageProps) {
         .then((result) => {
           if (result.status === 200) {
             let arr: searchPlaceProps[] = [];
-            result.data.data.map((ele: any) => {
-              let data: searchPlaceProps = {
-                placeName: ele.name,
-                address: ele.address,
-                latitude: ele.lat,
-                longitude: ele.lon,
-                img: ele.img,
-              };
-              arr.push(data);
-            });
+            if (result.data.data.length > 0) {
+              result.data.data.map((ele: any) => {
+                let data: searchPlaceProps = {
+                  placeName: ele.name,
+                  address: ele.address,
+                  latitude: ele.lat,
+                  longitude: ele.lon,
+                  img: ele.img,
+                };
+                arr.push(data);
+              });
 
-            setSearchedPlace(arr);
+              setSearchedPlace(arr);
+            } else {
+              toast.error('검색결과가 없습니다.');
+            }
           }
+          // console.log(result);
         })
         .catch((err) => {
           // console.log(err);

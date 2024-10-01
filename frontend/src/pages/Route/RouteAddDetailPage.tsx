@@ -146,7 +146,7 @@ function RouteAddDetailPage() {
     });
 
     setAttractionsCard(arr);
-    console.log(dateDetail);
+    // console.log(dateDetail);
   }, [attractions]);
 
   useEffect(() => {
@@ -306,10 +306,12 @@ function RouteAddDetailPage() {
       GetDistance(startlat, startlon, endlat, endlon)
         .then((res) => {
           if (res.status === 200 && res.data.status === 'SUCCESS') {
-            let dist = Math.floor(Number(res.data.data[0].distance) / 1000);
-            let cal = Math.floor(3.5 * 70 * (dist / 4));
-            let durationInHours = Math.floor(dist / 4); // 소요 시간 (시간 단위)
-
+            let dist: number = Number(
+              (Number(res.data.data[0].distance) / 1000).toFixed(1),
+            );
+            let cal = (3.5 * 70 * (dist / 4.0)).toFixed(1);
+            let durationInHours = dist / 4.0; // 소요 시간 (시간 단위)
+            // console.log(durationInHours);
             // 시간과 분으로 변환
             let durationHours = Math.floor(durationInHours); // 시간
             let durationMinutes = Math.round(
