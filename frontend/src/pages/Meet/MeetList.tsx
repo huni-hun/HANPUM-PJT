@@ -21,6 +21,7 @@ import SortBox from '@/components/Meet/SortBox';
 import { meetFilterInfoAtom } from '@/atoms/meetFilterAtom';
 import { useRecoilValue } from 'recoil';
 import Loading from '@/components/common/Loading';
+import styled from 'styled-components';
 
 function MeetList() {
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -156,110 +157,119 @@ function MeetList() {
   }
 
   return (
-    <R.RouteListContainer>
-      <Header
-        purpose="meet"
-        $isborder={true}
-        back={false}
-        clickBack={() => {}}
-      />
-
-      <R.MainContainer>
-        <Flex direction="column">
-          {myMeet && myMeet.data && (
-            <>
-              <Text
-                $typography="t20"
-                $bold={true}
-                style={{ paddingLeft: '8px' }}
-              >
-                내 모임
-              </Text>
-              <MeetLongCard
-                data={myMeet.data}
-                onClick={() => clickMeetCard(myMeet.data.groupId)}
-              />
-            </>
-          )}
-          <Flex
-            $align="center"
-            $gap={3}
-            style={{ paddingLeft: '8px', marginBottom: '16px' }}
-          >
-            <Text $typography="t10" color="grey2" onClick={handleToggleOpen}>
-              {sortList.filter(
-                (val) => val.value === requestDto.pageable.sort,
-              )[0]?.label || '최신순'}
-            </Text>
-            <Icon name="IconDownArrow" />
-          </Flex>
-          <div className="small-list">
-            {groupListData?.pages?.[0]?.data?.groupResDtoList &&
-            groupListData.pages[0].data.groupResDtoList.length === 0 ? (
-              <Flex $align="center" $justify="center" $gap={3}>
-                <S.NoHaveContainer>
-                  <img src={noImage} alt="" />
-                  <Text
-                    $bold={true}
-                    $typography="t16"
-                    color="grey2"
-                    style={{ marginBottom: '12px' }}
-                  >
-                    현재 모임이 없어요
-                  </Text>
-                  <Flex direction="column" style={{ textAlign: 'center' }}>
-                    <Text
-                      $typography="t14"
-                      color="grey2"
-                      style={{ marginBottom: '4px' }}
-                    >
-                      모임을 생성하여
-                    </Text>
-                    <Text $typography="t14" color="grey2">
-                      함께하는 일정을 만들어보세요.
-                    </Text>
-                  </Flex>
-
-                  <BaseButton
-                    size="large"
-                    style={{ margin: '36px auto 0' }}
-                    onClick={() => {
-                      navigate('/meet/addMain');
-                    }}
-                  >
-                    모임 생성하기
-                  </BaseButton>
-                </S.NoHaveContainer>
-              </Flex>
-            ) : (
-              groupListData?.pages?.map((page) =>
-                page.data.groupResDtoList?.map((groupData: MeetInfo) => (
-                  <MeetSmallCard
-                    key={groupData.groupId}
-                    data={groupData}
-                    onClick={() => clickMeetCard(groupData.groupId)}
-                    refetchGroupList={refetch}
-                  />
-                )),
-              )
-            )}
-            {isFetching && <div>불러오는 중..</div>}
-            <div ref={loadMoreRef} style={{ height: '1px' }} />
-          </div>
-        </Flex>
-      </R.MainContainer>
-
-      {openSort ? (
-        <SortBox
-          onClick={handleToggleOpen}
-          sortState={requestDto}
-          clickSort={clickSort}
+    <MeetPageMainContainer>
+      <R.RouteListContainer>
+        <Header
+          purpose="meet"
+          $isborder={true}
+          back={false}
+          clickBack={() => {}}
         />
-      ) : (
-        <BottomTab />
-      )}
-    </R.RouteListContainer>
+
+        <R.MainContainer>
+          <Flex direction="column">
+            {myMeet && myMeet.data && (
+              <>
+                <Text
+                  $typography="t20"
+                  $bold={true}
+                  style={{ paddingLeft: '8px' }}
+                >
+                  내 모임
+                </Text>
+                <MeetLongCard
+                  data={myMeet.data}
+                  onClick={() => clickMeetCard(myMeet.data.groupId)}
+                />
+              </>
+            )}
+            <Flex
+              $align="center"
+              $gap={3}
+              style={{ paddingLeft: '8px', marginBottom: '16px' }}
+            >
+              <Text $typography="t10" color="grey2" onClick={handleToggleOpen}>
+                {sortList.filter(
+                  (val) => val.value === requestDto.pageable.sort,
+                )[0]?.label || '최신순'}
+              </Text>
+              <Icon name="IconDownArrow" />
+            </Flex>
+            <div className="small-list">
+              {groupListData?.pages?.[0]?.data?.groupResDtoList &&
+              groupListData.pages[0].data.groupResDtoList.length === 0 ? (
+                <Flex $align="center" $justify="center" $gap={3}>
+                  <S.NoHaveContainer>
+                    <img src={noImage} alt="" />
+                    <Text
+                      $bold={true}
+                      $typography="t16"
+                      color="grey2"
+                      style={{ marginBottom: '12px' }}
+                    >
+                      현재 모임이 없어요
+                    </Text>
+                    <Flex direction="column" style={{ textAlign: 'center' }}>
+                      <Text
+                        $typography="t14"
+                        color="grey2"
+                        style={{ marginBottom: '4px' }}
+                      >
+                        모임을 생성하여
+                      </Text>
+                      <Text $typography="t14" color="grey2">
+                        함께하는 일정을 만들어보세요.
+                      </Text>
+                    </Flex>
+
+                    <BaseButton
+                      size="large"
+                      style={{ margin: '36px auto 0' }}
+                      onClick={() => {
+                        navigate('/meet/addMain');
+                      }}
+                    >
+                      모임 생성하기
+                    </BaseButton>
+                  </S.NoHaveContainer>
+                </Flex>
+              ) : (
+                groupListData?.pages?.map((page) =>
+                  page.data.groupResDtoList?.map((groupData: MeetInfo) => (
+                    <MeetSmallCard
+                      key={groupData.groupId}
+                      data={groupData}
+                      onClick={() => clickMeetCard(groupData.groupId)}
+                      refetchGroupList={refetch}
+                    />
+                  )),
+                )
+              )}
+              {isFetching && <div>불러오는 중..</div>}
+              <div ref={loadMoreRef} style={{ height: '1px' }} />
+            </div>
+          </Flex>
+        </R.MainContainer>
+
+        {openSort ? (
+          <SortBox
+            onClick={handleToggleOpen}
+            sortState={requestDto}
+            clickSort={clickSort}
+          />
+        ) : (
+          <BottomTab />
+        )}
+      </R.RouteListContainer>
+    </MeetPageMainContainer>
   );
 }
 
 export default MeetList;
+
+const MeetPageMainContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  /* background-color: #f5f5f5; */
+  background-color: #fff;
+`;

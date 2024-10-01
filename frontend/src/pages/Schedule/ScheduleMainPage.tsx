@@ -207,9 +207,10 @@ function ScheduleMainPage() {
   const meetFeedData = {
     routeFeedImg: meetListData?.backgroundImg,
     routeUserImg: memberLeader[0]?.profilePicture,
-    routeName: memberLeader[0]?.nickname,
+    routeName: meetListData?.title,
     routeContent: meetListData?.content,
     routeTypes: meetListData?.courseTypes || [],
+    readerName: memberLeader[0]?.nickname,
   };
 
   /** 내카드 선택 시 -> 내일정 상세 페이지로 */
@@ -1235,11 +1236,11 @@ function ScheduleMainPage() {
                   <Feed routeData={meetFeedData} isUserContainer />
                   <FeedInfo
                     feedInfoTitle="모임 일정 정보"
-                    startPoint={feedMeetInfoProps.startPoint}
-                    endPoint={feedMeetInfoProps.endPoint}
+                    startPoint={meetListData.startPoint}
+                    endPoint={meetListData.endPoint}
                     startDate={formatDate(meetListData?.startDate || '')}
                     endDate={formatDate(meetListData?.endDate || '-')}
-                    totalDistance={feedMeetInfoProps.totalDistance}
+                    totalDistance={meetListData.totalDistance}
                     dayData={feedMeetInfoProps.dayData}
                   />
                   <R.ContentSelecContainer>

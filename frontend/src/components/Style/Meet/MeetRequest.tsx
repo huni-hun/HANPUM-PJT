@@ -93,3 +93,12 @@ export const ButtonWrap = styled.div`
   margin-top: 10rem;
   gap: 2rem;
 `;
+
+export const InfoButtonWrap = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10rem;
+  /* gap: 2rem; */
+`;
