@@ -24,13 +24,16 @@ function Entry() {
       <img src={logo} alt="logo" className="logo" />
 
       <Flex direction="column" $align="center" $justify="center">
-        <Text $bold={true} $typography="t16" style={{ lineHeight: '25px' }}>
-          '한' 한국을 '품' 품는 여정
+        <Text $bold={true} $typography="t13" style={{ lineHeight: '2rem' }}>
+          <span style={{ color: '#006600', fontSize: '15px' }}>'한'</span>
+          한국을
+          <span style={{ color: '#006600', fontSize: '15px' }}>'품'</span> 품는
+          여정
         </Text>
-        <Text $bold={true} $typography="t16" style={{ lineHeight: '25px' }}>
+        <Text $bold={true} $typography="t13" style={{ lineHeight: '2rem' }}>
           국내 최초 국토재장정 종합 앱 서비스 '한품은'
         </Text>
-        <Text $bold={true} $typography="t16" style={{ lineHeight: '25px' }}>
+        <Text $bold={true} $typography="t13" style={{ lineHeight: '2rem' }}>
           다양한 지역을 포용하는 여정에 동행합니다.
         </Text>
       </Flex>
