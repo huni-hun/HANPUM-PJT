@@ -30,7 +30,7 @@ public class Course {
     @Column(name= "background_img")
     private String backgroundImg;
 
-    @Column(name= "content", length = 100)
+    @Column(name= "content", length = 500)
     private String content;
 
     @Column(name= "write_state")
