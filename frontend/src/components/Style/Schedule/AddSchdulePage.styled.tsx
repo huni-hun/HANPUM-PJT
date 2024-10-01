@@ -80,8 +80,9 @@ export const RoutePointWrap = styled.div`
 
 export const RoutePointSection = styled.div`
   height: 100%;
-  width: 30vw;
+  width: max-content;
   display: flex;
+  gap: 1rem;
   justify-content: space-around;
   align-items: center;
   height: inherit;

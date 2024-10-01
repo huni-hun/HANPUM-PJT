@@ -257,151 +257,171 @@ function MainPage() {
   if (routeLoading || isLoading || scheduleLoading) return <Loading />;
 
   return (
-    <MainPageContainer>
-      <Header purpose="main" $isborder={true} clickBack={() => {}} />
-      <div className="container">
-        {mySchedule &&
-          (mySchedule.message === '유효한 일정이 없습니다.' ? (
-            <NotHaveSchedule />
-          ) : (
-            <Schedule data={mySchedule.data} />
-          ))}
+    <MainWrapper>
+      <MainPageContainer
+        style={{
+          paddingBottom:
+            groupListData.data.groupResDtoList.length !== 0 ? '7vh' : '0vh',
+        }}
+      >
+        <Header purpose="main" $isborder={true} clickBack={() => {}} />
+        <div className="container">
+          {mySchedule &&
+            (mySchedule.message === '유효한 일정이 없습니다.' ? (
+              <NotHaveSchedule />
+            ) : (
+              <Schedule data={mySchedule.data} />
+            ))}
 
-        <div className="spacing" />
+          {routes.length !== 0 && <div className="spacing" />}
 
-        <div className="route-container">
-          <Flex $justify="space-between" $align="center">
-            {userInfo && (
-              <Text $typography="t20" $bold={true}>
-                {userInfo.data.nickname}님을 위한 추천코스
-              </Text>
-            )}
-
-            <Flex
-              $align="center"
-              style={{ width: 'auto' }}
-              onClick={() => {
-                // console.log('clic');
-                navigator('/route/list');
-              }}
-            >
-              <Text $typography="t10">더 보기</Text>
-              <Icon name="IconLeftBlackArrow" width={6} height={4} />
-            </Flex>
-          </Flex>
-          <Flex>
-            {routes &&
-              routes.map((ele) => <RouteCard ele={ele} key={ele.routeId} />)}
-          </Flex>
-        </div>
-
-        <div className="spacing" />
-
-        {groupListData &&
-          groupListData.data.groupResDtoList.map((meet: MeetInfo) => (
-            <div className="meet-container" key={meet.groupId}>
+          {routes.length !== 0 && (
+            <div className="route-container">
               <Flex $justify="space-between" $align="center">
-                <Text $typography="t20" $bold={true}>
-                  한품 PICK 모임 추천
-                </Text>
-
-                <Flex $align="center" style={{ width: 'auto' }}>
-                  <Text
-                    $typography="t10"
-                    onClick={() => {
-                      navigator('/meet/list');
-                    }}
-                  >
-                    더 보기
+                {userInfo && (
+                  <Text $typography="t20" $bold={true}>
+                    {userInfo.data.nickname}님을 위한 추천코스
                   </Text>
+                )}
+
+                <Flex
+                  $align="center"
+                  style={{ width: 'auto' }}
+                  onClick={() => {
+                    // console.log('clic');
+                    navigator('/route/list');
+                  }}
+                >
+                  <Text $typography="t10">더 보기</Text>
                   <Icon name="IconLeftBlackArrow" width={6} height={4} />
                 </Flex>
               </Flex>
+              <Flex>
+                {routes &&
+                  routes.map((ele) => (
+                    <RouteCard ele={ele} key={ele.routeId} />
+                  ))}
+              </Flex>
+            </div>
+          )}
 
-              <div
-                className="main-longCard"
-                onClick={() => {
-                  navigator('/meet/detail', {
-                    state: { groupId: meet.groupId },
-                  });
-                }}
-              >
-                <img src={meet.groupImg} alt="" />
-                <DateBadge
-                  style={{ top: '16px', left: '20px' }}
-                  totalDays={meet.totalDays}
-                />
+          {groupListData.data.groupResDtoList.length !== 0 && (
+            <div className="spacing" />
+          )}
 
-                {meet.like ? (
-                  <Icon
-                    onClick={(e) => handleLike(meet.groupId, e)}
-                    name="IconModiHeartFill"
-                    size={20}
-                    style={{
-                      position: 'absolute',
-                      top: '18px',
-                      right: '20px',
-                      zIndex: '3',
-                    }}
-                  />
-                ) : (
-                  <Icon
-                    onClick={(e) => handleDisLike(meet.groupId, e)}
-                    name="IconModiHeartNonFill"
-                    size={20}
-                    style={{
-                      position: 'absolute',
-                      top: '18px',
-                      right: '20px',
-                      zIndex: '3',
-                    }}
-                  />
-                )}
+          {groupListData.data.groupResDtoList.length !== 0 &&
+            groupListData.data.groupResDtoList.map((meet: MeetInfo) => (
+              <div className="meet-container" key={meet.groupId}>
+                <Flex $justify="space-between" $align="center">
+                  <Text $typography="t20" $bold={true}>
+                    한품 PICK 모임 추천
+                  </Text>
 
-                <Text
-                  $typography="t14"
-                  color="white"
-                  $bold={true}
-                  style={{
-                    position: 'absolute',
-                    bottom: '34px',
-                    left: '20px',
-                    zIndex: 3,
+                  <Flex $align="center" style={{ width: 'auto' }}>
+                    <Text
+                      $typography="t10"
+                      onClick={() => {
+                        navigator('/meet/list');
+                      }}
+                    >
+                      더 보기
+                    </Text>
+                    <Icon name="IconLeftBlackArrow" width={6} height={4} />
+                  </Flex>
+                </Flex>
+
+                <div
+                  className="main-longCard"
+                  onClick={() => {
+                    navigator('/meet/detail', {
+                      state: { groupId: meet.groupId },
+                    });
                   }}
                 >
-                  {meet.title}
-                </Text>
+                  <img src={meet.groupImg} alt="" />
+                  <DateBadge
+                    style={{ top: '16px', left: '20px' }}
+                    totalDays={meet.totalDays}
+                  />
 
-                <InfoBadge
-                  style={{ bottom: '20px', right: '20px' }}
-                  recruitmentCount={meet.recruitmentCount}
-                  recruitedCount={meet.recruitedCount}
-                  likeCount={meet.likeCount}
-                />
+                  {meet.like ? (
+                    <Icon
+                      onClick={(e) => handleLike(meet.groupId, e)}
+                      name="IconModiHeartFill"
+                      size={20}
+                      style={{
+                        position: 'absolute',
+                        top: '18px',
+                        right: '20px',
+                        zIndex: '3',
+                      }}
+                    />
+                  ) : (
+                    <Icon
+                      onClick={(e) => handleDisLike(meet.groupId, e)}
+                      name="IconModiHeartNonFill"
+                      size={20}
+                      style={{
+                        position: 'absolute',
+                        top: '18px',
+                        right: '20px',
+                        zIndex: '3',
+                      }}
+                    />
+                  )}
 
-                <RouteBadge
-                  style={{ bottom: '20px', left: '20px' }}
-                  startPoint={meet.startDate}
-                  endPoint={meet.endPoint}
-                  totalDistance={meet.totalDistance}
-                />
+                  <Text
+                    $typography="t14"
+                    color="white"
+                    $bold={true}
+                    style={{
+                      position: 'absolute',
+                      bottom: '34px',
+                      left: '20px',
+                      zIndex: 3,
+                    }}
+                  >
+                    {meet.title}
+                  </Text>
 
-                <div className="black-bg" />
+                  <InfoBadge
+                    style={{ bottom: '20px', right: '20px' }}
+                    recruitmentCount={meet.recruitmentCount}
+                    recruitedCount={meet.recruitedCount}
+                    likeCount={meet.likeCount}
+                  />
+
+                  <RouteBadge
+                    style={{ bottom: '20px', left: '20px' }}
+                    startPoint={meet.startDate}
+                    endPoint={meet.endPoint}
+                    totalDistance={meet.totalDistance}
+                  />
+
+                  <div className="black-bg" />
+                </div>
               </div>
-            </div>
-          ))}
-        <BottomTab />
-      </div>
-      {/* <Loading /> */}
-    </MainPageContainer>
+            ))}
+          <BottomTab />
+        </div>
+        {/* <Loading /> */}
+      </MainPageContainer>
+    </MainWrapper>
   );
 }
 
 export default MainPage;
 
+const MainWrapper = styled.div`
+  background-color: #fff;
+  width: 100%;
+  height: 100%;
+  padding-bottom: 1px;
+`;
+
 const MainPageContainer = styled.div`
   width: 100%;
-  padding-bottom: 7vh;
+
   background-color: ${colors.white};
   .container {
     width: 100%;
