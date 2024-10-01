@@ -239,6 +239,7 @@ export const AttractionCard = styled.div<{ img: string }>`
   border-radius: 1.2rem;
   background-image: url(${(props) => props.img});
   background-size: cover;
+  position: relative;
 `;
 
 export const AttractionAddCard = styled.div`
@@ -286,4 +287,14 @@ export const AttractionCardDetailText = styled.div`
   text-overflow: clip;
   font-size: 1.2rem;
   font-weight: bold;
+`;
+
+export const AttractionDeleteBox = styled.div`
+  width: 1.5rem;
+  height: 1.5rem;
+  disflex: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 0.8rem;
 `;
