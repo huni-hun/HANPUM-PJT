@@ -132,8 +132,8 @@ function RouteAddDetailPage() {
     setAttMarker([]);
     attractions.map((ele: AttractionReqDto) => {
       let markerData: LineStartEndProps = {
-        x: ele.lon,
-        y: ele.lat,
+        x: ele.lat,
+        y: ele.lon,
       };
       setAttMarker((pre) => [...pre, markerData]);
     });
@@ -169,6 +169,8 @@ function RouteAddDetailPage() {
             }
           })
           .catch((err) => {
+            console.log(se);
+            console.log(kakaolinePath);
             GetLineDataKakao(se[0], se[1], kakaolinePath)
               .then((result) => {
                 if (result.status === 200 && result.data.status === 'SUCCESS') {
