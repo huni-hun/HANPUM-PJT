@@ -210,77 +210,34 @@ function RouteAddDetailPage() {
               });
           });
       } else {
-        let arr: MapLinePathProps[] = [];
         const promises: Promise<any>[] = [];
+        GetLineDataKakao(se[0], se[1], kakaolinePath)
+          .then((result) => {
+            if (result.status === 200 && result.data.status === 'SUCCESS') {
+              result.data.data.forEach((ele: any) => {
+                ele.vertexes.forEach((vertex: any, index: number) => {
+                  if (index % 2 === 0) {
+                    const latLng = new window.kakao.maps.LatLng(
+                      ele.vertexes[index + 1],
+                      ele.vertexes[index],
+                    );
 
-        linePath.forEach((ele: MapLinePathProps, idx: number) => {
-          if (arr.length < 5) {
-            arr.push(ele);
-          } else {
-            arr = [arr[arr.length - 1]];
-            arr.push(ele);
-          }
+                    // if (previousVertex) {
+                    //   mapLinesArr.push(previousVertex);
+                    // }
 
-          promises.push(
-            GetLineData(arr)
-              .then((res) => {
-                if (res.status === 200 && res.data.status === 'SUCCESS') {
-                  res.data.data.forEach((ele: any) => {
-                    ele.vertexes.forEach((vertex: any, index: number) => {
-                      if (index % 2 === 0) {
-                        const latLng = new window.kakao.maps.LatLng(
-                          ele.vertexes[index + 1],
-                          ele.vertexes[index],
-                        );
+                    mapLinesArr.push(latLng);
 
-                        // if (previousVertex) {
-                        //   mapLinesArr.push(previousVertex); // 이전 좌표부터 이어짐
-                        // }
-
-                        mapLinesArr.push(latLng);
-
-                        // previousVertex = latLng; // 마지막 좌표를 저장하여 다음 구간과 연결
-                      }
-                    });
-                  });
-                }
-              })
-              .catch((err) => {
-                GetLineDataKakao(se[0], se[1], kakaolinePath)
-                  .then((result) => {
-                    if (
-                      result.status === 200 &&
-                      result.data.status === 'SUCCESS'
-                    ) {
-                      result.data.data.forEach((ele: any) => {
-                        ele.vertexes.forEach((vertex: any, index: number) => {
-                          if (index % 2 === 0) {
-                            const latLng = new window.kakao.maps.LatLng(
-                              ele.vertexes[index + 1],
-                              ele.vertexes[index],
-                            );
-
-                            // if (previousVertex) {
-                            //   mapLinesArr.push(previousVertex);
-                            // }
-
-                            mapLinesArr.push(latLng);
-
-                            // previousVertex = latLng;
-                          }
-                        });
-                      });
-                      setMapLines([...mapLinesArr]);
-                    }
-                  })
-                  .catch((err) => {
-                    toast.error('해당경로는 길찾기를 제공하지 않습니다.');
-                  });
-              }),
-          );
-
-          // arr = [arr[arr.length - 1]]; // 마지막 지점만 남겨서 다음 구간과 연결
-        });
+                    // previousVertex = latLng;
+                  }
+                });
+              });
+              setMapLines([...mapLinesArr]);
+            }
+          })
+          .catch((err) => {
+            toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+          });
 
         Promise.all(promises).then(() => {
           // console.log(mapLinesArr);
