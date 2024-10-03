@@ -150,6 +150,7 @@ function RouteDetailPage() {
     setSe([]);
     setMarker([]);
     setAttMarker([]);
+    setMapLines([]);
     getRouteDayDetail(routeid as string, selectedDay).then((result) => {
       if (result.status === 200) {
         let arr: DaysOfRouteProps[] = [];
