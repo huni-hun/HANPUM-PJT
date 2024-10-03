@@ -222,13 +222,13 @@ function RouteAddDetailPage() {
                       ele.vertexes[index],
                     );
 
-                    // if (previousVertex) {
-                    //   mapLinesArr.push(previousVertex);
-                    // }
+                    if (previousVertex) {
+                      mapLinesArr.push(previousVertex);
+                    }
 
                     mapLinesArr.push(latLng);
 
-                    // previousVertex = latLng;
+                    previousVertex = latLng;
                   }
                 });
               });
