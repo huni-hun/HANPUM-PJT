@@ -188,6 +188,7 @@ function RouteDetailPage() {
             kakaoData.push(line);
           }
           lines.push(line);
+
           if (ele.vertexes !== null) {
             if (ele.vertexes !== undefined) {
               if (ele.vertexes.length > 0) {
@@ -203,8 +204,7 @@ function RouteDetailPage() {
                     );
                   }
                 });
-
-                setMapLines([...ml]);
+                setMapLines((pre) => [...pre, ...ml]);
                 // setNoVertexes(false);
               } else {
                 setNoVertexes(true);
