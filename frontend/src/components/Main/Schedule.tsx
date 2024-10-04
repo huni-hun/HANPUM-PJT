@@ -11,21 +11,32 @@ interface ScheduleProps {
 
 function Schedule({ data, nickname }: ScheduleProps) {
   const percentage = data.rate ? data.rate : 0;
-  // const totalDistance = data.totalDistance ? data.totalDistance : 0;
-  // const currentLocation = data.scheduleWayPointList?.[0]?.name || '알 수 없음';
   const startPoint = data.startPoint || '알 수 없음';
   const endPoint = data.endPoint || '알 수 없음';
 
-  /** 오늘 달성률 */
-  const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  const today = new Date();
+
+  let startDate: Date | undefined;
+  let diffDays = 0;
+
+  if (data.startDate) {
+    startDate = new Date(
+      parseInt(data.startDate.slice(0, 4)),
+      parseInt(data.startDate.slice(4, 6)) - 1,
+      parseInt(data.startDate.slice(6, 8)),
+    );
+
+    const diffTime = Math.abs(today.getTime() - startDate.getTime());
+    diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  }
 
   const todaySchedule = data?.scheduleDayResDtoList?.find(
-    (schedule) => schedule.date === today,
+    (schedule) =>
+      schedule.date === today.toISOString().slice(0, 10).replace(/-/g, ''),
   );
 
   const scheduleWayPointList = todaySchedule?.scheduleWayPointList || [];
 
-  // 현재 경유지 인덱스를 찾습니다 (point.state === 2인 항목 중 첫 번째 요소)
   let currentPointIndex: number | undefined = undefined;
   for (let i = scheduleWayPointList.length - 1; i >= 0; i--) {
     if (scheduleWayPointList[i].state === 2) {
@@ -34,13 +45,11 @@ function Schedule({ data, nickname }: ScheduleProps) {
     }
   }
 
-  // 현재 경유지
   const currentWayPoint =
     currentPointIndex !== undefined
       ? scheduleWayPointList[currentPointIndex].name
       : '-';
 
-  // 다음 경유지
   const nextWaypoint =
     currentPointIndex !== undefined &&
     currentPointIndex < scheduleWayPointList.length - 1
@@ -53,7 +62,6 @@ function Schedule({ data, nickname }: ScheduleProps) {
 
   const todayTotalVisitCount = todaySchedule?.scheduleWayPointList?.length || 0;
 
-  // 달성률 퍼센트 계산
   const achievementPercentage =
     todayTotalVisitCount > 0
       ? (currentVisitCount / todayTotalVisitCount) * 100
@@ -64,10 +72,10 @@ function Schedule({ data, nickname }: ScheduleProps) {
       <Flex $justify="space-between">
         <Flex direction="column" $gap={4} style={{ width: 'auto' }}>
           <Text $typography="t20" $bold={true}>
-            {nickname}
+            {nickname}님의
           </Text>
           <Text $typography="t20" $bold={true}>
-            {data.title || '일정'} {/* 일정 제목 */}
+            {diffDays}일차 일정
           </Text>
         </Flex>
         <div className="location-container">
@@ -106,7 +114,6 @@ function Schedule({ data, nickname }: ScheduleProps) {
                 color="grey2"
                 style={{ maxWidth: '7.5rem', flex: '1' }}
               >
-                {/* 현재 위치 */}
                 현재 경유지
               </Text>
               <Text $typography="t12" color="grey2" $bold={true}>
@@ -143,15 +150,8 @@ function Schedule({ data, nickname }: ScheduleProps) {
               {achievementPercentage}%
             </Text>
             <Flex style={{ width: 'auto' }}>
-              <Text $typography="t12" color="main">
-                {/* 0km */}
-              </Text>
-              <Text $typography="t12">
-                {/* {todaySchedule?.totalDistance !== undefined
-                  ? parseFloat(todaySchedule.totalDistance)
-                  : 0}
-                km */}
-              </Text>
+              <Text $typography="t12" color="main"></Text>
+              <Text $typography="t12"></Text>
             </Flex>
           </Flex>
         </Flex>
