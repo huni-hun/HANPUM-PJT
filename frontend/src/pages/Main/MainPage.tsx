@@ -270,7 +270,10 @@ function MainPage() {
             (mySchedule.message === '유효한 일정이 없습니다.' ? (
               <NotHaveSchedule />
             ) : (
-              <Schedule data={mySchedule.data} />
+              <Schedule
+                data={mySchedule.data}
+                nickname={userInfo.data.nickname}
+              />
             ))}
 
           {routes.length !== 0 && <div className="spacing" />}

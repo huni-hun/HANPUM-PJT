@@ -4,7 +4,12 @@ import Flex from '../common/Flex';
 import Text from '../common/Text';
 import { RunningScheduleProps } from '@/models/schdule'; // 타입 import
 
-function Schedule({ data }: { data: RunningScheduleProps }) {
+interface ScheduleProps {
+  data: RunningScheduleProps;
+  nickname: string;
+}
+
+function Schedule({ data, nickname }: ScheduleProps) {
   const percentage = data.rate ? data.rate : 0;
   // const totalDistance = data.totalDistance ? data.totalDistance : 0;
   // const currentLocation = data.scheduleWayPointList?.[0]?.name || '알 수 없음';
@@ -59,7 +64,7 @@ function Schedule({ data }: { data: RunningScheduleProps }) {
       <Flex $justify="space-between">
         <Flex direction="column" $gap={4} style={{ width: 'auto' }}>
           <Text $typography="t20" $bold={true}>
-            동동님의
+            {nickname}
           </Text>
           <Text $typography="t20" $bold={true}>
             {data.title || '일정'} {/* 일정 제목 */}
@@ -151,7 +156,7 @@ function Schedule({ data }: { data: RunningScheduleProps }) {
           </Flex>
         </Flex>
 
-        <S.ProgressBar percentage={percentage}>
+        <S.ProgressBar percentage={achievementPercentage}>
           <div className="progress" />
         </S.ProgressBar>
       </div>
