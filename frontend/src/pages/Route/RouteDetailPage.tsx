@@ -31,6 +31,7 @@ import defaultImg from '@/assets/img/mountain.jpg';
 import { GetUser } from '@/api/mypage/GET';
 import useQueryHandling from '@/hooks/global/useQueryHandling';
 import { setDefaultImg } from '@/utils/Image';
+import Loading from '@/components/common/Loading';
 
 function RouteDetailPage() {
   const { routeid } = useParams();
@@ -42,6 +43,7 @@ function RouteDetailPage() {
   const [selected, setSelected] = useState<string>('course');
   const [selectedDay, setSelectedDay] = useState<number>(1);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [loadingEnd, setLoadingEnd] = useState<boolean>(false);
   const [routeData, setRouteData] = useState<RouteDetailProps>(null!);
   const [dayData, setDayData] = useState<RouteDetailDayProps[]>([]);
   const [routeType, setRouteType] = useState<string[]>([]);
@@ -115,8 +117,6 @@ function RouteDetailPage() {
             setRouteType(type);
             setTotalDistance(num);
           }
-
-          setLoading(true);
         })
         .catch((err) => {});
     } else {
@@ -194,19 +194,22 @@ function RouteDetailPage() {
             if (ele.vertexes !== undefined) {
               if (ele.vertexes.length > 0) {
                 const ml: any[] = [];
-                // console.log(ele.vertexes);
-                ele.vertexes.forEach((vertex: any, index: number) => {
-                  if (index % 2 === 0) {
-                    ml.push(
-                      new window.kakao.maps.LatLng(
-                        ele.vertexes[index + 1],
-                        ele.vertexes[index],
-                      ),
-                    );
-                  }
-                });
-                setMapLines((pre) => [...pre, ...ml]);
-                // setNoVertexes(false);
+                console.log(ele.vertexes);
+                if (window.kakao && window.kakao.maps) {
+                  ele.vertexes.forEach((vertex: any, index: number) => {
+                    if (index % 2 === 0) {
+                      ml.push(
+                        new window.kakao.maps.LatLng(
+                          ele.vertexes[index + 1],
+                          ele.vertexes[index],
+                        ),
+                      );
+                    }
+                  });
+                  setMapLines((pre) => [...pre, ...ml]);
+                  // setNoVertexes(false);
+                }
+                setLoading(true);
               } else {
                 setNoVertexes(true);
               }
@@ -707,7 +710,9 @@ function RouteDetailPage() {
         />
       )}
     </R.Container>
-  ) : null;
+  ) : (
+    <Loading />
+  );
 }
 
 export default RouteDetailPage;
