@@ -422,10 +422,26 @@ function RouteAddDetailPage() {
     <R.Container>
       <Header
         purpose="root"
-        depart={wayPoints.length >= 2 ? cutAddress(wayPoints[0].address) : ''}
+        depart={
+          wayPoints.length >= 2
+            ? cutAddress(wayPoints[wayPoints.length - 1].address).includes(
+                '특별',
+              )
+              ? cutAddress(wayPoints[wayPoints.length - 1].address).split(
+                  '특별',
+                )[0]
+              : cutAddress(wayPoints[wayPoints.length - 1].address)
+            : ''
+        }
         arrive={
           wayPoints.length >= 2
-            ? cutAddress(wayPoints[wayPoints.length - 1].address)
+            ? cutAddress(wayPoints[wayPoints.length - 1].address).includes(
+                '특별',
+              )
+              ? cutAddress(wayPoints[wayPoints.length - 1].address).split(
+                  '특별',
+                )[0]
+              : cutAddress(wayPoints[wayPoints.length - 1].address)
             : ''
         }
         clickBack={() => {

@@ -100,6 +100,7 @@ function RouteDetailPage() {
             setRouteData(rd);
             setProfileImg(result.data.data.profilePicture);
             setMemberName(result.data.data.nickname);
+            // console.log(result.data.data.courseDays);
             result.data.data.courseDays.map((ele: any) => {
               let data: RouteDetailDayProps = {
                 dayNum: ele.dayNumber,
@@ -194,7 +195,7 @@ function RouteDetailPage() {
             if (ele.vertexes !== undefined) {
               if (ele.vertexes.length > 0) {
                 const ml: any[] = [];
-                console.log(ele.vertexes);
+                // console.log(ele.vertexes);
                 if (window.kakao && window.kakao.maps) {
                   ele.vertexes.forEach((vertex: any, index: number) => {
                     if (index % 2 === 0) {
