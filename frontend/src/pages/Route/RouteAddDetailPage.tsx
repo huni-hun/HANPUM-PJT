@@ -16,6 +16,7 @@ import {
   LineStartEndProps,
   MapLinePathProps,
   DaysOfRouteProps,
+  MakerDataProps,
 } from '@/models/route';
 import RoutePlaceCard from '@/components/Style/Route/RoutePlaceCard';
 import { colors } from '@/styles/colorPalette';
@@ -43,6 +44,8 @@ function RouteAddDetailPage() {
   const [attractionsCard, setAttractionsCard] = useState<
     AttractionsAddCardProps[]
   >([]);
+
+  const [selectedMarker, setSelectedMarker] = useState<any>(null!);
   const [pointType, setPointType] = useState<string>('wp');
   const [colorValue, setColorValue] = useState<string>('');
   const [marker, setMarker] = useState<LineStartEndProps[]>([]);
@@ -102,9 +105,13 @@ function RouteAddDetailPage() {
     let kakaose: LineStartEndProps[] = [];
     let kakaoData: MapLinePathProps[] = [];
     wayPoints.map((ele: WayPointReqDto, idx: number) => {
-      let markerData: LineStartEndProps = {
+      let markerData: MakerDataProps = {
         x: ele.lat,
         y: ele.lon,
+        distance: ele.distance,
+        duration: ele.duration,
+        name: ele.name,
+        calorie: ele.calorie,
       };
       let line: MapLinePathProps = {
         name: ele.name,
@@ -422,10 +429,26 @@ function RouteAddDetailPage() {
     <R.Container>
       <Header
         purpose="root"
-        depart={wayPoints.length >= 2 ? cutAddress(wayPoints[0].address) : ''}
+        depart={
+          wayPoints.length >= 2
+            ? cutAddress(wayPoints[wayPoints.length - 1].address).includes(
+                '특별',
+              )
+              ? cutAddress(wayPoints[wayPoints.length - 1].address).split(
+                  '특별',
+                )[0]
+              : cutAddress(wayPoints[wayPoints.length - 1].address)
+            : ''
+        }
         arrive={
           wayPoints.length >= 2
-            ? cutAddress(wayPoints[wayPoints.length - 1].address)
+            ? cutAddress(wayPoints[wayPoints.length - 1].address).includes(
+                '특별',
+              )
+              ? cutAddress(wayPoints[wayPoints.length - 1].address).split(
+                  '특별',
+                )[0]
+              : cutAddress(wayPoints[wayPoints.length - 1].address)
             : ''
         }
         clickBack={() => {
@@ -499,6 +522,7 @@ function RouteAddDetailPage() {
                   marker={marker}
                   linePath={mapLines}
                   attrationmarker={attmarker}
+                  selected={selectedMarker}
                 />
               ) : null}
             </R.MapBox>
@@ -520,6 +544,8 @@ function RouteAddDetailPage() {
                       deleteHandler={() => {
                         deleteWayHandler(ele);
                       }}
+                      makers={marker[idx]}
+                      setSelectedMarker={setSelectedMarker}
                     />
                   ))}
                 </R.DetailWayOverflow>

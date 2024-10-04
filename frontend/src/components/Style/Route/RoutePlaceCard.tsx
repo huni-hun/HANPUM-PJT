@@ -49,8 +49,13 @@ function RoutePlaceCard(
       </R.PlaceNumberBox>
       {props.isAdd && (
         <R.RetouchAddIconBox
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             if (props.deleteHandler !== undefined) {
+              if (props.setSelectedMarker !== undefined) {
+                props.setSelectedMarker(null!);
+              }
+
               props.deleteHandler();
             }
           }}

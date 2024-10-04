@@ -76,6 +76,7 @@ function RouteList() {
 
         // 초보자 데이터 처리
         if (beginnerRoutes.status === 200) {
+          // console.log(beginnerRoutes);
           beginnerRoutes.data.data.courseListMap['초보자'].forEach(
             (ele: any) => {
               const data: RouteListProps = {
