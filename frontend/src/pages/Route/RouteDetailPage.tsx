@@ -378,7 +378,7 @@ function RouteDetailPage() {
     return <Loading />;
   }
 
-  return (
+  return loading ? (
     <R.Container>
       <Header
         purpose="route-detail"
@@ -583,7 +583,7 @@ function RouteDetailPage() {
         />
       )}
     </R.Container>
-  );
+  ) : null;
 }
 
 export default RouteDetailPage;

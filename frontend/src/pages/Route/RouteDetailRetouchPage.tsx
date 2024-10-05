@@ -799,6 +799,8 @@ function RouteDetailRetouchPage() {
                 clickWayBtn={clickWayBtn}
                 retouchDayHandler={dayAddHandler}
                 retouchDayDeHandler={dayDeleteHandler}
+                waypoints={wayPoints}
+                setWayPoints={setWayPoints}
               />
             )}
           </R.RouteDetailInfoContainer>
