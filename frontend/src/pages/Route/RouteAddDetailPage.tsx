@@ -221,7 +221,13 @@ function RouteAddDetailPage() {
         GetLineDataKakao(se[0], se[1], kakaolinePath)
           .then((result) => {
             if (result.status === 200 && result.data.status === 'SUCCESS') {
-              result.data.data.forEach((ele: any) => {
+              result.data.data.forEach((ele: any, idx: number) => {
+                wayPoints.map((el: WayPointReqDto, i: number) => {
+                  if (idx === i) {
+                    el.vertexes = ele.vertexes;
+                  }
+                });
+
                 ele.vertexes.forEach((vertex: any, index: number) => {
                   if (index % 2 === 0) {
                     const latLng = new window.kakao.maps.LatLng(

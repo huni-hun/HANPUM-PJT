@@ -20,6 +20,7 @@ interface MapProps {
   infoBtn?: boolean;
   isSchdule?: boolean;
   selected?: any;
+  setMapLoad?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function Map(props: MapProps) {
@@ -41,6 +42,9 @@ function Map(props: MapProps) {
     const onLoadKakaoMap = () => {
       window.kakao.maps.load(() => {
         setIsMapLoaded(true);
+        if (props.setMapLoad !== undefined) {
+          props.setMapLoad(true);
+        }
       });
     };
 
