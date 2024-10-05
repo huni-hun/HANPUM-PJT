@@ -376,8 +376,8 @@ function RouteDetailRetouchPage() {
     if (linePath.length > 1) {
       const mapLinesArr: any[] = [];
       if (linePath.length <= 5) {
-        console.log(linePath);
-        console.log(wayPoints);
+        // console.log(linePath);
+        // console.log(wayPoints);
         GetLineData(linePath)
           .then((res) => {
             if (res.status === 200 && res.data.status === 'SUCCESS') {
