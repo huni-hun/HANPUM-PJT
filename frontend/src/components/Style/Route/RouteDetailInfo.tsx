@@ -7,6 +7,7 @@ import {
   MapLinePathProps,
   RouteDetailDayProps,
   RouteReviewProps,
+  WayPointReqDto,
 } from '@/models/route';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
@@ -39,6 +40,8 @@ interface RouteDetailInfoProps {
   reviewType: string;
   dayOfRoute: DaysOfRouteProps[];
   setDayOfRoute: React.Dispatch<React.SetStateAction<DaysOfRouteProps[]>>;
+  setWayPoints?: React.Dispatch<React.SetStateAction<WayPointReqDto[]>>;
+  waypoints?: WayPointReqDto[];
   clickWayBtn?: () => void;
   clickAttryBtn?: () => void;
   setSelectedIdx: React.Dispatch<React.SetStateAction<number>>;
@@ -138,7 +141,21 @@ function RouteDetailInfo({
 
     draggingPos.current = null;
     dragOverPos.current = null;
+    let newWay: WayPointReqDto[] = [];
+    if (props.waypoints !== undefined) {
+      reorderedItems.map((ele: DaysOfRouteProps, idx: number) => {
+        props.waypoints?.map((el: WayPointReqDto) => {
+          if (ele.routeName === el.name) {
+            el.pointNumber = ele.routePoint;
+            newWay.push(el);
+          }
+        });
+      });
 
+      if (props.setWayPoints !== undefined) {
+        props.setWayPoints(newWay);
+      }
+    }
     props.setDayOfRoute(reorderedItems);
   };
 
