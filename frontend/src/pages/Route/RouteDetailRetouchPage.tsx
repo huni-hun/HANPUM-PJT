@@ -273,6 +273,16 @@ function RouteDetailRetouchPage() {
           let data = { ...ele };
           data.routePoint = String(newWay.length + 1);
           newWay.push(data);
+        } else {
+          let newWayArr: WayPointReqDto[] = [];
+          wayPoints.map((el: WayPointReqDto) => {
+            if (el.pointNumber !== ele.routePoint) {
+              newWayArr.push(el);
+            }
+          });
+          setWayPoints(newWayArr);
+
+          dateDetail[selectedDay - 1].wayPointReqDtoList = newWayArr;
         }
       });
       setDayOfRoute(newWay);
@@ -288,7 +298,7 @@ function RouteDetailRetouchPage() {
     let kakaoData: MapLinePathProps[] = [];
     if (dateDetail.length > 0) {
       if (dateDetail[selectedDay - 1].wayPointReqDtoList.length > 0) {
-        wayPoints.sort((a: any, b: any) => a.routePoint - b.routePoint);
+        // wayPoints.sort((a: any, b: any) => a.routePoint - b.routePoint);
         wayPoints.map((ele: WayPointReqDto, idx: number) => {
           // console.log(ele);
           let data: DaysOfRouteProps = {
@@ -319,6 +329,32 @@ function RouteDetailRetouchPage() {
 
           lines.push(line);
 
+          // if (ele.vertexes !== null) {
+          //   if (ele.vertexes !== undefined) {
+          //     if (ele.vertexes.length > 0) {
+          //       const ml: any[] = [];
+          //       // console.log(ele.vertexes);
+          //       if (window.kakao && window.kakao.maps) {
+          //         ele.vertexes.forEach((vertex: any, index: number) => {
+          //           // console.log(vertex);
+          //           if (index % 2 === 0) {
+          //             ml.push(
+          //               new window.kakao.maps.LatLng(
+          //                 ele.vertexes[index + 1],
+          //                 ele.vertexes[index],
+          //               ),
+          //             );
+          //           }
+          //         });
+          //         setMapLines((pre) => [...pre, ...ml]);
+          //         // setNoVertexes(false);
+          //       }
+          //     } else {
+          //       // setNoVertexes(true);
+          //     }
+          //   }
+          // }
+
           let markerData: LineStartEndProps = {
             x: ele.lat,
             y: ele.lon,
@@ -338,9 +374,10 @@ function RouteDetailRetouchPage() {
 
   useEffect(() => {
     if (linePath.length > 1) {
-      const mapLines: any[] = [];
+      const mapLinesArr: any[] = [];
       if (linePath.length <= 5) {
         // console.log(linePath);
+        // console.log(wayPoints);
         GetLineData(linePath)
           .then((res) => {
             if (res.status === 200 && res.data.status === 'SUCCESS') {
@@ -352,7 +389,7 @@ function RouteDetailRetouchPage() {
                 });
                 ele.vertexes.forEach((vertex: any, index: number) => {
                   if (index % 2 === 0) {
-                    mapLines.push(
+                    mapLinesArr.push(
                       new window.kakao.maps.LatLng(
                         ele.vertexes[index + 1],
                         ele.vertexes[index],
@@ -361,7 +398,7 @@ function RouteDetailRetouchPage() {
                   }
                 });
               });
-              setMapLines([...mapLines]); // 복사본으로 상태 업데이트
+              setMapLines([...mapLinesArr]); // 복사본으로 상태 업데이트
             }
           })
           .catch((err) => {
@@ -378,7 +415,7 @@ function RouteDetailRetouchPage() {
 
                     ele.vertexes.forEach((vertex: any, index: number) => {
                       if (index % 2 === 0) {
-                        mapLines.push(
+                        mapLinesArr.push(
                           new window.kakao.maps.LatLng(
                             ele.vertexes[index + 1],
                             ele.vertexes[index],
@@ -387,7 +424,7 @@ function RouteDetailRetouchPage() {
                       }
                     });
                   });
-                  setMapLines([...mapLines]); // 복사본으로 상태 업데이트
+                  setMapLines([...mapLinesArr]); // 복사본으로 상태 업데이트
                 }
               })
               .catch((err) => {
@@ -399,7 +436,12 @@ function RouteDetailRetouchPage() {
         GetLineDataKakao(se[0], se[1], kakaolinePath)
           .then((result) => {
             if (result.status === 200 && result.data.status === 'SUCCESS') {
-              result.data.data.forEach((ele: any) => {
+              result.data.data.forEach((ele: any, idx: number) => {
+                wayPoints.map((el: WayPointReqDto, i: number) => {
+                  if (idx === i) {
+                    el.vertexes = ele.vertexes;
+                  }
+                });
                 ele.vertexes.forEach((vertex: any, index: number) => {
                   if (index % 2 === 0) {
                     const latLng = new window.kakao.maps.LatLng(
@@ -411,13 +453,13 @@ function RouteDetailRetouchPage() {
                     //   mapLinesArr.push(previousVertex);
                     // }
 
-                    mapLines.push(latLng);
+                    mapLinesArr.push(latLng);
 
                     // previousVertex = latLng;
                   }
                 });
               });
-              setMapLines([...mapLines]);
+              setMapLines([...mapLinesArr]);
             }
           })
           .catch((err) => {
@@ -426,7 +468,7 @@ function RouteDetailRetouchPage() {
 
         // 모든 비동기 작업이 완료된 후에 setMapLines 호출
         Promise.all(promises).then(() => {
-          setMapLines([...mapLines]);
+          setMapLines([...mapLinesArr]);
         });
       }
     }
@@ -534,6 +576,25 @@ function RouteDetailRetouchPage() {
         (a: DaysOfRouteProps, b: DaysOfRouteProps) =>
           Number(a.routePoint) - Number(b.routePoint),
       );
+      let wayArr: WayPointReqDto[] = [];
+      dayOfRoute.map((ele) => {
+        wayPoints.map((el) => {
+          if (ele.routeName === el.name) {
+            wayArr.push(el);
+          }
+        });
+      });
+      wayArr.map((ele, idx) => {
+        ele.pointNumber = String(idx + 1);
+        if (idx === 0) {
+          ele.type = '출발지';
+        } else if (idx === wayArr.length - 1) {
+          ele.type = '도착지';
+        } else {
+          ele.type = '경유지';
+        }
+      });
+
       setWayPoints(dateDetail[selectedDay - 1].wayPointReqDtoList);
     }
   }, [dayOfRoute]);
@@ -593,6 +654,7 @@ function RouteDetailRetouchPage() {
         courseArr.push(course);
       }
     });
+
     setSelectedDay(detailArr[detailArr.length - 1].dayNum);
     setDayData(detailArr);
     setDateDetail(courseArr);

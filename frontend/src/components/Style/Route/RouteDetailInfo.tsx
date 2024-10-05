@@ -55,6 +55,7 @@ interface RouteDetailInfoProps {
   reviewClickEven?: (ele: RouteReviewProps) => void;
   retouchDayHandler?: () => void;
   retouchDayDeHandler?: (n: number) => void;
+  setMapLoad?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function RouteDetailInfo({
@@ -158,6 +159,7 @@ function RouteDetailInfo({
                 infoBtn
                 attrationmarker={props.attmarker}
                 selected={selectedMarker}
+                setMapLoad={props.setMapLoad}
               />
             </R.MapBox>
             <R.DetailHeader>
