@@ -119,9 +119,8 @@ function RouteListSearchPage() {
     '제주올레길',
     'DMZ접경지역',
     '해파랑길코스',
-    '코리아둘레길코스',
+    '코리아둘레길',
     '서해랑길코스',
-    '힐링',
   ];
 
   useEffect(() => {
