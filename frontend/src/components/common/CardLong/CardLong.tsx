@@ -219,7 +219,7 @@ function CardLong({
             </Text>
             <div className="line" />
             <Text $typography="t10" color="white">
-              {item.totalDistance}km
+              {Math.round(item.totalDistance)}km
             </Text>
           </div>
         </div>

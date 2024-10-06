@@ -70,10 +70,16 @@ function RouteListMoreCard(props: RouteListMoreCardProps) {
         <R.TextBox>
           <R.Title>{props.title}</R.Title>
           <R.RouteTextBox>
-            {props.start}
+            {props.start.includes('특별')
+              ? props.start.split('특별')[0]
+              : props.start}
             <Icon name="IconGreyLeftArrow" size={10} />
-            {props.end}
-            <R.RouteDistanceBox>{props.distance}km</R.RouteDistanceBox>
+            {props.end.includes('특별')
+              ? props.end.split('특별')[0]
+              : props.end}
+            <R.RouteDistanceBox>
+              {Math.round(props.distance)}km
+            </R.RouteDistanceBox>
           </R.RouteTextBox>
           <R.ScoreBox>
             <Icon name="IconGrenStar" size={10} />
