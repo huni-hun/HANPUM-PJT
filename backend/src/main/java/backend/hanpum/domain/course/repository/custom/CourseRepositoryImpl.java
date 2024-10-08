@@ -174,6 +174,7 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
                         qCourseDay.totalCalorie))
                 .from(qCourseDay)
                 .where(qCourseDay.course.courseId.eq(courseId))
+                .orderBy(qCourseDay.dayNumber.asc())
                 .fetch();
 
         Member member = memberRepository.findByCourses_courseId(courseResDto.getCourseId()).orElseThrow(MemberNotFoundException::new);
