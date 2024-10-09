@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import useImageCompression from '@/hooks/global/useImageCompression';
 import { convertImageToFile } from '@/utils/util';
 import { setDefaultImg } from '@/utils/Image';
+import { toast } from 'react-toastify';
 
 function RouteAddMainPage() {
   const navigator = useNavigate();
@@ -95,18 +96,26 @@ function RouteAddMainPage() {
                     onChange={async (e) => {
                       if (e.target.files) {
                         const file = e.target.files[0];
-                        const compressedFile =
-                          (await compressImage(file)) ?? file;
+                        if (
+                          file.name.endsWith('.jpg') ||
+                          file.name.endsWith('.png') ||
+                          file.name.endsWith('.jpeg')
+                        ) {
+                          const compressedFile =
+                            (await compressImage(file)) ?? file;
 
-                        const reader = URL.createObjectURL(compressedFile);
-                        // console.log(reader);
-                        setImgData(compressedFile);
-                        setImgSrc(reader);
+                          const reader = URL.createObjectURL(compressedFile);
+                          // console.log(reader);
+                          setImgData(compressedFile);
+                          setImgSrc(reader);
 
-                        setImgReady(true);
+                          setImgReady(true);
+                        } else {
+                          toast.error('지원하지 않는 이미지 형식입니다.');
+                        }
                       }
                     }}
-                    accept="image/*"
+                    accept="image/png, image/jpeg, image/jpg"
                     type="file"
                   />
                 </R.ImgBox>
