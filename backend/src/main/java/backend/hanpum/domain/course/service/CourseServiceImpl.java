@@ -980,6 +980,7 @@ public class CourseServiceImpl implements CourseService {
         List<CourseResDto> courseResDtoList = new ArrayList<>();
 
         for (Course course : courseList) {
+            if(course.isDeleteState()) continue;
             List<Review> reviews = reviewRepository.findByCourse(course);
             double scoreAvg = reviews.stream()
                     .mapToDouble(Review::getScore)
