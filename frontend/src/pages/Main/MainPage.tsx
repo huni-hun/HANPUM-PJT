@@ -41,6 +41,19 @@ import { isAuthEnticatedAtom, isInitAtom } from '@/atoms/isAuthEnticatedAtom';
 import { encodeToken } from '@/utils/util';
 
 function MainPage() {
+  useEffect(() => {
+    if (window.kakao && window.kakao.maps) {
+      // Set KakaoMap as loaded when it's ready
+    } else {
+      const kakaoMapScript = document.createElement('script');
+      kakaoMapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_MAP_KEY}&autoload=false`;
+      kakaoMapScript.async = true;
+      kakaoMapScript.onload = () => {
+        window.kakao.maps.load(() => {});
+      };
+      document.head.appendChild(kakaoMapScript);
+    }
+  }, []);
   const navigator = useNavigate();
   const type = '초보자';
 
