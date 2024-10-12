@@ -216,6 +216,7 @@ function RouteDetailPage() {
                 if (window.kakao && window.kakao.maps) {
                   ele.vertexes.forEach((vertex: any, index: number) => {
                     // console.log(vertex);
+
                     if (index % 2 === 0) {
                       ml.push(
                         new window.kakao.maps.LatLng(
