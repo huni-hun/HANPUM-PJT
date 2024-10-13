@@ -28,6 +28,7 @@ import {
   AttractionsProps,
   DaysOfRouteProps,
   LineStartEndProps,
+  MakerDataProps,
   MapLinePathProps,
   RouteDetailDayProps,
   RouteDetailProps,
@@ -76,6 +77,7 @@ function DetailMineSchedulePage() {
   const [lat, setLat] = useState<number | null>(null);
   const [lon, setLon] = useState<number | null>(null);
   const [marker, setMarker] = useState<LineStartEndProps[]>([]);
+  const [attmarker, setAttMarker] = useState<LineStartEndProps[]>([]);
   const [selectedIdx, setSelectedIdx] = useState<number>(-1);
   const [reviews, setReviews] = useState<RouteReviewProps[]>([]);
   const [dayOfRoute, setDayOfRoute] = useState<DaysOfRouteProps[]>([]);
@@ -192,14 +194,14 @@ function DetailMineSchedulePage() {
     /* 맵에 마커, 선 초기화 */
     setSe([]);
     setMarker([]);
+    setAttMarker([]);
+    setMapLines([]);
     /*경로 일차별 경유지 정보 가져오기 */
     if (scheduleId > 0) {
       getDayNumData(selectedDay, scheduleId).then((result) => {
         if (result.status === 'SUCCESS') {
           let arr: DaysOfRouteProps[] = [];
-          let lines: MapLinePathProps[] = [];
-          let kakaose: LineStartEndProps[] = [];
-          let kakaoData: MapLinePathProps[] = [];
+
           /** 경유지 turnGreen 상태관리 */
           let greenStates: boolean[] = [];
           result.data.scheduleWayPointList.map((ele: any, idx: number) => {
@@ -216,39 +218,41 @@ function DetailMineSchedulePage() {
             arr.push(data);
             /* 다중 경유지 정보, 시작점, 도착점 저장 */
 
-            let line: MapLinePathProps = {
-              name: ele.name,
-              x: ele.lat,
-              y: ele.lon,
-            };
+            // let line: MapLinePathProps = {
+            //   name: ele.name,
+            //   x: ele.lat,
+            //   y: ele.lon,
+            // };
 
-            lines.push(line);
+            // lines.push(line);
 
-            if (
-              idx === 0 ||
-              idx === result.data.scheduleWayPointList.length - 1
-            ) {
-              let kse: LineStartEndProps = {
-                x: ele.lat,
-                y: ele.lon,
-              };
-              kakaose.push(kse);
-            } else {
-              kakaoData.push(line);
-            }
+            // if (
+            //   idx === 0 ||
+            //   idx === result.data.scheduleWayPointList.length - 1
+            // ) {
+            //   let kse: LineStartEndProps = {
+            //     x: ele.lat,
+            //     y: ele.lon,
+            //   };
+            //   kakaose.push(kse);
+            // } else {
+            //   kakaoData.push(line);
+            // }
 
-            let markerData: LineStartEndProps = {
-              x: ele.lat,
-              y: ele.lon,
-            };
-            setMarker((pre) => [...pre, markerData]);
+            // let markerData: LineStartEndProps = {
+            //   x: ele.lat,
+            //   y: ele.lon,
+            // };
+            // setMarker((pre) => [...pre, markerData]);
           });
-          arr.sort((a: any, b: any) => a.routePoint - b.routePoint);
+          // arr.sort((a: any, b: any) => a.routePoint - b.routePoint);
           setDayOfRoute(arr);
-          setLinePath(lines);
+          // console.log(lines);
+          // setLinePath(lines);
           setWayPoints(arr);
-          setSe(kakaose);
-          setKakaoLinePath(kakaoData);
+          // setSe(kakaose);
+          // console.log(kakaoData);
+          // setKakaoLinePath(kakaoData);
 
           /* 지도 중심점 잡기 */
           if (arr.length > 0 && arr[0] && arr[0].latitude && arr[0].longitude) {
@@ -261,6 +265,95 @@ function DetailMineSchedulePage() {
           }
         }
       });
+
+      getRouteDayDetail(courseId.toString(), selectedDay).then((result) => {
+        if (result.status === 200) {
+          let arr: DaysOfRouteProps[] = [];
+          let lines: MapLinePathProps[] = [];
+
+          // console.log(result);
+          result.data.data.wayPoints.sort(
+            (a: any, b: any) => a.pointNumber - b.pointNumber,
+          );
+
+          result.data.data.wayPoints!.map((ele: any, idx: number) => {
+            let data: DaysOfRouteProps = {
+              routeName: ele.name,
+              routeAddress: ele.address,
+              routeType: ele.type,
+              routeId: ele.waypointId,
+              routePoint: ele.pointNumber,
+              latitude: ele.lat,
+              longitude: ele.lon,
+            };
+            arr.push(data);
+
+            // let line: MapLinePathProps = {
+            //   name: ele.name,
+            //   x: ele.lat,
+            //   y: ele.lon,
+            // };
+            // if (idx === 0 || idx === result.data.data.wayPoints.length - 1) {
+            //   let kse: LineStartEndProps = {
+            //     x: ele.lat,
+            //     y: ele.lon,
+            //   };
+            //   kakaose.push(kse);
+            // } else {
+            //   kakaoData.push(line);
+            // }
+            // lines.push(line);
+
+            if (ele.vertexes !== null) {
+              if (ele.vertexes !== undefined) {
+                if (ele.vertexes.length > 0) {
+                  const ml: any[] = [];
+                  // console.log(ele.vertexes);
+                  if (window.kakao && window.kakao.maps) {
+                    ele.vertexes.forEach((vertex: any, index: number) => {
+                      // console.log(vertex);
+
+                      if (index % 2 === 0) {
+                        ml.push(
+                          new window.kakao.maps.LatLng(
+                            ele.vertexes[index + 1],
+                            ele.vertexes[index],
+                          ),
+                        );
+                      }
+                    });
+
+                    setMapLines((pre) => [...pre, ...ml]);
+                    // setNoVertexes(false);
+                    // setLoadingEnd(true);
+                  }
+                } else {
+                  // setNoVertexes(true);
+                }
+              }
+            } else {
+              // setNoVertexes(true);
+            }
+
+            let markerData: MakerDataProps = {
+              x: ele.lat,
+              y: ele.lon,
+              distance: ele.distance,
+              duration: ele.duration,
+              name: ele.name,
+              calorie: ele.calorie,
+            };
+            setMarker((pre) => [...pre, markerData]);
+          });
+          arr.sort((a: any, b: any) => a.routePoint - b.routePoint);
+          setDayOfRoute(arr);
+          setLinePath(lines);
+
+          // setLatitude(arr[0].latitude);
+          // setLongitude(arr[0].longitude);
+        }
+      });
+
       /**  관광지 가져오기 */
       getRouteDayAttraction(courseId.toString(), selectedDay).then((res) => {
         if (res.status === 200 && res.data.status === 'SUCCESS') {
@@ -290,133 +383,133 @@ function DetailMineSchedulePage() {
     }
   }, [selectedDay, scheduleId, arriveGreen, courseId]);
 
-  useEffect(() => {
-    if (linePath.length > 0) {
-      const mapLines: any[] = [];
-      if (linePath.length <= 5) {
-        GetLineData(linePath)
-          .then((res) => {
-            if (res.status === 200 && res.data.status === 'SUCCESS') {
-              res.data.data.forEach((ele: any) => {
-                ele.vertexes.forEach((vertex: any, index: number) => {
-                  if (index % 2 === 0) {
-                    mapLines.push(
-                      new window.kakao.maps.LatLng(
-                        ele.vertexes[index + 1],
-                        ele.vertexes[index],
-                      ),
-                    );
-                  }
-                });
-              });
-              setMapLines([...mapLines]); // 복사본으로 상태 업데이트
-            }
-          })
-          .catch((err) => {
-            // console.log(se);
-            GetLineDataKakao(se[0], se[1], kakaolinePath)
-              .then((result) => {
-                if (result.status === 200 && result.data.status === 'SUCCESS') {
-                  result.data.data.forEach((ele: any, idx: number) => {
-                    // wayPoints.map((el: WayPointReqDto, i: number) => {
-                    //   // eslint-disable-next-line no-self-assign
-                    //   if (idx === i) {
-                    //     el.vertexes = ele.vertexes;
-                    //   }
-                    // });
+  // useEffect(() => {
+  //   if (linePath.length > 0) {
+  //     const mapLines: any[] = [];
+  //     if (linePath.length <= 5) {
+  //       GetLineData(linePath)
+  //         .then((res) => {
+  //           if (res.status === 200 && res.data.status === 'SUCCESS') {
+  //             res.data.data.forEach((ele: any) => {
+  //               ele.vertexes.forEach((vertex: any, index: number) => {
+  //                 if (index % 2 === 0) {
+  //                   mapLines.push(
+  //                     new window.kakao.maps.LatLng(
+  //                       ele.vertexes[index + 1],
+  //                       ele.vertexes[index],
+  //                     ),
+  //                   );
+  //                 }
+  //               });
+  //             });
+  //             setMapLines([...mapLines]); // 복사본으로 상태 업데이트
+  //           }
+  //         })
+  //         .catch((err) => {
+  //           // console.log(se);
+  //           GetLineDataKakao(se[0], se[1], kakaolinePath)
+  //             .then((result) => {
+  //               if (result.status === 200 && result.data.status === 'SUCCESS') {
+  //                 result.data.data.forEach((ele: any, idx: number) => {
+  //                   // wayPoints.map((el: WayPointReqDto, i: number) => {
+  //                   //   // eslint-disable-next-line no-self-assign
+  //                   //   if (idx === i) {
+  //                   //     el.vertexes = ele.vertexes;
+  //                   //   }
+  //                   // });
 
-                    ele.vertexes.forEach((vertex: any, index: number) => {
-                      if (index % 2 === 0) {
-                        mapLines.push(
-                          new window.kakao.maps.LatLng(
-                            ele.vertexes[index + 1],
-                            ele.vertexes[index],
-                          ),
-                        );
-                      }
-                    });
-                  });
-                  setMapLines([...mapLines]); // 복사본으로 상태 업데이트
-                }
-              })
-              .catch((err) => {
-                toast.error('해당경로는 길찾기를 제공하지 않습니다.');
-              });
-          });
-      } else {
-        let arr: MapLinePathProps[] = [];
-        const promises: Promise<any>[] = []; // 비동기 작업을 저장할 배열
+  //                   ele.vertexes.forEach((vertex: any, index: number) => {
+  //                     if (index % 2 === 0) {
+  //                       mapLines.push(
+  //                         new window.kakao.maps.LatLng(
+  //                           ele.vertexes[index + 1],
+  //                           ele.vertexes[index],
+  //                         ),
+  //                       );
+  //                     }
+  //                   });
+  //                 });
+  //                 setMapLines([...mapLines]); // 복사본으로 상태 업데이트
+  //               }
+  //             })
+  //             .catch((err) => {
+  //               toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+  //             });
+  //         });
+  //     } else {
+  //       let arr: MapLinePathProps[] = [];
+  //       const promises: Promise<any>[] = []; // 비동기 작업을 저장할 배열
 
-        linePath.forEach((ele: MapLinePathProps, idx: number) => {
-          arr.push(ele);
+  //       linePath.forEach((ele: MapLinePathProps, idx: number) => {
+  //         arr.push(ele);
 
-          if (arr.length === 5 || idx === linePath.length - 1) {
-            // 배열이 5개가 되었거나 마지막 요소일 때 GetLineData 호출
-            promises.push(
-              GetLineData(arr)
-                .then((res) => {
-                  if (res.status === 200 && res.data.status === 'SUCCESS') {
-                    res.data.data.forEach((ele: any) => {
-                      ele.vertexes.forEach((vertex: any, index: number) => {
-                        if (index % 2 === 0) {
-                          mapLines.push(
-                            new window.kakao.maps.LatLng(
-                              ele.vertexes[index + 1],
-                              ele.vertexes[index],
-                            ),
-                          );
-                        }
-                      });
-                    });
-                  }
-                })
-                .catch((err) => {
-                  GetLineDataKakao(se[0], se[1], kakaolinePath)
-                    .then((result) => {
-                      if (
-                        result.status === 200 &&
-                        result.data.status === 'SUCCESS'
-                      ) {
-                        result.data.data.forEach((ele: any, idx: number) => {
-                          // wayPoints.map((el: WayPointReqDto, i: number) => {
-                          //   // eslint-disable-next-line no-self-assign
-                          //   if (idx === i) {
-                          //     el.vertexes = ele.vertexes;
-                          //   }
-                          // });
+  //         if (arr.length === 5 || idx === linePath.length - 1) {
+  //           // 배열이 5개가 되었거나 마지막 요소일 때 GetLineData 호출
+  //           promises.push(
+  //             GetLineData(arr)
+  //               .then((res) => {
+  //                 if (res.status === 200 && res.data.status === 'SUCCESS') {
+  //                   res.data.data.forEach((ele: any) => {
+  //                     ele.vertexes.forEach((vertex: any, index: number) => {
+  //                       if (index % 2 === 0) {
+  //                         mapLines.push(
+  //                           new window.kakao.maps.LatLng(
+  //                             ele.vertexes[index + 1],
+  //                             ele.vertexes[index],
+  //                           ),
+  //                         );
+  //                       }
+  //                     });
+  //                   });
+  //                 }
+  //               })
+  //               .catch((err) => {
+  //                 GetLineDataKakao(se[0], se[1], kakaolinePath)
+  //                   .then((result) => {
+  //                     if (
+  //                       result.status === 200 &&
+  //                       result.data.status === 'SUCCESS'
+  //                     ) {
+  //                       result.data.data.forEach((ele: any, idx: number) => {
+  //                         // wayPoints.map((el: WayPointReqDto, i: number) => {
+  //                         //   // eslint-disable-next-line no-self-assign
+  //                         //   if (idx === i) {
+  //                         //     el.vertexes = ele.vertexes;
+  //                         //   }
+  //                         // });
 
-                          ele.vertexes.forEach((vertex: any, index: number) => {
-                            if (index % 2 === 0) {
-                              mapLines.push(
-                                new window.kakao.maps.LatLng(
-                                  ele.vertexes[index + 1],
-                                  ele.vertexes[index],
-                                ),
-                              );
-                            }
-                          });
-                        });
-                        setMapLines([...mapLines]); // 복사본으로 상태 업데이트
-                      }
-                    })
-                    .catch((err) => {
-                      toast.error('해당경로는 길찾기를 제공하지 않습니다.');
-                    });
-                }),
-            );
+  //                         ele.vertexes.forEach((vertex: any, index: number) => {
+  //                           if (index % 2 === 0) {
+  //                             mapLines.push(
+  //                               new window.kakao.maps.LatLng(
+  //                                 ele.vertexes[index + 1],
+  //                                 ele.vertexes[index],
+  //                               ),
+  //                             );
+  //                           }
+  //                         });
+  //                       });
+  //                       setMapLines([...mapLines]); // 복사본으로 상태 업데이트
+  //                     }
+  //                   })
+  //                   .catch((err) => {
+  //                     toast.error('해당경로는 길찾기를 제공하지 않습니다.');
+  //                   });
+  //               }),
+  //           );
 
-            // 배열 초기화
-            arr = [];
-          }
-        });
+  //           // 배열 초기화
+  //           arr = [];
+  //         }
+  //       });
 
-        // 모든 비동기 작업이 완료된 후에 setMapLines 호출
-        Promise.all(promises).then(() => {
-          setMapLines([...mapLines]);
-        });
-      }
-    }
-  }, [linePath]);
+  //       // 모든 비동기 작업이 완료된 후에 setMapLines 호출
+  //       Promise.all(promises).then(() => {
+  //         setMapLines([...mapLines]);
+  //       });
+  //     }
+  //   }
+  // }, [linePath]);
 
   useEffect(() => {
     const geo = window.navigator.geolocation;

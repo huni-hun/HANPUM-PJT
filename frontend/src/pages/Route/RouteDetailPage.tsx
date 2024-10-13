@@ -78,21 +78,21 @@ function RouteDetailPage() {
   const [isOpenSetting, setIsOpenSetting] = useState<boolean>(false); // 경로설정 BottomSheet 열림 상태
   const [isOpenSorting, setIsOpenSorting] = useState<boolean>(false); // 경로정렬 BottomSheet 열림 상태
 
-  useEffect(() => {
-    if (window.kakao && window.kakao.maps) {
-      setLoadingEnd(true); // Set KakaoMap as loaded when it's ready
-    } else {
-      const kakaoMapScript = document.createElement('script');
-      kakaoMapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_MAP_KEY}&autoload=false`;
-      kakaoMapScript.async = true;
-      kakaoMapScript.onload = () => {
-        window.kakao.maps.load(() => {
-          setLoadingEnd(true);
-        });
-      };
-      document.head.appendChild(kakaoMapScript);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (window.kakao && window.kakao.maps) {
+  //     setLoadingEnd(true); // Set KakaoMap as loaded when it's ready
+  //   } else {
+  //     const kakaoMapScript = document.createElement('script');
+  //     kakaoMapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_MAP_KEY}&autoload=false`;
+  //     kakaoMapScript.async = true;
+  //     kakaoMapScript.onload = () => {
+  //       window.kakao.maps.load(() => {
+  //         setLoadingEnd(true);
+  //       });
+  //     };
+  //     document.head.appendChild(kakaoMapScript);
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (dayData.length === 0) {
