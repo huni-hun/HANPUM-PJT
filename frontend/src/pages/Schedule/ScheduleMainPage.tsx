@@ -346,6 +346,7 @@ function ScheduleMainPage() {
         // setLoading(true);
         try {
           const response = await getRunningScheduleData();
+          // console.log(response);
           if (response && response.status === 'SUCCESS') {
             setRunningScheduleData(response.data);
             setCourseId(response.data.courseId);
@@ -469,6 +470,7 @@ function ScheduleMainPage() {
     if (isSelected !== 'Class') {
       if (scheduleId > 0) {
         getDayNumData(selectedDay, scheduleId).then((result) => {
+          // console.log(result);
           if (result.status === 'SUCCESS') {
             let arr: DaysOfRouteProps[] = [];
             let lines: MapLinePathProps[] = [];
@@ -489,6 +491,46 @@ function ScheduleMainPage() {
               };
               arr.push(data);
               /* 다중 경유지 정보, 시작점, 도착점 저장 */
+
+              if (ele.polyline !== null) {
+                if (ele.polyline !== undefined) {
+                  if (ele.polyline !== '[]') {
+                    let polylineArray: number[] = [];
+                    let ar: string = ele.polyline.substring(
+                      1,
+                      ele.polyline.length - 2,
+                    );
+                    polylineArray = ar.split(',').map(Number);
+                    // console.log();
+                    if (polylineArray.length > 0) {
+                      const ml: any[] = [];
+                      // console.log(ele.vertexes);
+                      if (window.kakao && window.kakao.maps) {
+                        polylineArray.forEach((vertex: any, index: number) => {
+                          // console.log(vertex);
+
+                          if (index % 2 === 0) {
+                            ml.push(
+                              new window.kakao.maps.LatLng(
+                                polylineArray[index + 1],
+                                polylineArray[index],
+                              ),
+                            );
+                          }
+                        });
+
+                        setMapLines((pre) => [...pre, ...ml]);
+                        // setNoVertexes(false);
+                        // setLoadingEnd(true);
+                      }
+                    } else {
+                      // setNoVertexes(true);
+                    }
+                  }
+                } else {
+                  // setNoVertexes(true);
+                }
+              }
 
               // let line: MapLinePathProps = {
               //   name: ele.name,
@@ -511,11 +553,11 @@ function ScheduleMainPage() {
               //   kakaoData.push(line);
               // }
 
-              // let markerData: LineStartEndProps = {
-              //   x: ele.lat,
-              //   y: ele.lon,
-              // };
-              // setMarker((pre) => [...pre, markerData]);
+              let markerData: LineStartEndProps = {
+                x: ele.lat,
+                y: ele.lon,
+              };
+              setMarker((pre) => [...pre, markerData]);
             });
             arr.sort((a: any, b: any) => a.routePoint - b.routePoint);
             setDayOfRoute(arr);
@@ -528,94 +570,6 @@ function ScheduleMainPage() {
             /* 지도 중심점 잡기 */
             setLatitude(arr[0].latitude);
             setLongitude(arr[0].longitude);
-          }
-        });
-
-        getRouteDayDetail(courseId.toString(), selectedDay).then((result) => {
-          if (result.status === 200) {
-            let arr: DaysOfRouteProps[] = [];
-            let lines: MapLinePathProps[] = [];
-
-            // console.log(result);
-            result.data.data.wayPoints.sort(
-              (a: any, b: any) => a.pointNumber - b.pointNumber,
-            );
-
-            result.data.data.wayPoints!.map((ele: any, idx: number) => {
-              let data: DaysOfRouteProps = {
-                routeName: ele.name,
-                routeAddress: ele.address,
-                routeType: ele.type,
-                routeId: ele.waypointId,
-                routePoint: ele.pointNumber,
-                latitude: ele.lat,
-                longitude: ele.lon,
-              };
-              arr.push(data);
-
-              // let line: MapLinePathProps = {
-              //   name: ele.name,
-              //   x: ele.lat,
-              //   y: ele.lon,
-              // };
-              // if (idx === 0 || idx === result.data.data.wayPoints.length - 1) {
-              //   let kse: LineStartEndProps = {
-              //     x: ele.lat,
-              //     y: ele.lon,
-              //   };
-              //   kakaose.push(kse);
-              // } else {
-              //   kakaoData.push(line);
-              // }
-              // lines.push(line);
-
-              if (ele.vertexes !== null) {
-                if (ele.vertexes !== undefined) {
-                  if (ele.vertexes.length > 0) {
-                    const ml: any[] = [];
-                    // console.log(ele.vertexes);
-                    if (window.kakao && window.kakao.maps) {
-                      ele.vertexes.forEach((vertex: any, index: number) => {
-                        // console.log(vertex);
-
-                        if (index % 2 === 0) {
-                          ml.push(
-                            new window.kakao.maps.LatLng(
-                              ele.vertexes[index + 1],
-                              ele.vertexes[index],
-                            ),
-                          );
-                        }
-                      });
-
-                      setMapLines((pre) => [...pre, ...ml]);
-                      // setNoVertexes(false);
-                      // setLoadingEnd(true);
-                    }
-                  } else {
-                    // setNoVertexes(true);
-                  }
-                }
-              } else {
-                // setNoVertexes(true);
-              }
-
-              let markerData: MakerDataProps = {
-                x: ele.lat,
-                y: ele.lon,
-                distance: ele.distance,
-                duration: ele.duration,
-                name: ele.name,
-                calorie: ele.calorie,
-              };
-              setMarker((pre) => [...pre, markerData]);
-            });
-            arr.sort((a: any, b: any) => a.routePoint - b.routePoint);
-            setDayOfRoute(arr);
-            setLinePath(lines);
-
-            // setLatitude(arr[0].latitude);
-            // setLongitude(arr[0].longitude);
           }
         });
       }
