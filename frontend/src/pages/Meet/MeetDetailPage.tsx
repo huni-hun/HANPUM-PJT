@@ -162,6 +162,9 @@ function MeetDetailPage() {
         let lines: MapLinePathProps[] = [];
         let kakaose: LineStartEndProps[] = [];
         let kakaoData: MapLinePathProps[] = [];
+        result.data.data.wayPoints.sort(
+          (a: any, b: any) => a.pointNumber - b.pointNumber,
+        );
         result.data.data.wayPoints.map((ele: any, idx: number) => {
           let data: DaysOfRouteProps = {
             routeName: ele.name,

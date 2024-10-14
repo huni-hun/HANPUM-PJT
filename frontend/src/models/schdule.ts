@@ -85,6 +85,7 @@ export interface RunningScheduleProps {
 }
 
 export interface WayPoint {
+  polyline?: string;
   name?: string;
   type?: string;
   address?: string;
