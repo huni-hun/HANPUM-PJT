@@ -15,4 +15,5 @@ public class ScheduleWayPointResDto {
     double lat;
     double lon;
     int state;
+    String polyline;
 }

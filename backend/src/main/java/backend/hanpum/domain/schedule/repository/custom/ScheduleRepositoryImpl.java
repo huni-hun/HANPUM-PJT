@@ -216,7 +216,8 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         waypoint.address,
                         waypoint.lat,
                         waypoint.lon,
-                        scheduleWayPoint.state))
+                        scheduleWayPoint.state,
+                        waypoint.polyline))
                 .from(scheduleWayPoint)
                 .leftJoin(scheduleWayPoint.waypoint, waypoint)
                 .where(scheduleWayPoint.scheduleDay.id.eq(scheduleDayId))
