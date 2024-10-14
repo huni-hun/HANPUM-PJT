@@ -601,6 +601,7 @@ function ScheduleMainPage() {
     } else {
       let arr: DaysOfRouteProps[] = [];
       let lines: MapLinePathProps[] = [];
+      // console.log(meetListData);
       meetListData?.scheduleDayResDtoList[
         selectedDay - 1
       ].scheduleWayPointList?.map((ele, idx: number) => {
@@ -625,15 +626,54 @@ function ScheduleMainPage() {
           arr.push(data);
         }
 
+        if (ele.polyline !== null) {
+          if (ele.polyline !== undefined) {
+            if (ele.polyline !== '[]') {
+              let polylineArray: number[] = [];
+              let ar: string = ele.polyline.substring(
+                1,
+                ele.polyline.length - 2,
+              );
+              polylineArray = ar.split(',').map(Number);
+              // console.log();
+              if (polylineArray.length > 0) {
+                const ml: any[] = [];
+                // console.log(ele.vertexes);
+                if (window.kakao && window.kakao.maps) {
+                  polylineArray.forEach((vertex: any, index: number) => {
+                    // console.log(vertex);
+
+                    if (index % 2 === 0) {
+                      ml.push(
+                        new window.kakao.maps.LatLng(
+                          polylineArray[index + 1],
+                          polylineArray[index],
+                        ),
+                      );
+                    }
+                  });
+
+                  setMapLines((pre) => [...pre, ...ml]);
+                  // setNoVertexes(false);
+                  // setLoadingEnd(true);
+                }
+              } else {
+                // setNoVertexes(true);
+              }
+            }
+          } else {
+            // setNoVertexes(true);
+          }
+        }
         /* 다중 경유지 정보, 시작점, 도착점 저장 */
         // console.log(ele);
-        let line: MapLinePathProps = {
-          name: ele.name!,
-          x: ele.lat!,
-          y: ele.lon!,
-        };
+        // let line: MapLinePathProps = {
+        //   name: ele.name!,
+        //   x: ele.lat!,
+        //   y: ele.lon!,
+        // };
 
-        lines.push(line);
+        // lines.push(line);
 
         let markerData: LineStartEndProps = {
           x: ele.lat!,
@@ -643,7 +683,7 @@ function ScheduleMainPage() {
       });
 
       setDayOfRoute(arr);
-      setLinePath(lines);
+      // setLinePath(lines);
 
       setWayPoints(arr);
       getRouteDayAttraction(String(courseId), selectedDay).then((res) => {
