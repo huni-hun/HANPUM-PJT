@@ -48,7 +48,9 @@
 ---
 
 > 타겟 사용자 설명
-> 
+
+![페르소나](https://github.com/user-attachments/assets/c600d1e2-7498-4f2f-b32c-10c666978553)
+
 
 ## ⚙ 기술 스택
 
