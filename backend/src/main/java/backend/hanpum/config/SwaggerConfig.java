@@ -39,4 +39,52 @@ public class SwaggerConfig {
                 .pathsToMatch("/api/**")
                 .build();
     }
+
+    @Bean
+    public GroupedOpenApi scheduleGroup(){
+        return GroupedOpenApi.builder()
+                .group("일정")
+                .pathsToMatch("/api/schedule/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi courseGroup(){
+        return GroupedOpenApi.builder()
+                .group("경로")
+                .pathsToMatch("/api/course/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi authGroup(){
+        return GroupedOpenApi.builder()
+                .group("인증")
+                .pathsToMatch("/api/auth/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi groupGroup(){
+        return GroupedOpenApi.builder()
+                .group("모임")
+                .pathsToMatch("/api/group/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi memberGroup(){
+        return GroupedOpenApi.builder()
+                .group("회원")
+                .pathsToMatch("/api/member/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi weatherGroup(){
+        return GroupedOpenApi.builder()
+                .group("날씨")
+                .pathsToMatch("/api/weather/**")
+                .build();
+    }
 }
