@@ -24,10 +24,18 @@
 
 ## 🤝 팀 구성
 
----
-
 - 길걷는 친구들
-- 팀원 소개 (이미지 및 역할)
+
+### 팀원 소개 📸
+
+|      역할       |            이름            |
+| :-------------: | :------------------------: |
+|  **Back** <br>  | 김태훈<br>윤석찬<br>오건영 |
+| **Front** <br>  | 김영우<br>심채운<br>장효령 |
+|   **PM** <br>   |           김해당           |
+| **Design** <br> |           박혜진           |
+
+---
 
 ## 🏁 프로젝트 목표
 
@@ -64,17 +72,21 @@
 
 ## ⚙ 기술 스택
 
----
+1. **이슈관리** : Jira, ganttchart
+2. **형상관리** : Gitlab
+3. **커뮤니케이션** : MatterMost, Notion
+4. **디자인** : Figma, Adobe Photoshop
+5. **개발환경**
+   i. **운영체제** : Windows 10,11
 
-1. 이슈 관리 도구
-2. 형상 관리 도구
-3. 커뮤니케이션 도구
-4. 디자인 도구
-5. 개발 환경
-   1. 운영체제
-   2. IDE
-   3. 데이터베이스
-   4. 서버
+   ii. **IDE**
+
+   - IntelliJ IDEA
+   - Visual Studio Code
+
+   iii. **데이터베이스**
+
+   iv. **서버**
 
 ## 🖼 프론트엔드
 
@@ -172,7 +184,782 @@
 
 ## **📈** 프로젝트 디렉토리
 
----
+- Backend
+  <details>
+    <summary>백엔드 디렉토리 구조</summary>
+
+  ```plaintext
+  📦backend
+  ┣ 📂gradle
+  ┃ ┗ 📂wrapper
+  ┃ ┃ ┣ 📜gradle-wrapper.jar
+  ┃ ┃ ┗ 📜gradle-wrapper.properties
+  ┣ 📂src
+  ┃ ┣ 📂main
+  ┃ ┃ ┣ 📂java
+  ┃ ┃ ┃ ┗ 📂backend
+  ┃ ┃ ┃ ┃ ┗ 📂hanpum
+  ┃ ┃ ┃ ┃ ┃ ┣ 📂config
+  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂jwt
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CustomAuthenticationEntryPoint.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜JwtAuthFilter.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜JwtProvider.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜SecurityErrorResponse.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜UserDetailsImpl.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜UserDetailsServiceImpl.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂redis
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CustomKeyGenerator.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜RedisConfig.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜RedisDao.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂s3
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜S3Config.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜S3ImageService.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜QuerydslConfig.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜RestTemplateConfig.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜SecurityConfig.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜SwaggerConfig.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜WebConfig.java
+  ┃ ┃ ┃ ┃ ┃ ┣ 📂domain
+  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂auth
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂controller
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜AuthController.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂dto
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂requestDto
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CheckEmailAuthCodeReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CheckLoginIdDuplicationReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CheckNicknameDuplicationReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜FindMemberLoginIdReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜FindMemberPasswordReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜KakaoSignUpCompleteReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜LoginReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜SendEmailAuthCodeReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜SendFindPasswordAuthCodeReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜SignUpReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜TokenReissueReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂responseDto
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜FindMemberLoginIdResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜LoginResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ReissueAccessTokenResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜TokenResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂handler
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜OAuth2SuccessHandler.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂service
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜AuthService.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜AuthServiceImpl.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜CustomOAuth2UserService.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂course
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂controller
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜CourseController.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂dto
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂requestDto
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜AttractionReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CourseDayReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CourseReviewReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜EditCourseReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜MakeCourseReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜MultiWaypointSearchReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜SearchAttractionReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜SearchWaypointReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜WayPointReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂responseDto
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜AttractionResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CourseDayResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CourseDetailResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CourseListMapResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CourseResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CourseReviewResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GetCourseDayResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜MultiWaypointSearchResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜SearchWaypointResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜UsedCourseResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜WayPointResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂entity
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜Attraction.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜Course.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CourseDay.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CourseDayId.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CourseType.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CourseUsageHistory.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜InterestCourse.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜Review.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜Waypoint.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂enums
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜CourseTypes.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂repository
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂custom
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CourseRepositoryCustom.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜CourseRepositoryImpl.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜AttractionRepository.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CourseDayRepository.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CourseRepository.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CourseTypeRepository.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CourseUsageHistoryRepository.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜InterestCourseRepository.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ReviewRepository.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜WaypointRepository.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂service
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CourseService.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜CourseServiceImpl.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂group
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂controller
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜GroupController.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂dto
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂requestDto
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ApplyPostReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupPostReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜GroupUpdateReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂responseDto
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupApplyListGetResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupApplyResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupDetailGetResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupListGetResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupMemberDetailGetResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupMemberListGetResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupMemberResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupPostResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜LikeGroupListGetResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂entity
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜Group.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupMember.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜LikeGroup.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂enums
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupJoinStatus.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupStatus.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜JoinType.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂repository
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂custom
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupMemberRepositoryCustom.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupMemberRepositoryImpl.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupRepositoryCustom.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜GroupRepositoryImpl.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupMemberRepository.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupRepository.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜LikeGroupRepository.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂service
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupService.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜GroupServiceImpl.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂member
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂controller
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜MemberController.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂dto
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂requestDto
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜UpdateMemberInfoReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜UpdateNicknameReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜UpdatePasswordReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂responseDto
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜MemberProfileResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂entity
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜Member.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂enums
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜Gender.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜MemberType.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂repository
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜MemberRepository.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂service
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜MemberService.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜MemberServiceImpl.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂schedule
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂controller
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ScheduleController.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂dto
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂requestDto
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜MemoPostReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ScheduleDayReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ScheduleInProgressReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜SchedulePostReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ScheduleRunReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ScheduleStartReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ScheduleUpdateReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ScheduleWayPointReqDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂responseDto
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupScheduleResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜NearByAttractionResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ScheduleDayResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ScheduleDetailResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ScheduleInProgressResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ScheduleResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ScheduleTempResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ScheduleWayPointResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂entity
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜Memo.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜Schedule.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ScheduleDay.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ScheduleWayPoint.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂repository
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂custom
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ScheduleRepositoryCustom.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ScheduleRepositoryImpl.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜MemoRepository.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ScheduleDayRepository.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ScheduleRepository.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ScheduleWayPointRepository.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂service
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ScheduleService.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ScheduleServiceImpl.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂test
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜DatabaseWarmup.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜TestController.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂weather
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂converter
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜WeatherConverter.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂dto
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜LocationInfo.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜WeatherResDto.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂service
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜WeatherService.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜WeatherServiceImpl.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜WeatherController.java
+  ┃ ┃ ┃ ┃ ┃ ┣ 📂exception
+  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂exception
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂auth
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜AccessTokenInvalidException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜AuthenticationCodeInvalidException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜AuthenticationMailSendFailedException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜AuthenticationMailTimeoutException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜EmailDuplicatedException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜EmailExpiredException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜EmailNotAuthenticatedException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜EmailNotFoundException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜LoginIdDuplicatedException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜LoginIdExpiredException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜LoginInfoInvalidException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜MemberInfoInvalidException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜MemberNotFoundException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜NicknameDuplicatedException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜NicknameExpiredException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜RefreshTokenNotFoundException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂common
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜JsonBadMappingException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜JsonBadProcessingException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜UriBadSyntaxException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂course
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CourseDayNotFoundException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CourseListNotFoundException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CourseNotFoundException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CourseReviewsNotFoundException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜InterestAlreadyExistsException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜InterestCourseNotFoundException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ReviewAlreadyExistsException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂group
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupAlreadyJoinedException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupAlreadyLikeException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupDeleteFailedException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupLikeNotFoundException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupMemberFullException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupMemberNotFoundException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupNotFoundException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜GroupPermissionException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂member
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜DeleteMemberFailedByGroupException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂s3
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜FileDeleteFailedException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜FileFormatUnsupportedException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜FilePutFailedException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂schedule
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜BadScheduleDateSettingException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜BadScheduleStateUpdateRequestException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CreateCountExceededException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GroupScheduleNotFoundException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜InvalidDayFormatException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜NearByAttractionNotFoundException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ScheduleDayNotFoundException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ScheduleNotFoundException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ScheduleWayPointNotFoundException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ValidScheduleNotFoundException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂test
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜TestNotFoundException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂weather
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜WeatherParsingException.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂format
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂code
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ApiResponse.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂response
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ErrorCode.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ResponseCode.java
+  ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂handler
+  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜GlobalExceptionHandler.java
+  ┃ ┃ ┃ ┃ ┃ ┗ 📜HanpumApplication.java
+  ┃ ┃ ┗ 📂resources
+  ┃ ┃ ┃ ┗ 📜logback-spring.xml
+  ┃ ┗ 📂test
+  ┃ ┃ ┗ 📂java
+  ┃ ┃ ┃ ┗ 📂backend
+  ┃ ┃ ┃ ┃ ┗ 📂hanpum
+  ┃ ┃ ┃ ┃ ┃ ┗ 📜HanpumApplicationTests.java
+  ┣ 📜.gitignore
+  ┣ 📜.gitkeep
+  ┣ 📜Dockerfile
+  ┣ 📜build.gradle
+  ┣ 📜gradlew
+  ┣ 📜gradlew.bat
+  ┗ 📜settings.gradle
+
+  ```
+
+  </details>
+
+- Frontend
+    <details>
+    <summary>프론트엔드 디렉토리 구조</summary>
+
+  ```plaintext
+  📦frontend
+  ┣ 📂public
+  ┃ ┣ 📂fonts
+  ┃ ┃ ┣ 📜NotoSansKR-Bold.woff
+  ┃ ┃ ┣ 📜NotoSansKR-Bold.woff2
+  ┃ ┃ ┣ 📜NotoSansKR-Medium.woff
+  ┃ ┃ ┣ 📜NotoSansKR-Medium.woff2
+  ┃ ┃ ┗ 📜NotoSansKR-VariableFont_wght.ttf
+  ┃ ┣ 📜index.html
+  ┃ ┣ 📜logo.ico
+  ┃ ┣ 📜logo.png
+  ┃ ┣ 📜logo192.png
+  ┃ ┣ 📜logo512.png
+  ┃ ┣ 📜manifest.json
+  ┃ ┗ 📜robots.txt
+  ┣ 📂src
+  ┃ ┣ 📂api
+  ┃ ┃ ┣ 📂meet
+  ┃ ┃ ┃ ┣ 📜Delete.ts
+  ┃ ┃ ┃ ┣ 📜GET.ts
+  ┃ ┃ ┃ ┣ 📜POST.ts
+  ┃ ┃ ┃ ┗ 📜PUT.ts
+  ┃ ┃ ┣ 📂mypage
+  ┃ ┃ ┃ ┣ 📜Delete.ts
+  ┃ ┃ ┃ ┣ 📜GET.ts
+  ┃ ┃ ┃ ┗ 📜PUT.ts
+  ┃ ┃ ┣ 📂route
+  ┃ ┃ ┃ ┣ 📜Delete.ts
+  ┃ ┃ ┃ ┣ 📜GET.ts
+  ┃ ┃ ┃ ┣ 📜POST.ts
+  ┃ ┃ ┃ ┗ 📜PUT.ts
+  ┃ ┃ ┣ 📂schedule
+  ┃ ┃ ┃ ┣ 📜Delete.ts
+  ┃ ┃ ┃ ┣ 📜GET.ts
+  ┃ ┃ ┃ ┣ 📜POST.ts
+  ┃ ┃ ┃ ┗ 📜PUT.ts
+  ┃ ┃ ┣ 📂signup
+  ┃ ┃ ┃ ┣ 📜GET.ts
+  ┃ ┃ ┃ ┗ 📜POST.ts
+  ┃ ┃ ┗ 📜index.ts
+  ┃ ┣ 📂assets
+  ┃ ┃ ┣ 📂icons
+  ┃ ┃ ┃ ┣ 📜Arrow.svg
+  ┃ ┃ ┃ ┣ 📜ArrowBlack.svg
+  ┃ ┃ ┃ ┣ 📜ArrowWhite.svg
+  ┃ ┃ ┃ ┣ 📜BackArrow.svg
+  ┃ ┃ ┃ ┣ 📜BookMarker.svg
+  ┃ ┃ ┃ ┣ 📜BookMarker2.svg
+  ┃ ┃ ┃ ┣ 📜CalendarIcon.svg
+  ┃ ┃ ┃ ┣ 📜ClassGreen.svg
+  ┃ ┃ ┃ ┣ 📜ClassGrey.svg
+  ┃ ┃ ┃ ┣ 📜CommunityGreen.svg
+  ┃ ┃ ┃ ┣ 📜CommunityGrey.svg
+  ┃ ┃ ┃ ┣ 📜Error.svg
+  ┃ ┃ ┃ ┣ 📜Flag.svg
+  ┃ ┃ ┃ ┣ 📜GreenChecked.svg
+  ┃ ┃ ┃ ┣ 📜GrenStar.svg
+  ┃ ┃ ┃ ┣ 📜GreyReview.svg
+  ┃ ┃ ┃ ┣ 📜GreyStar.svg
+  ┃ ┃ ┃ ┣ 📜HeaderPlus.svg
+  ┃ ┃ ┃ ┣ 📜HomeGreen.svg
+  ┃ ┃ ┃ ┣ 📜HomeGrey.svg
+  ┃ ┃ ┃ ┣ 📜IconCamera.svg
+  ┃ ┃ ┃ ┣ 📜IconClose.svg
+  ┃ ┃ ┃ ┣ 📜IconDelete.svg
+  ┃ ┃ ┃ ┣ 📜IconLock.svg
+  ┃ ┃ ┃ ┣ 📜IconMarker.svg
+  ┃ ┃ ┃ ┣ 📜IconMeetComplete.svg
+  ┃ ┃ ┃ ┣ 📜IconMemberBlack.svg
+  ┃ ┃ ┃ ┣ 📜IconReOrder.svg
+  ┃ ┃ ┃ ┣ 📜IconRetouch.svg
+  ┃ ┃ ┃ ┣ 📜My.svg
+  ┃ ┃ ┃ ┣ 📜Notification.svg
+  ┃ ┃ ┃ ┣ 📜OptionIcon.svg
+  ┃ ┃ ┃ ┣ 📜PlusIcon.svg
+  ┃ ┃ ┃ ┣ 📜RetouchDelete.svg
+  ┃ ┃ ┃ ┣ 📜Review.svg
+  ┃ ┃ ┃ ┣ 📜RouteAddComplete.svg
+  ┃ ┃ ┃ ┣ 📜RouteAddIcon.svg
+  ┃ ┃ ┃ ┣ 📜RouteGreen.svg
+  ┃ ┃ ┃ ┣ 📜RouteGrey.svg
+  ┃ ┃ ┃ ┣ 📜RouteIcon.svg
+  ┃ ┃ ┃ ┣ 📜ScheduleGreen.svg
+  ┃ ┃ ┃ ┣ 📜ScheduleGrey.svg
+  ┃ ┃ ┃ ┣ 📜SearchIcon.svg
+  ┃ ┃ ┃ ┣ 📜UserBasicImg.svg
+  ┃ ┃ ┃ ┣ 📜WhiteStar.svg
+  ┃ ┃ ┃ ┣ 📜add_scheduleButton.svg
+  ┃ ┃ ┃ ┣ 📜arrowRight.svg
+  ┃ ┃ ┃ ┣ 📜bookmark_in_header.svg
+  ┃ ┃ ┃ ┣ 📜camera.svg
+  ┃ ┃ ┃ ┣ 📜check.svg
+  ┃ ┃ ┃ ┣ 📜check_signin.svg
+  ┃ ┃ ┃ ┣ 📜config.svg
+  ┃ ┃ ┃ ┣ 📜delete.svg
+  ┃ ┃ ┃ ┣ 📜filter.svg
+  ┃ ┃ ┃ ┣ 📜filter_revert.svg
+  ┃ ┃ ┃ ┣ 📜finishedRoot.svg
+  ┃ ┃ ┃ ┣ 📜grey_down_arrow.svg
+  ┃ ┃ ┃ ┣ 📜grey_left_arrow.svg
+  ┃ ┃ ┃ ┣ 📜heart.svg
+  ┃ ┃ ┃ ┣ 📜heart_grey.svg
+  ┃ ┃ ┃ ┣ 📜heart_grey_fill.svg
+  ┃ ┃ ┃ ┣ 📜heart_in_grey.svg
+  ┃ ┃ ┃ ┣ 📜heart_white_border.svg
+  ┃ ┃ ┃ ┣ 📜heart_white_fill.svg
+  ┃ ┃ ┃ ┣ 📜icon_flag_bold.svg
+  ┃ ┃ ┃ ┣ 📜index.ts
+  ┃ ┃ ┃ ┣ 📜inprogress.svg
+  ┃ ┃ ┃ ┣ 📜interestList.svg
+  ┃ ┃ ┃ ┣ 📜kakao.svg
+  ┃ ┃ ┃ ┣ 📜lastModiHeart_fill.svg
+  ┃ ┃ ┃ ┣ 📜lastModiHeart_nonFill.svg
+  ┃ ┃ ┃ ┣ 📜leftWhiteArrow.svg
+  ┃ ┃ ┃ ┣ 📜loading.svg
+  ┃ ┃ ┃ ┣ 📜lock.svg
+  ┃ ┃ ┃ ┣ 📜meetExport.svg
+  ┃ ┃ ┃ ┣ 📜meetManage.svg
+  ┃ ┃ ┃ ┣ 📜member.svg
+  ┃ ┃ ┃ ┣ 📜member_grey.svg
+  ┃ ┃ ┃ ┣ 📜modal_warning.svg
+  ┃ ┃ ┃ ┣ 📜myInfo.svg
+  ┃ ┃ ┃ ┣ 📜myInfoActive.svg
+  ┃ ┃ ┃ ┣ 📜myRoot.svg
+  ┃ ┃ ┃ ┣ 📜myRootClose.svg
+  ┃ ┃ ┃ ┣ 📜nextArrow.svg
+  ┃ ┃ ┃ ┣ 📜precipitation.svg
+  ┃ ┃ ┃ ┣ 📜rightArrow_grey.svg
+  ┃ ┃ ┃ ┣ 📜search.svg
+  ┃ ┃ ┃ ┣ 📜signupCalender.svg
+  ┃ ┃ ┃ ┣ 📜sortmodal_check.svg
+  ┃ ┃ ┃ ┣ 📜sortmodal_close.svg
+  ┃ ┃ ┃ ┣ 📜square_grey_fill.svg
+  ┃ ┃ ┃ ┣ 📜star.svg
+  ┃ ┃ ┃ ┣ 📜sun.svg
+  ┃ ┃ ┃ ┣ 📜user.svg
+  ┃ ┃ ┃ ┣ 📜weather_clouds.svg
+  ┃ ┃ ┃ ┣ 📜weather_rainy.svg
+  ┃ ┃ ┃ ┣ 📜weather_sun.svg
+  ┃ ┃ ┃ ┗ 📜weather_sun_clouds.svg
+  ┃ ┃ ┗ 📂img
+  ┃ ┃ ┃ ┣ 📜AttMarker.png
+  ┃ ┃ ┃ ┣ 📜DefaultImg1.png
+  ┃ ┃ ┃ ┣ 📜DefaultImg2.png
+  ┃ ┃ ┃ ┣ 📜DefaultImg3.png
+  ┃ ┃ ┃ ┣ 📜DefaultImg4.jpg
+  ┃ ┃ ┃ ┣ 📜DefaultImg5.jpg
+  ┃ ┃ ┃ ┣ 📜Marker.png
+  ┃ ┃ ┃ ┣ 📜banner_flag.png
+  ┃ ┃ ┃ ┣ 📜banner_shoes.png
+  ┃ ┃ ┃ ┣ 📜default.png
+  ┃ ┃ ┃ ┣ 📜goyuMY.png
+  ┃ ┃ ┃ ┣ 📜img1.jpg
+  ┃ ┃ ┃ ┣ 📜kakaoImg.png
+  ┃ ┃ ┃ ┣ 📜lastLogo.png
+  ┃ ┃ ┃ ┣ 📜login_flag.png
+  ┃ ┃ ┃ ┣ 📜login_human.png
+  ┃ ┃ ┃ ┣ 📜logo.png
+  ┃ ┃ ┃ ┣ 📜logo2.png
+  ┃ ┃ ┃ ┣ 📜memberImg.svg
+  ┃ ┃ ┃ ┣ 📜mountain.jpg
+  ┃ ┃ ┃ ┣ 📜newLogo.png
+  ┃ ┃ ┃ ┣ 📜noInterest.png
+  ┃ ┃ ┃ ┣ 📜nohave_schedule.png
+  ┃ ┃ ┃ ┣ 📜scheduleBackground.png
+  ┃ ┃ ┃ ┣ 📜signup_finished.png
+  ┃ ┃ ┃ ┣ 📜splash_logo.png
+  ┃ ┃ ┃ ┣ 📜success.png
+  ┃ ┃ ┃ ┣ 📜successSchedule.png
+  ┃ ┃ ┃ ┗ 📜warning.png
+  ┃ ┣ 📂atoms
+  ┃ ┃ ┣ 📜alertStateAtom.ts
+  ┃ ┃ ┣ 📜isAuthEnticatedAtom.ts
+  ┃ ┃ ┣ 📜meetFilterAtom.ts
+  ┃ ┃ ┣ 📜meetRequestAtom.ts
+  ┃ ┃ ┣ 📜purposeAtom.ts
+  ┃ ┃ ┣ 📜signupStepAtom.ts
+  ┃ ┃ ┗ 📜userAtom.ts
+  ┃ ┣ 📂components
+  ┃ ┃ ┣ 📂Auth
+  ┃ ┃ ┃ ┣ 📜FindId.tsx
+  ┃ ┃ ┃ ┣ 📜FindPw.tsx
+  ┃ ┃ ┃ ┣ 📜NewPw.tsx
+  ┃ ┃ ┃ ┗ 📜SuccessFindLayout.tsx
+  ┃ ┃ ┣ 📂Login
+  ┃ ┃ ┃ ┣ 📜Entry.tsx
+  ┃ ┃ ┃ ┣ 📜Form.tsx
+  ┃ ┃ ┃ ┗ 📜Splash.tsx
+  ┃ ┃ ┣ 📂Main
+  ┃ ┃ ┃ ┣ 📜Course.tsx
+  ┃ ┃ ┃ ┣ 📜Meet.tsx
+  ┃ ┃ ┃ ┣ 📜MeetItem.tsx
+  ┃ ┃ ┃ ┣ 📜NotHaveSchedule.tsx
+  ┃ ┃ ┃ ┗ 📜Schedule.tsx
+  ┃ ┃ ┣ 📂Meet
+  ┃ ┃ ┃ ┣ 📜FilterTable.tsx
+  ┃ ┃ ┃ ┣ 📜MeetLongCard.tsx
+  ┃ ┃ ┃ ┣ 📜MeetModal.tsx
+  ┃ ┃ ┃ ┣ 📜MeetNoHave.tsx
+  ┃ ┃ ┃ ┣ 📜MeetSmallCard.tsx
+  ┃ ┃ ┃ ┣ 📜MemberList.tsx
+  ┃ ┃ ┃ ┗ 📜SortBox.tsx
+  ┃ ┃ ┣ 📂My
+  ┃ ┃ ┃ ┣ 📂category
+  ┃ ┃ ┃ ┃ ┣ 📜FinishedRoot.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜Interest.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜MyORFinishedNoHave.tsx
+  ┃ ┃ ┃ ┃ ┗ 📜MyRoot.tsx
+  ┃ ┃ ┃ ┣ 📂config
+  ┃ ┃ ┃ ┃ ┣ 📜Announcement.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜ChangePw.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜ConfigItem.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜ConfigLayout.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜PersonalInformationText.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜Policy.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜TermsText.tsx
+  ┃ ┃ ┃ ┃ ┗ 📜Withdraw.tsx
+  ┃ ┃ ┃ ┣ 📂edit
+  ┃ ┃ ┃ ┃ ┣ 📜CategoryLayout.tsx
+  ┃ ┃ ┃ ┃ ┗ 📜ProfileItem.tsx
+  ┃ ┃ ┃ ┣ 📜Activity.tsx
+  ┃ ┃ ┃ ┣ 📜ActivityLayout.tsx
+  ┃ ┃ ┃ ┣ 📜NoHave.tsx
+  ┃ ┃ ┃ ┗ 📜ReviewForm.tsx
+  ┃ ┃ ┣ 📂Schedule
+  ┃ ┃ ┃ ┣ 📜MeetMember.tsx
+  ┃ ┃ ┃ ┣ 📜ProgressSchedule.tsx
+  ┃ ┃ ┃ ┣ 📜SchduleCard.tsx
+  ┃ ┃ ┃ ┣ 📜ScheduleNoHave.tsx
+  ┃ ┃ ┃ ┗ 📜WeatherSchedule.tsx
+  ┃ ┃ ┣ 📂Signup
+  ┃ ┃ ┃ ┣ 📜Calender.tsx
+  ┃ ┃ ┃ ┣ 📜Finish.tsx
+  ┃ ┃ ┃ ┣ 📜ProfileConfig.tsx
+  ┃ ┃ ┃ ┣ 📜Terms.tsx
+  ┃ ┃ ┃ ┗ 📜UserInfo.tsx
+  ┃ ┃ ┣ 📂Style
+  ┃ ┃ ┃ ┣ 📂Auth
+  ┃ ┃ ┃ ┃ ┗ 📜FindId.styled.tsx
+  ┃ ┃ ┃ ┣ 📂Common
+  ┃ ┃ ┃ ┃ ┣ 📜Badge.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜Feed.tsx
+  ┃ ┃ ┃ ┃ ┗ 📜FeedInfo.tsx
+  ┃ ┃ ┃ ┣ 📂Login
+  ┃ ┃ ┃ ┃ ┣ 📜Entry.styled.tsx
+  ┃ ┃ ┃ ┃ ┗ 📜Form.styled.tsx
+  ┃ ┃ ┃ ┣ 📂Main
+  ┃ ┃ ┃ ┃ ┣ 📜Course.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜Meet.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜MeetItem.styled.tsx
+  ┃ ┃ ┃ ┃ ┗ 📜Schedule.styled.tsx
+  ┃ ┃ ┃ ┣ 📂Meet
+  ┃ ┃ ┃ ┃ ┣ 📜FilterTable.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜MeetAddMain.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜MeetDetail.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜MeetFilter.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜MeetModal.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜MeetRequest.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜MeetRequestManager.styled.tsx
+  ┃ ┃ ┃ ┃ ┗ 📜MemberList.styled.tsx
+  ┃ ┃ ┃ ┣ 📂My
+  ┃ ┃ ┃ ┃ ┣ 📂category
+  ┃ ┃ ┃ ┃ ┃ ┣ 📜FinishedRoot.styled.tsx
+  ┃ ┃ ┃ ┃ ┃ ┣ 📜Interest.styled.tsx
+  ┃ ┃ ┃ ┃ ┃ ┗ 📜MyRoot.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📂config
+  ┃ ┃ ┃ ┃ ┃ ┗ 📜ConfigItem.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📂edit
+  ┃ ┃ ┃ ┃ ┃ ┗ 📜ProfileItem.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜Activity.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜NoHave.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜ReviewForm.styled.tsx
+  ┃ ┃ ┃ ┃ ┗ 📜RootCard.styled.tsx
+  ┃ ┃ ┃ ┣ 📂Route
+  ┃ ┃ ┃ ┃ ┣ 📜AttractionsCard.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜BottomSheet.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜ReviewCard.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜ReviewModal.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜ReviewModal.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜RouteAddCompletePage.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜RouteAddDetailPage.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜RouteAddMainPage.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜RouteAddPagePlace.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜RouteBottom.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜RouteCard.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜RouteCard.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜RouteDetailInfo.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜RouteDetailPage.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜RouteList.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜RouteListMoreCard.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜RouteListMorePage.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜RouteListSearchPage.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜RouteLongCard.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜RoutePlaceCard.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜RoutePlaceCard.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜RouteRetouchPlaceCard.tsx
+  ┃ ┃ ┃ ┃ ┗ 📜SearchPlacePage.styled.tsx
+  ┃ ┃ ┃ ┣ 📂Schedule
+  ┃ ┃ ┃ ┃ ┣ 📜AddSchdulePage.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜SchduleCard.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜SchduleMainPage.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜ScheduleMemo.styled.tsx
+  ┃ ┃ ┃ ┃ ┗ 📜SuccessPage.styled.tsx
+  ┃ ┃ ┃ ┗ 📂Signup
+  ┃ ┃ ┃ ┃ ┣ 📜Calender.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜Finish.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜ProfileConfig.styled.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜Terms.styled.tsx
+  ┃ ┃ ┃ ┃ ┗ 📜UserInfo.styled.tsx
+  ┃ ┃ ┣ 📂common
+  ┃ ┃ ┃ ┣ 📂Badge
+  ┃ ┃ ┃ ┃ ┣ 📜DateBadge.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜InfoBadge.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜RouteBadge.tsx
+  ┃ ┃ ┃ ┃ ┗ 📜StarBadge.tsx
+  ┃ ┃ ┃ ┣ 📂BottomTab
+  ┃ ┃ ┃ ┃ ┣ 📜BottomTab.styled.tsx
+  ┃ ┃ ┃ ┃ ┗ 📜BottomTab.tsx
+  ┃ ┃ ┃ ┣ 📂Button
+  ┃ ┃ ┃ ┃ ┣ 📜Button.styled.tsx
+  ┃ ┃ ┃ ┃ ┗ 📜Button.tsx
+  ┃ ┃ ┃ ┣ 📂Calendar
+  ┃ ┃ ┃ ┃ ┣ 📜CustomCalendar.styled.tsx
+  ┃ ┃ ┃ ┃ ┗ 📜RangeCalendar.tsx
+  ┃ ┃ ┃ ┣ 📂CardLong
+  ┃ ┃ ┃ ┃ ┣ 📜CardLong.styled.tsx
+  ┃ ┃ ┃ ┃ ┗ 📜CardLong.tsx
+  ┃ ┃ ┃ ┣ 📂Header
+  ┃ ┃ ┃ ┃ ┣ 📜Header.styled.tsx
+  ┃ ┃ ┃ ┃ ┗ 📜Header.tsx
+  ┃ ┃ ┃ ┣ 📂Icon
+  ┃ ┃ ┃ ┃ ┗ 📜Icon.tsx
+  ┃ ┃ ┃ ┣ 📂Input
+  ┃ ┃ ┃ ┃ ┗ 📜Input.tsx
+  ┃ ┃ ┃ ┣ 📂Map
+  ┃ ┃ ┃ ┃ ┗ 📜Map.tsx
+  ┃ ┃ ┃ ┣ 📂Modal
+  ┃ ┃ ┃ ┃ ┣ 📜Alert.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜AlertProvider.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜CalenderAlert.tsx
+  ┃ ┃ ┃ ┃ ┣ 📜Dimmed.tsx
+  ┃ ┃ ┃ ┃ ┗ 📜WithdrawAlert.tsx
+  ┃ ┃ ┃ ┣ 📂Select
+  ┃ ┃ ┃ ┃ ┣ 📜Select.styled.tsx
+  ┃ ┃ ┃ ┃ ┗ 📜Select.tsx
+  ┃ ┃ ┃ ┣ 📂TextField
+  ┃ ┃ ┃ ┃ ┣ 📜TextField.styled.tsx
+  ┃ ┃ ┃ ┃ ┗ 📜TextField.tsx
+  ┃ ┃ ┃ ┣ 📂ToggleSlider
+  ┃ ┃ ┃ ┃ ┣ 📜ToggleSlider.styled.tsx
+  ┃ ┃ ┃ ┃ ┗ 📜ToggleSlider.tsx
+  ┃ ┃ ┃ ┣ 📜BaseButton.tsx
+  ┃ ┃ ┃ ┣ 📜FixedBottomButton.tsx
+  ┃ ┃ ┃ ┣ 📜Flex.tsx
+  ┃ ┃ ┃ ┣ 📜Loading.tsx
+  ┃ ┃ ┃ ┣ 📜Message.tsx
+  ┃ ┃ ┃ ┣ 📜Spacing.tsx
+  ┃ ┃ ┃ ┣ 📜Text.tsx
+  ┃ ┃ ┃ ┗ 📜TextLineBreaks.tsx
+  ┃ ┃ ┗ 📜RootCard.tsx
+  ┃ ┣ 📂constants
+  ┃ ┃ ┗ 📜index.ts
+  ┃ ┣ 📂hooks
+  ┃ ┃ ┣ 📂auth
+  ┃ ┃ ┃ ┗ 📜useIsAuth.ts
+  ┃ ┃ ┗ 📂global
+  ┃ ┃ ┃ ┣ 📜useAlert.ts
+  ┃ ┃ ┃ ┣ 📜useImageCompression.ts
+  ┃ ┃ ┃ ┗ 📜useQueryHandling.ts
+  ┃ ┣ 📂models
+  ┃ ┃ ┣ 📜config.ts
+  ┃ ┃ ┣ 📜meet.ts
+  ┃ ┃ ┣ 📜root.ts
+  ┃ ┃ ┣ 📜route.ts
+  ┃ ┃ ┣ 📜schdule.ts
+  ┃ ┃ ┣ 📜signup.ts
+  ┃ ┃ ┗ 📜user.ts
+  ┃ ┣ 📂pages
+  ┃ ┃ ┣ 📂Auth
+  ┃ ┃ ┃ ┣ 📜FindPage.tsx
+  ┃ ┃ ┃ ┣ 📜LoginPage.tsx
+  ┃ ┃ ┃ ┗ 📜SignupPage.tsx
+  ┃ ┃ ┣ 📂Main
+  ┃ ┃ ┃ ┗ 📜MainPage.tsx
+  ┃ ┃ ┣ 📂Meet
+  ┃ ┃ ┃ ┣ 📜MeetAddCompletePage.tsx
+  ┃ ┃ ┃ ┣ 📜MeetAddDeadLinePage.tsx
+  ┃ ┃ ┃ ┣ 📜MeetAddMainPage.tsx
+  ┃ ┃ ┃ ┣ 📜MeetAddSchedulePage.tsx
+  ┃ ┃ ┃ ┣ 📜MeetDetailPage.tsx
+  ┃ ┃ ┃ ┣ 📜MeetEditPage.tsx
+  ┃ ┃ ┃ ┣ 📜MeetFilterPage.tsx
+  ┃ ┃ ┃ ┣ 📜MeetList.tsx
+  ┃ ┃ ┃ ┣ 📜MeetManageAcceptPage.tsx
+  ┃ ┃ ┃ ┣ 📜MeetManageRequest.tsx
+  ┃ ┃ ┃ ┣ 📜MemberManageDetail.tsx
+  ┃ ┃ ┃ ┣ 📜MemberManageList.tsx
+  ┃ ┃ ┃ ┗ 📜RequestManageList.tsx
+  ┃ ┃ ┣ 📂My
+  ┃ ┃ ┃ ┣ 📜ConfigDetailPage.tsx
+  ┃ ┃ ┃ ┣ 📜MyPage.tsx
+  ┃ ┃ ┃ ┣ 📜MyProfilePage.tsx
+  ┃ ┃ ┃ ┗ 📜ReviewPage.tsx
+  ┃ ┃ ┣ 📂Route
+  ┃ ┃ ┃ ┣ 📜RoteListMorePage.tsx
+  ┃ ┃ ┃ ┣ 📜RouteAddCompletePage.tsx
+  ┃ ┃ ┃ ┣ 📜RouteAddDetailPage.tsx
+  ┃ ┃ ┃ ┣ 📜RouteAddMainPage.tsx
+  ┃ ┃ ┃ ┣ 📜RouteAddPlacePage.tsx
+  ┃ ┃ ┃ ┣ 📜RouteDetailPage.tsx
+  ┃ ┃ ┃ ┣ 📜RouteDetailRetouchPage.tsx
+  ┃ ┃ ┃ ┣ 📜RouteList.tsx
+  ┃ ┃ ┃ ┣ 📜RouteListSearchPage.tsx
+  ┃ ┃ ┃ ┣ 📜RouteListSearchResult.tsx
+  ┃ ┃ ┃ ┗ 📜SearchPlacePage.tsx
+  ┃ ┃ ┣ 📂Schedule
+  ┃ ┃ ┃ ┣ 📜AddSchedulePage.tsx
+  ┃ ┃ ┃ ┣ 📜DetailMineSchedulePage.tsx
+  ┃ ┃ ┃ ┣ 📜EditMySchedulePage.tsx
+  ┃ ┃ ┃ ┣ 📜ScheduleMainPage.tsx
+  ┃ ┃ ┃ ┣ 📜ScheduleMemoPage.tsx
+  ┃ ┃ ┃ ┗ 📜SuccessAddSchedulePage.tsx
+  ┃ ┃ ┣ 📜Router.tsx
+  ┃ ┃ ┗ 📜index.tsx
+  ┃ ┣ 📂styles
+  ┃ ┃ ┣ 📜GlobalStyles.tsx
+  ┃ ┃ ┣ 📜buttons.ts
+  ┃ ┃ ┣ 📜colorPalette.ts
+  ┃ ┃ ┗ 📜typography.ts
+  ┃ ┣ 📂utils
+  ┃ ┃ ┣ 📜Image.ts
+  ┃ ┃ ┗ 📜util.ts
+  ┃ ┣ 📜.eslintrc.json
+  ┃ ┣ 📜.prettierrc
+  ┃ ┣ 📜App.test.tsx
+  ┃ ┣ 📜App.tsx
+  ┃ ┣ 📜index.css
+  ┃ ┣ 📜index.tsx
+  ┃ ┣ 📜logo.svg
+  ┃ ┣ 📜react-app-env.d.ts
+  ┃ ┣ 📜reportWebVitals.ts
+  ┃ ┣ 📜service-worker.ts
+  ┃ ┣ 📜serviceWorkerRegistration.ts
+  ┃ ┣ 📜setupTests.ts
+  ┃ ┗ 📜svg.d.ts
+  ┣ 📜.gitignore
+  ┣ 📜.gitkeep
+  ┣ 📜Dockerfile
+  ┣ 📜craco.config.js
+  ┣ 📜package-lock.json
+  ┣ 📜package.json
+  ┣ 📜tsconfig.json
+  ┗ 📜tsconfig.paths.json
+  ```
+
+    </details>
 
 ## 🎨 핵심 페이지
 
