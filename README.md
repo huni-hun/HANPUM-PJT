@@ -72,12 +72,13 @@
 
 ## ⚙ 기술 스택
 
-1. **이슈관리** : Jira, ganttchart
-2. **형상관리** : Gitlab
-3. **커뮤니케이션** : MatterMost, Notion
+1. **이슈관리** : Jira
+2. **형상관리** : Git
+3. **커뮤니케이션** : Slack, Notion
 4. **디자인** : Figma, Adobe Photoshop
 5. **개발환경**
-   i. **운영체제** : Windows 10,11
+
+   i. **운영체제** : Ubuntu 20.04
 
    ii. **IDE**
 
@@ -86,7 +87,11 @@
 
    iii. **데이터베이스**
 
+   - PostgreSQL
+
    iv. **서버**
+
+   - AWS LightSail
 
 ## 🖼 프론트엔드
 
@@ -103,12 +108,12 @@
 
 ---
 
-- Java 17
-- Spring Boot (3.3.1), Gradle
-- JPA, QueryDSL
-- PostgreSQL
-- Redis
-- S3
+- **Java 17**
+- **Spring Boot (3.3.1), Gradle**
+- **JPA, QueryDSL**
+- **PostgreSQL**
+- **Redis**
+- **S3**
 
 ## 🧩 아키텍처
 
