@@ -39,7 +39,7 @@
 | 김태훈 | 오건영 | 윤석찬 | 김영우 | 장효령 | 심채운 |
 | --- | --- | --- | --- | --- | --- | 
 | ![태훈](https://github.com/user-attachments/assets/c74bab62-f1af-4e04-b351-fda941d548ee) | ![건영](https://github.com/user-attachments/assets/8154f214-d17e-49d7-8c2f-1ac48f6052f6) | ![석찬](https://github.com/user-attachments/assets/8a050612-0cb1-4abc-a780-05cb7f264b1c) | ![영우](https://github.com/user-attachments/assets/7ab4cb8e-48e2-4250-81d3-bf7ec944ee75) | ![효령](https://github.com/user-attachments/assets/e1da90a4-64f0-4cc2-b417-6cdc75899e2e) | ![채운](https://github.com/user-attachments/assets/ab5ba9e1-a662-44f2-934b-4c3aa2e7e099) | 
-| **PM** <br> **BE** : '경로'기능 담당 | **INPRA** <br> **BE** : '일정'기능 담당 | **BE** : '모임', '회원' 기능 담당 | **프론트 팀장** <br> **FE** : '경로', '모임'화면 담당  | **FE** : '일정', '모임'화면 담당 | **FE** : '회원', '모임'화면 담당  | 
+| **PM** <br> **BE** : '경로'기능 담당 | **INFRA** <br> **BE** : '일정'기능 담당 | **BE** : '모임', '회원' 기능 담당 | **프론트 팀장** <br> **FE** : '경로', '모임'화면 담당  | **FE** : '일정', '모임'화면 담당 | **FE** : '회원', '모임'화면 담당  | 
 
 </div>
 
